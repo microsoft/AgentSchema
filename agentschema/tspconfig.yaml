@@ -3,7 +3,7 @@ emit:
   - "@agentschema/emitter"
 options:
   "@typespec/json-schema":
-    emitter-output-dir: "{cwd}/tsp-output/json-schema"
+    emitter-output-dir: "{cwd}/../runtime/json-schema"
     emitAllModels: true
     emitAllRefs: true
     file-type: yaml
