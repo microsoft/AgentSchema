@@ -35,34 +35,46 @@
 }
 
 /* Modern card styling - enhanced Starlight cards */
-.card {
+.card,
+.sl-card {
   border-radius: 12px;
   box-shadow: var(--sl-shadow-md);
-  transition: all 0.3s ease;
+  transition: box-shadow 0.2s ease;
   backdrop-filter: blur(10px);
 }
 
-.card:hover {
-  transform: translateY(-2px);
+/* Remove hover animations that cause layout issues */
+.card:hover,
+.sl-card:hover {
   box-shadow: var(--sl-shadow-lg);
 }
 
 /* Clean card styling for splash page */
-[data-has-hero] .card {
+[data-has-hero] .card,
+[data-has-hero] .sl-card {
   border: 1px solid var(--sl-color-gray-5);
+}
+
+/* Ensure CardGrid doesn't have weird spacing issues */
+.not-content .card-grid {
+  gap: 1rem;
+}
+
+.not-content .card-grid .card {
+  margin: 0;
 }
 
 /* Enhanced buttons for splash page */
 [data-has-hero] .sl-link-button {
   border-radius: 12px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   box-shadow: var(--sl-shadow-md);
   font-weight: 600;
   padding: 0.75rem 1.5rem;
 }
 
 [data-has-hero] .sl-link-button:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   box-shadow: var(--sl-shadow-lg);
 }
 
@@ -97,10 +109,7 @@
   background: var(--sl-color-gray-1);
 }
 
-/* Subtle navigation enhancements */
-.sidebar {
-  backdrop-filter: blur(20px);
-}
+/* Subtle navigation enhancements - removed potential sidebar interference */
 
 /* Code blocks */
 pre {

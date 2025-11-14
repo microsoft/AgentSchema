@@ -25,19 +25,15 @@ export default defineConfig({
         },
       ],
       sidebar: [
+        { label: "Home", link: "/" },
         {
-          label: "Introduction",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Example Guide", slug: "guides/example" },
-          ],
+          label: "Getting Started",
+          items: [{ label: "Guides", slug: "guides" }],
         },
         {
           label: "Reference",
-          collapsed: true,
           autogenerate: {
             directory: "reference",
-            attrs: { class: "reference" },
           },
         },
       ],

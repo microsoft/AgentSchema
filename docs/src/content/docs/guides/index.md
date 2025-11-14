@@ -3,8 +3,6 @@ title: Guides
 description: Comprehensive guides for getting started with AgentSchema and building your first agents.
 ---
 
-# AgentSchema Guides
-
 Welcome to the AgentSchema guides! This section provides step-by-step tutorials and comprehensive documentation to help you get started with AgentSchema.
 
 ## Getting Started
@@ -13,15 +11,15 @@ Learn the fundamentals of AgentSchema and how to create your first agent specifi
 
 ### Quick Start
 
-- [Installation and Setup](#installation)
-- [Your First Agent](#first-agent)
-- [Understanding the Schema](#schema-basics)
+- Installation and Setup
+- Your First Agent
+- Understanding the Schema
 
 ### Core Concepts
 
-- [Agent Structure](#agent-structure)
-- [Tools and Connections](#tools-connections)
-- [Templates and Variables](#templates)
+- Agent Structure
+- Tools and Connections
+- Templates and Variables
 
 ## Examples
 
