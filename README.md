@@ -8,7 +8,6 @@ AgentSchema is a client facing spec designed to make creating agents easier in a
 4. Create a unified agentic primitive object model (AgentSchema)
 
 This spec is a collaboration between Microsoft Copilot Studio and Azure AI Foundry.
-This represents an upgraded version of the Prompty spec to incorporate more agentic features.
 
 ## Object Model
 

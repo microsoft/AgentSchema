@@ -37,7 +37,7 @@ const getModelType = (model: Model, rootNamespace: string, rootAlias: string): T
   if (rootAlias) {
     return {
       namespace: namespace,
-      name: name.replace("Prompty", rootAlias)
+      name: name.replace("AgentSchema", rootAlias)
     };
   }
 
@@ -287,7 +287,7 @@ export const resolveProperty = (program: Program, property: ModelProperty, visit
 
     default:
       program.reportDiagnostic({
-        code: "prompty-emitter-unsupported-property-type",
+        code: "agentschema-emitter-unsupported-property-type",
         message: `Unsupported property type: ${property.type.kind}`,
         severity: "error",
         target: property
@@ -428,7 +428,7 @@ export const resolveModelProperty = (program: Program, property: ModelProperty, 
         };
       } else {
         program.reportDiagnostic({
-          code: "prompty-emitter-unsupported-array-type",
+          code: "agentschema-emitter-unsupported-array-type",
           message: `Unsupported array type: ${getTypeName(model)}`,
           severity: "error",
           target: property
@@ -499,7 +499,7 @@ export const resolveUnionProperty = (program: Program, property: ModelProperty, 
         }
       } else {
         program.reportDiagnostic({
-          code: "prompty-emitter-unsupported-union-types",
+          code: "agentschema-emitter-unsupported-union-types",
           message: `Unsupported union types for Record/Array: ${recordType?.name} / ${arrayType?.name} - they should match.`,
           severity: "error",
           target: property
@@ -518,7 +518,7 @@ export const resolveUnionProperty = (program: Program, property: ModelProperty, 
         }
       } else {
         program.reportDiagnostic({
-          code: "prompty-emitter-named-model-union-types",
+          code: "agentschema-emitter-named-model-union-types",
           message: `Named model union types must match! (${models.map(m => m.name).join(", ")})`,
           severity: "error",
           target: property
@@ -527,7 +527,7 @@ export const resolveUnionProperty = (program: Program, property: ModelProperty, 
       }
     } else {
       program.reportDiagnostic({
-        code: "prompty-emitter-unsupported-union-types",
+        code: "agentschema-emitter-unsupported-union-types",
         message: `Unsupported union type: ${union.kind}`,
         severity: "error",
         target: property
@@ -550,7 +550,7 @@ export const resolveUnionProperty = (program: Program, property: ModelProperty, 
       const s = 1;
     } else {
       program.reportDiagnostic({
-        code: "prompty-emitter-unsupported-union-types",
+        code: "agentschema-emitter-unsupported-union-types",
         message: `Unable to resolve ${union.name} - too many variants: (${models.map(m => m.name).join(", ")})`,
         severity: "error",
         target: property

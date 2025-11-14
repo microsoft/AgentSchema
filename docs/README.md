@@ -1,299 +1,78 @@
-# Class Diagram
+# AgentSchema Documentation Site
 
-The following diagram illustrates the classes and their relationships for declarative agents.
-The root [object](AgentDefinition.md) represents the main entry point for the system.
+This is the documentation site for AgentSchema, built with [Astro](https://astro.build) and [Starlight](https://starlight.astro.build/).
 
-```mermaid
----
-title: AgentDefinition and Related Types
-config:
-  look: handDrawn
-  theme: colorful
-  class:
-    hideEmptyMembersBox: true
----
-classDiagram
-    class AgentDefinition {
-      <<abstract>>
-        +string kind
-        +string name
-        +string displayName
-        +string description
-        +dictionary metadata
-        +PropertySchema inputSchema
-        +PropertySchema outputSchema
-    }
-    class Connection {
-      <<abstract>>
-        +string kind
-        +string authenticationMode
-        +string usageDescription
-    }
-    class ReferenceConnection {
-      
-        +string kind
-        +string name
-        +string target
-    }
-    class RemoteConnection {
-      
-        +string kind
-        +string name
-        +string endpoint
-    }
-    class ApiKeyConnection {
-      
-        +string kind
-        +string endpoint
-        +string apiKey
-    }
-    class AnonymousConnection {
-      
-        +string kind
-        +string endpoint
-    }
-    class ModelOptions {
-      
-        +float32 frequencyPenalty
-        +int32 maxOutputTokens
-        +float32 presencePenalty
-        +int32 seed
-        +float32 temperature
-        +int32 topK
-        +float32 topP
-        +string[] stopSequences
-        +boolean allowMultipleToolCalls
-        +dictionary additionalProperties
-    }
-    class Model {
-      
-        +string id
-        +string provider
-        +string apiType
-        +Connection connection
-        +ModelOptions options
-    }
-    class Binding {
-      
-        +string name
-        +string input
-    }
-    class Tool {
-      <<abstract>>
-        +string name
-        +string kind
-        +string description
-        +Binding[] bindings
-    }
-    class Property {
-      
-        +string name
-        +string kind
-        +string description
-        +boolean required
-        +unknown default
-        +unknown example
-        +unknown[] enumValues
-    }
-    class ObjectProperty {
-      
-        +string kind
-        +Property[] properties
-    }
-    class ArrayProperty {
-      
-        +string kind
-        +Property items
-    }
-    class PropertySchema {
-      
-        +dictionary[] examples
-        +boolean strict
-        +Property[] properties
-    }
-    class FunctionTool {
-      
-        +string kind
-        +PropertySchema parameters
-        +boolean strict
-    }
-    class CustomTool {
-      
-        +string kind
-        +Connection connection
-        +dictionary options
-    }
-    class WebSearchTool {
-      
-        +string kind
-        +Connection connection
-        +dictionary options
-    }
-    class FileSearchTool {
-      
-        +string kind
-        +Connection connection
-        +string[] vectorStoreIds
-        +int32 maximumResultCount
-        +string ranker
-        +float32 scoreThreshold
-        +dictionary filters
-    }
-    class McpServerApprovalMode {
-      <<abstract>>
-        +string kind
-    }
-    class McpServerToolAlwaysRequireApprovalMode {
-      
-        +string kind
-    }
-    class McpServerToolNeverRequireApprovalMode {
-      
-        +string kind
-    }
-    class McpServerToolSpecifyApprovalMode {
-      
-        +string kind
-        +string[] alwaysRequireApprovalTools
-        +string[] neverRequireApprovalTools
-    }
-    class McpTool {
-      
-        +string kind
-        +Connection connection
-        +string serverName
-        +string serverDescription
-        +McpServerApprovalMode approvalMode
-        +string[] allowedTools
-    }
-    class OpenApiTool {
-      
-        +string kind
-        +Connection connection
-        +string specification
-    }
-    class CodeInterpreterTool {
-      
-        +string kind
-        +string[] fileIds
-    }
-    class Format {
-      
-        +string kind
-        +boolean strict
-        +dictionary options
-    }
-    class Parser {
-      
-        +string kind
-        +dictionary options
-    }
-    class Template {
-      
-        +Format format
-        +Parser parser
-    }
-    class PromptAgent {
-      
-        +string kind
-        +Model model
-        +Tool[] tools
-        +Template template
-        +string instructions
-        +string additionalInstructions
-    }
-    class Workflow {
-      
-        +string kind
-        +dictionary trigger
-    }
-    class ProtocolVersionRecord {
-      
-        +string protocol
-        +string version
-    }
-    class EnvironmentVariable {
-      
-        +string name
-        +string value
-    }
-    class ContainerAgent {
-      
-        +string kind
-        +ProtocolVersionRecord[] protocols
-        +EnvironmentVariable[] environmentVariables
-    }
-    class Resource {
-      <<abstract>>
-        +string name
-        +string kind
-    }
-    class ModelResource {
-      
-        +string kind
-        +string id
-    }
-    class ToolResource {
-      
-        +string kind
-        +string id
-        +dictionary options
-    }
-    class AgentManifest {
-      
-        +string name
-        +string displayName
-        +string description
-        +dictionary metadata
-        +AgentDefinition template
-        +PropertySchema parameters
-        +Resource[] resources
-    }
-    AgentDefinition <|-- PromptAgent
-    AgentDefinition <|-- Workflow
-    AgentDefinition <|-- ContainerAgent
-    Connection <|-- ReferenceConnection
-    Connection <|-- RemoteConnection
-    Connection <|-- ApiKeyConnection
-    Connection <|-- AnonymousConnection
-    Tool <|-- FunctionTool
-    Tool <|-- CustomTool
-    Tool <|-- WebSearchTool
-    Tool <|-- FileSearchTool
-    Tool <|-- McpTool
-    Tool <|-- OpenApiTool
-    Tool <|-- CodeInterpreterTool
-    Property <|-- ArrayProperty
-    Property <|-- ObjectProperty
-    McpServerApprovalMode <|-- McpServerToolAlwaysRequireApprovalMode
-    McpServerApprovalMode <|-- McpServerToolNeverRequireApprovalMode
-    McpServerApprovalMode <|-- McpServerToolSpecifyApprovalMode
-    Resource <|-- ModelResource
-    Resource <|-- ToolResource
-    AgentDefinition *-- PropertySchema
-    AgentDefinition *-- PropertySchema
-    Model *-- Connection
-    Model *-- ModelOptions
-    Tool *-- Binding
-    ObjectProperty *-- Property
-    ArrayProperty *-- Property
-    PropertySchema *-- dictionary
-    PropertySchema *-- Property
-    FunctionTool *-- PropertySchema
-    CustomTool *-- Connection
-    WebSearchTool *-- Connection
-    FileSearchTool *-- Connection
-    McpTool *-- Connection
-    McpTool *-- McpServerApprovalMode
-    OpenApiTool *-- Connection
-    Template *-- Format
-    Template *-- Parser
-    PromptAgent *-- Model
-    PromptAgent *-- Tool
-    PromptAgent *-- Template
-    ContainerAgent *-- ProtocolVersionRecord
-    ContainerAgent *-- EnvironmentVariable
-    AgentManifest *-- AgentDefinition
-    AgentManifest *-- PropertySchema
-    AgentManifest *-- Resource
+## Modern Theme
+
+The site uses a custom modern theme with the following features:
+
+### Design Elements
+
+- **Purple/Blue gradient color scheme** - Professional and modern appearance
+- **Glass morphism effects** - Cards with backdrop blur and subtle transparency
+- **Smooth animations** - Hover effects and micro-interactions
+- **Modern typography** - Clean system fonts with improved readability
+- **Enhanced shadows** - Layered shadow system for depth
+
+### Custom Hero Image
+
+The site features a custom SVG hero image (`agentschema-hero.svg`) that visualizes:
+
+- Connected agent network
+- Data flow between agents
+- Schema representation
+- YAML configuration
+- Animated particles and data packets
+
+### Color Palette
+
+- **Primary Accent**: `#6366f1` (Indigo)
+- **Background Gradient**: `#667eea` to `#764ba2`
+- **Gray Scale**: Tailwind-inspired neutral grays
+- **Support Colors**: Cyan and emerald for data flow
+
+### Styling Features
+
+- Responsive design with mobile-first approach
+- Dark mode support with adjusted color schemes
+- Enhanced accessibility with proper focus states
+- Modern card layouts with hover effects
+- Improved code block styling
+- Glass morphism navigation
+
+## Development
+
+To run the documentation site locally:
+
+```bash
+cd docs
+npm install
+npm run dev
 ```
+
+The site will be available at `http://localhost:4321/`
+
+## Building
+
+To build the site for production:
+
+```bash
+npm run build
+```
+
+## Customization
+
+The custom theme is located in `src/styles/custom.css` and can be modified to adjust:
+
+- Color schemes
+- Typography
+- Spacing
+- Animations
+- Component styling
+
+The Astro configuration is in `astro.config.mjs` where you can:
+
+- Update site metadata
+- Modify navigation structure
+- Add integrations
+- Configure build options

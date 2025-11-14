@@ -3,7 +3,7 @@ emit:
   - "@agentschema/emitter"
 options:
   "@typespec/json-schema":
-    emitter-output-dir: "{cwd}/../runtime/json-schema"
+    emitter-output-dir: "{cwd}/../schemas/v1.0"
     emitAllModels: true
     emitAllRefs: true
     file-type: yaml
@@ -12,7 +12,7 @@ options:
     root-object: "AgentSchema.Core.AgentManifest"
     emit-targets:
       - type: markdown
-        output-dir: "../docs"
+        output-dir: "../docs/src/content/docs/reference"
       - type: CSharp
         output-dir: "../runtime/csharp/AgentSchema.Core/Model"
         test-dir: "../runtime/csharp/AgentSchema.Core.Tests/Model"

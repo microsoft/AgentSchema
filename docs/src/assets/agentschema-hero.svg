@@ -1,0 +1,122 @@
+<svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="connectionGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="200" cy="200" r="180" fill="url(#bgGradient)" opacity="0.1"/>
+  
+  <!-- Network connections -->
+  <g stroke="url(#connectionGradient)" stroke-width="2" opacity="0.6">
+    <!-- Central node connections -->
+    <line x1="200" y1="200" x2="150" y2="120" filter="url(#glow)"/>
+    <line x1="200" y1="200" x2="280" y2="140" filter="url(#glow)"/>
+    <line x1="200" y1="200" x2="320" y2="220" filter="url(#glow)"/>
+    <line x1="200" y1="200" x2="280" y2="300" filter="url(#glow)"/>
+    <line x1="200" y1="200" x2="120" y2="280" filter="url(#glow)"/>
+    <line x1="200" y1="200" x2="80" y2="180" filter="url(#glow)"/>
+    
+    <!-- Secondary connections -->
+    <line x1="150" y1="120" x2="280" y2="140" opacity="0.4"/>
+    <line x1="280" y1="140" x2="320" y2="220" opacity="0.4"/>
+    <line x1="320" y1="220" x2="280" y2="300" opacity="0.4"/>
+    <line x1="280" y1="300" x2="120" y2="280" opacity="0.4"/>
+    <line x1="120" y1="280" x2="80" y2="180" opacity="0.4"/>
+  </g>
+  
+  <!-- Agent nodes -->
+  <g fill="url(#nodeGradient)" filter="url(#glow)">
+    <!-- Central agent (larger) -->
+    <circle cx="200" cy="200" r="20" stroke="#ffffff" stroke-width="3"/>
+    
+    <!-- Surrounding agents -->
+    <circle cx="150" cy="120" r="12" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="280" cy="140" r="12" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="320" cy="220" r="12" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="280" cy="300" r="12" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="120" cy="280" r="12" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="80" cy="180" r="12" stroke="#ffffff" stroke-width="2"/>
+  </g>
+  
+  <!-- Agent icons (simplified representations) -->
+  <g fill="#ffffff" opacity="0.9">
+    <!-- Central agent icon -->
+    <circle cx="200" cy="195" r="3"/>
+    <circle cx="195" cy="205" r="2"/>
+    <circle cx="205" cy="205" r="2"/>
+    
+    <!-- Smaller agent indicators -->
+    <circle cx="150" cy="120" r="2"/>
+    <circle cx="280" cy="140" r="2"/>
+    <circle cx="320" cy="220" r="2"/>
+    <circle cx="280" cy="300" r="2"/>
+    <circle cx="120" cy="280" r="2"/>
+    <circle cx="80" cy="180" r="2"/>
+  </g>
+  
+  <!-- Data flow indicators -->
+  <g stroke="#00d4aa" stroke-width="1" opacity="0.7" fill="none">
+    <!-- Animated data packets -->
+    <circle cx="175" cy="160" r="4" fill="#00d4aa" opacity="0.8">
+      <animateTransform attributeName="transform" type="translate" 
+                        values="0,0; 25,-40; 0,0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="240" cy="170" r="4" fill="#00d4aa" opacity="0.8">
+      <animateTransform attributeName="transform" type="translate" 
+                        values="0,0; 40,40; 0,0" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="160" cy="240" r="4" fill="#00d4aa" opacity="0.8">
+      <animateTransform attributeName="transform" type="translate" 
+                        values="0,0; -40,40; 0,0" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+  
+  <!-- Schema representation -->
+  <g transform="translate(300, 100)" opacity="0.6">
+    <rect x="0" y="0" width="60" height="8" rx="4" fill="#ffffff" opacity="0.7"/>
+    <rect x="0" y="12" width="45" height="6" rx="3" fill="#ffffff" opacity="0.5"/>
+    <rect x="0" y="22" width="50" height="6" rx="3" fill="#ffffff" opacity="0.5"/>
+    <rect x="0" y="32" width="35" height="6" rx="3" fill="#ffffff" opacity="0.5"/>
+  </g>
+  
+  <!-- YAML representation -->
+  <g transform="translate(60, 300)" opacity="0.6">
+    <text x="0" y="0" font-family="monospace" font-size="8" fill="#ffffff" opacity="0.8">agent:</text>
+    <text x="2" y="12" font-family="monospace" font-size="6" fill="#ffffff" opacity="0.6">name: example</text>
+    <text x="2" y="22" font-family="monospace" font-size="6" fill="#ffffff" opacity="0.6">tools: [...]</text>
+  </g>
+  
+  <!-- Floating particles for modern effect -->
+  <g opacity="0.4">
+    <circle cx="100" cy="80" r="2" fill="#ffffff">
+      <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="350" cy="120" r="1.5" fill="#ffffff">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="80" cy="300" r="2.5" fill="#ffffff">
+      <animate attributeName="opacity" values="0.1;0.7;0.1" dur="5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="320" cy="350" r="2" fill="#ffffff">
+      <animate attributeName="opacity" values="0.2;0.6;0.2" dur="3.5s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>
