@@ -4,21 +4,21 @@ import {
   createTestWrapper,
   expectDiagnosticEmpty,
 } from "@typespec/compiler/testing";
-import { PromptyEmitTestLibrary } from "../src/testing/index.js";
+import { AgentSchemaEmitTestLibrary } from "../src/testing/index.js";
 
-export async function createPromptyEmitTestHost() {
+export async function createAgentSchemaEmitTestHost() {
   return createTestHost({
-    libraries: [PromptyEmitTestLibrary],
+    libraries: [AgentSchemaEmitTestLibrary],
   });
 }
 
-export async function createPromptyEmitTestRunner() {
-  const host = await createPromptyEmitTestHost();
+export async function createAgentSchemaEmitTestRunner() {
+  const host = await createAgentSchemaEmitTestHost();
 
   return createTestWrapper(host, {
     compilerOptions: {
       noEmit: false,
-      emit: ["prompty-emit"],
+      emit: ["agentschema-emit"],
     },
   });
 }
@@ -26,11 +26,11 @@ export async function createPromptyEmitTestRunner() {
 export async function emitWithDiagnostics(
   code: string
 ): Promise<[Record<string, string>, readonly Diagnostic[]]> {
-  const runner = await createPromptyEmitTestRunner();
+  const runner = await createAgentSchemaEmitTestRunner();
   await runner.compileAndDiagnose(code, {
     outputDir: "tsp-output",
   });
-  const emitterOutputDir = "./tsp-output/prompty-emit";
+  const emitterOutputDir = "./tsp-output/agentschema-emit";
   const files = await runner.program.host.readDir(emitterOutputDir);
 
   const result: Record<string, string> = {};

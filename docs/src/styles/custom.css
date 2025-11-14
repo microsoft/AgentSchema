@@ -1,0 +1,174 @@
+/* Modern AgentSchema Theme - Preserving Starlight defaults */
+:root {
+  /* Only override accent colors - keep Starlight's grays and other colors */
+  --sl-color-accent-low: #1e1b4b;
+  --sl-color-accent: #6366f1;
+  --sl-color-accent-high: #a5b4fc;
+
+  /* Modern typography enhancements */
+  --sl-font-system: system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --sl-font-mono: "JetBrains Mono", "Fira Code", Consolas, "Liberation Mono",
+    Menlo, Monaco, "Courier New", monospace;
+
+  /* Enhanced content width */
+  --sl-content-width: 65rem;
+
+  /* Modern shadows */
+  --sl-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --sl-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+    0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sl-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode accent adjustments */
+:root[data-theme="dark"] {
+  --sl-color-accent-low: #312e81;
+  --sl-color-accent: #818cf8;
+  --sl-color-accent-high: #c7d2fe;
+}
+
+/* Splash page hero section enhancements - clean and minimal */
+[data-has-hero] .hero {
+  position: relative;
+}
+
+/* Modern card styling - enhanced Starlight cards */
+.card {
+  border-radius: 12px;
+  box-shadow: var(--sl-shadow-md);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sl-shadow-lg);
+}
+
+/* Clean card styling for splash page */
+[data-has-hero] .card {
+  border: 1px solid var(--sl-color-gray-5);
+}
+
+/* Enhanced buttons for splash page */
+[data-has-hero] .sl-link-button {
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: var(--sl-shadow-md);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+[data-has-hero] .sl-link-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sl-shadow-lg);
+}
+
+/* Primary button styling */
+[data-has-hero] .sl-link-button[data-variant="primary"] {
+  background: var(--sl-color-accent);
+  color: white;
+  border: 1px solid var(--sl-color-accent);
+}
+
+[data-has-hero] .sl-link-button[data-variant="primary"]:hover {
+  background: var(--sl-color-accent-high);
+  border-color: var(--sl-color-accent-high);
+}
+
+/* Minimal button styling (GitHub button) */
+[data-has-hero] .sl-link-button[data-variant="minimal"] {
+  background: transparent;
+  color: var(--sl-color-text);
+  border: 2px solid var(--sl-color-gray-4);
+}
+
+[data-has-hero] .sl-link-button[data-variant="minimal"]:hover {
+  background: var(--sl-color-gray-6);
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-accent);
+}
+
+:root[data-theme="dark"]
+  [data-has-hero]
+  .sl-link-button[data-variant="minimal"]:hover {
+  background: var(--sl-color-gray-1);
+}
+
+/* Subtle navigation enhancements */
+.sidebar {
+  backdrop-filter: blur(20px);
+}
+
+/* Code blocks */
+pre {
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sl-shadow-sm);
+}
+
+:root[data-theme="dark"] pre {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Table styling */
+table {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--sl-shadow-sm);
+}
+
+/* Smooth animations */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+.sl-link-button:focus,
+a:focus {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}
+
+/* Subtle enhancements */
+
+/* Enhanced header styling for splash page */
+[data-has-hero] .site-title {
+  font-weight: 700;
+}
+
+/* Modern code blocks */
+pre {
+  border-radius: 8px;
+}
+
+/* Enhanced blockquotes */
+blockquote {
+  border-left: 4px solid var(--sl-color-accent);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  [data-has-hero] .hero {
+    padding: 2rem 1rem;
+  }
+
+  .card {
+    margin: 1rem 0;
+  }
+}
+
+/* Smooth animations */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+a:focus,
+button:focus {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}

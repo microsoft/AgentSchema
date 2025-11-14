@@ -12,6 +12,11 @@ export default defineConfig({
     }),
     starlight({
       title: "AgentSchema",
+      description: "A modern specification for building agents with ease",
+      customCss: [
+        // Path to custom CSS file for modern theme
+        "./src/styles/custom.css",
+      ],
       social: [
         {
           icon: "github",

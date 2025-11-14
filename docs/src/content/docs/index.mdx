@@ -1,40 +1,68 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: AgentSchema
+description: A client-facing specification for creating agents in a code-first YAML file format, designed to make agent development easier and serve as an exchange format between platforms.
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  title: AgentSchema
+  tagline: A unified specification for building agents with ease. Code-first YAML format that's easy to read, understand, and integrate into existing repositories.
   image:
-    file: ../../assets/houston.webp
+    file: ../../assets/agentschema-hero.svg
+    alt: AgentSchema network diagram showing connected agents and data flow
   actions:
-    - text: Example Guide
-      link: /guides/example/
+    - text: Get Started
+      link: /guides/
       icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
+    - text: View on GitHub
+      link: https://github.com/microsoft/AgentSchema
       icon: external
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Next steps
+## Why AgentSchema?
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="Easy to Read & Understand" icon="open-book">
+		Simple YAML format that developers can quickly grasp and work with, making agent development accessible to everyone.
 	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
+	<Card title="Easy Integration" icon="add-document">
+		Designed to be easily added to existing repositories without major restructuring or complex setup processes.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Platform Exchange Format" icon="setting">
+		Serves as a unified exchange format between Microsoft Copilot Studio, Azure AI Foundry, and future platforms.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Unified Object Model" icon="puzzle">
+		Creates a consistent agentic primitive object model that standardizes how agents are defined and structured.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Enterprise-Grade Quality" icon="heart">
+		A joint collaboration between Microsoft Copilot Studio and Azure AI Foundry teams, ensuring production-ready reliability.
+	</Card>
+	<Card title="Modern Architecture" icon="rocket">
+		Built with modern development practices and incorporates advanced agentic features and capabilities.
 	</Card>
 </CardGrid>
+
+## Getting Started
+
+<CardGrid>
+	<Card title="📖 Object Model" icon="document">
+		Explore the complete AgentSchema object model with detailed documentation and examples.
+		
+		[View Documentation →](/reference/)
+	</Card>
+	<Card title="🚀 Examples" icon="rocket">
+		See AgentSchema in action with real-world examples including analyst, QnA, and travel agents.
+		
+		[Browse Examples →](/guides/example/)
+	</Card>
+	<Card title="🤝 Contributing" icon="github">
+		Help improve the specification by contributing to the AgentSchema project.
+		
+		[Contributing Guide →](https://github.com/microsoft/AgentSchema/blob/main/README.md#contributing)
+	</Card>
+</CardGrid>
+
+## Key Features
+
+AgentSchema bridges the gap across different agentic platforms, providing a standardized way to define and deploy agents regardless of your chosen environment. It incorporates advanced agentic capabilities while maintaining simplicity and readability, making it the ideal choice for modern agent development workflows.
