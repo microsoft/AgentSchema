@@ -5,6 +5,8 @@ import mermaid from "astro-mermaid";
 
 // <https://astro.build/config>
 export default defineConfig({
+  site: "https://sethjuarez.github.io",
+  base: "/AgentSchema",
   integrations: [
     mermaid({
       theme: "forest",
