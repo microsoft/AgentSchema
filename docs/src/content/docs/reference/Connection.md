@@ -81,10 +81,10 @@ usageDescription: This will allow the agent to respond to an email on your behal
 
 The following types extend `Connection`:
 
-- [ReferenceConnection](/reference/referenceconnection)
-- [RemoteConnection](/reference/remoteconnection)
-- [ApiKeyConnection](/reference/apikeyconnection)
-- [AnonymousConnection](/reference/anonymousconnection)
+- [ReferenceConnection](../referenceconnection/)
+- [RemoteConnection](../remoteconnection/)
+- [ApiKeyConnection](../apikeyconnection/)
+- [AnonymousConnection](../anonymousconnection/)
 
 
 

@@ -63,7 +63,7 @@ items:
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string |   |
-| items | [Property](Property.md) | The type of items contained in the array (Related Types: [ObjectProperty](ObjectProperty.md)) |
+| items | [Property](../property/) | The type of items contained in the array (Related Types: [ObjectProperty](../objectproperty/)) |
 
 
 
@@ -74,6 +74,6 @@ items:
 ## Composed Types
 The following types are composed within `ArrayProperty`:
 
-- [Property](/reference/property)
+- [Property](../property/)
 
 

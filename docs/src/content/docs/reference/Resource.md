@@ -66,8 +66,8 @@ kind: model
 
 The following types extend `Resource`:
 
-- [ModelResource](/reference/modelresource)
-- [ToolResource](/reference/toolresource)
+- [ModelResource](../modelresource/)
+- [ToolResource](../toolresource/)
 
 
 

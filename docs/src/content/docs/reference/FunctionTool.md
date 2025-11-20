@@ -68,7 +68,7 @@ strict: true
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | The kind identifier for function tools  |
-| parameters | [PropertySchema](PropertySchema.md) | Parameters accepted by the function tool  |
+| parameters | [PropertySchema](../propertyschema/) | Parameters accepted by the function tool  |
 | strict | boolean | Indicates whether the function tool enforces strict validation on its parameters  |
 
 
@@ -80,6 +80,6 @@ strict: true
 ## Composed Types
 The following types are composed within `FunctionTool`:
 
-- [PropertySchema](/reference/propertyschema)
+- [PropertySchema](../propertyschema/)
 
 

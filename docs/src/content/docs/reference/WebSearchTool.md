@@ -58,7 +58,7 @@ options:
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | The kind identifier for Bing search tools  |
-| connection | [Connection](Connection.md) | The connection configuration for the Bing search tool  |
+| connection | [Connection](../connection/) | The connection configuration for the Bing search tool  |
 | options | dictionary | The configuration options for the Bing search tool  |
 
 

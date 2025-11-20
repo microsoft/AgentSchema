@@ -103,7 +103,7 @@ bindings:
 | name | string | Name of the tool. If a function tool, this is the function name, otherwise it is the type  |
 | kind | string | The kind identifier for the tool  |
 | description | string | A short description of the tool for metadata purposes  |
-| bindings | [Binding[]](Binding.md) | Tool argument bindings to input properties  |
+| bindings | [Binding[]](../binding/) | Tool argument bindings to input properties  |
 
 
 
@@ -113,19 +113,19 @@ bindings:
 
 The following types extend `Tool`:
 
-- [FunctionTool](/reference/functiontool)
-- [CustomTool](/reference/customtool)
-- [WebSearchTool](/reference/websearchtool)
-- [FileSearchTool](/reference/filesearchtool)
-- [McpTool](/reference/mcptool)
-- [OpenApiTool](/reference/openapitool)
-- [CodeInterpreterTool](/reference/codeinterpretertool)
+- [FunctionTool](../functiontool/)
+- [CustomTool](../customtool/)
+- [WebSearchTool](../websearchtool/)
+- [FileSearchTool](../filesearchtool/)
+- [McpTool](../mcptool/)
+- [OpenApiTool](../openapitool/)
+- [CodeInterpreterTool](../codeinterpretertool/)
 
 
 
 ## Composed Types
 The following types are composed within `Tool`:
 
-- [Binding](/reference/binding)
+- [Binding](../binding/)
 
 

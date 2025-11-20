@@ -71,8 +71,8 @@ environmentVariables:
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | Type of agent, e.g., &#39;hosted&#39;  |
-| protocols | [ProtocolVersionRecord[]](ProtocolVersionRecord.md) | Protocol used by the containerized agent  |
-| environmentVariables | [EnvironmentVariable[]](EnvironmentVariable.md) | Environment variables to set in the container  |
+| protocols | [ProtocolVersionRecord[]](../protocolversionrecord/) | Protocol used by the containerized agent  |
+| environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container  |
 
 
 
@@ -83,7 +83,7 @@ environmentVariables:
 ## Composed Types
 The following types are composed within `ContainerAgent`:
 
-- [ProtocolVersionRecord](/reference/protocolversionrecord)
-- [EnvironmentVariable](/reference/environmentvariable)
+- [ProtocolVersionRecord](../protocolversionrecord/)
+- [EnvironmentVariable](../environmentvariable/)
 
 

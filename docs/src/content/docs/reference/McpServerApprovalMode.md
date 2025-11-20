@@ -64,9 +64,9 @@ kind: never
 
 The following types extend `McpServerApprovalMode`:
 
-- [McpServerToolAlwaysRequireApprovalMode](/reference/mcpservertoolalwaysrequireapprovalmode)
-- [McpServerToolNeverRequireApprovalMode](/reference/mcpservertoolneverrequireapprovalmode)
-- [McpServerToolSpecifyApprovalMode](/reference/mcpservertoolspecifyapprovalmode)
+- [McpServerToolAlwaysRequireApprovalMode](../mcpservertoolalwaysrequireapprovalmode/)
+- [McpServerToolNeverRequireApprovalMode](../mcpservertoolneverrequireapprovalmode/)
+- [McpServerToolSpecifyApprovalMode](../mcpservertoolspecifyapprovalmode/)
 
 
 

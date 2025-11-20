@@ -5,6 +5,9 @@ import mermaid from "astro-mermaid";
 
 // <https://astro.build/config>
 export default defineConfig({
+  site: "https://microsoft.github.io",
+  base: "/AgentSchema",
+  trailingSlash: "always",
   integrations: [
     mermaid({
       theme: "forest",
@@ -21,14 +24,16 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/microsoft/AgentSchema",
+          href: "https://github.com/sethjuarez/AgentSchema",
         },
       ],
       sidebar: [
         { label: "Home", link: "/" },
         {
           label: "Getting Started",
-          items: [{ label: "Guides", slug: "guides" }],
+          autogenerate: {
+            directory: "guides",
+          },
         },
         {
           label: "Reference",

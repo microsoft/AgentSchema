@@ -92,14 +92,14 @@ export const renderType = (prop: PropertyNode) => {
   } else if (prop.isDict) {
     return `${prop.typeName.name + arrayString}`;
   } else {
-    return `[${prop.typeName.name + arrayString}](${prop.typeName.name}.md)`;
+    return `[${prop.typeName.name + arrayString}](../${prop.typeName.name.toLowerCase()}/)`;
   }
 };
 
 export const renderChildTypes = (node: PropertyNode) => {
   if (!node.isScalar && node.type) {
     const childTypes = node.type.childTypes.map(c => {
-      return `[${c.typeName.name}](${c.typeName.name}.md)`;
+      return `[${c.typeName.name}](../${c.typeName.name.toLowerCase()}/)`;
     });
 
     if (childTypes.length === 0) {

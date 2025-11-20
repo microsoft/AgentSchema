@@ -67,7 +67,7 @@ properties:
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string |   |
-| properties | [Property[]](Property.md) | The properties contained in the object  |
+| properties | [Property[]](../property/) | The properties contained in the object  |
 
 
 
@@ -78,6 +78,6 @@ properties:
 ## Composed Types
 The following types are composed within `ObjectProperty`:
 
-- [Property](/reference/property)
+- [Property](../property/)
 
 

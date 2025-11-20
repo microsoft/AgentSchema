@@ -62,8 +62,8 @@ parser:
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| format | [Format](Format.md) | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)  |
-| parser | [Parser](Parser.md) | Parser used to process the rendered template into API-compatible format  |
+| format | [Format](../format/) | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)  |
+| parser | [Parser](../parser/) | Parser used to process the rendered template into API-compatible format  |
 
 
 
@@ -74,7 +74,7 @@ parser:
 ## Composed Types
 The following types are composed within `Template`:
 
-- [Format](/reference/format)
-- [Parser](/reference/parser)
+- [Format](../format/)
+- [Parser](../parser/)
 
 

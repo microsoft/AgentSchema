@@ -53,7 +53,7 @@ specification: full_sepcification_here
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | The kind identifier for OpenAPI tools  |
-| connection | [Connection](Connection.md) | The connection configuration for the OpenAPI tool  |
+| connection | [Connection](../connection/) | The connection configuration for the OpenAPI tool  |
 | specification | string | The full OpenAPI specification  |
 
 

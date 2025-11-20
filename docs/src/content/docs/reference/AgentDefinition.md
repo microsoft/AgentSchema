@@ -100,8 +100,8 @@ outputSchema:
 | displayName | string | Display name of the agent for UI purposes  |
 | description | string | Description of the agent&#39;s capabilities and purpose  |
 | metadata | dictionary | Additional metadata including authors, tags, and other arbitrary properties  |
-| inputSchema | [PropertySchema](PropertySchema.md) | Input parameters that participate in template rendering  |
-| outputSchema | [PropertySchema](PropertySchema.md) | Expected output format and structure from the agent  |
+| inputSchema | [PropertySchema](../propertyschema/) | Input parameters that participate in template rendering  |
+| outputSchema | [PropertySchema](../propertyschema/) | Expected output format and structure from the agent  |
 
 
 
@@ -111,9 +111,9 @@ outputSchema:
 
 The following types extend `AgentDefinition`:
 
-- [PromptAgent](/reference/promptagent)
-- [Workflow](/reference/workflow)
-- [ContainerAgent](/reference/containeragent)
+- [PromptAgent](../promptagent/)
+- [Workflow](../workflow/)
+- [ContainerAgent](../containeragent/)
 
 
 

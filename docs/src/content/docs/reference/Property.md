@@ -85,8 +85,8 @@ enumValues:
 
 The following types extend `Property`:
 
-- [ArrayProperty](/reference/arrayproperty)
-- [ObjectProperty](/reference/objectproperty)
+- [ArrayProperty](../arrayproperty/)
+- [ObjectProperty](../objectproperty/)
 
 
 

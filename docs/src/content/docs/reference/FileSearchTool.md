@@ -66,7 +66,7 @@ filters:
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | The kind identifier for file search tools  |
-| connection | [Connection](Connection.md) | The connection configuration for the file search tool  |
+| connection | [Connection](../connection/) | The connection configuration for the file search tool  |
 | vectorStoreIds | string[] | The IDs of the vector stores to search within.  |
 | maximumResultCount | int32 | The maximum number of search results to return.  |
 | ranker | string | File search ranker.  |

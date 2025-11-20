@@ -107,9 +107,9 @@ resources:
 | displayName | string | Human-readable name of the manifest  |
 | description | string | Description of the agent&#39;s capabilities and purpose  |
 | metadata | dictionary | Additional metadata including authors, tags, and other arbitrary properties  |
-| template | [AgentDefinition](AgentDefinition.md) | The agent that this manifest is based on (Related Types: [PromptAgent](PromptAgent.md), [Workflow](Workflow.md), [ContainerAgent](ContainerAgent.md)) |
-| parameters | [PropertySchema](PropertySchema.md) | Parameters for configuring the agent&#39;s behavior and execution  |
-| resources | [Resource[]](Resource.md) | Resources required by the agent, such as models or tools (Related Types: [ModelResource](ModelResource.md), [ToolResource](ToolResource.md)) |
+| template | [AgentDefinition](../agentdefinition/) | The agent that this manifest is based on (Related Types: [PromptAgent](../promptagent/), [Workflow](../workflow/), [ContainerAgent](../containeragent/)) |
+| parameters | [PropertySchema](../propertyschema/) | Parameters for configuring the agent&#39;s behavior and execution  |
+| resources | [Resource[]](../resource/) | Resources required by the agent, such as models or tools (Related Types: [ModelResource](../modelresource/), [ToolResource](../toolresource/)) |
 
 
 
@@ -120,7 +120,7 @@ resources:
 ## Composed Types
 The following types are composed within `AgentManifest`:
 
-- [AgentDefinition](/reference/agentdefinition)
-- [Resource](/reference/resource)
+- [AgentDefinition](../agentdefinition/)
+- [Resource](../resource/)
 
 

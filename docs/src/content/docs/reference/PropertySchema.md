@@ -67,7 +67,7 @@ properties:
 | ---- | ---- | ----------- |
 | examples | dictionary[] | Example records for the input schema  |
 | strict | boolean | Whether the input schema is strict - if true, only the defined properties are allowed  |
-| properties | [Property[]](Property.md) | The input properties for the schema (Related Types: [ArrayProperty](ArrayProperty.md), [ObjectProperty](ObjectProperty.md)) |
+| properties | [Property[]](../property/) | The input properties for the schema (Related Types: [ArrayProperty](../arrayproperty/), [ObjectProperty](../objectproperty/)) |
 
 
 
@@ -78,6 +78,6 @@ properties:
 ## Composed Types
 The following types are composed within `PropertySchema`:
 
-- [Property](/reference/property)
+- [Property](../property/)
 
 
