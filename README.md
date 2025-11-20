@@ -9,9 +9,11 @@ AgentSchema is a client facing spec designed to make creating agents easier in a
 
 This spec is a collaboration between Microsoft Copilot Studio and Azure AI Foundry.
 
+Read more about the project over at the [AgentSchema Documentation Site](https://microsoft.github.io/AgentSchema/).
+
 ## Object Model
 
-You can review the existing object model in the [README](./docs/README.md).
+You can review the existing object model in the [AgentSchema Documentation Site](https://microsoft.github.io/AgentSchema/reference/).
 These documents are auto-generated from the [agentschema-emitter](./agentschema-emitter) project.
 
 ## Contributing
