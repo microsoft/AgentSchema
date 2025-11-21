@@ -24,7 +24,7 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/sethjuarez/AgentSchema",
+          href: "https://github.com/microsoft/AgentSchema",
         },
       ],
       sidebar: [
