@@ -25,7 +25,7 @@ public class ConnectionYamlConverter : YamlConverter<Connection>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Connection is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "reference" => rootDeserializer(typeof(ReferenceConnection)) as ReferenceConnection ??
                     throw new YamlException("Empty ReferenceConnection instances are not supported"),

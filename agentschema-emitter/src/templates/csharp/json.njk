@@ -45,7 +45,7 @@ public class {{ node.typeName.name }}JsonConverter: JsonConverter<{{ node.typeNa
             {%- if polymorphicTypes %}
             // load polymorphic {{ node.typeName.name }} instance
             {{ node.typeName.name }} instance;
-            instance = {{ alt.scalar }}Value switch 
+            instance = {{ alt.scalar }}Value.ToLowerInvariant() switch 
             {
                 {%- for type in polymorphicTypes.types %}
                 "{{ type.value }}" => new {{ type.instance.typeName.name }}(),

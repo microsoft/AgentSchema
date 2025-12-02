@@ -25,7 +25,7 @@ public class ResourceYamlConverter : YamlConverter<Resource>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Resource is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "model" => rootDeserializer(typeof(ModelResource)) as ModelResource ??
                     throw new YamlException("Empty ModelResource instances are not supported"),

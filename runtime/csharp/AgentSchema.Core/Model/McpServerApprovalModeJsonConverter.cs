@@ -20,7 +20,7 @@ public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprova
             var stringValue = reader.GetString() ?? throw new JsonException("Empty string shorthand values for McpServerApprovalMode are not supported");
             // load polymorphic McpServerApprovalMode instance
             McpServerApprovalMode instance;
-            instance = stringValue switch
+            instance = stringValue.ToLowerInvariant() switch
             {
                 "always" => new McpServerToolAlwaysRequireApprovalMode(),
                 "never" => new McpServerToolNeverRequireApprovalMode(),

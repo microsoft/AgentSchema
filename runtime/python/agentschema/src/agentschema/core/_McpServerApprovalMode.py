@@ -39,7 +39,7 @@ class McpServerApprovalMode(ABC):
     def load_kind(data: dict) -> "McpServerApprovalMode":
         # load polymorphic McpServerApprovalMode instance
         if data is not None and "kind" in data:
-            discriminator_value = data["kind"]
+            discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "always":
                 return McpServerToolAlwaysRequireApprovalMode.load(data)
             elif discriminator_value == "never":

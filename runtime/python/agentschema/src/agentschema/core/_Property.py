@@ -74,7 +74,7 @@ class Property:
     def load_kind(data: dict) -> "Property":
         # load polymorphic Property instance
         if data is not None and "kind" in data:
-            discriminator_value = data["kind"]
+            discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "array":
                 return ArrayProperty.load(data)
             elif discriminator_value == "object":

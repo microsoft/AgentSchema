@@ -29,7 +29,7 @@ public class PropertyJsonConverter : JsonConverter<Property>
             var stringValue = reader.GetString() ?? throw new JsonException("Empty string shorthand values for Property are not supported");
             // load polymorphic Property instance
             Property instance;
-            instance = stringValue switch
+            instance = stringValue.ToLowerInvariant() switch
             {
                 "array" => new ArrayProperty(),
                 "object" => new ObjectProperty(),

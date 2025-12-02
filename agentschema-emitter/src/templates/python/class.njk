@@ -61,7 +61,7 @@ class {{ node.typeName.name }}{% if node.base %}({{ node.base.name }}){% endif %
     def load_{{ node.discriminator }}(data: dict) -> "{{ node.typeName.name }}":
         # load polymorphic {{ node.typeName.name }} instance
         if data is not None and "{{ node.discriminator }}" in data:
-            discriminator_value = data["{{ node.discriminator }}"]
+            discriminator_value = str(data["{{ node.discriminator }}"]).lower()
             {%- for type in polymorphicTypes.types %}
             {% if loop.first %}if{% else %}elif{% endif %} discriminator_value == "{{ type.value }}":
                 return {{ type.instance.typeName.name }}.load(data)

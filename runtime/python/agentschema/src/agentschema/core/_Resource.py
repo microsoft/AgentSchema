@@ -41,7 +41,7 @@ class Resource(ABC):
     def load_kind(data: dict) -> "Resource":
         # load polymorphic Resource instance
         if data is not None and "kind" in data:
-            discriminator_value = data["kind"]
+            discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "model":
                 return ModelResource.load(data)
             elif discriminator_value == "tool":

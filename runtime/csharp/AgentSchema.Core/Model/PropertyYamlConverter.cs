@@ -25,7 +25,7 @@ public class PropertyYamlConverter : YamlConverter<Property>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Property is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "array" => rootDeserializer(typeof(ArrayProperty)) as ArrayProperty ??
                     throw new YamlException("Empty ArrayProperty instances are not supported"),

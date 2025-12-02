@@ -25,7 +25,7 @@ public class AgentDefinitionYamlConverter : YamlConverter<AgentDefinition>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for AgentDefinition is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "prompt" => rootDeserializer(typeof(PromptAgent)) as PromptAgent ??
                     throw new YamlException("Empty PromptAgent instances are not supported"),

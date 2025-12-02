@@ -25,7 +25,7 @@ public class ToolYamlConverter : YamlConverter<Tool>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Tool is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "function" => rootDeserializer(typeof(FunctionTool)) as FunctionTool ??
                     throw new YamlException("Empty FunctionTool instances are not supported"),

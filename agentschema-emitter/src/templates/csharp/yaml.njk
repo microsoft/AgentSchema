@@ -27,7 +27,7 @@ public class {{ node.typeName.name }}YamlConverter: YamlConverter<{{ node.typeNa
         {
             var discriminator = {{ node.discriminator }}Value.Value
                 ?? throw new YamlException("Empty discriminator value for {{ node.typeName.name }} is not supported");
-            instance = discriminator switch 
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 {%- for type in polymorphicTypes.types %}
                 "{{ type.value }}" => rootDeserializer(typeof({{ type.instance.typeName.name }})) as {{ type.instance.typeName.name }} ??

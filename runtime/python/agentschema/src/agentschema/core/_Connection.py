@@ -46,7 +46,7 @@ class Connection(ABC):
     def load_kind(data: dict) -> "Connection":
         # load polymorphic Connection instance
         if data is not None and "kind" in data:
-            discriminator_value = data["kind"]
+            discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "reference":
                 return ReferenceConnection.load(data)
             elif discriminator_value == "remote":

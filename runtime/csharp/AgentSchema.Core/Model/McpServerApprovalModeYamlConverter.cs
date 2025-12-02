@@ -25,7 +25,7 @@ public class McpServerApprovalModeYamlConverter : YamlConverter<McpServerApprova
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for McpServerApprovalMode is not supported");
-            instance = discriminator switch
+            instance = discriminator.ToLowerInvariant() switch
             {
                 "always" => rootDeserializer(typeof(McpServerToolAlwaysRequireApprovalMode)) as McpServerToolAlwaysRequireApprovalMode ??
                     throw new YamlException("Empty McpServerToolAlwaysRequireApprovalMode instances are not supported"),

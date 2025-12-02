@@ -65,7 +65,7 @@ class Tool(ABC):
     def load_kind(data: dict) -> "Tool":
         # load polymorphic Tool instance
         if data is not None and "kind" in data:
-            discriminator_value = data["kind"]
+            discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "function":
                 return FunctionTool.load(data)
             elif discriminator_value == "bing_search":
