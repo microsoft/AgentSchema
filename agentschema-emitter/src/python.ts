@@ -136,10 +136,7 @@ const renderPython = (node: TypeNode, fileTemplate: nunjucks.Template, classTemp
 
   const classDef: string[] = [renderClass(node), ...node.childTypes.map(ct => renderClass(ct))];
 
-  const typings = ["Any"];
-  if (containsOptional(node)) {
-    typings.push("Optional");
-  }
+  const typings = ["Any", "Callable", "Optional"];
   const python = fileTemplate.render({
     containsAbstract: node.isAbstract || node.childTypes.some(c => c.isAbstract),
     typings: typings,
@@ -208,9 +205,9 @@ const renderSetInstance = (node: TypeNode) => (prop: PropertyNode, variable: str
     return `${setter}${dictArg}["${prop.name}"]`;
   } else {
     if (prop.isCollection) {
-      return `${setter}${node.typeName.name}.load_${prop.name}(${dictArg}["${prop.name}"])`;
+      return `${setter}${node.typeName.name}.load_${prop.name}(${dictArg}["${prop.name}"], pre_process)`;
     } else {
-      return `${setter}${prop.typeName.name}.load(${dictArg}["${prop.name}"])`;
+      return `${setter}${prop.typeName.name}.load(${dictArg}["${prop.name}"], pre_process)`;
     }
   }
 }

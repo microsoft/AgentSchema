@@ -4,7 +4,7 @@
 # ANY EDITS WILL BE LOST
 ##########################################
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 from ._Property import Property
 
 
@@ -26,8 +26,20 @@ class PropertySchema:
     properties: list[Property] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any) -> "PropertySchema":
-        """Load a PropertySchema instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "PropertySchema":
+        """Load a PropertySchema instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            PropertySchema: The loaded PropertySchema instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for PropertySchema: {data}")
@@ -39,15 +51,19 @@ class PropertySchema:
         if data is not None and "strict" in data:
             instance.strict = data["strict"]
         if data is not None and "properties" in data:
-            instance.properties = PropertySchema.load_properties(data["properties"])
+            instance.properties = PropertySchema.load_properties(
+                data["properties"], pre_process
+            )
         return instance
 
     @staticmethod
-    def load_properties(data: dict | list) -> list[Property]:
+    def load_properties(
+        data: dict | list, pre_process: Optional[Callable[[Any], Any]]
+    ) -> list[Property]:
         if isinstance(data, dict):
             # convert simple named properties to list of Property
             if len(data.keys()) == 1:
                 data = [{"name": k, "kind": v} for k, v in data.items()]
             else:
                 data = [{"name": k, **v} for k, v in data.items()]
-        return [Property.load(item) for item in data]
+        return [Property.load(item, pre_process) for item in data]

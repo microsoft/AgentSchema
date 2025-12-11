@@ -5,7 +5,7 @@
 ##########################################
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
 from ._PropertySchema import PropertySchema
@@ -44,14 +44,26 @@ class AgentDefinition(ABC):
     outputSchema: Optional[PropertySchema] = None
 
     @staticmethod
-    def load(data: Any) -> "AgentDefinition":
-        """Load a AgentDefinition instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "AgentDefinition":
+        """Load a AgentDefinition instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            AgentDefinition: The loaded AgentDefinition instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AgentDefinition: {data}")
 
         # load polymorphic AgentDefinition instance
-        instance = AgentDefinition.load_kind(data)
+        instance = AgentDefinition.load_kind(data, pre_process)
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "name" in data:
@@ -63,22 +75,26 @@ class AgentDefinition(ABC):
         if data is not None and "metadata" in data:
             instance.metadata = data["metadata"]
         if data is not None and "inputSchema" in data:
-            instance.inputSchema = PropertySchema.load(data["inputSchema"])
+            instance.inputSchema = PropertySchema.load(data["inputSchema"], pre_process)
         if data is not None and "outputSchema" in data:
-            instance.outputSchema = PropertySchema.load(data["outputSchema"])
+            instance.outputSchema = PropertySchema.load(
+                data["outputSchema"], pre_process
+            )
         return instance
 
     @staticmethod
-    def load_kind(data: dict) -> "AgentDefinition":
+    def load_kind(
+        data: dict, pre_process: Optional[Callable[[Any], Any]]
+    ) -> "AgentDefinition":
         # load polymorphic AgentDefinition instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "prompt":
-                return PromptAgent.load(data)
+                return PromptAgent.load(data, pre_process)
             elif discriminator_value == "workflow":
-                return Workflow.load(data)
+                return Workflow.load(data, pre_process)
             elif discriminator_value == "hosted":
-                return ContainerAgent.load(data)
+                return ContainerAgent.load(data, pre_process)
             else:
                 raise ValueError(
                     f"Unknown AgentDefinition discriminator value: {discriminator_value}"
@@ -114,8 +130,20 @@ class PromptAgent(AgentDefinition):
     additionalInstructions: Optional[str] = None
 
     @staticmethod
-    def load(data: Any) -> "PromptAgent":
-        """Load a PromptAgent instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "PromptAgent":
+        """Load a PromptAgent instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            PromptAgent: The loaded PromptAgent instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for PromptAgent: {data}")
@@ -125,11 +153,11 @@ class PromptAgent(AgentDefinition):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "model" in data:
-            instance.model = Model.load(data["model"])
+            instance.model = Model.load(data["model"], pre_process)
         if data is not None and "tools" in data:
-            instance.tools = PromptAgent.load_tools(data["tools"])
+            instance.tools = PromptAgent.load_tools(data["tools"], pre_process)
         if data is not None and "template" in data:
-            instance.template = Template.load(data["template"])
+            instance.template = Template.load(data["template"], pre_process)
         if data is not None and "instructions" in data:
             instance.instructions = data["instructions"]
         if data is not None and "additionalInstructions" in data:
@@ -137,14 +165,16 @@ class PromptAgent(AgentDefinition):
         return instance
 
     @staticmethod
-    def load_tools(data: dict | list) -> list[Tool]:
+    def load_tools(
+        data: dict | list, pre_process: Optional[Callable[[Any], Any]]
+    ) -> list[Tool]:
         if isinstance(data, dict):
             # convert simple named tools to list of Tool
             if len(data.keys()) == 1:
                 data = [{"name": k, "kind": v} for k, v in data.items()]
             else:
                 data = [{"name": k, **v} for k, v in data.items()]
-        return [Tool.load(item) for item in data]
+        return [Tool.load(item, pre_process) for item in data]
 
 
 @dataclass
@@ -162,8 +192,20 @@ class Workflow(AgentDefinition):
     trigger: Optional[dict[str, Any]] = None
 
     @staticmethod
-    def load(data: Any) -> "Workflow":
-        """Load a Workflow instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "Workflow":
+        """Load a Workflow instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            Workflow: The loaded Workflow instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Workflow: {data}")
@@ -197,8 +239,20 @@ class ContainerAgent(AgentDefinition):
     )
 
     @staticmethod
-    def load(data: Any) -> "ContainerAgent":
-        """Load a ContainerAgent instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "ContainerAgent":
+        """Load a ContainerAgent instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            ContainerAgent: The loaded ContainerAgent instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ContainerAgent: {data}")
@@ -208,29 +262,35 @@ class ContainerAgent(AgentDefinition):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "protocols" in data:
-            instance.protocols = ContainerAgent.load_protocols(data["protocols"])
+            instance.protocols = ContainerAgent.load_protocols(
+                data["protocols"], pre_process
+            )
         if data is not None and "environmentVariables" in data:
             instance.environmentVariables = ContainerAgent.load_environmentVariables(
-                data["environmentVariables"]
+                data["environmentVariables"], pre_process
             )
         return instance
 
     @staticmethod
-    def load_protocols(data: dict | list) -> list[ProtocolVersionRecord]:
+    def load_protocols(
+        data: dict | list, pre_process: Optional[Callable[[Any], Any]]
+    ) -> list[ProtocolVersionRecord]:
         if isinstance(data, dict):
             # convert simple named protocols to list of ProtocolVersionRecord
             if len(data.keys()) == 1:
                 data = [{"name": k, "protocol": v} for k, v in data.items()]
             else:
                 data = [{"name": k, **v} for k, v in data.items()]
-        return [ProtocolVersionRecord.load(item) for item in data]
+        return [ProtocolVersionRecord.load(item, pre_process) for item in data]
 
     @staticmethod
-    def load_environmentVariables(data: dict | list) -> list[EnvironmentVariable]:
+    def load_environmentVariables(
+        data: dict | list, pre_process: Optional[Callable[[Any], Any]]
+    ) -> list[EnvironmentVariable]:
         if isinstance(data, dict):
             # convert simple named environmentVariables to list of EnvironmentVariable
             if len(data.keys()) == 1:
                 data = [{"name": k, "value": v} for k, v in data.items()]
             else:
                 data = [{"name": k, **v} for k, v in data.items()]
-        return [EnvironmentVariable.load(item) for item in data]
+        return [EnvironmentVariable.load(item, pre_process) for item in data]

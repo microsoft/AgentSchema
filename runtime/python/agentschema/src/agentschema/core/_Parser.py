@@ -4,7 +4,7 @@
 # ANY EDITS WILL BE LOST
 ##########################################
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 @dataclass
@@ -22,8 +22,18 @@ class Parser:
     options: Optional[dict[str, Any]] = None
 
     @staticmethod
-    def load(data: Any) -> "Parser":
-        """Load a Parser instance."""
+    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Parser":
+        """Load a Parser instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            Parser: The loaded Parser instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
         # handle alternate representations
         if isinstance(data, str):
             data = {"kind": data}

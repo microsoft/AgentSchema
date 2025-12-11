@@ -5,7 +5,7 @@
 ##########################################
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 
 @dataclass
@@ -26,14 +26,26 @@ class Connection(ABC):
     usageDescription: Optional[str] = None
 
     @staticmethod
-    def load(data: Any) -> "Connection":
-        """Load a Connection instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "Connection":
+        """Load a Connection instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            Connection: The loaded Connection instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Connection: {data}")
 
         # load polymorphic Connection instance
-        instance = Connection.load_kind(data)
+        instance = Connection.load_kind(data, pre_process)
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "authenticationMode" in data:
@@ -43,18 +55,20 @@ class Connection(ABC):
         return instance
 
     @staticmethod
-    def load_kind(data: dict) -> "Connection":
+    def load_kind(
+        data: dict, pre_process: Optional[Callable[[Any], Any]]
+    ) -> "Connection":
         # load polymorphic Connection instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "reference":
-                return ReferenceConnection.load(data)
+                return ReferenceConnection.load(data, pre_process)
             elif discriminator_value == "remote":
-                return RemoteConnection.load(data)
+                return RemoteConnection.load(data, pre_process)
             elif discriminator_value == "key":
-                return ApiKeyConnection.load(data)
+                return ApiKeyConnection.load(data, pre_process)
             elif discriminator_value == "anonymous":
-                return AnonymousConnection.load(data)
+                return AnonymousConnection.load(data, pre_process)
             else:
                 raise ValueError(
                     f"Unknown Connection discriminator value: {discriminator_value}"
@@ -81,8 +95,20 @@ class ReferenceConnection(Connection):
     target: Optional[str] = None
 
     @staticmethod
-    def load(data: Any) -> "ReferenceConnection":
-        """Load a ReferenceConnection instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "ReferenceConnection":
+        """Load a ReferenceConnection instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            ReferenceConnection: The loaded ReferenceConnection instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ReferenceConnection: {data}")
@@ -116,8 +142,20 @@ class RemoteConnection(Connection):
     endpoint: str = field(default="")
 
     @staticmethod
-    def load(data: Any) -> "RemoteConnection":
-        """Load a RemoteConnection instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "RemoteConnection":
+        """Load a RemoteConnection instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            RemoteConnection: The loaded RemoteConnection instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for RemoteConnection: {data}")
@@ -151,8 +189,20 @@ class ApiKeyConnection(Connection):
     apiKey: str = field(default="")
 
     @staticmethod
-    def load(data: Any) -> "ApiKeyConnection":
-        """Load a ApiKeyConnection instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "ApiKeyConnection":
+        """Load a ApiKeyConnection instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            ApiKeyConnection: The loaded ApiKeyConnection instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ApiKeyConnection: {data}")
@@ -183,8 +233,20 @@ class AnonymousConnection(Connection):
     endpoint: str = field(default="")
 
     @staticmethod
-    def load(data: Any) -> "AnonymousConnection":
-        """Load a AnonymousConnection instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "AnonymousConnection":
+        """Load a AnonymousConnection instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            AnonymousConnection: The loaded AnonymousConnection instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AnonymousConnection: {data}")

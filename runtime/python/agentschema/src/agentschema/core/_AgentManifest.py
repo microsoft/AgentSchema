@@ -4,7 +4,7 @@
 # ANY EDITS WILL BE LOST
 ##########################################
 from dataclasses import dataclass, field
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 from ._AgentDefinition import AgentDefinition
 from ._PropertySchema import PropertySchema
 from ._Resource import Resource
@@ -40,8 +40,20 @@ class AgentManifest:
     resources: list[Resource] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any) -> "AgentManifest":
-        """Load a AgentManifest instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "AgentManifest":
+        """Load a AgentManifest instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            AgentManifest: The loaded AgentManifest instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AgentManifest: {data}")
@@ -57,19 +69,23 @@ class AgentManifest:
         if data is not None and "metadata" in data:
             instance.metadata = data["metadata"]
         if data is not None and "template" in data:
-            instance.template = AgentDefinition.load(data["template"])
+            instance.template = AgentDefinition.load(data["template"], pre_process)
         if data is not None and "parameters" in data:
-            instance.parameters = PropertySchema.load(data["parameters"])
+            instance.parameters = PropertySchema.load(data["parameters"], pre_process)
         if data is not None and "resources" in data:
-            instance.resources = AgentManifest.load_resources(data["resources"])
+            instance.resources = AgentManifest.load_resources(
+                data["resources"], pre_process
+            )
         return instance
 
     @staticmethod
-    def load_resources(data: dict | list) -> list[Resource]:
+    def load_resources(
+        data: dict | list, pre_process: Optional[Callable[[Any], Any]]
+    ) -> list[Resource]:
         if isinstance(data, dict):
             # convert simple named resources to list of Resource
             if len(data.keys()) == 1:
                 data = [{"name": k, "kind": v} for k, v in data.items()]
             else:
                 data = [{"name": k, **v} for k, v in data.items()]
-        return [Resource.load(item) for item in data]
+        return [Resource.load(item, pre_process) for item in data]

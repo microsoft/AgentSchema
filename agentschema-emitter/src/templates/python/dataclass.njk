@@ -9,10 +9,7 @@
 from abc import ABC
 {%- endif %}
 from dataclasses import dataclass, field
-{%- if typings and typings.length > 0 %}
-from typing import{% for item in typings -%}{{ comma() }} {{ item }}{% endfor %}
-{%- endif %}
-
+from typing import Any, Callable, Optional
 {%- for import in imports %}
 from ._{{ import }} import {{ import }}
 {%- endfor %}

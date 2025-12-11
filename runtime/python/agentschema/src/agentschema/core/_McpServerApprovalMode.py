@@ -5,7 +5,7 @@
 ##########################################
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Callable, Optional
 
 
 @dataclass
@@ -20,8 +20,20 @@ class McpServerApprovalMode(ABC):
     kind: str = field(default="")
 
     @staticmethod
-    def load(data: Any) -> "McpServerApprovalMode":
-        """Load a McpServerApprovalMode instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "McpServerApprovalMode":
+        """Load a McpServerApprovalMode instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            McpServerApprovalMode: The loaded McpServerApprovalMode instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
         # handle alternate representations
         if isinstance(data, str):
             data = {"kind": data}
@@ -30,22 +42,24 @@ class McpServerApprovalMode(ABC):
             raise ValueError(f"Invalid data for McpServerApprovalMode: {data}")
 
         # load polymorphic McpServerApprovalMode instance
-        instance = McpServerApprovalMode.load_kind(data)
+        instance = McpServerApprovalMode.load_kind(data, pre_process)
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         return instance
 
     @staticmethod
-    def load_kind(data: dict) -> "McpServerApprovalMode":
+    def load_kind(
+        data: dict, pre_process: Optional[Callable[[Any], Any]]
+    ) -> "McpServerApprovalMode":
         # load polymorphic McpServerApprovalMode instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "always":
-                return McpServerToolAlwaysRequireApprovalMode.load(data)
+                return McpServerToolAlwaysRequireApprovalMode.load(data, pre_process)
             elif discriminator_value == "never":
-                return McpServerToolNeverRequireApprovalMode.load(data)
+                return McpServerToolNeverRequireApprovalMode.load(data, pre_process)
             elif discriminator_value == "specify":
-                return McpServerToolSpecifyApprovalMode.load(data)
+                return McpServerToolSpecifyApprovalMode.load(data, pre_process)
             else:
                 raise ValueError(
                     f"Unknown McpServerApprovalMode discriminator value: {discriminator_value}"
@@ -68,8 +82,20 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
     kind: str = field(default="always")
 
     @staticmethod
-    def load(data: Any) -> "McpServerToolAlwaysRequireApprovalMode":
-        """Load a McpServerToolAlwaysRequireApprovalMode instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "McpServerToolAlwaysRequireApprovalMode":
+        """Load a McpServerToolAlwaysRequireApprovalMode instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            McpServerToolAlwaysRequireApprovalMode: The loaded McpServerToolAlwaysRequireApprovalMode instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(
@@ -95,8 +121,20 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
     kind: str = field(default="never")
 
     @staticmethod
-    def load(data: Any) -> "McpServerToolNeverRequireApprovalMode":
-        """Load a McpServerToolNeverRequireApprovalMode instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "McpServerToolNeverRequireApprovalMode":
+        """Load a McpServerToolNeverRequireApprovalMode instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            McpServerToolNeverRequireApprovalMode: The loaded McpServerToolNeverRequireApprovalMode instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(
@@ -128,8 +166,20 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
     neverRequireApprovalTools: list[str] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any) -> "McpServerToolSpecifyApprovalMode":
-        """Load a McpServerToolSpecifyApprovalMode instance."""
+    def load(
+        data: Any, pre_process: Optional[Callable[[Any], Any]] = None
+    ) -> "McpServerToolSpecifyApprovalMode":
+        """Load a McpServerToolSpecifyApprovalMode instance.
+        Args:
+            data (Any): The data to load the instance from.
+            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+        Returns:
+            McpServerToolSpecifyApprovalMode: The loaded McpServerToolSpecifyApprovalMode instance.
+
+        """
+
+        if pre_process is not None:
+            data = pre_process(data)
 
         if not isinstance(data, dict):
             raise ValueError(
