@@ -84,9 +84,6 @@ jobs:
     # Only publish on release events (not manual workflow_dispatch)
     if: github.event_name == 'release'
 
-    permissions:
-      id-token: write # Required for trusted publishing
-
     steps:
       - name: Download distribution packages
         uses: actions/download-artifact@v4
@@ -101,3 +98,5 @@ jobs:
 
       - name: Publish to PyPI
         run: uv publish dist/*
+        env:
+          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
