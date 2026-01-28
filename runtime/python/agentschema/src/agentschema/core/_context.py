@@ -1,0 +1,49 @@
+
+
+# AgentSchema LoadContext
+from dataclasses import dataclass
+from typing import Any, Callable, Optional
+
+
+@dataclass
+class LoadContext:
+    """
+    Context for customizing the loading process of agent definitions.
+
+    Provides hooks for pre-processing input data before parsing and
+    post-processing output data after instantiation.
+    """
+
+    pre_process: Optional[Callable[[dict[str, Any]], dict[str, Any]]] = None
+    """Optional callback to transform input data before parsing."""
+
+    post_process: Optional[Callable[[Any], Any]] = None
+    """Optional callback to transform the result after instantiation."""
+
+    def process_input(self, data: dict[str, Any]) -> dict[str, Any]:
+        """
+        Apply pre-processing to input data if a pre_process callback is set.
+
+        Args:
+            data: The raw input dictionary to process.
+
+        Returns:
+            The processed dictionary, or the original if no callback is set.
+        """
+        if self.pre_process is not None:
+            return self.pre_process(data)
+        return data
+
+    def process_output(self, result: Any) -> Any:
+        """
+        Apply post-processing to the result if a post_process callback is set.
+
+        Args:
+            result: The instantiated object to process.
+
+        Returns:
+            The processed result, or the original if no callback is set.
+        """
+        if self.post_process is not None:
+            return self.post_process(result)
+        return result

@@ -657,6 +657,16 @@ export interface PythonTestContext {
 }
 
 /**
+ * Context for rendering the LoadContext file.
+ */
+export interface PythonLoadContextContext {
+  /** File header comment */
+  header: string;
+  /** Package name for imports in test file */
+  package?: string;
+}
+
+/**
  * Base render context interface - all language contexts should extend this.
  * This ensures consistency across emitters.
  */

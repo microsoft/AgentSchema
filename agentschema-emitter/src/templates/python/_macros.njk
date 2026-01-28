@@ -27,6 +27,7 @@
   - Collections (list[T])
   - Optionals (Optional[T])
   - Dictionaries (dict[str, Any])
+  - Optional dictionaries (Optional[dict[str, Any]])
   
   @param prop - PropertyNode with type information
   @param typeMapper - Record<string, string> mapping TypeSpec types to Python types
@@ -36,7 +37,9 @@
 {% macro pythonType(prop, typeMapper) %}
 {%- set baseType = typeMapper[prop.typeName.name] if prop.isScalar else (typeMapper[prop.typeName.name] or prop.typeName.name) -%}
 {%- if not baseType %}{% set baseType = "Any" %}{% endif -%}
-{%- if prop.isDict -%}
+{%- if prop.isDict and prop.isOptional -%}
+Optional[dict[str, Any]]
+{%- elif prop.isDict -%}
 dict[str, Any]
 {%- elif prop.isCollection -%}
 list[{{ baseType }}]
@@ -129,9 +132,9 @@ list[{{ baseType }}]
 {%- if prop.isScalar or prop.isDict -%}
 {{ varName }}.{{ prop.name }} = {{ dictName }}["{{ prop.name }}"]
 {%- elif prop.isCollection -%}
-{{ varName }}.{{ prop.name }} = {{ parentTypeName }}.load_{{ prop.name }}({{ dictName }}["{{ prop.name }}"], pre_process)
+{{ varName }}.{{ prop.name }} = {{ parentTypeName }}.load_{{ prop.name }}({{ dictName }}["{{ prop.name }}"], context)
 {%- else -%}
-{{ varName }}.{{ prop.name }} = {{ prop.typeName.name }}.load({{ dictName }}["{{ prop.name }}"], pre_process)
+{{ varName }}.{{ prop.name }} = {{ prop.typeName.name }}.load({{ dictName }}["{{ prop.name }}"], context)
 {%- endif -%}
 {% endmacro %}
 

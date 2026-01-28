@@ -6,7 +6,9 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 
 
 
@@ -31,24 +33,24 @@ class Connection(ABC):
     usageDescription: Optional[str] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Connection":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Connection":
         """Load a Connection instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Connection: The loaded Connection instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Connection: {data}")
 
         # load polymorphic Connection instance
-        instance = Connection.load_kind(data, pre_process)
+        instance = Connection.load_kind(data, context)
 
 
         if data is not None and "kind" in data:
@@ -57,23 +59,25 @@ class Connection(ABC):
             instance.authenticationMode = data["authenticationMode"]
         if data is not None and "usageDescription" in data:
             instance.usageDescription = data["usageDescription"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
 
     @staticmethod
-    def load_kind(data: dict, pre_process: Optional[Callable[[Any], Any]]) -> "Connection":
+    def load_kind(data: dict, context: Optional[LoadContext]) -> "Connection":
         # load polymorphic Connection instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "reference":
-                return ReferenceConnection.load(data, pre_process)
+                return ReferenceConnection.load(data, context)
             elif discriminator_value == "remote":
-                return RemoteConnection.load(data, pre_process)
+                return RemoteConnection.load(data, context)
             elif discriminator_value == "key":
-                return ApiKeyConnection.load(data, pre_process)
+                return ApiKeyConnection.load(data, context)
             elif discriminator_value == "anonymous":
-                return AnonymousConnection.load(data, pre_process)
+                return AnonymousConnection.load(data, context)
 
             else:
                 raise ValueError(f"Unknown Connection discriminator value: {discriminator_value}")
@@ -102,18 +106,18 @@ class ReferenceConnection(Connection):
     target: Optional[str] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ReferenceConnection":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ReferenceConnection":
         """Load a ReferenceConnection instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ReferenceConnection: The loaded ReferenceConnection instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ReferenceConnection: {data}")
@@ -127,6 +131,8 @@ class ReferenceConnection(Connection):
             instance.name = data["name"]
         if data is not None and "target" in data:
             instance.target = data["target"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -151,18 +157,18 @@ class RemoteConnection(Connection):
     endpoint: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "RemoteConnection":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "RemoteConnection":
         """Load a RemoteConnection instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             RemoteConnection: The loaded RemoteConnection instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for RemoteConnection: {data}")
@@ -176,6 +182,8 @@ class RemoteConnection(Connection):
             instance.name = data["name"]
         if data is not None and "endpoint" in data:
             instance.endpoint = data["endpoint"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -200,18 +208,18 @@ class ApiKeyConnection(Connection):
     apiKey: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ApiKeyConnection":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ApiKeyConnection":
         """Load a ApiKeyConnection instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ApiKeyConnection: The loaded ApiKeyConnection instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ApiKeyConnection: {data}")
@@ -225,6 +233,8 @@ class ApiKeyConnection(Connection):
             instance.endpoint = data["endpoint"]
         if data is not None and "apiKey" in data:
             instance.apiKey = data["apiKey"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -246,18 +256,18 @@ class AnonymousConnection(Connection):
     endpoint: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "AnonymousConnection":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "AnonymousConnection":
         """Load a AnonymousConnection instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             AnonymousConnection: The loaded AnonymousConnection instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AnonymousConnection: {data}")
@@ -269,6 +279,8 @@ class AnonymousConnection(Connection):
             instance.kind = data["kind"]
         if data is not None and "endpoint" in data:
             instance.endpoint = data["endpoint"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 

@@ -5,7 +5,9 @@
 ##########################################
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 from ._Format import Format
 from ._Parser import Parser
 
@@ -34,18 +36,18 @@ class Template:
     parser: Parser = field(default_factory=Parser)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Template":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Template":
         """Load a Template instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Template: The loaded Template instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Template: {data}")
@@ -54,9 +56,11 @@ class Template:
         instance = Template()
 
         if data is not None and "format" in data:
-            instance.format = Format.load(data["format"], pre_process)
+            instance.format = Format.load(data["format"], context)
         if data is not None and "parser" in data:
-            instance.parser = Parser.load(data["parser"], pre_process)
+            instance.parser = Parser.load(data["parser"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 

@@ -6,7 +6,9 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 from ._Binding import Binding
 from ._Connection import Connection
 from ._McpServerApprovalMode import McpServerApprovalMode
@@ -36,24 +38,24 @@ class Tool(ABC):
     bindings: list[Binding] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Tool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Tool":
         """Load a Tool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Tool: The loaded Tool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Tool: {data}")
 
         # load polymorphic Tool instance
-        instance = Tool.load_kind(data, pre_process)
+        instance = Tool.load_kind(data, context)
 
 
         if data is not None and "name" in data:
@@ -63,43 +65,45 @@ class Tool(ABC):
         if data is not None and "description" in data:
             instance.description = data["description"]
         if data is not None and "bindings" in data:
-            instance.bindings = Tool.load_bindings(data["bindings"], pre_process)
+            instance.bindings = Tool.load_bindings(data["bindings"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
     @staticmethod
-    def load_bindings(data: dict | list, pre_process: Optional[Callable[[Any], Any]]) -> list[Binding]:
+    def load_bindings(data: dict | list, context: Optional[LoadContext]) -> list[Binding]:
         if isinstance(data, dict):
             # convert simple named bindings to list of Binding
             if(len(data.keys()) == 1):
                 data = [ {"name": k, "input": v} for k, v in data.items() ]
             else:
                 data = [ {"name": k, **v} for k, v in data.items() ]
-        return [Binding.load(item, pre_process) for item in data]
+        return [Binding.load(item, context) for item in data]
 
 
     @staticmethod
-    def load_kind(data: dict, pre_process: Optional[Callable[[Any], Any]]) -> "Tool":
+    def load_kind(data: dict, context: Optional[LoadContext]) -> "Tool":
         # load polymorphic Tool instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "function":
-                return FunctionTool.load(data, pre_process)
+                return FunctionTool.load(data, context)
             elif discriminator_value == "bing_search":
-                return WebSearchTool.load(data, pre_process)
+                return WebSearchTool.load(data, context)
             elif discriminator_value == "file_search":
-                return FileSearchTool.load(data, pre_process)
+                return FileSearchTool.load(data, context)
             elif discriminator_value == "mcp":
-                return McpTool.load(data, pre_process)
+                return McpTool.load(data, context)
             elif discriminator_value == "openapi":
-                return OpenApiTool.load(data, pre_process)
+                return OpenApiTool.load(data, context)
             elif discriminator_value == "code_interpreter":
-                return CodeInterpreterTool.load(data, pre_process)
+                return CodeInterpreterTool.load(data, context)
 
             else:
 
                 # load default instance
-                return CustomTool.load(data, pre_process)
+                return CustomTool.load(data, context)
 
         else:
 
@@ -126,18 +130,18 @@ class FunctionTool(Tool):
     strict: Optional[bool] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "FunctionTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "FunctionTool":
         """Load a FunctionTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             FunctionTool: The loaded FunctionTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for FunctionTool: {data}")
@@ -148,9 +152,11 @@ class FunctionTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "parameters" in data:
-            instance.parameters = PropertySchema.load(data["parameters"], pre_process)
+            instance.parameters = PropertySchema.load(data["parameters"], context)
         if data is not None and "strict" in data:
             instance.strict = data["strict"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -179,18 +185,18 @@ class CustomTool(Tool):
     options: dict[str, Any] = field(default_factory=dict)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "CustomTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "CustomTool":
         """Load a CustomTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             CustomTool: The loaded CustomTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for CustomTool: {data}")
@@ -201,9 +207,11 @@ class CustomTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "connection" in data:
-            instance.connection = Connection.load(data["connection"], pre_process)
+            instance.connection = Connection.load(data["connection"], context)
         if data is not None and "options" in data:
             instance.options = data["options"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -219,27 +227,27 @@ class WebSearchTool(Tool):
         The kind identifier for Bing search tools
     connection : Connection
         The connection configuration for the Bing search tool
-    options : dict[str, Any]
+    options : Optional[dict[str, Any]]
         The configuration options for the Bing search tool
     """
 
     kind: str = field(default="bing_search")
     connection: Connection = field(default_factory=Connection)
-    options: dict[str, Any] = None
+    options: Optional[dict[str, Any]] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "WebSearchTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "WebSearchTool":
         """Load a WebSearchTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             WebSearchTool: The loaded WebSearchTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for WebSearchTool: {data}")
@@ -250,9 +258,11 @@ class WebSearchTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "connection" in data:
-            instance.connection = Connection.load(data["connection"], pre_process)
+            instance.connection = Connection.load(data["connection"], context)
         if data is not None and "options" in data:
             instance.options = data["options"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -277,7 +287,7 @@ class FileSearchTool(Tool):
         File search ranker.
     scoreThreshold : Optional[float]
         Ranker search threshold.
-    filters : dict[str, Any]
+    filters : Optional[dict[str, Any]]
         Additional filters to apply during the file search.
     """
 
@@ -287,21 +297,21 @@ class FileSearchTool(Tool):
     maximumResultCount: Optional[int] = None
     ranker: Optional[str] = None
     scoreThreshold: Optional[float] = None
-    filters: dict[str, Any] = None
+    filters: Optional[dict[str, Any]] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "FileSearchTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "FileSearchTool":
         """Load a FileSearchTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             FileSearchTool: The loaded FileSearchTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for FileSearchTool: {data}")
@@ -312,7 +322,7 @@ class FileSearchTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "connection" in data:
-            instance.connection = Connection.load(data["connection"], pre_process)
+            instance.connection = Connection.load(data["connection"], context)
         if data is not None and "vectorStoreIds" in data:
             instance.vectorStoreIds = data["vectorStoreIds"]
         if data is not None and "maximumResultCount" in data:
@@ -323,6 +333,8 @@ class FileSearchTool(Tool):
             instance.scoreThreshold = data["scoreThreshold"]
         if data is not None and "filters" in data:
             instance.filters = data["filters"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -356,18 +368,18 @@ class McpTool(Tool):
     allowedTools: list[str] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "McpTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "McpTool":
         """Load a McpTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             McpTool: The loaded McpTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for McpTool: {data}")
@@ -378,15 +390,17 @@ class McpTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "connection" in data:
-            instance.connection = Connection.load(data["connection"], pre_process)
+            instance.connection = Connection.load(data["connection"], context)
         if data is not None and "serverName" in data:
             instance.serverName = data["serverName"]
         if data is not None and "serverDescription" in data:
             instance.serverDescription = data["serverDescription"]
         if data is not None and "approvalMode" in data:
-            instance.approvalMode = McpServerApprovalMode.load(data["approvalMode"], pre_process)
+            instance.approvalMode = McpServerApprovalMode.load(data["approvalMode"], context)
         if data is not None and "allowedTools" in data:
             instance.allowedTools = data["allowedTools"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -411,18 +425,18 @@ class OpenApiTool(Tool):
     specification: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "OpenApiTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "OpenApiTool":
         """Load a OpenApiTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             OpenApiTool: The loaded OpenApiTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for OpenApiTool: {data}")
@@ -433,9 +447,11 @@ class OpenApiTool(Tool):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "connection" in data:
-            instance.connection = Connection.load(data["connection"], pre_process)
+            instance.connection = Connection.load(data["connection"], context)
         if data is not None and "specification" in data:
             instance.specification = data["specification"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -458,18 +474,18 @@ class CodeInterpreterTool(Tool):
     fileIds: list[str] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "CodeInterpreterTool":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "CodeInterpreterTool":
         """Load a CodeInterpreterTool instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             CodeInterpreterTool: The loaded CodeInterpreterTool instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for CodeInterpreterTool: {data}")
@@ -481,6 +497,8 @@ class CodeInterpreterTool(Tool):
             instance.kind = data["kind"]
         if data is not None and "fileIds" in data:
             instance.fileIds = data["fileIds"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 

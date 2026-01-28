@@ -6,7 +6,9 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
 from ._PropertySchema import PropertySchema
@@ -33,7 +35,7 @@ class AgentDefinition(ABC):
         Display name of the agent for UI purposes
     description : Optional[str]
         Description of the agent's capabilities and purpose
-    metadata : dict[str, Any]
+    metadata : Optional[dict[str, Any]]
         Additional metadata including authors, tags, and other arbitrary properties
     inputSchema : Optional[PropertySchema]
         Input parameters that participate in template rendering
@@ -45,29 +47,29 @@ class AgentDefinition(ABC):
     name: str = field(default="")
     displayName: Optional[str] = None
     description: Optional[str] = None
-    metadata: dict[str, Any] = None
+    metadata: Optional[dict[str, Any]] = None
     inputSchema: Optional[PropertySchema] = None
     outputSchema: Optional[PropertySchema] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "AgentDefinition":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "AgentDefinition":
         """Load a AgentDefinition instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             AgentDefinition: The loaded AgentDefinition instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AgentDefinition: {data}")
 
         # load polymorphic AgentDefinition instance
-        instance = AgentDefinition.load_kind(data, pre_process)
+        instance = AgentDefinition.load_kind(data, context)
 
 
         if data is not None and "kind" in data:
@@ -81,24 +83,26 @@ class AgentDefinition(ABC):
         if data is not None and "metadata" in data:
             instance.metadata = data["metadata"]
         if data is not None and "inputSchema" in data:
-            instance.inputSchema = PropertySchema.load(data["inputSchema"], pre_process)
+            instance.inputSchema = PropertySchema.load(data["inputSchema"], context)
         if data is not None and "outputSchema" in data:
-            instance.outputSchema = PropertySchema.load(data["outputSchema"], pre_process)
+            instance.outputSchema = PropertySchema.load(data["outputSchema"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
 
     @staticmethod
-    def load_kind(data: dict, pre_process: Optional[Callable[[Any], Any]]) -> "AgentDefinition":
+    def load_kind(data: dict, context: Optional[LoadContext]) -> "AgentDefinition":
         # load polymorphic AgentDefinition instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "prompt":
-                return PromptAgent.load(data, pre_process)
+                return PromptAgent.load(data, context)
             elif discriminator_value == "workflow":
-                return Workflow.load(data, pre_process)
+                return Workflow.load(data, context)
             elif discriminator_value == "hosted":
-                return ContainerAgent.load(data, pre_process)
+                return ContainerAgent.load(data, context)
 
             else:
                 raise ValueError(f"Unknown AgentDefinition discriminator value: {discriminator_value}")
@@ -138,18 +142,18 @@ class PromptAgent(AgentDefinition):
     additionalInstructions: Optional[str] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "PromptAgent":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "PromptAgent":
         """Load a PromptAgent instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             PromptAgent: The loaded PromptAgent instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for PromptAgent: {data}")
@@ -160,27 +164,29 @@ class PromptAgent(AgentDefinition):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "model" in data:
-            instance.model = Model.load(data["model"], pre_process)
+            instance.model = Model.load(data["model"], context)
         if data is not None and "tools" in data:
-            instance.tools = PromptAgent.load_tools(data["tools"], pre_process)
+            instance.tools = PromptAgent.load_tools(data["tools"], context)
         if data is not None and "template" in data:
-            instance.template = Template.load(data["template"], pre_process)
+            instance.template = Template.load(data["template"], context)
         if data is not None and "instructions" in data:
             instance.instructions = data["instructions"]
         if data is not None and "additionalInstructions" in data:
             instance.additionalInstructions = data["additionalInstructions"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
     @staticmethod
-    def load_tools(data: dict | list, pre_process: Optional[Callable[[Any], Any]]) -> list[Tool]:
+    def load_tools(data: dict | list, context: Optional[LoadContext]) -> list[Tool]:
         if isinstance(data, dict):
             # convert simple named tools to list of Tool
             if(len(data.keys()) == 1):
                 data = [ {"name": k, "kind": v} for k, v in data.items() ]
             else:
                 data = [ {"name": k, **v} for k, v in data.items() ]
-        return [Tool.load(item, pre_process) for item in data]
+        return [Tool.load(item, context) for item in data]
 
 
 
@@ -202,26 +208,26 @@ class Workflow(AgentDefinition):
     ----------
     kind : str
         Type of agent, e.g., 'workflow'
-    trigger : dict[str, Any]
+    trigger : Optional[dict[str, Any]]
         The steps that make up the workflow
     """
 
     kind: str = field(default="workflow")
-    trigger: dict[str, Any] = None
+    trigger: Optional[dict[str, Any]] = None
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Workflow":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Workflow":
         """Load a Workflow instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Workflow: The loaded Workflow instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Workflow: {data}")
@@ -233,6 +239,8 @@ class Workflow(AgentDefinition):
             instance.kind = data["kind"]
         if data is not None and "trigger" in data:
             instance.trigger = data["trigger"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -259,18 +267,18 @@ class ContainerAgent(AgentDefinition):
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ContainerAgent":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ContainerAgent":
         """Load a ContainerAgent instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ContainerAgent: The loaded ContainerAgent instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ContainerAgent: {data}")
@@ -281,30 +289,32 @@ class ContainerAgent(AgentDefinition):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "protocols" in data:
-            instance.protocols = ContainerAgent.load_protocols(data["protocols"], pre_process)
+            instance.protocols = ContainerAgent.load_protocols(data["protocols"], context)
         if data is not None and "environmentVariables" in data:
-            instance.environmentVariables = ContainerAgent.load_environmentVariables(data["environmentVariables"], pre_process)
+            instance.environmentVariables = ContainerAgent.load_environmentVariables(data["environmentVariables"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
     @staticmethod
-    def load_protocols(data: dict | list, pre_process: Optional[Callable[[Any], Any]]) -> list[ProtocolVersionRecord]:
+    def load_protocols(data: dict | list, context: Optional[LoadContext]) -> list[ProtocolVersionRecord]:
         if isinstance(data, dict):
             # convert simple named protocols to list of ProtocolVersionRecord
             if(len(data.keys()) == 1):
                 data = [ {"name": k, "protocol": v} for k, v in data.items() ]
             else:
                 data = [ {"name": k, **v} for k, v in data.items() ]
-        return [ProtocolVersionRecord.load(item, pre_process) for item in data]
+        return [ProtocolVersionRecord.load(item, context) for item in data]
 
     @staticmethod
-    def load_environmentVariables(data: dict | list, pre_process: Optional[Callable[[Any], Any]]) -> list[EnvironmentVariable]:
+    def load_environmentVariables(data: dict | list, context: Optional[LoadContext]) -> list[EnvironmentVariable]:
         if isinstance(data, dict):
             # convert simple named environmentVariables to list of EnvironmentVariable
             if(len(data.keys()) == 1):
                 data = [ {"name": k, "value": v} for k, v in data.items() ]
             else:
                 data = [ {"name": k, **v} for k, v in data.items() ]
-        return [EnvironmentVariable.load(item, pre_process) for item in data]
+        return [EnvironmentVariable.load(item, context) for item in data]
 
 

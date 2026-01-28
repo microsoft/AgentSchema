@@ -7,7 +7,8 @@ import {
   PythonClassContext,
   PythonFileContext,
   PythonInitContext,
-  PythonTestContext
+  PythonTestContext,
+  PythonLoadContextContext
 } from "./ast.js";
 import { getCombinations, scalarValue } from "./utilities.js";
 import { createTemplateEngine } from "./template-engine.js";
@@ -48,6 +49,21 @@ export const generatePython = async (
   const engine = createTemplateEngine(templateDir, 'python');
 
   const nodes = Array.from(enumerateTypes(node));
+
+  // Determine package name from root node namespace (e.g., "agentschema.core")
+  const packageName = node.typeName.namespace.toLowerCase();
+
+  // Render LoadContext file
+  const contextContext = buildLoadContextContext();
+  const contextContent = engine.render('context.py.njk', contextContext);
+  await emitPythonFile(context, '_context.py', contextContent, emitTarget["output-dir"]);
+
+  // Render LoadContext tests
+  if (emitTarget["test-dir"]) {
+    const testContextContext = buildLoadContextContext(packageName);
+    const testContextContent = engine.render('test_context.py.njk', testContextContext);
+    await emitPythonFile(context, 'test_load_context.py', testContextContent, emitTarget["test-dir"]);
+  }
 
   // Render init file
   const initContext = buildInitContext(nodes);
@@ -173,6 +189,16 @@ function buildTestContext(node: TypeNode): PythonTestContext {
     node,
     examples,
     alternates,
+  };
+}
+
+/**
+ * Build context for rendering the LoadContext file.
+ */
+function buildLoadContextContext(packageName?: string): PythonLoadContextContext {
+  return {
+    header: "AgentSchema LoadContext",
+    package: packageName,
   };
 }
 

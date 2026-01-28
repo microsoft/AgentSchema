@@ -5,7 +5,9 @@
 ##########################################
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 
 
 
@@ -44,18 +46,18 @@ class Property:
     enumValues: list[Any] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Property":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Property":
         """Load a Property instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Property: The loaded Property instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         # handle alternate representations
         if isinstance(data, bool):
@@ -71,7 +73,7 @@ class Property:
             raise ValueError(f"Invalid data for Property: {data}")
 
         # load polymorphic Property instance
-        instance = Property.load_kind(data, pre_process)
+        instance = Property.load_kind(data, context)
 
 
         if data is not None and "name" in data:
@@ -88,19 +90,21 @@ class Property:
             instance.example = data["example"]
         if data is not None and "enumValues" in data:
             instance.enumValues = data["enumValues"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
 
     @staticmethod
-    def load_kind(data: dict, pre_process: Optional[Callable[[Any], Any]]) -> "Property":
+    def load_kind(data: dict, context: Optional[LoadContext]) -> "Property":
         # load polymorphic Property instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "array":
-                return ArrayProperty.load(data, pre_process)
+                return ArrayProperty.load(data, context)
             elif discriminator_value == "object":
-                return ObjectProperty.load(data, pre_process)
+                return ObjectProperty.load(data, context)
 
             else:
 
@@ -131,18 +135,18 @@ class ArrayProperty(Property):
     items: Property = field(default_factory=Property)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ArrayProperty":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ArrayProperty":
         """Load a ArrayProperty instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ArrayProperty: The loaded ArrayProperty instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ArrayProperty: {data}")
@@ -153,7 +157,9 @@ class ArrayProperty(Property):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "items" in data:
-            instance.items = Property.load(data["items"], pre_process)
+            instance.items = Property.load(data["items"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -176,18 +182,18 @@ class ObjectProperty(Property):
     properties: list[Property] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ObjectProperty":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ObjectProperty":
         """Load a ObjectProperty instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ObjectProperty: The loaded ObjectProperty instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ObjectProperty: {data}")
@@ -198,18 +204,20 @@ class ObjectProperty(Property):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "properties" in data:
-            instance.properties = ObjectProperty.load_properties(data["properties"], pre_process)
+            instance.properties = ObjectProperty.load_properties(data["properties"], context)
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
     @staticmethod
-    def load_properties(data: dict | list, pre_process: Optional[Callable[[Any], Any]]) -> list[Property]:
+    def load_properties(data: dict | list, context: Optional[LoadContext]) -> list[Property]:
         if isinstance(data, dict):
             # convert simple named properties to list of Property
             if(len(data.keys()) == 1):
                 data = [ {"name": k, "": v} for k, v in data.items() ]
             else:
                 data = [ {"name": k, **v} for k, v in data.items() ]
-        return [Property.load(item, pre_process) for item in data]
+        return [Property.load(item, context) for item in data]
 
 

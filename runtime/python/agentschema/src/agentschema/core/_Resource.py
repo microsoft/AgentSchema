@@ -6,7 +6,9 @@
 
 from abc import ABC
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 
 
 
@@ -28,43 +30,45 @@ class Resource(ABC):
     kind: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "Resource":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Resource":
         """Load a Resource instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             Resource: The loaded Resource instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Resource: {data}")
 
         # load polymorphic Resource instance
-        instance = Resource.load_kind(data, pre_process)
+        instance = Resource.load_kind(data, context)
 
 
         if data is not None and "name" in data:
             instance.name = data["name"]
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
 
     @staticmethod
-    def load_kind(data: dict, pre_process: Optional[Callable[[Any], Any]]) -> "Resource":
+    def load_kind(data: dict, context: Optional[LoadContext]) -> "Resource":
         # load polymorphic Resource instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
             if discriminator_value == "model":
-                return ModelResource.load(data, pre_process)
+                return ModelResource.load(data, context)
             elif discriminator_value == "tool":
-                return ToolResource.load(data, pre_process)
+                return ToolResource.load(data, context)
 
             else:
                 raise ValueError(f"Unknown Resource discriminator value: {discriminator_value}")
@@ -90,18 +94,18 @@ class ModelResource(Resource):
     id: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ModelResource":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ModelResource":
         """Load a ModelResource instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ModelResource: The loaded ModelResource instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ModelResource: {data}")
@@ -113,6 +117,8 @@ class ModelResource(Resource):
             instance.kind = data["kind"]
         if data is not None and "id" in data:
             instance.id = data["id"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
@@ -137,18 +143,18 @@ class ToolResource(Resource):
     options: dict[str, Any] = field(default_factory=dict)
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "ToolResource":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ToolResource":
         """Load a ToolResource instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             ToolResource: The loaded ToolResource instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ToolResource: {data}")
@@ -162,6 +168,8 @@ class ToolResource(Resource):
             instance.id = data["id"]
         if data is not None and "options" in data:
             instance.options = data["options"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 

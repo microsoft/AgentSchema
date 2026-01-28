@@ -5,7 +5,9 @@
 ##########################################
 
 from dataclasses import dataclass, field
-from typing import Any, Callable, Optional
+from typing import Any, Optional
+
+from ._context import LoadContext
 
 
 
@@ -25,18 +27,18 @@ class EnvironmentVariable:
     value: str = field(default="")
 
     @staticmethod
-    def load(data: Any, pre_process: Optional[Callable[[Any], Any]] = None) -> "EnvironmentVariable":
+    def load(data: Any, context: Optional[LoadContext] = None) -> "EnvironmentVariable":
         """Load a EnvironmentVariable instance.
         Args:
             data (Any): The data to load the instance from.
-            pre_process (Optional[Callable[[Any], Any]]): Optional pre-processing function to apply to the data before loading.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
             EnvironmentVariable: The loaded EnvironmentVariable instance.
 
         """
         
-        if pre_process is not None:
-            data = pre_process(data)
+        if context is not None:
+            data = context.process_input(data)
         
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for EnvironmentVariable: {data}")
@@ -48,6 +50,8 @@ class EnvironmentVariable:
             instance.name = data["name"]
         if data is not None and "value" in data:
             instance.value = data["value"]
+        if context is not None:
+            instance = context.process_output(instance)
         return instance
 
 
