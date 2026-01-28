@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ProtocolVersionRecordJsonConverter : JsonConverter<ProtocolVersionRecord>
+public class ProtocolVersionRecordJsonConverter: JsonConverter<ProtocolVersionRecord>
 {
     public override ProtocolVersionRecord Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class ProtocolVersionRecordJsonConverter : JsonConverter<ProtocolVersionR
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new ProtocolVersionRecord();
             if (rootElement.TryGetProperty("protocol", out JsonElement protocolValue))
             {
                 instance.Protocol = protocolValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: protocol");
             }
-
+            
             if (rootElement.TryGetProperty("version", out JsonElement versionValue))
             {
                 instance.Version = versionValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: version");
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class ProtocolVersionRecordJsonConverter : JsonConverter<ProtocolVersionR
         writer.WriteStartObject();
         writer.WritePropertyName("protocol");
         JsonSerializer.Serialize(writer, value.Protocol, options);
-
+        
         writer.WritePropertyName("version");
         JsonSerializer.Serialize(writer, value.Version, options);
-
+        
         writer.WriteEndObject();
     }
 }

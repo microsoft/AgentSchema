@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class PromptAgentConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

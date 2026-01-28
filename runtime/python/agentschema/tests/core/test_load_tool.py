@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import Tool
 
 
 def test_load_json_tool():
-    json_data = """
+    json_data = '''
     {
       "name": "my-tool",
       "kind": "function",
@@ -14,27 +15,29 @@ def test_load_json_tool():
         "input": "value"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = Tool.load(data)
     assert instance is not None
     assert instance.name == "my-tool"
     assert instance.kind == "function"
     assert instance.description == "A description of the tool"
-
+    
 
 def test_load_yaml_tool():
-    yaml_data = """
+    yaml_data = '''
     name: my-tool
     kind: function
     description: A description of the tool
     bindings:
       input: value
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = Tool.load(data)
     assert instance is not None
     assert instance.name == "my-tool"
     assert instance.kind == "function"
     assert instance.description == "A description of the tool"
+
+

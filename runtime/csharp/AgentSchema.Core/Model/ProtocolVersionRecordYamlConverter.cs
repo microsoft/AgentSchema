@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ProtocolVersionRecordYamlConverter : YamlConverter<ProtocolVersionRecord>
+public class ProtocolVersionRecordYamlConverter: YamlConverter<ProtocolVersionRecord>
 {
     /// <summary>
     /// Singleton instance of the ProtocolVersionRecord converter.
@@ -16,7 +16,7 @@ public class ProtocolVersionRecordYamlConverter : YamlConverter<ProtocolVersionR
 
     public override ProtocolVersionRecord Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new ProtocolVersionRecord();
@@ -47,10 +47,10 @@ public class ProtocolVersionRecordYamlConverter : YamlConverter<ProtocolVersionR
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("protocol"));
         serializer(value.Protocol, typeof(string));
-
+        
         emitter.Emit(new Scalar("version"));
         serializer(value.Version, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import PropertySchema
 
 
 def test_load_json_propertyschema():
-    json_data = """
+    json_data = '''
     {
       "examples": [
         {
@@ -28,16 +29,16 @@ def test_load_json_propertyschema():
         }
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = PropertySchema.load(data)
     assert instance is not None
-
+    
     assert instance.strict
-
+    
 
 def test_load_yaml_propertyschema():
-    yaml_data = """
+    yaml_data = '''
     examples:
       - key: value
     strict: true
@@ -52,8 +53,10 @@ def test_load_yaml_propertyschema():
         kind: string
         sample: What is the meaning of life?
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = PropertySchema.load(data)
     assert instance is not None
     assert instance.strict
+
+

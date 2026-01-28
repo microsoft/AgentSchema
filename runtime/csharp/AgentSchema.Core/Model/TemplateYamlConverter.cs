@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class TemplateYamlConverter : YamlConverter<Template>
+public class TemplateYamlConverter: YamlConverter<Template>
 {
     /// <summary>
     /// Singleton instance of the Template converter.
@@ -16,7 +16,7 @@ public class TemplateYamlConverter : YamlConverter<Template>
 
     public override Template Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new Template();
@@ -47,10 +47,10 @@ public class TemplateYamlConverter : YamlConverter<Template>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("format"));
         serializer(value.Format, typeof(Format));
-
+        
         emitter.Emit(new Scalar("parser"));
         serializer(value.Parser, typeof(Parser));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpServerToolNeverRequireApprovalModeJsonConverter : JsonConverter<McpServerToolNeverRequireApprovalMode>
+public class McpServerToolNeverRequireApprovalModeJsonConverter: JsonConverter<McpServerToolNeverRequireApprovalMode>
 {
     public override McpServerToolNeverRequireApprovalMode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,14 +23,14 @@ public class McpServerToolNeverRequireApprovalModeJsonConverter : JsonConverter<
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new McpServerToolNeverRequireApprovalMode();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             return instance;
         }
     }
@@ -40,7 +40,7 @@ public class McpServerToolNeverRequireApprovalModeJsonConverter : JsonConverter<
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WriteEndObject();
     }
 }

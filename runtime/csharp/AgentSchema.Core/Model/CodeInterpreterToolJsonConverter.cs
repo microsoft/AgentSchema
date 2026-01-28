@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class CodeInterpreterToolJsonConverter : JsonConverter<CodeInterpreterTool>
+public class CodeInterpreterToolJsonConverter: JsonConverter<CodeInterpreterTool>
 {
     public override CodeInterpreterTool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class CodeInterpreterToolJsonConverter : JsonConverter<CodeInterpreterToo
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new CodeInterpreterTool();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("fileIds", out JsonElement fileIdsValue))
             {
                 instance.FileIds = [.. fileIdsValue.EnumerateArray().Select(x => x.GetString() ?? throw new JsonException("Empty array elements for fileIds are not supported"))];
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class CodeInterpreterToolJsonConverter : JsonConverter<CodeInterpreterToo
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("fileIds");
         JsonSerializer.Serialize(writer, value.FileIds, options);
-
+        
         writer.WriteEndObject();
     }
 }

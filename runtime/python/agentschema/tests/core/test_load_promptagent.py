@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import PromptAgent
 
 
 def test_load_json_promptagent():
-    json_data = """
+    json_data = '''
     {
       "kind": "prompt",
       "model": {
@@ -39,14 +40,12 @@ def test_load_json_promptagent():
       },
       "instructions": "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}"
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = PromptAgent.load(data)
     assert instance is not None
     assert instance.kind == "prompt"
-    assert (
-        instance.instructions
-        == """system:
+    assert instance.instructions == """system:
 You are an AI assistant who helps people find information.
 As the assistant, you answer questions briefly, succinctly,
 and in a personable manner using markdown and even add some 
@@ -57,11 +56,10 @@ You are helping {{firstName}} {{lastName}} to find answers to
 their questions. Use their name to address them in your responses.
 user:
 {{question}}"""
-    )
-
+    
 
 def test_load_yaml_promptagent():
-    yaml_data = """
+    yaml_data = '''
     kind: prompt
     model:
       id: gpt-35-turbo
@@ -96,14 +94,12 @@ def test_load_yaml_promptagent():
       user:
       {{question}}
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = PromptAgent.load(data)
     assert instance is not None
     assert instance.kind == "prompt"
-    assert (
-        instance.instructions
-        == """system:
+    assert instance.instructions == """system:
 You are an AI assistant who helps people find information.
 As the assistant, you answer questions briefly, succinctly,
 and in a personable manner using markdown and even add some 
@@ -114,11 +110,9 @@ You are helping {{firstName}} {{lastName}} to find answers to
 their questions. Use their name to address them in your responses.
 user:
 {{question}}"""
-    )
-
 
 def test_load_json_promptagent_1():
-    json_data = """
+    json_data = '''
     {
       "kind": "prompt",
       "model": {
@@ -151,14 +145,12 @@ def test_load_json_promptagent_1():
       },
       "instructions": "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}"
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = PromptAgent.load(data)
     assert instance is not None
     assert instance.kind == "prompt"
-    assert (
-        instance.instructions
-        == """system:
+    assert instance.instructions == """system:
 You are an AI assistant who helps people find information.
 As the assistant, you answer questions briefly, succinctly,
 and in a personable manner using markdown and even add some 
@@ -169,11 +161,10 @@ You are helping {{firstName}} {{lastName}} to find answers to
 their questions. Use their name to address them in your responses.
 user:
 {{question}}"""
-    )
-
+    
 
 def test_load_yaml_promptagent_1():
-    yaml_data = """
+    yaml_data = '''
     kind: prompt
     model:
       id: gpt-35-turbo
@@ -208,14 +199,12 @@ def test_load_yaml_promptagent_1():
       user:
       {{question}}
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = PromptAgent.load(data)
     assert instance is not None
     assert instance.kind == "prompt"
-    assert (
-        instance.instructions
-        == """system:
+    assert instance.instructions == """system:
 You are an AI assistant who helps people find information.
 As the assistant, you answer questions briefly, succinctly,
 and in a personable manner using markdown and even add some 
@@ -226,4 +215,5 @@ You are helping {{firstName}} {{lastName}} to find answers to
 their questions. Use their name to address them in your responses.
 user:
 {{question}}"""
-    )
+
+

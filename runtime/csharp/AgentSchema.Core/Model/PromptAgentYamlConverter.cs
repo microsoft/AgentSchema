@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class PromptAgentYamlConverter : YamlConverter<PromptAgent>
+public class PromptAgentYamlConverter: YamlConverter<PromptAgent>
 {
     /// <summary>
     /// Singleton instance of the PromptAgent converter.
@@ -16,7 +16,7 @@ public class PromptAgentYamlConverter : YamlConverter<PromptAgent>
 
     public override PromptAgent Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new PromptAgent();
@@ -35,37 +35,37 @@ public class PromptAgentYamlConverter : YamlConverter<PromptAgent>
                     instance.Model = modelValue;
                     break;
                 case "tools":
-                    /*
-            if (toolsValue.ValueKind == JsonValueKind.Array)
-            {
-
-                instance.Tools = 
-                    [.. toolsValue.EnumerateArray()
-                        .Select(x => JsonSerializer.Deserialize<Tool> (x.GetRawText(), options)
-                            ?? throw new YamlException("Empty array elements for Tools are not supported"))];
-            }
-                    */
-                    /*
-            else if (toolsValue.ValueKind == JsonValueKind.Object)
-            {
-                instance.Tools = 
-                    [.. toolsValue.EnumerateObject()
-                        .Select(property =>
-                        {
-                            var item = JsonSerializer.Deserialize<Tool>(property.Value.GetRawText(), options)
-                                ?? throw new YamlException("Empty array elements for Tools are not supported");
-                            item.Name = property.Name;
-                            return item;
-                        })];
-            }
-                    */
-
-                    /*
-            else
-            {
-                throw new YamlException("Invalid JSON token for tools");
-            }
-                    */
+                            /*
+                    if (toolsValue.ValueKind == JsonValueKind.Array)
+                    {
+                            
+                        instance.Tools = 
+                            [.. toolsValue.EnumerateArray()
+                                .Select(x => JsonSerializer.Deserialize<Tool> (x.GetRawText(), options)
+                                    ?? throw new YamlException("Empty array elements for Tools are not supported"))];
+                    }
+                            */
+                            /*
+                    else if (toolsValue.ValueKind == JsonValueKind.Object)
+                    {
+                        instance.Tools = 
+                            [.. toolsValue.EnumerateObject()
+                                .Select(property =>
+                                {
+                                    var item = JsonSerializer.Deserialize<Tool>(property.Value.GetRawText(), options)
+                                        ?? throw new YamlException("Empty array elements for Tools are not supported");
+                                    item.Name = property.Name;
+                                    return item;
+                                })];
+                    }
+                            */
+                    
+                            /*
+                    else
+                    {
+                        throw new YamlException("Invalid JSON token for tools");
+                    }
+                            */
                     break;
                 case "template":
                     var templateValue = rootDeserializer(typeof(Template)) as Template;
@@ -92,34 +92,34 @@ public class PromptAgentYamlConverter : YamlConverter<PromptAgent>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("model"));
         serializer(value.Model, typeof(Model));
-
-        if (value.Tools != null)
+        
+        if(value.Tools != null)
         {
             emitter.Emit(new Scalar("tools"));
             serializer(value.Tools, typeof(IList<Tool>));
         }
-
-        if (value.Template != null)
+        
+        if(value.Template != null)
         {
             emitter.Emit(new Scalar("template"));
             serializer(value.Template, typeof(Template));
         }
-
-        if (value.Instructions != null)
+        
+        if(value.Instructions != null)
         {
             emitter.Emit(new Scalar("instructions"));
             serializer(value.Instructions, typeof(string));
         }
-
-        if (value.AdditionalInstructions != null)
+        
+        if(value.AdditionalInstructions != null)
         {
             emitter.Emit(new Scalar("additionalInstructions"));
             serializer(value.AdditionalInstructions, typeof(string));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

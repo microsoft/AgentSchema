@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ParserJsonConverter : JsonConverter<Parser>
+public class ParserJsonConverter: JsonConverter<Parser>
 {
     public override Parser Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -22,7 +22,7 @@ public class ParserJsonConverter : JsonConverter<Parser>
             {
                 Kind = stringValue,
             };
-
+            
         }
         else if (reader.TokenType != JsonTokenType.StartObject)
         {
@@ -32,19 +32,19 @@ public class ParserJsonConverter : JsonConverter<Parser>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Parser();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("options", out JsonElement optionsValue))
             {
                 instance.Options = JsonSerializer.Deserialize<Dictionary<string, object>>(optionsValue.GetRawText(), options);
             }
-
+            
             return instance;
         }
     }
@@ -54,13 +54,13 @@ public class ParserJsonConverter : JsonConverter<Parser>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             writer.WritePropertyName("options");
             JsonSerializer.Serialize(writer, value.Options, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

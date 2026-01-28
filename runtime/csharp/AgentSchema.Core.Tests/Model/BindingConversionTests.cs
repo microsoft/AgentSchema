@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class BindingConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -61,5 +61,5 @@ public class BindingConversionTests
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Input);
     }
-
+    
 }

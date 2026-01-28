@@ -18,25 +18,25 @@ public class CustomTool : Tool
     /// <summary>
     /// Initializes a new instance of <see cref="CustomTool"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public CustomTool()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// The kind identifier for server tools. This is a wildcard and can represent any server tool type not explicitly defined.
     /// </summary>
     public override string Kind { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Connection configuration for the server tool
     /// </summary>
     public Connection Connection { get; set; }
-
+        
     /// <summary>
     /// Configuration options for the server tool
     /// </summary>
     public IDictionary<string, object> Options { get; set; } = new Dictionary<string, object>();
-
+    
 }

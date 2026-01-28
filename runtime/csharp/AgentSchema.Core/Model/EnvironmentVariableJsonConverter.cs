@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class EnvironmentVariableJsonConverter : JsonConverter<EnvironmentVariable>
+public class EnvironmentVariableJsonConverter: JsonConverter<EnvironmentVariable>
 {
     public override EnvironmentVariable Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class EnvironmentVariableJsonConverter : JsonConverter<EnvironmentVariabl
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new EnvironmentVariable();
             if (rootElement.TryGetProperty("name", out JsonElement nameValue))
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("value", out JsonElement valueValue))
             {
                 instance.Value = valueValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: value");
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class EnvironmentVariableJsonConverter : JsonConverter<EnvironmentVariabl
         writer.WriteStartObject();
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
+        
         writer.WritePropertyName("value");
         JsonSerializer.Serialize(writer, value.Value, options);
-
+        
         writer.WriteEndObject();
     }
 }

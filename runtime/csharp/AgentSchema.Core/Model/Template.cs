@@ -21,20 +21,20 @@ public class Template
     /// <summary>
     /// Initializes a new instance of <see cref="Template"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public Template()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)
     /// </summary>
     public Format Format { get; set; }
-
+        
     /// <summary>
     /// Parser used to process the rendered template into API-compatible format
     /// </summary>
     public Parser Parser { get; set; }
-
+    
 }

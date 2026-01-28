@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class ProtocolVersionRecordConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ModelYamlConverter : YamlConverter<Model>
+public class ModelYamlConverter: YamlConverter<Model>
 {
     /// <summary>
     /// Singleton instance of the Model converter.
@@ -16,7 +16,7 @@ public class ModelYamlConverter : YamlConverter<Model>
 
     public override Model Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new Model();
@@ -59,31 +59,31 @@ public class ModelYamlConverter : YamlConverter<Model>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("id"));
         serializer(value.Id, typeof(string));
-
-        if (value.Provider != null)
+        
+        if(value.Provider != null)
         {
             emitter.Emit(new Scalar("provider"));
             serializer(value.Provider, typeof(string));
         }
-
-        if (value.ApiType != null)
+        
+        if(value.ApiType != null)
         {
             emitter.Emit(new Scalar("apiType"));
             serializer(value.ApiType, typeof(string));
         }
-
-        if (value.Connection != null)
+        
+        if(value.Connection != null)
         {
             emitter.Emit(new Scalar("connection"));
             serializer(value.Connection, typeof(Connection));
         }
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             emitter.Emit(new Scalar("options"));
             serializer(value.Options, typeof(ModelOptions));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

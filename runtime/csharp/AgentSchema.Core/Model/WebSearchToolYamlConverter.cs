@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class WebSearchToolYamlConverter : YamlConverter<WebSearchTool>
+public class WebSearchToolYamlConverter: YamlConverter<WebSearchTool>
 {
     /// <summary>
     /// Singleton instance of the WebSearchTool converter.
@@ -16,7 +16,7 @@ public class WebSearchToolYamlConverter : YamlConverter<WebSearchTool>
 
     public override WebSearchTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new WebSearchTool();
@@ -51,16 +51,16 @@ public class WebSearchToolYamlConverter : YamlConverter<WebSearchTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("connection"));
         serializer(value.Connection, typeof(Connection));
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             emitter.Emit(new Scalar("options"));
             serializer(value.Options, typeof(IDictionary<string, object>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

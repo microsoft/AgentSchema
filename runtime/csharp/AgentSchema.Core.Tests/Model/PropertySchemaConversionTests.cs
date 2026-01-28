@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class PropertySchemaConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

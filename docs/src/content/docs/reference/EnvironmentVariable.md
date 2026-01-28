@@ -25,8 +25,6 @@ classDiagram
     }
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -35,20 +33,9 @@ value: my-value
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | name | string | Name of the environment variable  |
 | value | string | Environment variable resolution  |
-
-
-
-
-
-
-
-

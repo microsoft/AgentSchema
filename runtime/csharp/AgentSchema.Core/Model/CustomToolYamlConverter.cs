@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class CustomToolYamlConverter : YamlConverter<CustomTool>
+public class CustomToolYamlConverter: YamlConverter<CustomTool>
 {
     /// <summary>
     /// Singleton instance of the CustomTool converter.
@@ -16,7 +16,7 @@ public class CustomToolYamlConverter : YamlConverter<CustomTool>
 
     public override CustomTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new CustomTool();
@@ -51,13 +51,13 @@ public class CustomToolYamlConverter : YamlConverter<CustomTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("connection"));
         serializer(value.Connection, typeof(Connection));
-
+        
         emitter.Emit(new Scalar("options"));
         serializer(value.Options, typeof(IDictionary<string, object>));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

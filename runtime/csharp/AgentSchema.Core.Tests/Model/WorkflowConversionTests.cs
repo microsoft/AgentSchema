@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class WorkflowConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

@@ -38,8 +38,6 @@ classDiagram
     Resource <|-- ToolResource
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -48,9 +46,6 @@ kind: model
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -58,17 +53,9 @@ kind: model
 | name | string | Name of the resource  |
 | kind | string | The kind of resource (e.g., model, tool)  |
 
-
-
-
-
 ## Child Types
 
 The following types extend `Resource`:
 
 - [ModelResource](../modelresource/)
 - [ToolResource](../toolresource/)
-
-
-
-

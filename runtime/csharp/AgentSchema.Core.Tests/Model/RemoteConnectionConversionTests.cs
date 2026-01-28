@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class RemoteConnectionConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

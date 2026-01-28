@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class WebSearchToolJsonConverter : JsonConverter<WebSearchTool>
+public class WebSearchToolJsonConverter: JsonConverter<WebSearchTool>
 {
     public override WebSearchTool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,24 +23,24 @@ public class WebSearchToolJsonConverter : JsonConverter<WebSearchTool>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new WebSearchTool();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("connection", out JsonElement connectionValue))
             {
                 instance.Connection = JsonSerializer.Deserialize<Connection>(connectionValue.GetRawText(), options) ?? throw new ArgumentException("Properties must contain a property named: connection");
             }
-
+            
             if (rootElement.TryGetProperty("options", out JsonElement optionsValue))
             {
                 instance.Options = JsonSerializer.Deserialize<Dictionary<string, object>>(optionsValue.GetRawText(), options);
             }
-
+            
             return instance;
         }
     }
@@ -50,16 +50,16 @@ public class WebSearchToolJsonConverter : JsonConverter<WebSearchTool>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("connection");
         JsonSerializer.Serialize(writer, value.Connection, options);
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             writer.WritePropertyName("options");
             JsonSerializer.Serialize(writer, value.Options, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class WebSearchToolConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import AgentManifest
 
 
 def test_load_json_agentmanifest():
-    json_data = """
+    json_data = '''
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -54,20 +55,17 @@ def test_load_json_agentmanifest():
         }
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert (
-        instance.description
-        == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    )
-
+    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    
 
 def test_load_yaml_agentmanifest():
-    yaml_data = """
+    yaml_data = '''
     name: basic-prompt
     displayName: My Basic Prompt
     description: A basic prompt that uses the GPT-3 chat API to answer questions
@@ -101,20 +99,16 @@ def test_load_yaml_agentmanifest():
         options:
           apiKey: my-api-key
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert (
-        instance.description
-        == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    )
-
+    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
 
 def test_load_json_agentmanifest_1():
-    json_data = """
+    json_data = '''
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -165,20 +159,17 @@ def test_load_json_agentmanifest_1():
         }
       ]
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert (
-        instance.description
-        == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    )
-
+    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    
 
 def test_load_yaml_agentmanifest_1():
-    yaml_data = """
+    yaml_data = '''
     name: basic-prompt
     displayName: My Basic Prompt
     description: A basic prompt that uses the GPT-3 chat API to answer questions
@@ -212,13 +203,12 @@ def test_load_yaml_agentmanifest_1():
         options:
           apiKey: my-api-key
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert (
-        instance.description
-        == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    )
+    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+
+

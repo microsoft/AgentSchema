@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class ApiKeyConnectionConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ConnectionYamlConverter : YamlConverter<Connection>
+public class ConnectionYamlConverter: YamlConverter<Connection>
 {
     /// <summary>
     /// Singleton instance of the Connection converter.
@@ -16,7 +16,7 @@ public class ConnectionYamlConverter : YamlConverter<Connection>
 
     public override Connection Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic Connection instance
         Connection instance;
@@ -25,7 +25,7 @@ public class ConnectionYamlConverter : YamlConverter<Connection>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Connection is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "reference" => rootDeserializer(typeof(ReferenceConnection)) as ReferenceConnection ??
                     throw new YamlException("Empty ReferenceConnection instances are not supported"),
@@ -73,16 +73,16 @@ public class ConnectionYamlConverter : YamlConverter<Connection>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("authenticationMode"));
         serializer(value.AuthenticationMode, typeof(string));
-
-        if (value.UsageDescription != null)
+        
+        if(value.UsageDescription != null)
         {
             emitter.Emit(new Scalar("usageDescription"));
             serializer(value.UsageDescription, typeof(string));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

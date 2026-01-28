@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ResourceYamlConverter : YamlConverter<Resource>
+public class ResourceYamlConverter: YamlConverter<Resource>
 {
     /// <summary>
     /// Singleton instance of the Resource converter.
@@ -16,7 +16,7 @@ public class ResourceYamlConverter : YamlConverter<Resource>
 
     public override Resource Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic Resource instance
         Resource instance;
@@ -25,7 +25,7 @@ public class ResourceYamlConverter : YamlConverter<Resource>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Resource is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "model" => rootDeserializer(typeof(ModelResource)) as ModelResource ??
                     throw new YamlException("Empty ModelResource instances are not supported"),
@@ -65,10 +65,10 @@ public class ResourceYamlConverter : YamlConverter<Resource>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

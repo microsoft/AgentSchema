@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpServerToolAlwaysRequireApprovalModeYamlConverter : YamlConverter<McpServerToolAlwaysRequireApprovalMode>
+public class McpServerToolAlwaysRequireApprovalModeYamlConverter: YamlConverter<McpServerToolAlwaysRequireApprovalMode>
 {
     /// <summary>
     /// Singleton instance of the McpServerToolAlwaysRequireApprovalMode converter.
@@ -16,7 +16,7 @@ public class McpServerToolAlwaysRequireApprovalModeYamlConverter : YamlConverter
 
     public override McpServerToolAlwaysRequireApprovalMode Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new McpServerToolAlwaysRequireApprovalMode();
@@ -43,7 +43,7 @@ public class McpServerToolAlwaysRequireApprovalModeYamlConverter : YamlConverter
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

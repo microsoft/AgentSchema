@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class CodeInterpreterToolYamlConverter : YamlConverter<CodeInterpreterTool>
+public class CodeInterpreterToolYamlConverter: YamlConverter<CodeInterpreterTool>
 {
     /// <summary>
     /// Singleton instance of the CodeInterpreterTool converter.
@@ -16,7 +16,7 @@ public class CodeInterpreterToolYamlConverter : YamlConverter<CodeInterpreterToo
 
     public override CodeInterpreterTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new CodeInterpreterTool();
@@ -31,9 +31,9 @@ public class CodeInterpreterToolYamlConverter : YamlConverter<CodeInterpreterToo
                     instance.Kind = kindValue.Value ?? throw new ArgumentException("Properties must contain a property named: kind");
                     break;
                 case "fileIds":
-                    /*
-            instance.FileIds = [.. fileIdsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for fileIds are not supported"))];
-                    */
+                            /*
+                    instance.FileIds = [.. fileIdsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for fileIds are not supported"))];
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in CodeInterpreterTool.");
@@ -48,10 +48,10 @@ public class CodeInterpreterToolYamlConverter : YamlConverter<CodeInterpreterToo
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("fileIds"));
         serializer(value.FileIds, typeof(IList<string>));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

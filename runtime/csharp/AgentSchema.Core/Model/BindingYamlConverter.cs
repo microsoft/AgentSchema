@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class BindingYamlConverter : YamlConverter<Binding>
+public class BindingYamlConverter: YamlConverter<Binding>
 {
     /// <summary>
     /// Singleton instance of the Binding converter.
@@ -16,7 +16,7 @@ public class BindingYamlConverter : YamlConverter<Binding>
 
     public override Binding Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new Binding();
@@ -47,10 +47,10 @@ public class BindingYamlConverter : YamlConverter<Binding>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("input"));
         serializer(value.Input, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

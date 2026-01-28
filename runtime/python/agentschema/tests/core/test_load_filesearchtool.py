@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import FileSearchTool
 
 
 def test_load_json_filesearchtool():
-    json_data = """
+    json_data = '''
     {
       "kind": "file_search",
       "connection": {
@@ -23,7 +24,7 @@ def test_load_json_filesearchtool():
         "createdAfter": "2023-01-01"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FileSearchTool.load(data)
     assert instance is not None
@@ -31,10 +32,10 @@ def test_load_json_filesearchtool():
     assert instance.maximumResultCount == 10
     assert instance.ranker == "auto"
     assert instance.scoreThreshold == 0.5
-
+    
 
 def test_load_yaml_filesearchtool():
-    yaml_data = """
+    yaml_data = '''
     kind: file_search
     connection:
       kind: reference
@@ -48,7 +49,7 @@ def test_load_yaml_filesearchtool():
       fileType: pdf
       createdAfter: 2023-01-01
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = FileSearchTool.load(data)
     assert instance is not None
@@ -56,3 +57,5 @@ def test_load_yaml_filesearchtool():
     assert instance.maximumResultCount == 10
     assert instance.ranker == "auto"
     assert instance.scoreThreshold == 0.5
+
+

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class FunctionToolYamlConverter : YamlConverter<FunctionTool>
+public class FunctionToolYamlConverter: YamlConverter<FunctionTool>
 {
     /// <summary>
     /// Singleton instance of the FunctionTool converter.
@@ -16,7 +16,7 @@ public class FunctionToolYamlConverter : YamlConverter<FunctionTool>
 
     public override FunctionTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new FunctionTool();
@@ -36,7 +36,7 @@ public class FunctionToolYamlConverter : YamlConverter<FunctionTool>
                     break;
                 case "strict":
                     var strictValue = parser.Consume<Scalar>();
-                    if (bool.TryParse(strictValue.Value, out var strictItem))
+                    if(bool.TryParse(strictValue.Value, out var strictItem))
                     {
                         instance.Strict = strictItem;
                     }
@@ -54,16 +54,16 @@ public class FunctionToolYamlConverter : YamlConverter<FunctionTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("parameters"));
         serializer(value.Parameters, typeof(PropertySchema));
-
-        if (value.Strict != null)
+        
+        if(value.Strict != null)
         {
             emitter.Emit(new Scalar("strict"));
             serializer(value.Strict, typeof(bool));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

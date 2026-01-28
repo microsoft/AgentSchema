@@ -16,40 +16,40 @@ public class PromptAgent : AgentDefinition
     /// <summary>
     /// Initializes a new instance of <see cref="PromptAgent"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public PromptAgent()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Type of agent, e.g., 'prompt'
     /// </summary>
     public override string Kind { get; set; } = "prompt";
-
+        
     /// <summary>
     /// Primary AI model configuration for the agent
     /// </summary>
     public Model Model { get; set; }
-
+        
     /// <summary>
     /// Tools available to the agent for extended functionality
     /// </summary>
     public IList<Tool>? Tools { get; set; }
-
+        
     /// <summary>
     /// Template configuration for prompt rendering
     /// </summary>
     public Template? Template { get; set; }
-
+        
     /// <summary>
     /// Give your agent clear directions on what to do and how to do it. Include specific tasks, their order, and any special instructions like tone or engagement style. (can use this for a pure yaml declaration or as content in the markdown format)
     /// </summary>
     public string? Instructions { get; set; }
-
+        
     /// <summary>
     /// Additional instructions or context for the agent, can be used to provide extra guidance (can use this for a pure yaml declaration)
     /// </summary>
     public string? AdditionalInstructions { get; set; }
-
+    
 }

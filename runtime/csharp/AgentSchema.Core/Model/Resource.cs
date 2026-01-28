@@ -16,20 +16,20 @@ public abstract class Resource
     /// <summary>
     /// Initializes a new instance of <see cref="Resource"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     protected Resource()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Name of the resource
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// The kind of resource (e.g., model, tool)
     /// </summary>
     public virtual string Kind { get; set; } = string.Empty;
-
+    
 }

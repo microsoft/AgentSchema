@@ -32,8 +32,6 @@ classDiagram
     }
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -43,9 +41,6 @@ apiKey: your-api-key
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -53,11 +48,3 @@ apiKey: your-api-key
 | kind | string | The Authentication kind for the AI service (e.g., &#39;key&#39; for API key, &#39;oauth&#39; for OAuth tokens)  |
 | endpoint | string | The endpoint URL for the AI service  |
 | apiKey | string | The API key for authenticating with the AI service  |
-
-
-
-
-
-
-
-

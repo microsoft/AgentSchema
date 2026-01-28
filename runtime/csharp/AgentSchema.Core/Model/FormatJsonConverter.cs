@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class FormatJsonConverter : JsonConverter<Format>
+public class FormatJsonConverter: JsonConverter<Format>
 {
     public override Format Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -22,7 +22,7 @@ public class FormatJsonConverter : JsonConverter<Format>
             {
                 Kind = stringValue,
             };
-
+            
         }
         else if (reader.TokenType != JsonTokenType.StartObject)
         {
@@ -32,24 +32,24 @@ public class FormatJsonConverter : JsonConverter<Format>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Format();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("strict", out JsonElement strictValue))
             {
                 instance.Strict = strictValue.GetBoolean();
             }
-
+            
             if (rootElement.TryGetProperty("options", out JsonElement optionsValue))
             {
                 instance.Options = JsonSerializer.Deserialize<Dictionary<string, object>>(optionsValue.GetRawText(), options);
             }
-
+            
             return instance;
         }
     }
@@ -59,19 +59,19 @@ public class FormatJsonConverter : JsonConverter<Format>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
-        if (value.Strict != null)
+        
+        if(value.Strict != null)
         {
             writer.WritePropertyName("strict");
             JsonSerializer.Serialize(writer, value.Strict, options);
         }
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             writer.WritePropertyName("options");
             JsonSerializer.Serialize(writer, value.Options, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

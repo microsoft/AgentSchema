@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ToolJsonConverter : JsonConverter<Tool>
+public class ToolJsonConverter: JsonConverter<Tool>
 {
     public override Tool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,26 +23,26 @@ public class ToolJsonConverter : JsonConverter<Tool>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // load polymorphic Tool instance
             Tool instance;
             if (rootElement.TryGetProperty("kind", out JsonElement discriminatorValue))
             {
-                var discriminator = discriminatorValue.GetString()
+                var discriminator = discriminatorValue.GetString() 
                     ?? throw new JsonException("Empty discriminator value for Tool is not supported");
-                instance = discriminator switch
+                instance = discriminator switch 
                 {
-                    "function" => JsonSerializer.Deserialize<FunctionTool>(rootElement, options)
+                    "function" => JsonSerializer.Deserialize<FunctionTool> (rootElement, options)
                         ?? throw new JsonException("Empty FunctionTool instances are not supported"),
-                    "bing_search" => JsonSerializer.Deserialize<WebSearchTool>(rootElement, options)
+                    "bing_search" => JsonSerializer.Deserialize<WebSearchTool> (rootElement, options)
                         ?? throw new JsonException("Empty WebSearchTool instances are not supported"),
-                    "file_search" => JsonSerializer.Deserialize<FileSearchTool>(rootElement, options)
+                    "file_search" => JsonSerializer.Deserialize<FileSearchTool> (rootElement, options)
                         ?? throw new JsonException("Empty FileSearchTool instances are not supported"),
-                    "mcp" => JsonSerializer.Deserialize<McpTool>(rootElement, options)
+                    "mcp" => JsonSerializer.Deserialize<McpTool> (rootElement, options)
                         ?? throw new JsonException("Empty McpTool instances are not supported"),
-                    "openapi" => JsonSerializer.Deserialize<OpenApiTool>(rootElement, options)
+                    "openapi" => JsonSerializer.Deserialize<OpenApiTool> (rootElement, options)
                         ?? throw new JsonException("Empty OpenApiTool instances are not supported"),
-                    "code_interpreter" => JsonSerializer.Deserialize<CodeInterpreterTool>(rootElement, options)
+                    "code_interpreter" => JsonSerializer.Deserialize<CodeInterpreterTool> (rootElement, options)
                         ?? throw new JsonException("Empty CodeInterpreterTool instances are not supported"),
                     _ => new CustomTool(),
                 };
@@ -55,29 +55,29 @@ public class ToolJsonConverter : JsonConverter<Tool>
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("description", out JsonElement descriptionValue))
             {
                 instance.Description = descriptionValue.GetString();
             }
-
+            
             if (rootElement.TryGetProperty("bindings", out JsonElement bindingsValue))
             {
                 if (bindingsValue.ValueKind == JsonValueKind.Array)
                 {
-                    instance.Bindings =
+                    instance.Bindings = 
                         [.. bindingsValue.EnumerateArray()
                             .Select(x => JsonSerializer.Deserialize<Binding> (x.GetRawText(), options)
                                 ?? throw new JsonException("Empty array elements for Bindings are not supported"))];
                 }
                 else if (bindingsValue.ValueKind == JsonValueKind.Object)
                 {
-                    instance.Bindings =
+                    instance.Bindings = 
                         [.. bindingsValue.EnumerateObject()
                             .Select(property =>
                             {
@@ -87,13 +87,13 @@ public class ToolJsonConverter : JsonConverter<Tool>
                                 return item;
                             })];
                 }
-
+                
                 else
                 {
                     throw new JsonException("Invalid JSON token for bindings");
                 }
             }
-
+            
             return instance;
         }
     }
@@ -103,22 +103,22 @@ public class ToolJsonConverter : JsonConverter<Tool>
         writer.WriteStartObject();
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
+        
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
-        if (value.Description != null)
+        
+        if(value.Description != null)
         {
             writer.WritePropertyName("description");
             JsonSerializer.Serialize(writer, value.Description, options);
         }
-
-        if (value.Bindings != null)
+        
+        if(value.Bindings != null)
         {
             writer.WritePropertyName("bindings");
             JsonSerializer.Serialize(writer, value.Bindings, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

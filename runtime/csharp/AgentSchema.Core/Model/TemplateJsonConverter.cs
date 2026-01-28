@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class TemplateJsonConverter : JsonConverter<Template>
+public class TemplateJsonConverter: JsonConverter<Template>
 {
     public override Template Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class TemplateJsonConverter : JsonConverter<Template>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Template();
             if (rootElement.TryGetProperty("format", out JsonElement formatValue))
             {
                 instance.Format = JsonSerializer.Deserialize<Format>(formatValue.GetRawText(), options) ?? throw new ArgumentException("Properties must contain a property named: format");
             }
-
+            
             if (rootElement.TryGetProperty("parser", out JsonElement parserValue))
             {
                 instance.Parser = JsonSerializer.Deserialize<Parser>(parserValue.GetRawText(), options) ?? throw new ArgumentException("Properties must contain a property named: parser");
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class TemplateJsonConverter : JsonConverter<Template>
         writer.WriteStartObject();
         writer.WritePropertyName("format");
         JsonSerializer.Serialize(writer, value.Format, options);
-
+        
         writer.WritePropertyName("parser");
         JsonSerializer.Serialize(writer, value.Parser, options);
-
+        
         writer.WriteEndObject();
     }
 }

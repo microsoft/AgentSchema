@@ -1,3 +1,13 @@
+{#
+  Python Test Template
+  ====================
+  Renders pytest test file for a type.
+  
+  Expected context (PythonTestContext):
+    - node: TypeNode
+    - examples: Array<{ json: string[], yaml: string[], validation: Array<{ key, value, delimeter }> }>
+    - alternates: Array<{ title, scalar, value, validation: Array<{ key, value, delimeter }> }>
+#}
 {%- if examples.length > 0 %}
 import json
 import yaml
@@ -8,7 +18,7 @@ from {{node.typeName.namespace | lower }} import {{node.typeName.name}}
 def test_load_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
     json_data = '''
     {% for line in sample.json -%}
-    {{ line | safe }}
+    {{ line }}
     {% endfor -%}
     '''
     data = json.loads(json_data, strict=False)
@@ -18,14 +28,14 @@ def test_load_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
     {%- if validation.value == "True" or validation.value == "False" %}
     assert {% if validation.value == "False" %}not {% endif %}instance.{{ validation.key }}
     {% else -%}
-    assert instance.{{ validation.key }} == {{ validation.delimeter | safe }}{{ validation.value }}{{ validation.delimeter | safe }}
+    assert instance.{{ validation.key }} == {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }}
     {% endif -%}
     {% endfor %}
 
 def test_load_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
     yaml_data = '''
     {% for line in sample.yaml -%}
-    {{ line | safe }}
+    {{ line }}
     {% endfor -%}
     '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -35,20 +45,20 @@ def test_load_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
     {%- if validation.value == "True" or validation.value == "False" %}
     assert {% if validation.value == "False" %}not {% endif %}instance.{{ validation.key }}
     {%- else %}
-    assert instance.{{ validation.key }} == {{ validation.delimeter | safe }}{{ validation.value }}{{ validation.delimeter | safe }}
+    assert instance.{{ validation.key }} == {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }}
     {%- endif %}
     {%- endfor %}
 {% endfor %}
 {% if alternates.length > 0 %}
 {% for alt in alternates -%}
 def test_load_{{node.typeName.name | lower}}_from_{{ alt.scalar }}():
-    instance = {{node.typeName.name}}.load({{ alt.value | safe }})
+    instance = {{node.typeName.name}}.load({{ alt.value }})
     assert instance is not None
     {%- for item in alt.validation %}
     {%- if item.value == "True" or item.value == "False" %}
     assert {% if item.value == "False" %}not {% endif %}instance.{{ item.key }}
     {%- else %}
-    assert instance.{{ item.key }} == {{ item.delimeter | safe }}{{ item.value | safe }}{{ item.delimeter | safe }}
+    assert instance.{{ item.key }} == {{ item.delimeter }}{{ item.value }}{{ item.delimeter }}
     {%- endif %}
     {%- endfor %}
 {% endfor %}

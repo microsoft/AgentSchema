@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class PropertyYamlConverter : YamlConverter<Property>
+public class PropertyYamlConverter: YamlConverter<Property>
 {
     /// <summary>
     /// Singleton instance of the Property converter.
@@ -16,7 +16,7 @@ public class PropertyYamlConverter : YamlConverter<Property>
 
     public override Property Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic Property instance
         Property instance;
@@ -25,7 +25,7 @@ public class PropertyYamlConverter : YamlConverter<Property>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Property is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "array" => rootDeserializer(typeof(ArrayProperty)) as ArrayProperty ??
                     throw new YamlException("Empty ArrayProperty instances are not supported"),
@@ -58,7 +58,7 @@ public class PropertyYamlConverter : YamlConverter<Property>
                     break;
                 case "required":
                     var requiredValue = parser.Consume<Scalar>();
-                    if (bool.TryParse(requiredValue.Value, out var requiredItem))
+                    if(bool.TryParse(requiredValue.Value, out var requiredItem))
                     {
                         instance.Required = requiredItem;
                     }
@@ -70,9 +70,9 @@ public class PropertyYamlConverter : YamlConverter<Property>
                     instance.Example = rootDeserializer(typeof(object));
                     break;
                 case "enumValues":
-                    /*
-            instance.EnumValues = [.. enumValuesValue.EnumerateArray().Select(x => x.GetScalarValue() ?? throw new YamlException("Empty array elements for enumValues are not supported"))];
-                    */
+                            /*
+                    instance.EnumValues = [.. enumValuesValue.EnumerateArray().Select(x => x.GetScalarValue() ?? throw new YamlException("Empty array elements for enumValues are not supported"))];
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in Property.");
@@ -87,40 +87,40 @@ public class PropertyYamlConverter : YamlConverter<Property>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
-        if (value.Description != null)
+        
+        if(value.Description != null)
         {
             emitter.Emit(new Scalar("description"));
             serializer(value.Description, typeof(string));
         }
-
-        if (value.Required != null)
+        
+        if(value.Required != null)
         {
             emitter.Emit(new Scalar("required"));
             serializer(value.Required, typeof(bool));
         }
-
-        if (value.Default != null)
+        
+        if(value.Default != null)
         {
             emitter.Emit(new Scalar("default"));
             serializer(value.Default, typeof(object));
         }
-
-        if (value.Example != null)
+        
+        if(value.Example != null)
         {
             emitter.Emit(new Scalar("example"));
             serializer(value.Example, typeof(object));
         }
-
-        if (value.EnumValues != null)
+        
+        if(value.EnumValues != null)
         {
             emitter.Emit(new Scalar("enumValues"));
             serializer(value.EnumValues, typeof(IList<object>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

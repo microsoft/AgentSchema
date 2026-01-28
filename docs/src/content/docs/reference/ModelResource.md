@@ -30,8 +30,6 @@ classDiagram
     }
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -40,20 +38,9 @@ id: gpt-4o
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | kind | string | The kind identifier for model resources  |
 | id | string | The unique identifier of the model resource  |
-
-
-
-
-
-
-
-

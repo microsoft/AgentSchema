@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpServerToolSpecifyApprovalModeYamlConverter : YamlConverter<McpServerToolSpecifyApprovalMode>
+public class McpServerToolSpecifyApprovalModeYamlConverter: YamlConverter<McpServerToolSpecifyApprovalMode>
 {
     /// <summary>
     /// Singleton instance of the McpServerToolSpecifyApprovalMode converter.
@@ -16,7 +16,7 @@ public class McpServerToolSpecifyApprovalModeYamlConverter : YamlConverter<McpSe
 
     public override McpServerToolSpecifyApprovalMode Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new McpServerToolSpecifyApprovalMode();
@@ -31,14 +31,14 @@ public class McpServerToolSpecifyApprovalModeYamlConverter : YamlConverter<McpSe
                     instance.Kind = kindValue.Value ?? throw new ArgumentException("Properties must contain a property named: kind");
                     break;
                 case "alwaysRequireApprovalTools":
-                    /*
-            instance.AlwaysRequireApprovalTools = [.. alwaysRequireApprovalToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for alwaysRequireApprovalTools are not supported"))];
-                    */
+                            /*
+                    instance.AlwaysRequireApprovalTools = [.. alwaysRequireApprovalToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for alwaysRequireApprovalTools are not supported"))];
+                            */
                     break;
                 case "neverRequireApprovalTools":
-                    /*
-            instance.NeverRequireApprovalTools = [.. neverRequireApprovalToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for neverRequireApprovalTools are not supported"))];
-                    */
+                            /*
+                    instance.NeverRequireApprovalTools = [.. neverRequireApprovalToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for neverRequireApprovalTools are not supported"))];
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in McpServerToolSpecifyApprovalMode.");
@@ -53,13 +53,13 @@ public class McpServerToolSpecifyApprovalModeYamlConverter : YamlConverter<McpSe
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("alwaysRequireApprovalTools"));
         serializer(value.AlwaysRequireApprovalTools, typeof(IList<string>));
-
+        
         emitter.Emit(new Scalar("neverRequireApprovalTools"));
         serializer(value.NeverRequireApprovalTools, typeof(IList<string>));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ResourceJsonConverter : JsonConverter<Resource>
+public class ResourceJsonConverter: JsonConverter<Resource>
 {
     public override Resource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,18 +23,18 @@ public class ResourceJsonConverter : JsonConverter<Resource>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // load polymorphic Resource instance
             Resource instance;
             if (rootElement.TryGetProperty("kind", out JsonElement discriminatorValue))
             {
-                var discriminator = discriminatorValue.GetString()
+                var discriminator = discriminatorValue.GetString() 
                     ?? throw new JsonException("Empty discriminator value for Resource is not supported");
-                instance = discriminator switch
+                instance = discriminator switch 
                 {
-                    "model" => JsonSerializer.Deserialize<ModelResource>(rootElement, options)
+                    "model" => JsonSerializer.Deserialize<ModelResource> (rootElement, options)
                         ?? throw new JsonException("Empty ModelResource instances are not supported"),
-                    "tool" => JsonSerializer.Deserialize<ToolResource>(rootElement, options)
+                    "tool" => JsonSerializer.Deserialize<ToolResource> (rootElement, options)
                         ?? throw new JsonException("Empty ToolResource instances are not supported"),
                     _ => throw new JsonException($"Unknown Resource discriminator value: {discriminator}"),
                 };
@@ -47,12 +47,12 @@ public class ResourceJsonConverter : JsonConverter<Resource>
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             return instance;
         }
     }
@@ -62,10 +62,10 @@ public class ResourceJsonConverter : JsonConverter<Resource>
         writer.WriteStartObject();
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
+        
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WriteEndObject();
     }
 }

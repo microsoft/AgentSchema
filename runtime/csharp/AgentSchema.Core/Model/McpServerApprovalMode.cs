@@ -14,15 +14,15 @@ public abstract class McpServerApprovalMode
     /// <summary>
     /// Initializes a new instance of <see cref="McpServerApprovalMode"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     protected McpServerApprovalMode()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// The kind identifier for string approval modes
     /// </summary>
     public virtual string Kind { get; set; } = string.Empty;
-
+    
 }

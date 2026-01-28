@@ -48,8 +48,6 @@ classDiagram
     ContainerAgent *-- EnvironmentVariable
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -63,9 +61,6 @@ environmentVariables:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -74,16 +69,9 @@ environmentVariables:
 | protocols | [ProtocolVersionRecord[]](../protocolversionrecord/) | Protocol used by the containerized agent  |
 | environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container  |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `ContainerAgent`:
 
 - [ProtocolVersionRecord](../protocolversionrecord/)
 - [EnvironmentVariable](../environmentvariable/)
-
-

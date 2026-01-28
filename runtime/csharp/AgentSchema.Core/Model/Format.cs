@@ -14,25 +14,25 @@ public class Format
     /// <summary>
     /// Initializes a new instance of <see cref="Format"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public Format()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)
     /// </summary>
     public string Kind { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Whether the template can emit structural text for parsing output
     /// </summary>
     public bool? Strict { get; set; }
-
+        
     /// <summary>
     /// Options for the template engine
     /// </summary>
     public IDictionary<string, object>? Options { get; set; }
-
+    
 }

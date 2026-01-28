@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpServerApprovalModeYamlConverter : YamlConverter<McpServerApprovalMode>
+public class McpServerApprovalModeYamlConverter: YamlConverter<McpServerApprovalMode>
 {
     /// <summary>
     /// Singleton instance of the McpServerApprovalMode converter.
@@ -16,7 +16,7 @@ public class McpServerApprovalModeYamlConverter : YamlConverter<McpServerApprova
 
     public override McpServerApprovalMode Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic McpServerApprovalMode instance
         McpServerApprovalMode instance;
@@ -25,7 +25,7 @@ public class McpServerApprovalModeYamlConverter : YamlConverter<McpServerApprova
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for McpServerApprovalMode is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "always" => rootDeserializer(typeof(McpServerToolAlwaysRequireApprovalMode)) as McpServerToolAlwaysRequireApprovalMode ??
                     throw new YamlException("Empty McpServerToolAlwaysRequireApprovalMode instances are not supported"),
@@ -63,7 +63,7 @@ public class McpServerApprovalModeYamlConverter : YamlConverter<McpServerApprova
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

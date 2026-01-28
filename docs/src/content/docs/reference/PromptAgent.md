@@ -100,8 +100,6 @@ user:
 {{question}}
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -141,9 +139,6 @@ instructions: |-
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -155,17 +150,10 @@ instructions: |-
 | instructions | string | Give your agent clear directions on what to do and how to do it. Include specific tasks, their order, and any special instructions like tone or engagement style. (can use this for a pure yaml declaration or as content in the markdown format)  |
 | additionalInstructions | string | Additional instructions or context for the agent, can be used to provide extra guidance (can use this for a pure yaml declaration)  |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `PromptAgent`:
 
 - [Model](../model/)
 - [Tool](../tool/)
 - [Template](../template/)
-
-

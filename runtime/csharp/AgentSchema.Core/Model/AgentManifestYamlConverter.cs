@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class AgentManifestYamlConverter : YamlConverter<AgentManifest>
+public class AgentManifestYamlConverter: YamlConverter<AgentManifest>
 {
     /// <summary>
     /// Singleton instance of the AgentManifest converter.
@@ -16,7 +16,7 @@ public class AgentManifestYamlConverter : YamlConverter<AgentManifest>
 
     public override AgentManifest Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new AgentManifest();
@@ -51,37 +51,37 @@ public class AgentManifestYamlConverter : YamlConverter<AgentManifest>
                     instance.Parameters = parametersValue;
                     break;
                 case "resources":
-                    /*
-            if (resourcesValue.ValueKind == JsonValueKind.Array)
-            {
-
-                instance.Resources = 
-                    [.. resourcesValue.EnumerateArray()
-                        .Select(x => JsonSerializer.Deserialize<Resource> (x.GetRawText(), options)
-                            ?? throw new YamlException("Empty array elements for Resources are not supported"))];
-            }
-                    */
-                    /*
-            else if (resourcesValue.ValueKind == JsonValueKind.Object)
-            {
-                instance.Resources = 
-                    [.. resourcesValue.EnumerateObject()
-                        .Select(property =>
-                        {
-                            var item = JsonSerializer.Deserialize<Resource>(property.Value.GetRawText(), options)
-                                ?? throw new YamlException("Empty array elements for Resources are not supported");
-                            item.Name = property.Name;
-                            return item;
-                        })];
-            }
-                    */
-
-                    /*
-            else
-            {
-                throw new YamlException("Invalid JSON token for resources");
-            }
-                    */
+                            /*
+                    if (resourcesValue.ValueKind == JsonValueKind.Array)
+                    {
+                            
+                        instance.Resources = 
+                            [.. resourcesValue.EnumerateArray()
+                                .Select(x => JsonSerializer.Deserialize<Resource> (x.GetRawText(), options)
+                                    ?? throw new YamlException("Empty array elements for Resources are not supported"))];
+                    }
+                            */
+                            /*
+                    else if (resourcesValue.ValueKind == JsonValueKind.Object)
+                    {
+                        instance.Resources = 
+                            [.. resourcesValue.EnumerateObject()
+                                .Select(property =>
+                                {
+                                    var item = JsonSerializer.Deserialize<Resource>(property.Value.GetRawText(), options)
+                                        ?? throw new YamlException("Empty array elements for Resources are not supported");
+                                    item.Name = property.Name;
+                                    return item;
+                                })];
+                    }
+                            */
+                    
+                            /*
+                    else
+                    {
+                        throw new YamlException("Invalid JSON token for resources");
+                    }
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in AgentManifest.");
@@ -96,31 +96,31 @@ public class AgentManifestYamlConverter : YamlConverter<AgentManifest>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("displayName"));
         serializer(value.DisplayName, typeof(string));
-
-        if (value.Description != null)
+        
+        if(value.Description != null)
         {
             emitter.Emit(new Scalar("description"));
             serializer(value.Description, typeof(string));
         }
-
-        if (value.Metadata != null)
+        
+        if(value.Metadata != null)
         {
             emitter.Emit(new Scalar("metadata"));
             serializer(value.Metadata, typeof(IDictionary<string, object>));
         }
-
+        
         emitter.Emit(new Scalar("template"));
         serializer(value.Template, typeof(AgentDefinition));
-
+        
         emitter.Emit(new Scalar("parameters"));
         serializer(value.Parameters, typeof(PropertySchema));
-
+        
         emitter.Emit(new Scalar("resources"));
         serializer(value.Resources, typeof(IList<Resource>));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

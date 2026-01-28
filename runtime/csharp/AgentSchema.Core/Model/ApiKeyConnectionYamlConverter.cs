@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ApiKeyConnectionYamlConverter : YamlConverter<ApiKeyConnection>
+public class ApiKeyConnectionYamlConverter: YamlConverter<ApiKeyConnection>
 {
     /// <summary>
     /// Singleton instance of the ApiKeyConnection converter.
@@ -16,7 +16,7 @@ public class ApiKeyConnectionYamlConverter : YamlConverter<ApiKeyConnection>
 
     public override ApiKeyConnection Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new ApiKeyConnection();
@@ -51,13 +51,13 @@ public class ApiKeyConnectionYamlConverter : YamlConverter<ApiKeyConnection>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("endpoint"));
         serializer(value.Endpoint, typeof(string));
-
+        
         emitter.Emit(new Scalar("apiKey"));
         serializer(value.ApiKey, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

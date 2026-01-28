@@ -14,20 +14,20 @@ public class EnvironmentVariable
     /// <summary>
     /// Initializes a new instance of <see cref="EnvironmentVariable"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public EnvironmentVariable()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Name of the environment variable
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Environment variable resolution
     /// </summary>
     public string Value { get; set; } = string.Empty;
-
+    
 }

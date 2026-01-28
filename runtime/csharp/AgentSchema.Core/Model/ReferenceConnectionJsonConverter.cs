@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ReferenceConnectionJsonConverter : JsonConverter<ReferenceConnection>
+public class ReferenceConnectionJsonConverter: JsonConverter<ReferenceConnection>
 {
     public override ReferenceConnection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,24 +23,24 @@ public class ReferenceConnectionJsonConverter : JsonConverter<ReferenceConnectio
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new ReferenceConnection();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("name", out JsonElement nameValue))
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("target", out JsonElement targetValue))
             {
                 instance.Target = targetValue.GetString();
             }
-
+            
             return instance;
         }
     }
@@ -50,16 +50,16 @@ public class ReferenceConnectionJsonConverter : JsonConverter<ReferenceConnectio
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
-        if (value.Target != null)
+        
+        if(value.Target != null)
         {
             writer.WritePropertyName("target");
             JsonSerializer.Serialize(writer, value.Target, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

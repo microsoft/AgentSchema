@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class AnonymousConnectionJsonConverter : JsonConverter<AnonymousConnection>
+public class AnonymousConnectionJsonConverter: JsonConverter<AnonymousConnection>
 {
     public override AnonymousConnection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class AnonymousConnectionJsonConverter : JsonConverter<AnonymousConnectio
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new AnonymousConnection();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("endpoint", out JsonElement endpointValue))
             {
                 instance.Endpoint = endpointValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: endpoint");
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class AnonymousConnectionJsonConverter : JsonConverter<AnonymousConnectio
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("endpoint");
         JsonSerializer.Serialize(writer, value.Endpoint, options);
-
+        
         writer.WriteEndObject();
     }
 }

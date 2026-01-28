@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ModelResourceJsonConverter : JsonConverter<ModelResource>
+public class ModelResourceJsonConverter: JsonConverter<ModelResource>
 {
     public override ModelResource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class ModelResourceJsonConverter : JsonConverter<ModelResource>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new ModelResource();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("id", out JsonElement idValue))
             {
                 instance.Id = idValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: id");
             }
-
+            
             return instance;
         }
     }
@@ -45,10 +45,10 @@ public class ModelResourceJsonConverter : JsonConverter<ModelResource>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("id");
         JsonSerializer.Serialize(writer, value.Id, options);
-
+        
         writer.WriteEndObject();
     }
 }

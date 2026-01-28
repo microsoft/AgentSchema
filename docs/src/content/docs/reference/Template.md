@@ -43,8 +43,6 @@ classDiagram
     Template *-- Parser
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -55,9 +53,6 @@ parser:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -65,16 +60,9 @@ parser:
 | format | [Format](../format/) | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)  |
 | parser | [Parser](../parser/) | Parser used to process the rendered template into API-compatible format  |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `Template`:
 
 - [Format](../format/)
 - [Parser](../parser/)
-
-

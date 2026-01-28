@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ToolResourceYamlConverter : YamlConverter<ToolResource>
+public class ToolResourceYamlConverter: YamlConverter<ToolResource>
 {
     /// <summary>
     /// Singleton instance of the ToolResource converter.
@@ -16,7 +16,7 @@ public class ToolResourceYamlConverter : YamlConverter<ToolResource>
 
     public override ToolResource Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new ToolResource();
@@ -51,13 +51,13 @@ public class ToolResourceYamlConverter : YamlConverter<ToolResource>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("id"));
         serializer(value.Id, typeof(string));
-
+        
         emitter.Emit(new Scalar("options"));
         serializer(value.Options, typeof(IDictionary<string, object>));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

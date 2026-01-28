@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema.core import FunctionTool
 
 
 def test_load_json_functiontool():
-    json_data = """
+    json_data = '''
     {
       "kind": "function",
       "parameters": {
@@ -26,17 +27,17 @@ def test_load_json_functiontool():
       },
       "strict": true
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FunctionTool.load(data)
     assert instance is not None
     assert instance.kind == "function"
-
+    
     assert instance.strict
-
+    
 
 def test_load_yaml_functiontool():
-    yaml_data = """
+    yaml_data = '''
     kind: function
     parameters:
       properties:
@@ -51,16 +52,15 @@ def test_load_yaml_functiontool():
           value: What is the meaning of life?
     strict: true
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = FunctionTool.load(data)
     assert instance is not None
     assert instance.kind == "function"
     assert instance.strict
 
-
 def test_load_json_functiontool_1():
-    json_data = """
+    json_data = '''
     {
       "kind": "function",
       "parameters": {
@@ -84,17 +84,17 @@ def test_load_json_functiontool_1():
       },
       "strict": true
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FunctionTool.load(data)
     assert instance is not None
     assert instance.kind == "function"
-
+    
     assert instance.strict
-
+    
 
 def test_load_yaml_functiontool_1():
-    yaml_data = """
+    yaml_data = '''
     kind: function
     parameters:
       properties:
@@ -109,9 +109,11 @@ def test_load_yaml_functiontool_1():
           value: What is the meaning of life?
     strict: true
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = FunctionTool.load(data)
     assert instance is not None
     assert instance.kind == "function"
     assert instance.strict
+
+

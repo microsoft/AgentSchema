@@ -582,3 +582,87 @@ const getTemplateType = (type: Type | undefined): Type | undefined => {
   }
   return undefined;
 };
+
+
+// ============================================================================
+// Render Context Interfaces
+// ============================================================================
+// These interfaces define the pure data structures passed to Nunjucks templates.
+// Templates should receive only data (no functions) - all rendering logic
+// should be implemented as Nunjucks macros.
+
+/**
+ * Context for rendering a single Python class.
+ */
+export interface PythonClassContext {
+  /** The TypeNode being rendered */
+  node: TypeNode;
+  /** Type mapping from TypeSpec types to Python types */
+  typeMapper: Record<string, string>;
+  /** Processed alternate representations for shorthand constructors */
+  alternates: Array<{ scalar: string; alternate: string }>;
+  /** Polymorphic type information if this is a discriminated type */
+  polymorphicTypes: ReturnType<TypeNode['retrievePolymorphicTypes']> | undefined;
+  /** Import types needed from other modules */
+  imports: string[];
+  /** Collection properties with their nested type info for load_* methods */
+  collectionTypes: Array<{ prop: PropertyNode; type: string[] }>;
+}
+
+/**
+ * Context for rendering a Python file containing one or more classes.
+ */
+export interface PythonFileContext {
+  /** Whether any class in the file is abstract */
+  containsAbstract: boolean;
+  /** Python typing imports needed (e.g., "Any", "Callable", "Optional") */
+  typings: string[];
+  /** Import types needed from other modules */
+  imports: string[];
+  /** Array of class contexts to render */
+  classes: PythonClassContext[];
+  /** Type mapping from TypeSpec types to Python types */
+  typeMapper: Record<string, string>;
+}
+
+/**
+ * Context for rendering a Python __init__.py file.
+ */
+export interface PythonInitContext {
+  /** Base types (types without a parent) for top-level imports */
+  baseTypes: TypeNode[];
+  /** All types for __all__ export list */
+  types: TypeNode[];
+}
+
+/**
+ * Context for rendering Python test files.
+ */
+export interface PythonTestContext {
+  /** The TypeNode being tested */
+  node: TypeNode;
+  /** Flattened sample combinations for testing */
+  examples: Array<{
+    json: string[];
+    yaml: string[];
+    validation: Array<{ key: string; value: any; delimeter: string }>;
+  }>;
+  /** Alternate representation tests */
+  alternates: Array<{
+    title: string;
+    scalar: string;
+    value: string;
+    validation: Array<{ key: string; value: any; delimeter: string }>;
+  }>;
+}
+
+/**
+ * Base render context interface - all language contexts should extend this.
+ * This ensures consistency across emitters.
+ */
+export interface BaseRenderContext {
+  /** The TypeNode being rendered */
+  node: TypeNode;
+  /** Type mapping from TypeSpec types to target language types */
+  typeMapper: Record<string, string>;
+}

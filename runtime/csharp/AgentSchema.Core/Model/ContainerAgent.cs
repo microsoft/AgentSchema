@@ -16,25 +16,25 @@ public class ContainerAgent : AgentDefinition
     /// <summary>
     /// Initializes a new instance of <see cref="ContainerAgent"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public ContainerAgent()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Type of agent, e.g., 'hosted'
     /// </summary>
     public override string Kind { get; set; } = "hosted";
-
+        
     /// <summary>
     /// Protocol used by the containerized agent
     /// </summary>
     public IList<ProtocolVersionRecord> Protocols { get; set; } = [];
-
+        
     /// <summary>
     /// Environment variables to set in the container
     /// </summary>
     public IList<EnvironmentVariable>? EnvironmentVariables { get; set; }
-
+    
 }

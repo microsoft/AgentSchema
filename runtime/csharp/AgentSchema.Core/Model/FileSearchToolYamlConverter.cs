@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class FileSearchToolYamlConverter : YamlConverter<FileSearchTool>
+public class FileSearchToolYamlConverter: YamlConverter<FileSearchTool>
 {
     /// <summary>
     /// Singleton instance of the FileSearchTool converter.
@@ -16,7 +16,7 @@ public class FileSearchToolYamlConverter : YamlConverter<FileSearchTool>
 
     public override FileSearchTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new FileSearchTool();
@@ -35,13 +35,13 @@ public class FileSearchToolYamlConverter : YamlConverter<FileSearchTool>
                     instance.Connection = connectionValue;
                     break;
                 case "vectorStoreIds":
-                    /*
-            instance.VectorStoreIds = [.. vectorStoreIdsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for vectorStoreIds are not supported"))];
-                    */
+                            /*
+                    instance.VectorStoreIds = [.. vectorStoreIdsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for vectorStoreIds are not supported"))];
+                            */
                     break;
                 case "maximumResultCount":
                     var maximumResultCountValue = parser.Consume<Scalar>();
-                    if (int.TryParse(maximumResultCountValue.Value, out var maximumResultCountItem))
+                    if(int.TryParse(maximumResultCountValue.Value, out var maximumResultCountItem))
                     {
                         instance.MaximumResultCount = maximumResultCountItem;
                     }
@@ -52,7 +52,7 @@ public class FileSearchToolYamlConverter : YamlConverter<FileSearchTool>
                     break;
                 case "scoreThreshold":
                     var scoreThresholdValue = parser.Consume<Scalar>();
-                    if (float.TryParse(scoreThresholdValue.Value, out var scoreThresholdItem))
+                    if(float.TryParse(scoreThresholdValue.Value, out var scoreThresholdItem))
                     {
                         instance.ScoreThreshold = scoreThresholdItem;
                     }
@@ -74,37 +74,37 @@ public class FileSearchToolYamlConverter : YamlConverter<FileSearchTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("connection"));
         serializer(value.Connection, typeof(Connection));
-
+        
         emitter.Emit(new Scalar("vectorStoreIds"));
         serializer(value.VectorStoreIds, typeof(IList<string>));
-
-        if (value.MaximumResultCount != null)
+        
+        if(value.MaximumResultCount != null)
         {
             emitter.Emit(new Scalar("maximumResultCount"));
             serializer(value.MaximumResultCount, typeof(int));
         }
-
-        if (value.Ranker != null)
+        
+        if(value.Ranker != null)
         {
             emitter.Emit(new Scalar("ranker"));
             serializer(value.Ranker, typeof(string));
         }
-
-        if (value.ScoreThreshold != null)
+        
+        if(value.ScoreThreshold != null)
         {
             emitter.Emit(new Scalar("scoreThreshold"));
             serializer(value.ScoreThreshold, typeof(float));
         }
-
-        if (value.Filters != null)
+        
+        if(value.Filters != null)
         {
             emitter.Emit(new Scalar("filters"));
             serializer(value.Filters, typeof(IDictionary<string, object>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

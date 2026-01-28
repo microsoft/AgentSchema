@@ -15,20 +15,20 @@ public class ArrayProperty : Property
     /// <summary>
     /// Initializes a new instance of <see cref="ArrayProperty"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public ArrayProperty()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// 
     /// </summary>
     public override string Kind { get; set; } = "array";
-
+        
     /// <summary>
     /// The type of items contained in the array
     /// </summary>
     public Property Items { get; set; }
-
+    
 }

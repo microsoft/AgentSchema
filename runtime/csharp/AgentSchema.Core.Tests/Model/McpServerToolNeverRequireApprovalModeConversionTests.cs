@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class McpServerToolNeverRequireApprovalModeConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

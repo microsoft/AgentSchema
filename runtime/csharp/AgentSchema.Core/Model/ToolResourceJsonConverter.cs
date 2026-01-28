@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ToolResourceJsonConverter : JsonConverter<ToolResource>
+public class ToolResourceJsonConverter: JsonConverter<ToolResource>
 {
     public override ToolResource Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,24 +23,24 @@ public class ToolResourceJsonConverter : JsonConverter<ToolResource>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new ToolResource();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("id", out JsonElement idValue))
             {
                 instance.Id = idValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: id");
             }
-
+            
             if (rootElement.TryGetProperty("options", out JsonElement optionsValue))
             {
                 instance.Options = JsonSerializer.Deserialize<Dictionary<string, object>>(optionsValue.GetRawText(), options) ?? throw new ArgumentException("Properties must contain a property named: options");
             }
-
+            
             return instance;
         }
     }
@@ -50,13 +50,13 @@ public class ToolResourceJsonConverter : JsonConverter<ToolResource>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("id");
         JsonSerializer.Serialize(writer, value.Id, options);
-
+        
         writer.WritePropertyName("options");
         JsonSerializer.Serialize(writer, value.Options, options);
-
+        
         writer.WriteEndObject();
     }
 }

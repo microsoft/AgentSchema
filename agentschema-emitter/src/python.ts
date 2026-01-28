@@ -1,12 +1,23 @@
-import { EmitContext, emitFile, isUnknownType, resolvePath, Type } from "@typespec/compiler";
+import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
-import { enumerateTypes, PropertyNode, TypeNode } from "./ast.js";
-import * as nunjucks from "nunjucks";
-import path from "path";
+import {
+  enumerateTypes,
+  PropertyNode,
+  TypeNode,
+  PythonClassContext,
+  PythonFileContext,
+  PythonInitContext,
+  PythonTestContext
+} from "./ast.js";
 import { getCombinations, scalarValue } from "./utilities.js";
+import { createTemplateEngine } from "./template-engine.js";
 import * as YAML from "yaml";
 
-const pythonTypeMapper: Record<string, string> = {
+/**
+ * Type mapping from TypeSpec scalar types to Python types.
+ * This is passed as data to templates, not used for inline rendering.
+ */
+export const pythonTypeMapper: Record<string, string> = {
   "string": "str",
   "number": "float",
   "array": "list",
@@ -23,226 +34,208 @@ const pythonTypeMapper: Record<string, string> = {
   "dictionary": "dict[str, Any]",
 };
 
-
-export const generatePython = async (context: EmitContext<AgentSchemaEmitterOptions>, templateDir: string, node: TypeNode, emitTarget: EmitTarget) => {
-  // set up template environment
-  const templatePath = path.resolve(templateDir, 'python');
-  const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatePath));
-  const fileTemplate = env.getTemplate('dataclass.njk', true);
-  const classTemplate = env.getTemplate('class.njk', true);
-  const initTemplate = env.getTemplate('init.njk', true);
-  const testTemplate = env.getTemplate('test.njk', true);
+/**
+ * Main entry point for Python code generation.
+ * Prepares pure data contexts and delegates rendering to Nunjucks templates.
+ */
+export const generatePython = async (
+  context: EmitContext<AgentSchemaEmitterOptions>,
+  templateDir: string,
+  node: TypeNode,
+  emitTarget: EmitTarget
+): Promise<void> => {
+  // Create template engine with Python templates + shared macros
+  const engine = createTemplateEngine(templateDir, 'python');
 
   const nodes = Array.from(enumerateTypes(node));
 
-  // render init file
-  await emitPythonFile(context, node, renderInit(nodes, initTemplate), `__init__.py`, emitTarget["output-dir"]);
+  // Render init file
+  const initContext = buildInitContext(nodes);
+  const initContent = engine.render('init.py.njk', initContext);
+  await emitPythonFile(context, '__init__.py', initContent, emitTarget["output-dir"]);
 
-  for (const node of nodes) {
-    // render each class
-
-    // skip child types
-    if (!node.base) {
-      // render class file
-      await emitPythonFile(context, node, renderPython(node, fileTemplate, classTemplate), `_${node.typeName.name}.py`, emitTarget["output-dir"]);
+  // Render each base type and its children as a single file
+  for (const n of nodes) {
+    // Skip child types - they're rendered with their parent
+    if (!n.base) {
+      const fileContext = buildFileContext(n);
+      const fileContent = engine.render('file.py.njk', fileContext);
+      await emitPythonFile(context, `_${n.typeName.name}.py`, fileContent, emitTarget["output-dir"]);
     }
 
+    // Render test file for each type
     if (emitTarget["test-dir"]) {
-      // render test file
-      await emitPythonFile(context, node, renderTest(node, testTemplate), `test_load_${node.typeName.name.toLowerCase()}.py`, emitTarget["test-dir"]);
+      const testContext = buildTestContext(n);
+      const testContent = engine.render('test.py.njk', testContext);
+      await emitPythonFile(context, `test_load_${n.typeName.name.toLowerCase()}.py`, testContent, emitTarget["test-dir"]);
     }
   }
 };
 
-const renderTest = (node: TypeNode, testTemplate: nunjucks.Template): string => {
-  const samples = node.properties.filter(p => p.samples && p.samples.length > 0).map(p => {
-    return p.samples?.map(s => ({
-      ...s.sample,
-    }));
-  });
+/**
+ * Build context for rendering a single Python class.
+ */
+function buildClassContext(node: TypeNode): PythonClassContext {
+  return {
+    node,
+    typeMapper: pythonTypeMapper,
+    alternates: prepareAlternates(node),
+    polymorphicTypes: node.retrievePolymorphicTypes(),
+    imports: getUniqueImportTypes(node),
+    collectionTypes: getCollectionTypes(node),
+  };
+}
 
-  const combinations =
-    samples.length > 0 ?
-      getCombinations(samples) :
-      [];
+/**
+ * Build context for rendering a Python file with a base type and its children.
+ */
+function buildFileContext(node: TypeNode): PythonFileContext {
+  // Build class contexts for this node and all its children
+  const classes: PythonClassContext[] = [
+    buildClassContext(node),
+    ...node.childTypes.map(ct => buildClassContext(ct))
+  ];
 
-  const flattened = combinations.map(c => {
+  return {
+    containsAbstract: node.isAbstract || node.childTypes.some(c => c.isAbstract),
+    typings: ["Any", "Callable", "Optional"],
+    imports: getUniqueImportTypes(node),
+    classes,
+    typeMapper: pythonTypeMapper,
+  };
+}
+
+/**
+ * Build context for rendering the __init__.py file.
+ */
+function buildInitContext(nodes: TypeNode[]): PythonInitContext {
+  return {
+    baseTypes: nodes.filter(n => !n.base),
+    types: nodes,
+  };
+}
+
+/**
+ * Build context for rendering a test file.
+ */
+function buildTestContext(node: TypeNode): PythonTestContext {
+  // Get sample properties and generate combinations
+  const samples = node.properties
+    .filter(p => p.samples && p.samples.length > 0)
+    .map(p => p.samples?.map(s => ({ ...s.sample })));
+
+  const combinations = samples.length > 0 ? getCombinations(samples) : [];
+
+  // Flatten combinations into test examples
+  const examples = combinations.map(c => {
     const sample = Object.assign({}, ...c);
     return {
       json: JSON.stringify(sample, null, 2).split('\n'),
       yaml: YAML.stringify(sample, { indent: 2 }).split('\n'),
-      // get all scalars in the sample
-      validation: Object.keys(sample).filter(key => typeof sample[key] !== 'object').map(key => ({
-        key: key,
-        value: typeof sample[key] === 'boolean' ? (sample[key] ? "True" : "False") : sample[key],
-        delimeter: typeof sample[key] === 'string' ? (sample[key].includes('\n') ? '"""' : '"') : '',
-      })),
+      validation: Object.keys(sample)
+        .filter(key => typeof sample[key] !== 'object')
+        .map(key => ({
+          key,
+          value: typeof sample[key] === 'boolean'
+            ? (sample[key] ? "True" : "False")
+            : sample[key],
+          delimeter: typeof sample[key] === 'string'
+            ? (sample[key].includes('\n') ? '"""' : '"')
+            : '',
+        })),
     };
   });
 
+  // Prepare alternate test cases
   const alternates = node.alternates.map(alt => {
-    const example = alt.example ? (typeof (alt.example) === "string" ? '"' + alt.example + '"' : alt.example.toString()) : scalarValue[alt.scalar] || "None";
+    const example = alt.example
+      ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString())
+      : scalarValue[alt.scalar] || "None";
+
     return {
       title: alt.title || alt.scalar,
       scalar: alt.scalar,
       value: example,
-      validation: Object.keys(alt.expansion).filter(key => typeof alt.expansion[key] !== 'object').map(key => {
-        const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
-        return {
-          key: key,
-          value: value,
-          delimeter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
-        };
-      }),
+      validation: Object.keys(alt.expansion)
+        .filter(key => typeof alt.expansion[key] !== 'object')
+        .map(key => {
+          const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
+          return {
+            key,
+            value,
+            delimeter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
+          };
+        }),
     };
   });
 
-  const test = testTemplate.render({
-    node: node,
-    // replace control characters in samples
-    examples: flattened,
-    alternates: alternates,
-  });
-  return test;
-};
-
-const renderInit = (nodes: TypeNode[], initTemplate: nunjucks.Template): string => {
-  const n = nodes.filter(n => !n.base);
-  const init = initTemplate.render({
-    baseTypes: n,
-    types: nodes,
-  });
-  return init;
-};
-
-const renderPython = (node: TypeNode, fileTemplate: nunjucks.Template, classTemplate: nunjucks.Template): string => {
-  // render a single class and its children
-
-  const renderClass = (n: TypeNode) => {
-    const collectionTypes = n.properties.filter(p => p.isCollection && !p.isScalar && !p.isDict).map(
-      p => ({ prop: p, type: p.type?.properties.filter(t => t.name !== "name").map(t => t.name) || [] })
-    );
-    return classTemplate.render({
-      node: n,
-      imports: importTypes(n),
-      renderType: renderType,
-      renderDefault: renderDefault,
-      renderSetInstance: renderSetInstance(n),
-      alternates: generateAlternates(n),
-      polymorphicTypes: n.retrievePolymorphicTypes(),
-      collectionTypes: collectionTypes,
-    });
+  return {
+    node,
+    examples,
+    alternates,
   };
+}
 
-  const classDef: string[] = [renderClass(node), ...node.childTypes.map(ct => renderClass(ct))];
-
-  const typings = ["Any", "Callable", "Optional"];
-  const python = fileTemplate.render({
-    containsAbstract: node.isAbstract || node.childTypes.some(c => c.isAbstract),
-    typings: typings,
-    imports: importTypes(node),
-    classes: classDef,
-  });
-
-  return python;
-};
-
-const generateAlternates = (node: TypeNode): { scalar: string; alternate: string }[] => {
-  if (node.alternates && node.alternates.length > 0) {
-    return node.alternates.map(alt => ({
-      scalar: pythonTypeMapper[alt.scalar],
-      alternate: JSON.stringify(alt.expansion, null, ``).replaceAll('\n', '').replaceAll("\"{value}\"", " data"),
-    }));
-  } else {
+/**
+ * Prepare alternate representations for template rendering.
+ * Converts alternates to Python-specific format with JSON stringification.
+ */
+function prepareAlternates(node: TypeNode): Array<{ scalar: string; alternate: string }> {
+  if (!node.alternates || node.alternates.length === 0) {
     return [];
   }
-};
 
-const renderType = (prop: PropertyNode): string => {
-  let type = prop.isScalar ? (pythonTypeMapper[prop.typeName.name] || "Any") : pythonTypeMapper[prop.typeName.name] || prop.typeName.name;
-  if (prop.isDict) {
-    type = `dict[str, Any]`;
-  }
-  if (prop.isCollection) {
-    type = `list[${type}]`;
-  }
-  if (prop.isOptional) {
-    type = `Optional[${type}]`;
-  }
-  return type;
+  return node.alternates.map(alt => ({
+    scalar: pythonTypeMapper[alt.scalar],
+    alternate: JSON.stringify(alt.expansion, null, '')
+      .replaceAll('\n', '')
+      .replaceAll('"{value}"', ' data'),
+  }));
 }
 
-const renderDefault = (prop: PropertyNode): string => {
-  if (prop.isCollection) {
-    return " = field(default_factory=list)";
-  } else if (prop.isOptional) {
-    return ` = None`;
-  } else if (prop.isScalar) {
-
-    if (prop.typeName.name === "boolean") {
-      return ` = field(default=${prop.defaultValue === true ? "True" : "False"})`;
-    } else if (prop.typeName.name === "string") {
-      return ` = field(default="${prop.defaultValue ?? ""}")`;
-    } else if (prop.typeName.name === "number" || prop.typeName.name === "numeric") {
-      return ` = field(default=${prop.defaultValue ?? "0.0"})`;
-    } else if (prop.typeName.name === "dictionary") {
-      return " = field(default_factory=dict)";
-    } else if (prop.typeName.name === "int64" || prop.typeName.name === "int32" || prop.typeName.name === "integer") {
-      return ` = field(default=${prop.defaultValue ?? "0"})`;
-    } else if (prop.typeName.name === "float64" || prop.typeName.name === "float32" || prop.typeName.name === "float") {
-      return ` = field(default=${prop.defaultValue ?? "0.0"})`;
-    } else {
-      return ` = field(default=${prop.defaultValue ?? "None"})`;
-    }
-  } else {
-    return ` = field(default_factory=${prop.typeName.name})`;
-  }
+/**
+ * Get collection properties with their nested type info for load_* methods.
+ */
+function getCollectionTypes(node: TypeNode): Array<{ prop: PropertyNode; type: string[] }> {
+  return node.properties
+    .filter(p => p.isCollection && !p.isScalar && !p.isDict)
+    .map(p => ({
+      prop: p,
+      type: p.type?.properties.filter(t => t.name !== "name").map(t => t.name) || [],
+    }));
 }
 
-const renderSetInstance = (node: TypeNode) => (prop: PropertyNode, variable: string, dictArg: string): string => {
-  const setter = `${variable}.${prop.name} = `;
-  if (prop.isScalar || prop.isDict) {
-    return `${setter}${dictArg}["${prop.name}"]`;
-  } else {
-    if (prop.isCollection) {
-      return `${setter}${node.typeName.name}.load_${prop.name}(${dictArg}["${prop.name}"], pre_process)`;
-    } else {
-      return `${setter}${prop.typeName.name}.load(${dictArg}["${prop.name}"], pre_process)`;
-    }
-  }
-}
-
-const containsOptional = (node: TypeNode): boolean => {
-  const optional = [
-    node.properties.some(p => p.isOptional),
-    ...node.childTypes.map(c => c.properties.some(p => p.isOptional))
-  ];
-  return optional.some(o => o);
-};
-
-const importTypes = (node: TypeNode): string[] => {
+/**
+ * Get unique import types needed from other modules.
+ * Excludes self-references and parent types.
+ */
+function getUniqueImportTypes(node: TypeNode): string[] {
   const imports = [
     node.properties.filter(p => !p.isScalar && !p.isDict).map(p => p.typeName.name),
-    ...node.childTypes.flatMap(c => c.properties.filter(p => !p.isScalar && !p.isDict).map(p => p.typeName.name))
+    ...node.childTypes.flatMap(c =>
+      c.properties.filter(p => !p.isScalar && !p.isDict).map(p => p.typeName.name)
+    )
   ].flat().filter(n => n !== node.typeName.name && node.base?.name !== n);
 
-  // remove duplicates and self references
-  const uniqueImports = new Set(imports);
-  return Array.from(uniqueImports).sort();
-};
+  // Remove duplicates and sort
+  return Array.from(new Set(imports)).sort();
+}
 
-const typeLink = (name: string) =>
-  name.toLowerCase().replaceAll(' ', '-');
-
-
-const emitPythonFile = async (context: EmitContext<AgentSchemaEmitterOptions>, type: TypeNode, python: string, filename: string, outputDir?: string) => {
+/**
+ * Write generated Python content to file using TypeSpec's emitFile API.
+ */
+async function emitPythonFile(
+  context: EmitContext<AgentSchemaEmitterOptions>,
+  filename: string,
+  content: string,
+  outputDir?: string
+): Promise<void> {
   outputDir = outputDir || `${context.emitterOutputDir}/python`;
-  //const typePath = type.typeName.namespace.split(".").map(part => typeLink(part));
-  // replace typename with file
-  //typePath.push(filename);
-  const path = resolvePath(outputDir, filename);
+  const filePath = resolvePath(outputDir, filename);
+
   await emitFile(context.program, {
-    path: resolvePath(path),
-    content: python,
+    path: filePath,
+    content,
   });
 }
+

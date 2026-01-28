@@ -14,25 +14,25 @@ public class ToolResource : Resource
     /// <summary>
     /// Initializes a new instance of <see cref="ToolResource"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public ToolResource()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// The kind identifier for tool resources
     /// </summary>
     public override string Kind { get; set; } = "tool";
-
+        
     /// <summary>
     /// The unique identifier of the tool resource
     /// </summary>
     public string Id { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Configuration options for the tool resource
     /// </summary>
     public IDictionary<string, object> Options { get; set; } = new Dictionary<string, object>();
-
+    
 }

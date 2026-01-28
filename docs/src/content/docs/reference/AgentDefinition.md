@@ -53,8 +53,6 @@ classDiagram
     AgentDefinition <|-- ContainerAgent
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -88,9 +86,6 @@ outputSchema:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -103,10 +98,6 @@ outputSchema:
 | inputSchema | [PropertySchema](../propertyschema/) | Input parameters that participate in template rendering  |
 | outputSchema | [PropertySchema](../propertyschema/) | Expected output format and structure from the agent  |
 
-
-
-
-
 ## Child Types
 
 The following types extend `AgentDefinition`:
@@ -114,7 +105,3 @@ The following types extend `AgentDefinition`:
 - [PromptAgent](../promptagent/)
 - [Workflow](../workflow/)
 - [ContainerAgent](../containeragent/)
-
-
-
-

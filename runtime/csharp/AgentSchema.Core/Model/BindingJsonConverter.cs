@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class BindingJsonConverter : JsonConverter<Binding>
+public class BindingJsonConverter: JsonConverter<Binding>
 {
     public override Binding Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -22,7 +22,7 @@ public class BindingJsonConverter : JsonConverter<Binding>
             {
                 Input = stringValue,
             };
-
+            
         }
         else if (reader.TokenType != JsonTokenType.StartObject)
         {
@@ -32,19 +32,19 @@ public class BindingJsonConverter : JsonConverter<Binding>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Binding();
             if (rootElement.TryGetProperty("name", out JsonElement nameValue))
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("input", out JsonElement inputValue))
             {
                 instance.Input = inputValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: input");
             }
-
+            
             return instance;
         }
     }
@@ -54,10 +54,10 @@ public class BindingJsonConverter : JsonConverter<Binding>
         writer.WriteStartObject();
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
+        
         writer.WritePropertyName("input");
         JsonSerializer.Serialize(writer, value.Input, options);
-
+        
         writer.WriteEndObject();
     }
 }

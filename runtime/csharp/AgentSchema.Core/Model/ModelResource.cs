@@ -14,20 +14,20 @@ public class ModelResource : Resource
     /// <summary>
     /// Initializes a new instance of <see cref="ModelResource"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public ModelResource()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// The kind identifier for model resources
     /// </summary>
     public override string Kind { get; set; } = "model";
-
+        
     /// <summary>
     /// The unique identifier of the model resource
     /// </summary>
     public string Id { get; set; } = string.Empty;
-
+    
 }
