@@ -84,10 +84,6 @@ jobs:
     # Only publish on release events (not manual workflow_dispatch)
     if: github.event_name == 'release'
 
-    environment:
-      name: pypi
-      url: https://pypi.org/project/agentschema/
-
     permissions:
       id-token: write # Required for trusted publishing
 
