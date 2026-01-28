@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprovalMode>
+public class McpServerApprovalModeJsonConverter: JsonConverter<McpServerApprovalMode>
 {
     public override McpServerApprovalMode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -20,16 +20,16 @@ public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprova
             var stringValue = reader.GetString() ?? throw new JsonException("Empty string shorthand values for McpServerApprovalMode are not supported");
             // load polymorphic McpServerApprovalMode instance
             McpServerApprovalMode instance;
-            instance = stringValue.ToLowerInvariant() switch
+            instance = stringValue.ToLowerInvariant() switch 
             {
                 "always" => new McpServerToolAlwaysRequireApprovalMode(),
                 "never" => new McpServerToolNeverRequireApprovalMode(),
                 "specify" => new McpServerToolSpecifyApprovalMode(),
-                _ => throw new JsonException($"Unknown McpServerApprovalMode discriminator value: {stringValue}"),
+                _ => throw new JsonException($"Unknown McpServerApprovalMode discriminator value: { stringValue }"),
             };
             instance.Kind = stringValue;
             return instance;
-
+            
         }
         else if (reader.TokenType != JsonTokenType.StartObject)
         {
@@ -39,20 +39,20 @@ public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprova
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // load polymorphic McpServerApprovalMode instance
             McpServerApprovalMode instance;
             if (rootElement.TryGetProperty("kind", out JsonElement discriminatorValue))
             {
-                var discriminator = discriminatorValue.GetString()
+                var discriminator = discriminatorValue.GetString() 
                     ?? throw new JsonException("Empty discriminator value for McpServerApprovalMode is not supported");
-                instance = discriminator switch
+                instance = discriminator switch 
                 {
-                    "always" => JsonSerializer.Deserialize<McpServerToolAlwaysRequireApprovalMode>(rootElement, options)
+                    "always" => JsonSerializer.Deserialize<McpServerToolAlwaysRequireApprovalMode> (rootElement, options)
                         ?? throw new JsonException("Empty McpServerToolAlwaysRequireApprovalMode instances are not supported"),
-                    "never" => JsonSerializer.Deserialize<McpServerToolNeverRequireApprovalMode>(rootElement, options)
+                    "never" => JsonSerializer.Deserialize<McpServerToolNeverRequireApprovalMode> (rootElement, options)
                         ?? throw new JsonException("Empty McpServerToolNeverRequireApprovalMode instances are not supported"),
-                    "specify" => JsonSerializer.Deserialize<McpServerToolSpecifyApprovalMode>(rootElement, options)
+                    "specify" => JsonSerializer.Deserialize<McpServerToolSpecifyApprovalMode> (rootElement, options)
                         ?? throw new JsonException("Empty McpServerToolSpecifyApprovalMode instances are not supported"),
                     _ => throw new JsonException($"Unknown McpServerApprovalMode discriminator value: {discriminator}"),
                 };
@@ -65,7 +65,7 @@ public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprova
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             return instance;
         }
     }
@@ -75,7 +75,7 @@ public class McpServerApprovalModeJsonConverter : JsonConverter<McpServerApprova
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WriteEndObject();
     }
 }

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ArrayPropertyYamlConverter : YamlConverter<ArrayProperty>
+public class ArrayPropertyYamlConverter: YamlConverter<ArrayProperty>
 {
     /// <summary>
     /// Singleton instance of the ArrayProperty converter.
@@ -16,7 +16,7 @@ public class ArrayPropertyYamlConverter : YamlConverter<ArrayProperty>
 
     public override ArrayProperty Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new ArrayProperty();
@@ -47,10 +47,10 @@ public class ArrayPropertyYamlConverter : YamlConverter<ArrayProperty>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("items"));
         serializer(value.Items, typeof(Property));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

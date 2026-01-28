@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class EnvironmentVariableConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

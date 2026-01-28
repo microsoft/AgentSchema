@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class WorkflowYamlConverter : YamlConverter<Workflow>
+public class WorkflowYamlConverter: YamlConverter<Workflow>
 {
     /// <summary>
     /// Singleton instance of the Workflow converter.
@@ -16,7 +16,7 @@ public class WorkflowYamlConverter : YamlConverter<Workflow>
 
     public override Workflow Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new Workflow();
@@ -47,13 +47,13 @@ public class WorkflowYamlConverter : YamlConverter<Workflow>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
-        if (value.Trigger != null)
+        
+        if(value.Trigger != null)
         {
             emitter.Emit(new Scalar("trigger"));
             serializer(value.Trigger, typeof(IDictionary<string, object>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

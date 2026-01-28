@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ObjectPropertyJsonConverter : JsonConverter<ObjectProperty>
+public class ObjectPropertyJsonConverter: JsonConverter<ObjectProperty>
 {
     public override ObjectProperty Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,26 +23,26 @@ public class ObjectPropertyJsonConverter : JsonConverter<ObjectProperty>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new ObjectProperty();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("properties", out JsonElement propertiesValue))
             {
                 if (propertiesValue.ValueKind == JsonValueKind.Array)
                 {
-                    instance.Properties =
+                    instance.Properties = 
                         [.. propertiesValue.EnumerateArray()
                             .Select(x => JsonSerializer.Deserialize<Property> (x.GetRawText(), options)
                                 ?? throw new JsonException("Empty array elements for Properties are not supported"))];
                 }
                 else if (propertiesValue.ValueKind == JsonValueKind.Object)
                 {
-                    instance.Properties =
+                    instance.Properties = 
                         [.. propertiesValue.EnumerateObject()
                             .Select(property =>
                             {
@@ -52,13 +52,13 @@ public class ObjectPropertyJsonConverter : JsonConverter<ObjectProperty>
                                 return item;
                             })];
                 }
-
+                
                 else
                 {
                     throw new JsonException("Invalid JSON token for properties");
                 }
             }
-
+            
             return instance;
         }
     }
@@ -68,10 +68,10 @@ public class ObjectPropertyJsonConverter : JsonConverter<ObjectProperty>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("properties");
         JsonSerializer.Serialize(writer, value.Properties, options);
-
+        
         writer.WriteEndObject();
     }
 }

@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class OpenApiToolConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

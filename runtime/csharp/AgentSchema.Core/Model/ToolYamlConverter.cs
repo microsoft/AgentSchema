@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ToolYamlConverter : YamlConverter<Tool>
+public class ToolYamlConverter: YamlConverter<Tool>
 {
     /// <summary>
     /// Singleton instance of the Tool converter.
@@ -16,7 +16,7 @@ public class ToolYamlConverter : YamlConverter<Tool>
 
     public override Tool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic Tool instance
         Tool instance;
@@ -25,7 +25,7 @@ public class ToolYamlConverter : YamlConverter<Tool>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for Tool is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "function" => rootDeserializer(typeof(FunctionTool)) as FunctionTool ??
                     throw new YamlException("Empty FunctionTool instances are not supported"),
@@ -65,37 +65,37 @@ public class ToolYamlConverter : YamlConverter<Tool>
                     instance.Description = descriptionValue.Value;
                     break;
                 case "bindings":
-                    /*
-            if (bindingsValue.ValueKind == JsonValueKind.Array)
-            {
-
-                instance.Bindings = 
-                    [.. bindingsValue.EnumerateArray()
-                        .Select(x => JsonSerializer.Deserialize<Binding> (x.GetRawText(), options)
-                            ?? throw new YamlException("Empty array elements for Bindings are not supported"))];
-            }
-                    */
-                    /*
-            else if (bindingsValue.ValueKind == JsonValueKind.Object)
-            {
-                instance.Bindings = 
-                    [.. bindingsValue.EnumerateObject()
-                        .Select(property =>
-                        {
-                            var item = JsonSerializer.Deserialize<Binding>(property.Value.GetRawText(), options)
-                                ?? throw new YamlException("Empty array elements for Bindings are not supported");
-                            item.Name = property.Name;
-                            return item;
-                        })];
-            }
-                    */
-
-                    /*
-            else
-            {
-                throw new YamlException("Invalid JSON token for bindings");
-            }
-                    */
+                            /*
+                    if (bindingsValue.ValueKind == JsonValueKind.Array)
+                    {
+                            
+                        instance.Bindings = 
+                            [.. bindingsValue.EnumerateArray()
+                                .Select(x => JsonSerializer.Deserialize<Binding> (x.GetRawText(), options)
+                                    ?? throw new YamlException("Empty array elements for Bindings are not supported"))];
+                    }
+                            */
+                            /*
+                    else if (bindingsValue.ValueKind == JsonValueKind.Object)
+                    {
+                        instance.Bindings = 
+                            [.. bindingsValue.EnumerateObject()
+                                .Select(property =>
+                                {
+                                    var item = JsonSerializer.Deserialize<Binding>(property.Value.GetRawText(), options)
+                                        ?? throw new YamlException("Empty array elements for Bindings are not supported");
+                                    item.Name = property.Name;
+                                    return item;
+                                })];
+                    }
+                            */
+                    
+                            /*
+                    else
+                    {
+                        throw new YamlException("Invalid JSON token for bindings");
+                    }
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in Tool.");
@@ -110,22 +110,22 @@ public class ToolYamlConverter : YamlConverter<Tool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
-        if (value.Description != null)
+        
+        if(value.Description != null)
         {
             emitter.Emit(new Scalar("description"));
             serializer(value.Description, typeof(string));
         }
-
-        if (value.Bindings != null)
+        
+        if(value.Bindings != null)
         {
             emitter.Emit(new Scalar("bindings"));
             serializer(value.Bindings, typeof(IList<Binding>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

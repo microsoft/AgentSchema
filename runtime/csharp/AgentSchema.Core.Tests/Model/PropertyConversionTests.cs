@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class PropertyConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -163,5 +163,5 @@ public class PropertyConversionTests
         Assert.Equal("string", instance.Kind);
         Assert.Equal("example", instance.Example);
     }
-
+    
 }

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class WorkflowJsonConverter : JsonConverter<Workflow>
+public class WorkflowJsonConverter: JsonConverter<Workflow>
 {
     public override Workflow Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,19 +23,19 @@ public class WorkflowJsonConverter : JsonConverter<Workflow>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Workflow();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("trigger", out JsonElement triggerValue))
             {
                 instance.Trigger = JsonSerializer.Deserialize<Dictionary<string, object>>(triggerValue.GetRawText(), options);
             }
-
+            
             return instance;
         }
     }
@@ -45,13 +45,13 @@ public class WorkflowJsonConverter : JsonConverter<Workflow>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
-        if (value.Trigger != null)
+        
+        if(value.Trigger != null)
         {
             writer.WritePropertyName("trigger");
             JsonSerializer.Serialize(writer, value.Trigger, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

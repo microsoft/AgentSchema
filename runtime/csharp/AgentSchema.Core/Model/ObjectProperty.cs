@@ -15,20 +15,20 @@ public class ObjectProperty : Property
     /// <summary>
     /// Initializes a new instance of <see cref="ObjectProperty"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public ObjectProperty()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// 
     /// </summary>
     public override string Kind { get; set; } = "object";
-
+        
     /// <summary>
     /// The properties contained in the object
     /// </summary>
     public IList<Property> Properties { get; set; } = [];
-
+    
 }

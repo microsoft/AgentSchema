@@ -57,6 +57,86 @@ def test_load_yaml_property():
     assert instance.example == "example value"
 
 
+def test_roundtrip_json_property():
+    """Test that load -> save -> load produces equivalent data."""
+    json_data = """
+    {
+      "name": "my-input",
+      "kind": "string",
+      "description": "A description of the input property",
+      "required": true,
+      "default": "default value",
+      "example": "example value",
+      "enumValues": [
+        "value1",
+        "value2",
+        "value3"
+      ]
+    }
+    """
+    original_data = json.loads(json_data, strict=False)
+    instance = Property.load(original_data)
+    saved_data = instance.save()
+    reloaded = Property.load(saved_data)
+    assert reloaded is not None
+    assert reloaded.name == "my-input"
+    assert reloaded.kind == "string"
+    assert reloaded.description == "A description of the input property"
+    assert reloaded.required
+    assert reloaded.default == "default value"
+    assert reloaded.example == "example value"
+
+
+def test_to_json_property():
+    """Test that to_json produces valid JSON."""
+    json_data = """
+    {
+      "name": "my-input",
+      "kind": "string",
+      "description": "A description of the input property",
+      "required": true,
+      "default": "default value",
+      "example": "example value",
+      "enumValues": [
+        "value1",
+        "value2",
+        "value3"
+      ]
+    }
+    """
+    data = json.loads(json_data, strict=False)
+    instance = Property.load(data)
+    json_output = instance.to_json()
+    assert json_output is not None
+    parsed = json.loads(json_output)
+    assert isinstance(parsed, dict)
+
+
+def test_to_yaml_property():
+    """Test that to_yaml produces valid YAML."""
+    json_data = """
+    {
+      "name": "my-input",
+      "kind": "string",
+      "description": "A description of the input property",
+      "required": true,
+      "default": "default value",
+      "example": "example value",
+      "enumValues": [
+        "value1",
+        "value2",
+        "value3"
+      ]
+    }
+    """
+    data = json.loads(json_data, strict=False)
+    instance = Property.load(data)
+    yaml_output = instance.to_yaml()
+    assert yaml_output is not None
+    parsed = yaml.safe_load(yaml_output)
+    assert isinstance(parsed, dict)
+
+
 def test_load_property_from_boolean():
     instance = Property.load(False)
     assert instance is not None

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class FunctionToolJsonConverter : JsonConverter<FunctionTool>
+public class FunctionToolJsonConverter: JsonConverter<FunctionTool>
 {
     public override FunctionTool Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,24 +23,24 @@ public class FunctionToolJsonConverter : JsonConverter<FunctionTool>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new FunctionTool();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("parameters", out JsonElement parametersValue))
             {
                 instance.Parameters = JsonSerializer.Deserialize<PropertySchema>(parametersValue.GetRawText(), options) ?? throw new ArgumentException("Properties must contain a property named: parameters");
             }
-
+            
             if (rootElement.TryGetProperty("strict", out JsonElement strictValue))
             {
                 instance.Strict = strictValue.GetBoolean();
             }
-
+            
             return instance;
         }
     }
@@ -50,16 +50,16 @@ public class FunctionToolJsonConverter : JsonConverter<FunctionTool>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("parameters");
         JsonSerializer.Serialize(writer, value.Parameters, options);
-
-        if (value.Strict != null)
+        
+        if(value.Strict != null)
         {
             writer.WritePropertyName("strict");
             JsonSerializer.Serialize(writer, value.Strict, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

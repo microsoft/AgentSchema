@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ReferenceConnectionYamlConverter : YamlConverter<ReferenceConnection>
+public class ReferenceConnectionYamlConverter: YamlConverter<ReferenceConnection>
 {
     /// <summary>
     /// Singleton instance of the ReferenceConnection converter.
@@ -16,7 +16,7 @@ public class ReferenceConnectionYamlConverter : YamlConverter<ReferenceConnectio
 
     public override ReferenceConnection Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new ReferenceConnection();
@@ -51,16 +51,16 @@ public class ReferenceConnectionYamlConverter : YamlConverter<ReferenceConnectio
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
-        if (value.Target != null)
+        
+        if(value.Target != null)
         {
             emitter.Emit(new Scalar("target"));
             serializer(value.Target, typeof(string));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

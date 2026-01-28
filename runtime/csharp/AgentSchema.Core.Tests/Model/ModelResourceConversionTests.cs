@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class ModelResourceConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

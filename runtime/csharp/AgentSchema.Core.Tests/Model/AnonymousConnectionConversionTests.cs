@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class AnonymousConnectionConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ParserYamlConverter : YamlConverter<Parser>
+public class ParserYamlConverter: YamlConverter<Parser>
 {
     /// <summary>
     /// Singleton instance of the Parser converter.
@@ -16,7 +16,7 @@ public class ParserYamlConverter : YamlConverter<Parser>
 
     public override Parser Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new Parser();
@@ -47,13 +47,13 @@ public class ParserYamlConverter : YamlConverter<Parser>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             emitter.Emit(new Scalar("options"));
             serializer(value.Options, typeof(IDictionary<string, object>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

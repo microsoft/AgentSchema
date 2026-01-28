@@ -14,25 +14,25 @@ public class FunctionTool : Tool
     /// <summary>
     /// Initializes a new instance of <see cref="FunctionTool"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public FunctionTool()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// The kind identifier for function tools
     /// </summary>
     public override string Kind { get; set; } = "function";
-
+        
     /// <summary>
     /// Parameters accepted by the function tool
     /// </summary>
     public PropertySchema Parameters { get; set; }
-
+        
     /// <summary>
     /// Indicates whether the function tool enforces strict validation on its parameters
     /// </summary>
     public bool? Strict { get; set; }
-
+    
 }

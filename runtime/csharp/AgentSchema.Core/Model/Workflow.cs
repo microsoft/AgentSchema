@@ -24,20 +24,20 @@ public class Workflow : AgentDefinition
     /// <summary>
     /// Initializes a new instance of <see cref="Workflow"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     public Workflow()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Type of agent, e.g., 'workflow'
     /// </summary>
     public override string Kind { get; set; } = "workflow";
-
+        
     /// <summary>
     /// The steps that make up the workflow
     /// </summary>
     public IDictionary<string, object>? Trigger { get; set; }
-
+    
 }

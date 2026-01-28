@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class AnonymousConnectionYamlConverter : YamlConverter<AnonymousConnection>
+public class AnonymousConnectionYamlConverter: YamlConverter<AnonymousConnection>
 {
     /// <summary>
     /// Singleton instance of the AnonymousConnection converter.
@@ -16,7 +16,7 @@ public class AnonymousConnectionYamlConverter : YamlConverter<AnonymousConnectio
 
     public override AnonymousConnection Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new AnonymousConnection();
@@ -47,10 +47,10 @@ public class AnonymousConnectionYamlConverter : YamlConverter<AnonymousConnectio
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("endpoint"));
         serializer(value.Endpoint, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

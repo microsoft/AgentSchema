@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class FormatConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -66,5 +66,5 @@ public class FormatConversionTests
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }
-
+    
 }

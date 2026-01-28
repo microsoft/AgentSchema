@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class AgentDefinitionYamlConverter : YamlConverter<AgentDefinition>
+public class AgentDefinitionYamlConverter: YamlConverter<AgentDefinition>
 {
     /// <summary>
     /// Singleton instance of the AgentDefinition converter.
@@ -16,7 +16,7 @@ public class AgentDefinitionYamlConverter : YamlConverter<AgentDefinition>
 
     public override AgentDefinition Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // load polymorphic AgentDefinition instance
         AgentDefinition instance;
@@ -25,7 +25,7 @@ public class AgentDefinitionYamlConverter : YamlConverter<AgentDefinition>
         {
             var discriminator = kindValue.Value
                 ?? throw new YamlException("Empty discriminator value for AgentDefinition is not supported");
-            instance = discriminator.ToLowerInvariant() switch
+            instance = discriminator.ToLowerInvariant() switch 
             {
                 "prompt" => rootDeserializer(typeof(PromptAgent)) as PromptAgent ??
                     throw new YamlException("Empty PromptAgent instances are not supported"),
@@ -87,40 +87,40 @@ public class AgentDefinitionYamlConverter : YamlConverter<AgentDefinition>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
-        if (value.DisplayName != null)
+        
+        if(value.DisplayName != null)
         {
             emitter.Emit(new Scalar("displayName"));
             serializer(value.DisplayName, typeof(string));
         }
-
-        if (value.Description != null)
+        
+        if(value.Description != null)
         {
             emitter.Emit(new Scalar("description"));
             serializer(value.Description, typeof(string));
         }
-
-        if (value.Metadata != null)
+        
+        if(value.Metadata != null)
         {
             emitter.Emit(new Scalar("metadata"));
             serializer(value.Metadata, typeof(IDictionary<string, object>));
         }
-
-        if (value.InputSchema != null)
+        
+        if(value.InputSchema != null)
         {
             emitter.Emit(new Scalar("inputSchema"));
             serializer(value.InputSchema, typeof(PropertySchema));
         }
-
-        if (value.OutputSchema != null)
+        
+        if(value.OutputSchema != null)
         {
             emitter.Emit(new Scalar("outputSchema"));
             serializer(value.OutputSchema, typeof(PropertySchema));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

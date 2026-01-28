@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class McpToolYamlConverter : YamlConverter<McpTool>
+public class McpToolYamlConverter: YamlConverter<McpTool>
 {
     /// <summary>
     /// Singleton instance of the McpTool converter.
@@ -16,7 +16,7 @@ public class McpToolYamlConverter : YamlConverter<McpTool>
 
     public override McpTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new McpTool();
@@ -47,9 +47,9 @@ public class McpToolYamlConverter : YamlConverter<McpTool>
                     instance.ApprovalMode = approvalModeValue;
                     break;
                 case "allowedTools":
-                    /*
-            instance.AllowedTools = [.. allowedToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for allowedTools are not supported"))];
-                    */
+                            /*
+                    instance.AllowedTools = [.. allowedToolsValue.EnumerateArray().Select(x => x.GetString() ?? throw new YamlException("Empty array elements for allowedTools are not supported"))];
+                            */
                     break;
                 default:
                     throw new YamlException($"Unknown property '{propertyName}' in McpTool.");
@@ -64,28 +64,28 @@ public class McpToolYamlConverter : YamlConverter<McpTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("connection"));
         serializer(value.Connection, typeof(Connection));
-
+        
         emitter.Emit(new Scalar("serverName"));
         serializer(value.ServerName, typeof(string));
-
-        if (value.ServerDescription != null)
+        
+        if(value.ServerDescription != null)
         {
             emitter.Emit(new Scalar("serverDescription"));
             serializer(value.ServerDescription, typeof(string));
         }
-
+        
         emitter.Emit(new Scalar("approvalMode"));
         serializer(value.ApprovalMode, typeof(McpServerApprovalMode));
-
-        if (value.AllowedTools != null)
+        
+        if(value.AllowedTools != null)
         {
             emitter.Emit(new Scalar("allowedTools"));
             serializer(value.AllowedTools, typeof(IList<string>));
         }
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

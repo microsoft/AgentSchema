@@ -31,7 +31,7 @@
   "scripts": {
     "build": "tsc && cp -r ./src/templates ./dist/src",
     "watch": "tsc --watch",
-    "generate": "tsp compile ../agentschema/model/manifest.tsp --config ../agentschema/tspconfig.yaml && markdownlint ../docs/* -f -c ./markdown.json",
+    "generate": "tsp compile ../agentschema/model/manifest.tsp --config ../agentschema/tspconfig.yaml && markdownlint \"../docs/src/**/*.md\" -f -c ./markdown.json",
     "test": "node --test",
     "lint": "eslint src/ test/ --report-unused-disable-directives --max-warnings=0",
     "lint:fix": "eslint . --report-unused-disable-directives --fix",

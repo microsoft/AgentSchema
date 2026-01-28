@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class OpenApiToolYamlConverter : YamlConverter<OpenApiTool>
+public class OpenApiToolYamlConverter: YamlConverter<OpenApiTool>
 {
     /// <summary>
     /// Singleton instance of the OpenApiTool converter.
@@ -16,7 +16,7 @@ public class OpenApiToolYamlConverter : YamlConverter<OpenApiTool>
 
     public override OpenApiTool Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new OpenApiTool();
@@ -51,13 +51,13 @@ public class OpenApiToolYamlConverter : YamlConverter<OpenApiTool>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("connection"));
         serializer(value.Connection, typeof(Connection));
-
+        
         emitter.Emit(new Scalar("specification"));
         serializer(value.Specification, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

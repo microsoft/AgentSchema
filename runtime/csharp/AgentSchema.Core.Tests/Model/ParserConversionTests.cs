@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class ParserConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -62,5 +62,5 @@ public class ParserConversionTests
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }
-
+    
 }

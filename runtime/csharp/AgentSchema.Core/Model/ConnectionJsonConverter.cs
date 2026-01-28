@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ConnectionJsonConverter : JsonConverter<Connection>
+public class ConnectionJsonConverter: JsonConverter<Connection>
 {
     public override Connection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,22 +23,22 @@ public class ConnectionJsonConverter : JsonConverter<Connection>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // load polymorphic Connection instance
             Connection instance;
             if (rootElement.TryGetProperty("kind", out JsonElement discriminatorValue))
             {
-                var discriminator = discriminatorValue.GetString()
+                var discriminator = discriminatorValue.GetString() 
                     ?? throw new JsonException("Empty discriminator value for Connection is not supported");
-                instance = discriminator switch
+                instance = discriminator switch 
                 {
-                    "reference" => JsonSerializer.Deserialize<ReferenceConnection>(rootElement, options)
+                    "reference" => JsonSerializer.Deserialize<ReferenceConnection> (rootElement, options)
                         ?? throw new JsonException("Empty ReferenceConnection instances are not supported"),
-                    "remote" => JsonSerializer.Deserialize<RemoteConnection>(rootElement, options)
+                    "remote" => JsonSerializer.Deserialize<RemoteConnection> (rootElement, options)
                         ?? throw new JsonException("Empty RemoteConnection instances are not supported"),
-                    "key" => JsonSerializer.Deserialize<ApiKeyConnection>(rootElement, options)
+                    "key" => JsonSerializer.Deserialize<ApiKeyConnection> (rootElement, options)
                         ?? throw new JsonException("Empty ApiKeyConnection instances are not supported"),
-                    "anonymous" => JsonSerializer.Deserialize<AnonymousConnection>(rootElement, options)
+                    "anonymous" => JsonSerializer.Deserialize<AnonymousConnection> (rootElement, options)
                         ?? throw new JsonException("Empty AnonymousConnection instances are not supported"),
                     _ => throw new JsonException($"Unknown Connection discriminator value: {discriminator}"),
                 };
@@ -51,17 +51,17 @@ public class ConnectionJsonConverter : JsonConverter<Connection>
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("authenticationMode", out JsonElement authenticationModeValue))
             {
                 instance.AuthenticationMode = authenticationModeValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: authenticationMode");
             }
-
+            
             if (rootElement.TryGetProperty("usageDescription", out JsonElement usageDescriptionValue))
             {
                 instance.UsageDescription = usageDescriptionValue.GetString();
             }
-
+            
             return instance;
         }
     }
@@ -71,16 +71,16 @@ public class ConnectionJsonConverter : JsonConverter<Connection>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("authenticationMode");
         JsonSerializer.Serialize(writer, value.AuthenticationMode, options);
-
-        if (value.UsageDescription != null)
+        
+        if(value.UsageDescription != null)
         {
             writer.WritePropertyName("usageDescription");
             JsonSerializer.Serialize(writer, value.UsageDescription, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

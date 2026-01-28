@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class McpToolConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

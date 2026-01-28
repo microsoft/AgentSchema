@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class FunctionToolConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {

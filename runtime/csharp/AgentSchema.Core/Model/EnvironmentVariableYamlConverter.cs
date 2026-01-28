@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class EnvironmentVariableYamlConverter : YamlConverter<EnvironmentVariable>
+public class EnvironmentVariableYamlConverter: YamlConverter<EnvironmentVariable>
 {
     /// <summary>
     /// Singleton instance of the EnvironmentVariable converter.
@@ -16,7 +16,7 @@ public class EnvironmentVariableYamlConverter : YamlConverter<EnvironmentVariabl
 
     public override EnvironmentVariable Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new EnvironmentVariable();
@@ -47,10 +47,10 @@ public class EnvironmentVariableYamlConverter : YamlConverter<EnvironmentVariabl
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("value"));
         serializer(value.Value, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

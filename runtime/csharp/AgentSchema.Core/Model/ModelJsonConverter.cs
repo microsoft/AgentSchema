@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class ModelJsonConverter : JsonConverter<Model>
+public class ModelJsonConverter: JsonConverter<Model>
 {
     public override Model Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -22,7 +22,7 @@ public class ModelJsonConverter : JsonConverter<Model>
             {
                 Id = stringValue,
             };
-
+            
         }
         else if (reader.TokenType != JsonTokenType.StartObject)
         {
@@ -32,34 +32,34 @@ public class ModelJsonConverter : JsonConverter<Model>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new Model();
             if (rootElement.TryGetProperty("id", out JsonElement idValue))
             {
                 instance.Id = idValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: id");
             }
-
+            
             if (rootElement.TryGetProperty("provider", out JsonElement providerValue))
             {
                 instance.Provider = providerValue.GetString();
             }
-
+            
             if (rootElement.TryGetProperty("apiType", out JsonElement apiTypeValue))
             {
                 instance.ApiType = apiTypeValue.GetString();
             }
-
+            
             if (rootElement.TryGetProperty("connection", out JsonElement connectionValue))
             {
                 instance.Connection = JsonSerializer.Deserialize<Connection?>(connectionValue.GetRawText(), options);
             }
-
+            
             if (rootElement.TryGetProperty("options", out JsonElement optionsValue))
             {
                 instance.Options = JsonSerializer.Deserialize<ModelOptions?>(optionsValue.GetRawText(), options);
             }
-
+            
             return instance;
         }
     }
@@ -69,31 +69,31 @@ public class ModelJsonConverter : JsonConverter<Model>
         writer.WriteStartObject();
         writer.WritePropertyName("id");
         JsonSerializer.Serialize(writer, value.Id, options);
-
-        if (value.Provider != null)
+        
+        if(value.Provider != null)
         {
             writer.WritePropertyName("provider");
             JsonSerializer.Serialize(writer, value.Provider, options);
         }
-
-        if (value.ApiType != null)
+        
+        if(value.ApiType != null)
         {
             writer.WritePropertyName("apiType");
             JsonSerializer.Serialize(writer, value.ApiType, options);
         }
-
-        if (value.Connection != null)
+        
+        if(value.Connection != null)
         {
             writer.WritePropertyName("connection");
             JsonSerializer.Serialize(writer, value.Connection, options);
         }
-
-        if (value.Options != null)
+        
+        if(value.Options != null)
         {
             writer.WritePropertyName("options");
             JsonSerializer.Serialize(writer, value.Options, options);
         }
-
+        
         writer.WriteEndObject();
     }
 }

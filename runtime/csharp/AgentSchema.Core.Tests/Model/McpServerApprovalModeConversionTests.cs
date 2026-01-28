@@ -7,7 +7,7 @@ namespace AgentSchema.Core;
 
 
 public class McpServerApprovalModeConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -57,5 +57,5 @@ public class McpServerApprovalModeConversionTests
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
     }
-
+    
 }

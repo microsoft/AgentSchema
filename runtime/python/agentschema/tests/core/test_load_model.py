@@ -53,6 +53,89 @@ def test_load_yaml_model():
     assert instance.apiType == "chat"
 
 
+def test_roundtrip_json_model():
+    """Test that load -> save -> load produces equivalent data."""
+    json_data = """
+    {
+      "id": "gpt-35-turbo",
+      "provider": "azure",
+      "apiType": "chat",
+      "connection": {
+        "kind": "key",
+        "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",
+        "key": "{your-api-key}"
+      },
+      "options": {
+        "type": "chat",
+        "temperature": 0.7,
+        "maxTokens": 1000
+      }
+    }
+    """
+    original_data = json.loads(json_data, strict=False)
+    instance = Model.load(original_data)
+    saved_data = instance.save()
+    reloaded = Model.load(saved_data)
+    assert reloaded is not None
+    assert reloaded.id == "gpt-35-turbo"
+    assert reloaded.provider == "azure"
+    assert reloaded.apiType == "chat"
+
+
+def test_to_json_model():
+    """Test that to_json produces valid JSON."""
+    json_data = """
+    {
+      "id": "gpt-35-turbo",
+      "provider": "azure",
+      "apiType": "chat",
+      "connection": {
+        "kind": "key",
+        "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",
+        "key": "{your-api-key}"
+      },
+      "options": {
+        "type": "chat",
+        "temperature": 0.7,
+        "maxTokens": 1000
+      }
+    }
+    """
+    data = json.loads(json_data, strict=False)
+    instance = Model.load(data)
+    json_output = instance.to_json()
+    assert json_output is not None
+    parsed = json.loads(json_output)
+    assert isinstance(parsed, dict)
+
+
+def test_to_yaml_model():
+    """Test that to_yaml produces valid YAML."""
+    json_data = """
+    {
+      "id": "gpt-35-turbo",
+      "provider": "azure",
+      "apiType": "chat",
+      "connection": {
+        "kind": "key",
+        "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",
+        "key": "{your-api-key}"
+      },
+      "options": {
+        "type": "chat",
+        "temperature": 0.7,
+        "maxTokens": 1000
+      }
+    }
+    """
+    data = json.loads(json_data, strict=False)
+    instance = Model.load(data)
+    yaml_output = instance.to_yaml()
+    assert yaml_output is not None
+    parsed = yaml.safe_load(yaml_output)
+    assert isinstance(parsed, dict)
+
+
 def test_load_model_from_string():
     instance = Model.load("example")
     assert instance is not None

@@ -7,7 +7,7 @@ using YamlDotNet.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class RemoteConnectionYamlConverter : YamlConverter<RemoteConnection>
+public class RemoteConnectionYamlConverter: YamlConverter<RemoteConnection>
 {
     /// <summary>
     /// Singleton instance of the RemoteConnection converter.
@@ -16,7 +16,7 @@ public class RemoteConnectionYamlConverter : YamlConverter<RemoteConnection>
 
     public override RemoteConnection Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
-
+        
         parser.Consume<MappingStart>();
         // create new instance
         var instance = new RemoteConnection();
@@ -51,13 +51,13 @@ public class RemoteConnectionYamlConverter : YamlConverter<RemoteConnection>
         emitter.Emit(new MappingStart());
         emitter.Emit(new Scalar("kind"));
         serializer(value.Kind, typeof(string));
-
+        
         emitter.Emit(new Scalar("name"));
         serializer(value.Name, typeof(string));
-
+        
         emitter.Emit(new Scalar("endpoint"));
         serializer(value.Endpoint, typeof(string));
-
+        
         emitter.Emit(new MappingEnd());
     }
 }

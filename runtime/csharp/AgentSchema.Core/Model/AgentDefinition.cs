@@ -17,45 +17,45 @@ public abstract class AgentDefinition
     /// <summary>
     /// Initializes a new instance of <see cref="AgentDefinition"/>.
     /// </summary>
-#pragma warning disable CS8618
+    #pragma warning disable CS8618
     protected AgentDefinition()
     {
     }
-#pragma warning restore CS8618
-
+    #pragma warning restore CS8618
+        
     /// <summary>
     /// Kind represented by the document
     /// </summary>
     public virtual string Kind { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Human-readable name of the agent
     /// </summary>
     public string Name { get; set; } = string.Empty;
-
+        
     /// <summary>
     /// Display name of the agent for UI purposes
     /// </summary>
     public string? DisplayName { get; set; }
-
+        
     /// <summary>
     /// Description of the agent's capabilities and purpose
     /// </summary>
     public string? Description { get; set; }
-
+        
     /// <summary>
     /// Additional metadata including authors, tags, and other arbitrary properties
     /// </summary>
     public IDictionary<string, object>? Metadata { get; set; }
-
+        
     /// <summary>
     /// Input parameters that participate in template rendering
     /// </summary>
     public PropertySchema? InputSchema { get; set; }
-
+        
     /// <summary>
     /// Expected output format and structure from the agent
     /// </summary>
     public PropertySchema? OutputSchema { get; set; }
-
+    
 }

@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace AgentSchema.Core;
 #pragma warning restore IDE0130
 
-public class RemoteConnectionJsonConverter : JsonConverter<RemoteConnection>
+public class RemoteConnectionJsonConverter: JsonConverter<RemoteConnection>
 {
     public override RemoteConnection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
@@ -23,24 +23,24 @@ public class RemoteConnectionJsonConverter : JsonConverter<RemoteConnection>
         using (var jsonDocument = JsonDocument.ParseValue(ref reader))
         {
             var rootElement = jsonDocument.RootElement;
-
+            
             // create new instance
             var instance = new RemoteConnection();
             if (rootElement.TryGetProperty("kind", out JsonElement kindValue))
             {
                 instance.Kind = kindValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: kind");
             }
-
+            
             if (rootElement.TryGetProperty("name", out JsonElement nameValue))
             {
                 instance.Name = nameValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: name");
             }
-
+            
             if (rootElement.TryGetProperty("endpoint", out JsonElement endpointValue))
             {
                 instance.Endpoint = endpointValue.GetString() ?? throw new ArgumentException("Properties must contain a property named: endpoint");
             }
-
+            
             return instance;
         }
     }
@@ -50,13 +50,13 @@ public class RemoteConnectionJsonConverter : JsonConverter<RemoteConnection>
         writer.WriteStartObject();
         writer.WritePropertyName("kind");
         JsonSerializer.Serialize(writer, value.Kind, options);
-
+        
         writer.WritePropertyName("name");
         JsonSerializer.Serialize(writer, value.Name, options);
-
+        
         writer.WritePropertyName("endpoint");
         JsonSerializer.Serialize(writer, value.Endpoint, options);
-
+        
         writer.WriteEndObject();
     }
 }
