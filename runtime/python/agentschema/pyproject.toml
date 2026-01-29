@@ -1,5 +1,5 @@
 [project]
-name = "AgentSchema"
+name = "agentschema"
 version = "0.1.0a2"
 description = "Declarative Agent Schema"
 readme = "README.md"
