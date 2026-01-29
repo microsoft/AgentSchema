@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,13 +11,12 @@ public class ProtocolVersionRecordConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        protocol: responses
-        version: v0.1.1
-        
-        """;
+"protocol": "responses"
+"version": "v0.1.1"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ProtocolVersionRecord>(yamlData);
+""";
+
+        var instance = ProtocolVersionRecord.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("responses", instance.Protocol);
@@ -29,13 +27,13 @@ public class ProtocolVersionRecordConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "protocol": "responses",
-          "version": "v0.1.1"
-        }
-        """;
+{
+  "protocol": "responses",
+  "version": "v0.1.1"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ProtocolVersionRecord>(jsonData);
+        var instance = ProtocolVersionRecord.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("responses", instance.Protocol);
         Assert.Equal("v0.1.1", instance.Version);

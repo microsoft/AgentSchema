@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,23 +11,22 @@ public class FileSearchToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: file_search
-        connection:
-          kind: reference
-        vectorStoreIds:
-          - vectorStore1
-          - vectorStore2
-        maximumResultCount: 10
-        ranker: auto
-        scoreThreshold: 0.5
-        filters:
-          fileType: pdf
-          createdAfter: 2023-01-01
-        
-        """;
+"kind": "file_search"
+"connection":
+  "kind": "reference"
+"vectorStoreIds":
+  - "vectorStore1"
+  - "vectorStore2"
+"maximumResultCount": 10
+"ranker": "auto"
+"scoreThreshold": 0.5
+"filters":
+  "fileType": "pdf"
+  "createdAfter": "2023-01-01"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<FileSearchTool>(yamlData);
+""";
+
+        var instance = FileSearchTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("file_search", instance.Kind);
@@ -41,26 +39,26 @@ public class FileSearchToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "file_search",
-          "connection": {
-            "kind": "reference"
-          },
-          "vectorStoreIds": [
-            "vectorStore1",
-            "vectorStore2"
-          ],
-          "maximumResultCount": 10,
-          "ranker": "auto",
-          "scoreThreshold": 0.5,
-          "filters": {
-            "fileType": "pdf",
-            "createdAfter": "2023-01-01"
-          }
-        }
-        """;
+{
+  "kind": "file_search",
+  "connection": {
+    "kind": "reference"
+  },
+  "vectorStoreIds": [
+    "vectorStore1",
+    "vectorStore2"
+  ],
+  "maximumResultCount": 10,
+  "ranker": "auto",
+  "scoreThreshold": 0.5,
+  "filters": {
+    "fileType": "pdf",
+    "createdAfter": "2023-01-01"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<FileSearchTool>(jsonData);
+        var instance = FileSearchTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("file_search", instance.Kind);
         Assert.Equal(10, instance.MaximumResultCount);

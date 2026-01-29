@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,14 +11,13 @@ public class ParserConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: prompty
-        options:
-          key: value
-        
-        """;
+"kind": "prompty"
+"options":
+  "key": "value"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Parser>(yamlData);
+""";
+
+        var instance = Parser.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("prompty", instance.Kind);
@@ -29,15 +27,15 @@ public class ParserConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "prompty",
-          "options": {
-            "key": "value"
-          }
-        }
-        """;
+{
+  "kind": "prompty",
+  "options": {
+    "key": "value"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Parser>(jsonData);
+        var instance = Parser.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("prompty", instance.Kind);
     }
@@ -46,7 +44,7 @@ public class ParserConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var instance = JsonSerializer.Deserialize<Parser>(data);
+        var instance = Parser.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }
@@ -57,8 +55,7 @@ public class ParserConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Parser>(data);
+        var instance = Parser.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }

@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
-using System.Text.Json.Serialization;
+using System.Text.Json;
+using YamlDotNet.Serialization;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -9,51 +10,236 @@ namespace AgentSchema.Core;
 /// A tool for searching files.
 /// This tool allows an AI agent to search for files based on a query.
 /// </summary>
-[JsonConverter(typeof(FileSearchToolJsonConverter))]
 public class FileSearchTool : Tool
 {
     /// <summary>
+    /// The shorthand property name for this type, if any.
+    /// </summary>
+    public new static string? ShorthandProperty => null;
+
+    /// <summary>
     /// Initializes a new instance of <see cref="FileSearchTool"/>.
     /// </summary>
-    #pragma warning disable CS8618
+#pragma warning disable CS8618
     public FileSearchTool()
     {
     }
-    #pragma warning restore CS8618
-        
+#pragma warning restore CS8618
+
     /// <summary>
     /// The kind identifier for file search tools
     /// </summary>
     public override string Kind { get; set; } = "file_search";
-        
+
     /// <summary>
     /// The connection configuration for the file search tool
     /// </summary>
     public Connection Connection { get; set; }
-        
+
     /// <summary>
     /// The IDs of the vector stores to search within.
     /// </summary>
     public IList<string> VectorStoreIds { get; set; } = [];
-        
+
     /// <summary>
     /// The maximum number of search results to return.
     /// </summary>
     public int? MaximumResultCount { get; set; }
-        
+
     /// <summary>
     /// File search ranker.
     /// </summary>
     public string? Ranker { get; set; }
-        
+
     /// <summary>
     /// Ranker search threshold.
     /// </summary>
     public float? ScoreThreshold { get; set; }
-        
+
     /// <summary>
     /// Additional filters to apply during the file search.
     /// </summary>
     public IDictionary<string, object>? Filters { get; set; }
-    
+
+
+    #region Load Methods
+
+    /// <summary>
+    /// Load a FileSearchTool instance from a dictionary.
+    /// </summary>
+    /// <param name="data">The dictionary containing the data.</param>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <returns>The loaded FileSearchTool instance.</returns>
+    public new static FileSearchTool Load(Dictionary<string, object?> data, LoadContext? context = null)
+    {
+        if (context is not null)
+        {
+            data = context.ProcessInput(data);
+        }
+
+
+        // Create new instance
+        var instance = new FileSearchTool();
+
+
+        if (data.TryGetValue("kind", out var kindValue) && kindValue is not null)
+        {
+            instance.Kind = kindValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("connection", out var connectionValue) && connectionValue is not null)
+        {
+            instance.Connection = Connection.Load(connectionValue.GetDictionary(), context);
+        }
+
+        if (data.TryGetValue("vectorStoreIds", out var vectorStoreIdsValue) && vectorStoreIdsValue is not null)
+        {
+            instance.VectorStoreIds = (vectorStoreIdsValue as IEnumerable<object>)?.Select(x => x?.ToString()!).ToList() ?? [];
+        }
+
+        if (data.TryGetValue("maximumResultCount", out var maximumResultCountValue) && maximumResultCountValue is not null)
+        {
+            instance.MaximumResultCount = Convert.ToInt32(maximumResultCountValue);
+        }
+
+        if (data.TryGetValue("ranker", out var rankerValue) && rankerValue is not null)
+        {
+            instance.Ranker = rankerValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("scoreThreshold", out var scoreThresholdValue) && scoreThresholdValue is not null)
+        {
+            instance.ScoreThreshold = Convert.ToSingle(scoreThresholdValue);
+        }
+
+        if (data.TryGetValue("filters", out var filtersValue) && filtersValue is not null)
+        {
+            instance.Filters = filtersValue.GetDictionary()!;
+        }
+
+        if (context is not null)
+        {
+            instance = context.ProcessOutput(instance);
+        }
+        return instance;
+    }
+
+
+
+    #endregion
+
+    #region Save Methods
+
+    /// <summary>
+    /// Save the FileSearchTool instance to a dictionary.
+    /// </summary>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <returns>The dictionary representation of this instance.</returns>
+    public override Dictionary<string, object?> Save(SaveContext? context = null)
+    {
+        var obj = this;
+        if (context is not null)
+        {
+            obj = context.ProcessObject(obj);
+        }
+
+
+        // Start with parent class properties
+        var result = base.Save(context);
+
+
+        if (obj.Kind is not null)
+        {
+            result["kind"] = obj.Kind;
+        }
+
+        if (obj.Connection is not null)
+        {
+            result["connection"] = obj.Connection?.Save(context);
+        }
+
+        if (obj.VectorStoreIds is not null)
+        {
+            result["vectorStoreIds"] = obj.VectorStoreIds;
+        }
+
+        if (obj.MaximumResultCount is not null)
+        {
+            result["maximumResultCount"] = obj.MaximumResultCount;
+        }
+
+        if (obj.Ranker is not null)
+        {
+            result["ranker"] = obj.Ranker;
+        }
+
+        if (obj.ScoreThreshold is not null)
+        {
+            result["scoreThreshold"] = obj.ScoreThreshold;
+        }
+
+        if (obj.Filters is not null)
+        {
+            result["filters"] = obj.Filters;
+        }
+
+
+        return result;
+    }
+
+
+    /// <summary>
+    /// Convert the FileSearchTool instance to a YAML string.
+    /// </summary>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <returns>The YAML string representation of this instance.</returns>
+    public new string ToYaml(SaveContext? context = null)
+    {
+        context ??= new SaveContext();
+        return context.ToYaml(Save(context));
+    }
+
+    /// <summary>
+    /// Convert the FileSearchTool instance to a JSON string.
+    /// </summary>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <param name="indent">Whether to indent the output. Defaults to true.</param>
+    /// <returns>The JSON string representation of this instance.</returns>
+    public new string ToJson(SaveContext? context = null, bool indent = true)
+    {
+        context ??= new SaveContext();
+        return context.ToJson(Save(context), indent);
+    }
+
+    /// <summary>
+    /// Load a FileSearchTool instance from a JSON string.
+    /// </summary>
+    /// <param name="json">The JSON string to parse.</param>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <returns>The loaded FileSearchTool instance.</returns>
+    public new static FileSearchTool FromJson(string json, LoadContext? context = null)
+    {
+        using var doc = JsonDocument.Parse(json);
+        Dictionary<string, object?> dict;
+        dict = JsonSerializer.Deserialize<Dictionary<string, object?>>(json, JsonUtils.Options)
+            ?? throw new ArgumentException("Failed to parse JSON as dictionary");
+
+        return Load(dict, context);
+    }
+
+    /// <summary>
+    /// Load a FileSearchTool instance from a YAML string.
+    /// </summary>
+    /// <param name="yaml">The YAML string to parse.</param>
+    /// <param name="context">Optional context with pre/post processing callbacks.</param>
+    /// <returns>The loaded FileSearchTool instance.</returns>
+    public new static FileSearchTool FromYaml(string yaml, LoadContext? context = null)
+    {
+        var dict = YamlUtils.Deserializer.Deserialize<Dictionary<string, object?>>(yaml)
+            ?? throw new ArgumentException("Failed to parse YAML as dictionary");
+
+        return Load(dict, context);
+    }
+
+    #endregion
 }

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,14 +11,13 @@ public class ReferenceConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: reference
-        name: my-reference-connection
-        target: my-target-resource
-        
-        """;
+"kind": "reference"
+"name": "my-reference-connection"
+"target": "my-target-resource"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ReferenceConnection>(yamlData);
+""";
+
+        var instance = ReferenceConnection.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("reference", instance.Kind);
@@ -31,14 +29,14 @@ public class ReferenceConnectionConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "reference",
-          "name": "my-reference-connection",
-          "target": "my-target-resource"
-        }
-        """;
+{
+  "kind": "reference",
+  "name": "my-reference-connection",
+  "target": "my-target-resource"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ReferenceConnection>(jsonData);
+        var instance = ReferenceConnection.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("reference", instance.Kind);
         Assert.Equal("my-reference-connection", instance.Name);

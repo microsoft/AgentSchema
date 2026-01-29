@@ -56,8 +56,6 @@ classDiagram
     AgentManifest *-- Resource
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -96,9 +94,6 @@ resources:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -111,16 +106,9 @@ resources:
 | parameters | [PropertySchema](../propertyschema/) | Parameters for configuring the agent&#39;s behavior and execution  |
 | resources | [Resource[]](../resource/) | Resources required by the agent, such as models or tools (Related Types: [ModelResource](../modelresource/), [ToolResource](../toolresource/)) |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `AgentManifest`:
 
 - [AgentDefinition](../agentdefinition/)
 - [Resource](../resource/)
-
-

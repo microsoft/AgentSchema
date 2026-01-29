@@ -34,8 +34,6 @@ classDiagram
     }
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -57,9 +55,6 @@ additionalProperties:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -74,11 +69,3 @@ additionalProperties:
 | stopSequences | string[] | Stop sequences to end generation  |
 | allowMultipleToolCalls | boolean | Whether to allow multiple tool calls in a single response  |
 | additionalProperties | dictionary | Additional custom properties for model options  |
-
-
-
-
-
-
-
-

@@ -80,8 +80,6 @@ classDiagram
     Tool *-- Binding
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -93,9 +91,6 @@ bindings:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -104,10 +99,6 @@ bindings:
 | kind | string | The kind identifier for the tool  |
 | description | string | A short description of the tool for metadata purposes  |
 | bindings | [Binding[]](../binding/) | Tool argument bindings to input properties  |
-
-
-
-
 
 ## Child Types
 
@@ -121,11 +112,8 @@ The following types extend `Tool`:
 - [OpenApiTool](../openapitool/)
 - [CodeInterpreterTool](../codeinterpretertool/)
 
-
-
 ## Composed Types
+
 The following types are composed within `Tool`:
 
 - [Binding](../binding/)
-
-

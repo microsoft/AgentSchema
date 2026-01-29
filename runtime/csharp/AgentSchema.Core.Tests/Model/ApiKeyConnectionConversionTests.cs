@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,14 +11,13 @@ public class ApiKeyConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: key
-        endpoint: https://{your-custom-endpoint}.openai.azure.com/
-        apiKey: your-api-key
-        
-        """;
+"kind": "key"
+"endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
+"apiKey": "your-api-key"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ApiKeyConnection>(yamlData);
+""";
+
+        var instance = ApiKeyConnection.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("key", instance.Kind);
@@ -31,14 +29,14 @@ public class ApiKeyConnectionConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "key",
-          "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",
-          "apiKey": "your-api-key"
-        }
-        """;
+{
+  "kind": "key",
+  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",
+  "apiKey": "your-api-key"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ApiKeyConnection>(jsonData);
+        var instance = ApiKeyConnection.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("key", instance.Kind);
         Assert.Equal("https://{your-custom-endpoint}.openai.azure.com/", instance.Endpoint);

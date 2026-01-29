@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,12 +11,11 @@ public class McpServerApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: never
-        
-        """;
+"kind": "never"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<McpServerApprovalMode>(yamlData);
+""";
+
+        var instance = McpServerApprovalMode.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
@@ -27,12 +25,12 @@ public class McpServerApprovalModeConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "never"
-        }
-        """;
+{
+  "kind": "never"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<McpServerApprovalMode>(jsonData);
+        var instance = McpServerApprovalMode.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
     }
@@ -41,7 +39,7 @@ public class McpServerApprovalModeConversionTests
     {
         // alternate representation as string
         var data = "\"never\"";
-        var instance = JsonSerializer.Deserialize<McpServerApprovalMode>(data);
+        var instance = McpServerApprovalMode.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
     }
@@ -52,8 +50,7 @@ public class McpServerApprovalModeConversionTests
     {
         // alternate representation as string
         var data = "\"never\"";
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<McpServerApprovalMode>(data);
+        var instance = McpServerApprovalMode.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
     }

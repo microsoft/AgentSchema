@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,21 +11,20 @@ public class McpToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: mcp
-        connection:
-          kind: reference
-        serverName: My MCP Server
-        serverDescription: This tool allows access to MCP services.
-        approvalMode:
-          kind: always
-        allowedTools:
-          - operation1
-          - operation2
-        
-        """;
+"kind": "mcp"
+"connection":
+  "kind": "reference"
+"serverName": "My MCP Server"
+"serverDescription": "This tool allows access to MCP services."
+"approvalMode":
+  "kind": "always"
+"allowedTools":
+  - "operation1"
+  - "operation2"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<McpTool>(yamlData);
+""";
+
+        var instance = McpTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("mcp", instance.Kind);
@@ -38,24 +36,24 @@ public class McpToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "mcp",
-          "connection": {
-            "kind": "reference"
-          },
-          "serverName": "My MCP Server",
-          "serverDescription": "This tool allows access to MCP services.",
-          "approvalMode": {
-            "kind": "always"
-          },
-          "allowedTools": [
-            "operation1",
-            "operation2"
-          ]
-        }
-        """;
+{
+  "kind": "mcp",
+  "connection": {
+    "kind": "reference"
+  },
+  "serverName": "My MCP Server",
+  "serverDescription": "This tool allows access to MCP services.",
+  "approvalMode": {
+    "kind": "always"
+  },
+  "allowedTools": [
+    "operation1",
+    "operation2"
+  ]
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<McpTool>(jsonData);
+        var instance = McpTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("mcp", instance.Kind);
         Assert.Equal("My MCP Server", instance.ServerName);

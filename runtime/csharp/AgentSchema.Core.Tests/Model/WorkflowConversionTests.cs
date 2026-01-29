@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,12 +11,11 @@ public class WorkflowConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: workflow
-        
-        """;
+"kind": "workflow"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Workflow>(yamlData);
+""";
+
+        var instance = Workflow.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("workflow", instance.Kind);
@@ -27,12 +25,12 @@ public class WorkflowConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "workflow"
-        }
-        """;
+{
+  "kind": "workflow"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Workflow>(jsonData);
+        var instance = Workflow.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("workflow", instance.Kind);
     }

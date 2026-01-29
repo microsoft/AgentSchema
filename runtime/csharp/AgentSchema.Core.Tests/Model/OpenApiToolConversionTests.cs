@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,15 +11,14 @@ public class OpenApiToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: openapi
-        connection:
-          kind: reference
-        specification: full_sepcification_here
-        
-        """;
+"kind": "openapi"
+"connection":
+  "kind": "reference"
+"specification": "full_sepcification_here"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<OpenApiTool>(yamlData);
+""";
+
+        var instance = OpenApiTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("openapi", instance.Kind);
@@ -31,16 +29,16 @@ public class OpenApiToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "openapi",
-          "connection": {
-            "kind": "reference"
-          },
-          "specification": "full_sepcification_here"
-        }
-        """;
+{
+  "kind": "openapi",
+  "connection": {
+    "kind": "reference"
+  },
+  "specification": "full_sepcification_here"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<OpenApiTool>(jsonData);
+        var instance = OpenApiTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("openapi", instance.Kind);
         Assert.Equal("full_sepcification_here", instance.Specification);

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,16 +11,15 @@ public class ToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        name: my-tool
-        kind: function
-        description: A description of the tool
-        bindings:
-          input: value
-        
-        """;
+"name": "my-tool"
+"kind": "function"
+"description": "A description of the tool"
+"bindings":
+  "input": "value"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Tool>(yamlData);
+""";
+
+        var instance = Tool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("my-tool", instance.Name);
@@ -33,17 +31,17 @@ public class ToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "name": "my-tool",
-          "kind": "function",
-          "description": "A description of the tool",
-          "bindings": {
-            "input": "value"
-          }
-        }
-        """;
+{
+  "name": "my-tool",
+  "kind": "function",
+  "description": "A description of the tool",
+  "bindings": {
+    "input": "value"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Tool>(jsonData);
+        var instance = Tool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("my-tool", instance.Name);
         Assert.Equal("function", instance.Kind);

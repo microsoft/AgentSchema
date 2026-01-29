@@ -46,8 +46,6 @@ classDiagram
     ObjectProperty *-- Property
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -59,9 +57,6 @@ properties:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -69,15 +64,8 @@ properties:
 | kind | string |   |
 | properties | [Property[]](../property/) | The properties contained in the object  |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `ObjectProperty`:
 
 - [Property](../property/)
-
-

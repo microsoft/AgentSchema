@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,15 +11,14 @@ public class TemplateConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        format:
-          kind: mustache
-        parser:
-          kind: mustache
-        
-        """;
+"format":
+  "kind": "mustache"
+"parser":
+  "kind": "mustache"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Template>(yamlData);
+""";
+
+        var instance = Template.FromYaml(yamlData);
 
         Assert.NotNull(instance);
     }
@@ -29,17 +27,17 @@ public class TemplateConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "format": {
-            "kind": "mustache"
-          },
-          "parser": {
-            "kind": "mustache"
-          }
-        }
-        """;
+{
+  "format": {
+    "kind": "mustache"
+  },
+  "parser": {
+    "kind": "mustache"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Template>(jsonData);
+        var instance = Template.FromJson(jsonData);
         Assert.NotNull(instance);
     }
 }

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,16 +11,15 @@ public class ObjectPropertyConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        properties:
-          property1:
-            kind: string
-          property2:
-            kind: number
-        
-        """;
+"properties":
+  "property1":
+    "kind": "string"
+  "property2":
+    "kind": "number"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ObjectProperty>(yamlData);
+""";
+
+        var instance = ObjectProperty.FromYaml(yamlData);
 
         Assert.NotNull(instance);
     }
@@ -30,19 +28,19 @@ public class ObjectPropertyConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "properties": {
-            "property1": {
-              "kind": "string"
-            },
-            "property2": {
-              "kind": "number"
-            }
-          }
-        }
-        """;
+{
+  "properties": {
+    "property1": {
+      "kind": "string"
+    },
+    "property2": {
+      "kind": "number"
+    }
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ObjectProperty>(jsonData);
+        var instance = ObjectProperty.FromJson(jsonData);
         Assert.NotNull(instance);
     }
 }

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,15 +11,14 @@ public class FormatConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: mustache
-        strict: true
-        options:
-          key: value
-        
-        """;
+"kind": "mustache"
+"strict": true
+"options":
+  "key": "value"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Format>(yamlData);
+""";
+
+        var instance = Format.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("mustache", instance.Kind);
@@ -31,16 +29,16 @@ public class FormatConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "mustache",
-          "strict": true,
-          "options": {
-            "key": "value"
-          }
-        }
-        """;
+{
+  "kind": "mustache",
+  "strict": true,
+  "options": {
+    "key": "value"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Format>(jsonData);
+        var instance = Format.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("mustache", instance.Kind);
         Assert.True(instance.Strict);
@@ -50,7 +48,7 @@ public class FormatConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var instance = JsonSerializer.Deserialize<Format>(data);
+        var instance = Format.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }
@@ -61,8 +59,7 @@ public class FormatConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Format>(data);
+        var instance = Format.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Kind);
     }

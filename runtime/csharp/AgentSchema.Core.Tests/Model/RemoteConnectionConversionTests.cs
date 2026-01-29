@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,14 +11,13 @@ public class RemoteConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: remote
-        name: my-reference-connection
-        endpoint: https://{your-custom-endpoint}.openai.azure.com/
-        
-        """;
+"kind": "remote"
+"name": "my-reference-connection"
+"endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<RemoteConnection>(yamlData);
+""";
+
+        var instance = RemoteConnection.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("remote", instance.Kind);
@@ -31,14 +29,14 @@ public class RemoteConnectionConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "remote",
-          "name": "my-reference-connection",
-          "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
-        }
-        """;
+{
+  "kind": "remote",
+  "name": "my-reference-connection",
+  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<RemoteConnection>(jsonData);
+        var instance = RemoteConnection.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("remote", instance.Kind);
         Assert.Equal("my-reference-connection", instance.Name);

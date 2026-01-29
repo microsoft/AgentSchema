@@ -49,8 +49,6 @@ classDiagram
     Model *-- ModelOptions
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -68,9 +66,6 @@ options:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -81,34 +76,31 @@ options:
 | connection | [Connection](../connection/) | The connection configuration for the model (Related Types: [ReferenceConnection](../referenceconnection/), [RemoteConnection](../remoteconnection/), [ApiKeyConnection](../apikeyconnection/), [AnonymousConnection](../anonymousconnection/)) |
 | options | [ModelOptions](../modeloptions/) | Additional options for the model  |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `Model`:
 
 - [Connection](../connection/)
 - [ModelOptions](../modeloptions/)
 
-
-
 ## Alternate Constructions
 
-The following alternate constructions are available for `Model`. 
+The following alternate constructions are available for `Model`.
 These allow for simplified creation of instances using a single property.
 
 ### string model
+
 Simple construction with just an id
 
 The following simplified representation can be used:
+
 ```yaml
 model: "example"
 
 ```
+
 This is equivalent to the full representation:
+
 ```yaml
 model:
   id: "example"

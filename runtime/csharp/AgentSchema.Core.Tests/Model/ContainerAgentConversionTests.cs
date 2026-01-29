@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,18 +11,17 @@ public class ContainerAgentConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: hosted
-        protocols:
-          - protocol: responses
-            version: v0.1.1
-        environmentVariables:
-          - name: MY_ENV_VAR
-            value: my-value
-        
-        """;
+"kind": "hosted"
+"protocols":
+  - "protocol": "responses"
+    "version": "v0.1.1"
+"environmentVariables":
+  - "name": "MY_ENV_VAR"
+    "value": "my-value"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ContainerAgent>(yamlData);
+""";
+
+        var instance = ContainerAgent.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
@@ -33,24 +31,24 @@ public class ContainerAgentConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "hosted",
-          "protocols": [
-            {
-              "protocol": "responses",
-              "version": "v0.1.1"
-            }
-          ],
-          "environmentVariables": [
-            {
-              "name": "MY_ENV_VAR",
-              "value": "my-value"
-            }
-          ]
-        }
-        """;
+{
+  "kind": "hosted",
+  "protocols": [
+    {
+      "protocol": "responses",
+      "version": "v0.1.1"
+    }
+  ],
+  "environmentVariables": [
+    {
+      "name": "MY_ENV_VAR",
+      "value": "my-value"
+    }
+  ]
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ContainerAgent>(jsonData);
+        var instance = ContainerAgent.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
     }

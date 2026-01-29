@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,20 +11,19 @@ public class WebSearchToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: bing_search
-        connection:
-          kind: reference
-        options:
-          instanceName: MyBingInstance
-          market: en-US
-          setLang: en
-          count: 10
-          freshness: Day
-        
-        """;
+"kind": "bing_search"
+"connection":
+  "kind": "reference"
+"options":
+  "instanceName": "MyBingInstance"
+  "market": "en-US"
+  "setLang": "en"
+  "count": 10
+  "freshness": "Day"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<WebSearchTool>(yamlData);
+""";
+
+        var instance = WebSearchTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("bing_search", instance.Kind);
@@ -35,22 +33,22 @@ public class WebSearchToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "bing_search",
-          "connection": {
-            "kind": "reference"
-          },
-          "options": {
-            "instanceName": "MyBingInstance",
-            "market": "en-US",
-            "setLang": "en",
-            "count": 10,
-            "freshness": "Day"
-          }
-        }
-        """;
+{
+  "kind": "bing_search",
+  "connection": {
+    "kind": "reference"
+  },
+  "options": {
+    "instanceName": "MyBingInstance",
+    "market": "en-US",
+    "setLang": "en",
+    "count": 10,
+    "freshness": "Day"
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<WebSearchTool>(jsonData);
+        var instance = WebSearchTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("bing_search", instance.Kind);
     }

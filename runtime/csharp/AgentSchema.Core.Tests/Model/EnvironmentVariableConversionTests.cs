@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,13 +11,12 @@ public class EnvironmentVariableConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        name: MY_ENV_VAR
-        value: my-value
-        
-        """;
+"name": "MY_ENV_VAR"
+"value": "my-value"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<EnvironmentVariable>(yamlData);
+""";
+
+        var instance = EnvironmentVariable.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("MY_ENV_VAR", instance.Name);
@@ -29,13 +27,13 @@ public class EnvironmentVariableConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "name": "MY_ENV_VAR",
-          "value": "my-value"
-        }
-        """;
+{
+  "name": "MY_ENV_VAR",
+  "value": "my-value"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<EnvironmentVariable>(jsonData);
+        var instance = EnvironmentVariable.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("MY_ENV_VAR", instance.Name);
         Assert.Equal("my-value", instance.Value);

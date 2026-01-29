@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,24 +11,23 @@ public class FunctionToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: function
-        parameters:
-          properties:
-            firstName:
-              kind: string
-              value: Jane
-            lastName:
-              kind: string
-              value: Doe
-            question:
-              kind: string
-              value: What is the meaning of life?
-        strict: true
-        
-        """;
+"kind": "function"
+"parameters":
+  "properties":
+    "firstName":
+      "kind": "string"
+      "value": "Jane"
+    "lastName":
+      "kind": "string"
+      "value": "Doe"
+    "question":
+      "kind": "string"
+      "value": "What is the meaning of life?"
+"strict": true
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<FunctionTool>(yamlData);
+""";
+
+        var instance = FunctionTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("function", instance.Kind);
@@ -40,29 +38,29 @@ public class FunctionToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "function",
-          "parameters": {
-            "properties": {
-              "firstName": {
-                "kind": "string",
-                "value": "Jane"
-              },
-              "lastName": {
-                "kind": "string",
-                "value": "Doe"
-              },
-              "question": {
-                "kind": "string",
-                "value": "What is the meaning of life?"
-              }
-            }
-          },
-          "strict": true
-        }
-        """;
+{
+  "kind": "function",
+  "parameters": {
+    "properties": {
+      "firstName": {
+        "kind": "string",
+        "value": "Jane"
+      },
+      "lastName": {
+        "kind": "string",
+        "value": "Doe"
+      },
+      "question": {
+        "kind": "string",
+        "value": "What is the meaning of life?"
+      }
+    }
+  },
+  "strict": true
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<FunctionTool>(jsonData);
+        var instance = FunctionTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("function", instance.Kind);
         Assert.True(instance.Strict);
@@ -71,24 +69,23 @@ public class FunctionToolConversionTests
     public void LoadYamlInput1()
     {
         string yamlData = """
-        kind: function
-        parameters:
-          properties:
-            - name: firstName
-              kind: string
-              value: Jane
-            - name: lastName
-              kind: string
-              value: Doe
-            - name: question
-              kind: string
-              value: What is the meaning of life?
-        strict: true
-        
-        """;
+"kind": "function"
+"parameters":
+  "properties":
+    - "name": "firstName"
+      "kind": "string"
+      "value": "Jane"
+    - "name": "lastName"
+      "kind": "string"
+      "value": "Doe"
+    - "name": "question"
+      "kind": "string"
+      "value": "What is the meaning of life?"
+"strict": true
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<FunctionTool>(yamlData);
+""";
+
+        var instance = FunctionTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("function", instance.Kind);
@@ -99,32 +96,32 @@ public class FunctionToolConversionTests
     public void LoadJsonInput1()
     {
         string jsonData = """
-        {
-          "kind": "function",
-          "parameters": {
-            "properties": [
-              {
-                "name": "firstName",
-                "kind": "string",
-                "value": "Jane"
-              },
-              {
-                "name": "lastName",
-                "kind": "string",
-                "value": "Doe"
-              },
-              {
-                "name": "question",
-                "kind": "string",
-                "value": "What is the meaning of life?"
-              }
-            ]
-          },
-          "strict": true
-        }
-        """;
+{
+  "kind": "function",
+  "parameters": {
+    "properties": [
+      {
+        "name": "firstName",
+        "kind": "string",
+        "value": "Jane"
+      },
+      {
+        "name": "lastName",
+        "kind": "string",
+        "value": "Doe"
+      },
+      {
+        "name": "question",
+        "kind": "string",
+        "value": "What is the meaning of life?"
+      }
+    ]
+  },
+  "strict": true
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<FunctionTool>(jsonData);
+        var instance = FunctionTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("function", instance.Kind);
         Assert.True(instance.Strict);

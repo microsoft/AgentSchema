@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,16 +11,15 @@ public class CustomToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        connection:
-          kind: reference
-        options:
-          timeout: 30
-          retries: 3
-        
-        """;
+"connection":
+  "kind": "reference"
+"options":
+  "timeout": 30
+  "retries": 3
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<CustomTool>(yamlData);
+""";
+
+        var instance = CustomTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
     }
@@ -30,18 +28,18 @@ public class CustomToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "connection": {
-            "kind": "reference"
-          },
-          "options": {
-            "timeout": 30,
-            "retries": 3
-          }
-        }
-        """;
+{
+  "connection": {
+    "kind": "reference"
+  },
+  "options": {
+    "timeout": 30,
+    "retries": 3
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<CustomTool>(jsonData);
+        var instance = CustomTool.FromJson(jsonData);
         Assert.NotNull(instance);
     }
 }

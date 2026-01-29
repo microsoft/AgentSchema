@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,16 +11,15 @@ public class McpServerToolSpecifyApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: specify
-        alwaysRequireApprovalTools:
-          - operation1
-        neverRequireApprovalTools:
-          - operation2
-        
-        """;
+"kind": "specify"
+"alwaysRequireApprovalTools":
+  - "operation1"
+"neverRequireApprovalTools":
+  - "operation2"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<McpServerToolSpecifyApprovalMode>(yamlData);
+""";
+
+        var instance = McpServerToolSpecifyApprovalMode.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("specify", instance.Kind);
@@ -31,18 +29,18 @@ public class McpServerToolSpecifyApprovalModeConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "specify",
-          "alwaysRequireApprovalTools": [
-            "operation1"
-          ],
-          "neverRequireApprovalTools": [
-            "operation2"
-          ]
-        }
-        """;
+{
+  "kind": "specify",
+  "alwaysRequireApprovalTools": [
+    "operation1"
+  ],
+  "neverRequireApprovalTools": [
+    "operation2"
+  ]
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<McpServerToolSpecifyApprovalMode>(jsonData);
+        var instance = McpServerToolSpecifyApprovalMode.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("specify", instance.Kind);
     }

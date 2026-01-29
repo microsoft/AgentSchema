@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,13 +11,12 @@ public class BindingConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        name: my-tool
-        input: input-variable
-        
-        """;
+"name": "my-tool"
+"input": "input-variable"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Binding>(yamlData);
+""";
+
+        var instance = Binding.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("my-tool", instance.Name);
@@ -29,13 +27,13 @@ public class BindingConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "name": "my-tool",
-          "input": "input-variable"
-        }
-        """;
+{
+  "name": "my-tool",
+  "input": "input-variable"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Binding>(jsonData);
+        var instance = Binding.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("my-tool", instance.Name);
         Assert.Equal("input-variable", instance.Input);
@@ -45,7 +43,7 @@ public class BindingConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var instance = JsonSerializer.Deserialize<Binding>(data);
+        var instance = Binding.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Input);
     }
@@ -56,8 +54,7 @@ public class BindingConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Binding>(data);
+        var instance = Binding.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("example", instance.Input);
     }

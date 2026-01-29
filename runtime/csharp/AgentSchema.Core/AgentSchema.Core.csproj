@@ -4,10 +4,35 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- Package metadata -->
+    <PackageId>AgentSchema</PackageId>
+    <Version>1.0.0-beta.1</Version>
+    <Authors>Microsoft</Authors>
+    <Company>Microsoft</Company>
+    <Description>A declarative specification for defining AI agents in a code-first YAML format. Provides strongly-typed C# classes for loading, manipulating, and saving agent definitions.</Description>
+    <PackageTags>ai;agents;schema;yaml;declarative;microsoft</PackageTags>
+    <PackageProjectUrl>https://github.com/microsoft/AgentSchema</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/microsoft/AgentSchema</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) Microsoft Corporation</Copyright>
+    
+    <!-- Enable source link -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

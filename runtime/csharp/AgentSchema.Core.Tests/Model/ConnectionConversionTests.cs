@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,14 +11,13 @@ public class ConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: reference
-        authenticationMode: system
-        usageDescription: This will allow the agent to respond to an email on your behalf
-        
-        """;
+"kind": "reference"
+"authenticationMode": "system"
+"usageDescription": "This will allow the agent to respond to an email on your behalf"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Connection>(yamlData);
+""";
+
+        var instance = Connection.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("reference", instance.Kind);
@@ -31,14 +29,14 @@ public class ConnectionConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "reference",
-          "authenticationMode": "system",
-          "usageDescription": "This will allow the agent to respond to an email on your behalf"
-        }
-        """;
+{
+  "kind": "reference",
+  "authenticationMode": "system",
+  "usageDescription": "This will allow the agent to respond to an email on your behalf"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Connection>(jsonData);
+        var instance = Connection.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("reference", instance.Kind);
         Assert.Equal("system", instance.AuthenticationMode);

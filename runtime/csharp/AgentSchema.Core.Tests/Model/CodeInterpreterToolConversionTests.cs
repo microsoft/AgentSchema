@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,15 +11,14 @@ public class CodeInterpreterToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: code_interpreter
-        fileIds:
-          - file1
-          - file2
-        
-        """;
+"kind": "code_interpreter"
+"fileIds":
+  - "file1"
+  - "file2"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<CodeInterpreterTool>(yamlData);
+""";
+
+        var instance = CodeInterpreterTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("code_interpreter", instance.Kind);
@@ -30,16 +28,16 @@ public class CodeInterpreterToolConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "code_interpreter",
-          "fileIds": [
-            "file1",
-            "file2"
-          ]
-        }
-        """;
+{
+  "kind": "code_interpreter",
+  "fileIds": [
+    "file1",
+    "file2"
+  ]
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<CodeInterpreterTool>(jsonData);
+        var instance = CodeInterpreterTool.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("code_interpreter", instance.Kind);
     }

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,13 +11,12 @@ public class ModelResourceConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: model
-        id: gpt-4o
-        
-        """;
+"kind": "model"
+"id": "gpt-4o"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<ModelResource>(yamlData);
+""";
+
+        var instance = ModelResource.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("model", instance.Kind);
@@ -29,13 +27,13 @@ public class ModelResourceConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "model",
-          "id": "gpt-4o"
-        }
-        """;
+{
+  "kind": "model",
+  "id": "gpt-4o"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<ModelResource>(jsonData);
+        var instance = ModelResource.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("model", instance.Kind);
         Assert.Equal("gpt-4o", instance.Id);

@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,24 +11,23 @@ public class PropertySchemaConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        examples:
-          - key: value
-        strict: true
-        properties:
-          firstName:
-            kind: string
-            sample: Jane
-          lastName:
-            kind: string
-            sample: Doe
-          question:
-            kind: string
-            sample: What is the meaning of life?
-        
-        """;
+"examples":
+  - "key": "value"
+"strict": true
+"properties":
+  "firstName":
+    "kind": "string"
+    "sample": "Jane"
+  "lastName":
+    "kind": "string"
+    "sample": "Doe"
+  "question":
+    "kind": "string"
+    "sample": "What is the meaning of life?"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<PropertySchema>(yamlData);
+""";
+
+        var instance = PropertySchema.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.True(instance.Strict);
@@ -39,31 +37,31 @@ public class PropertySchemaConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "examples": [
-            {
-              "key": "value"
-            }
-          ],
-          "strict": true,
-          "properties": {
-            "firstName": {
-              "kind": "string",
-              "sample": "Jane"
-            },
-            "lastName": {
-              "kind": "string",
-              "sample": "Doe"
-            },
-            "question": {
-              "kind": "string",
-              "sample": "What is the meaning of life?"
-            }
-          }
-        }
-        """;
+{
+  "examples": [
+    {
+      "key": "value"
+    }
+  ],
+  "strict": true,
+  "properties": {
+    "firstName": {
+      "kind": "string",
+      "sample": "Jane"
+    },
+    "lastName": {
+      "kind": "string",
+      "sample": "Doe"
+    },
+    "question": {
+      "kind": "string",
+      "sample": "What is the meaning of life?"
+    }
+  }
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<PropertySchema>(jsonData);
+        var instance = PropertySchema.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.True(instance.Strict);
     }

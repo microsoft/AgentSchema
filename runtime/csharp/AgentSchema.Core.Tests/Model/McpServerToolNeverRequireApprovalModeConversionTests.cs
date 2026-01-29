@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,12 +11,11 @@ public class McpServerToolNeverRequireApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        kind: never
-        
-        """;
+"kind": "never"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<McpServerToolNeverRequireApprovalMode>(yamlData);
+""";
+
+        var instance = McpServerToolNeverRequireApprovalMode.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
@@ -27,12 +25,12 @@ public class McpServerToolNeverRequireApprovalModeConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "kind": "never"
-        }
-        """;
+{
+  "kind": "never"
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<McpServerToolNeverRequireApprovalMode>(jsonData);
+        var instance = McpServerToolNeverRequireApprovalMode.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("never", instance.Kind);
     }

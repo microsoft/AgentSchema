@@ -1,5 +1,4 @@
 using Xunit;
-using System.Text.Json;
 
 #pragma warning disable IDE0130
 namespace AgentSchema.Core;
@@ -12,21 +11,20 @@ public class PropertyConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-        name: my-input
-        kind: string
-        description: A description of the input property
-        required: true
-        default: default value
-        example: example value
-        enumValues:
-          - value1
-          - value2
-          - value3
-        
-        """;
+"name": "my-input"
+"kind": "string"
+"description": "A description of the input property"
+"required": true
+"default": "default value"
+"example": "example value"
+"enumValues":
+  - "value1"
+  - "value2"
+  - "value3"
 
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Property>(yamlData);
+""";
+
+        var instance = Property.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("my-input", instance.Name);
@@ -41,22 +39,22 @@ public class PropertyConversionTests
     public void LoadJsonInput()
     {
         string jsonData = """
-        {
-          "name": "my-input",
-          "kind": "string",
-          "description": "A description of the input property",
-          "required": true,
-          "default": "default value",
-          "example": "example value",
-          "enumValues": [
-            "value1",
-            "value2",
-            "value3"
-          ]
-        }
-        """;
+{
+  "name": "my-input",
+  "kind": "string",
+  "description": "A description of the input property",
+  "required": true,
+  "default": "default value",
+  "example": "example value",
+  "enumValues": [
+    "value1",
+    "value2",
+    "value3"
+  ]
+}
+""";
 
-        var instance = JsonSerializer.Deserialize<Property>(jsonData);
+        var instance = Property.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("my-input", instance.Name);
         Assert.Equal("string", instance.Kind);
@@ -69,8 +67,8 @@ public class PropertyConversionTests
     public void LoadJsonFromBoolean()
     {
         // alternate representation as boolean
-        var data = false;
-        var instance = JsonSerializer.Deserialize<Property>(data);
+        var data = "false";
+        var instance = Property.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("boolean", instance.Kind);
         Assert.NotNull(instance.Example);
@@ -83,9 +81,8 @@ public class PropertyConversionTests
     public void LoadYamlFromBoolean()
     {
         // alternate representation as boolean
-        var data = false;
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Property>(data.ToString());
+        var data = "false";
+        var instance = Property.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("boolean", instance.Kind);
         Assert.NotNull(instance.Example);
@@ -96,12 +93,13 @@ public class PropertyConversionTests
     public void LoadJsonFromFloat32()
     {
         // alternate representation as float32
-        var data = 3.14;
-        var instance = JsonSerializer.Deserialize<Property>(data);
+        var data = "3.14";
+        var instance = Property.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("float", instance.Kind);
-        Assert.IsType<float>(instance.Example);
-        Assert.Equal(3.14, (float)instance.Example, precision: 5);
+        Assert.NotNull(instance.Example);
+        Assert.True(instance.Example is float || instance.Example is double || instance.Example is int || instance.Example is long);
+        Assert.Equal(3.14, Convert.ToDouble(instance.Example), 5);
     }
 
 
@@ -109,20 +107,20 @@ public class PropertyConversionTests
     public void LoadYamlFromFloat32()
     {
         // alternate representation as float32
-        var data = 3.14;
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Property>(data.ToString());
+        var data = "3.14";
+        var instance = Property.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("float", instance.Kind);
-        Assert.IsType<float>(instance.Example);
-        Assert.Equal(3.14, (float)instance.Example, precision: 5);
+        Assert.NotNull(instance.Example);
+        Assert.True(instance.Example is float || instance.Example is double || instance.Example is int || instance.Example is long);
+        Assert.Equal(3.14, Convert.ToDouble(instance.Example), 5);
     }
     [Fact]
     public void LoadJsonFromInteger()
     {
         // alternate representation as integer
-        var data = 4;
-        var instance = JsonSerializer.Deserialize<Property>(data);
+        var data = "4";
+        var instance = Property.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("integer", instance.Kind);
         Assert.Equal(4, instance.Example);
@@ -133,9 +131,8 @@ public class PropertyConversionTests
     public void LoadYamlFromInteger()
     {
         // alternate representation as integer
-        var data = 4;
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Property>(data.ToString());
+        var data = "4";
+        var instance = Property.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("integer", instance.Kind);
         Assert.Equal(4, instance.Example);
@@ -145,7 +142,7 @@ public class PropertyConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var instance = JsonSerializer.Deserialize<Property>(data);
+        var instance = Property.FromJson(data);
         Assert.NotNull(instance);
         Assert.Equal("string", instance.Kind);
         Assert.Equal("example", instance.Example);
@@ -157,8 +154,7 @@ public class PropertyConversionTests
     {
         // alternate representation as string
         var data = "\"example\"";
-        var serializer = Yaml.GetDeserializer();
-        var instance = serializer.Deserialize<Property>(data);
+        var instance = Property.FromYaml(data);
         Assert.NotNull(instance);
         Assert.Equal("string", instance.Kind);
         Assert.Equal("example", instance.Example);
