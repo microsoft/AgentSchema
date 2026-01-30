@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSchema.Core", "AgentSchema.Core\AgentSchema.Core.csproj", "{E13C07E4-1C39-4A08-92B0-EBC7479AE0CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSchema", "AgentSchema\AgentSchema.csproj", "{E13C07E4-1C39-4A08-92B0-EBC7479AE0CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSchema.Core.Tests", "AgentSchema.Core.Tests\AgentSchema.Core.Tests.csproj", "{8AC3BBB0-533D-4402-95FE-AC891863FD37}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSchema.Tests", "AgentSchema.Tests\AgentSchema.Tests.csproj", "{8AC3BBB0-533D-4402-95FE-AC891863FD37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

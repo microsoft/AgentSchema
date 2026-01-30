@@ -71,22 +71,26 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
 
   const nodes = Array.from(enumerateTypes(node));
 
+  // Determine namespace: use override, or default to removing '.Core' suffix
+  const originalNamespace = node.typeName.namespace;
+  const csharpNamespace = emitTarget.namespace ?? originalNamespace.replace(/\.Core$/, '');
+
   // Emit context classes (LoadContext, SaveContext)
   const contextCode = contextTemplate.render({
-    namespace: node.typeName.namespace,
+    namespace: csharpNamespace,
   });
   await emitCsharpFile(context, node, contextCode, "Context.cs", emitTarget["output-dir"]);
 
   const utils = utilsTemplate.render({
-    namespace: node.typeName.namespace,
+    namespace: csharpNamespace,
   });
 
   await emitCsharpFile(context, node, utils, "Utils.cs", emitTarget["output-dir"]);
 
-  for (const node of nodes) {
-    await emitCsharpFile(context, node, renderCSharp(nodes, node, classTemplate), `${node.typeName.name}.cs`, emitTarget["output-dir"]);
+  for (const n of nodes) {
+    await emitCsharpFile(context, n, renderCSharp(nodes, n, classTemplate, csharpNamespace), `${n.typeName.name}.cs`, emitTarget["output-dir"]);
     if (emitTarget["test-dir"]) {
-      await emitCsharpFile(context, node, renderTests(node, testTemplate), `${node.typeName.name}ConversionTests.cs`, emitTarget["test-dir"]);
+      await emitCsharpFile(context, n, renderTests(n, testTemplate, csharpNamespace), `${n.typeName.name}ConversionTests.cs`, emitTarget["test-dir"]);
     }
   }
 
@@ -104,7 +108,7 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
 };
 
 
-const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks.Template): string => {
+const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks.Template, namespace: string): string => {
   const polymorphicTypes = node.retrievePolymorphicTypes();
   const findType = (typeName: string): TypeNode | undefined => {
     return nodes.find(n => n.typeName.name === typeName);
@@ -175,12 +179,13 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
     intAlternate: intAlternate,
     floatAlternate: floatAlternate,
     shorthandProperty: shorthandProperty,
+    namespace: namespace,
   });
 
   return csharp;
 }
 
-const renderTests = (node: TypeNode, testTemplate: nunjucks.Template): string => {
+const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace: string): string => {
   const samples = node.properties.filter(p => p.samples && p.samples.length > 0).map(p => {
     return p.samples?.map(s => ({
       ...s.sample,
@@ -231,6 +236,7 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template): string =>
     examples: examples,
     alternates: alternates,
     renderName: renderName,
+    namespace: namespace,
   });
   return test;
 };
@@ -516,13 +522,13 @@ function findDotNetProjectRoot(startDir: string): string | undefined {
     if (csprojFile) {
       return resolve(currentDir, csprojFile);
     }
-    
+
     // Then check for .sln
     const slnFile = files.find((f: string) => f.endsWith('.sln'));
     if (slnFile) {
       return resolve(currentDir, slnFile);
     }
-    
+
     currentDir = dirname(currentDir);
   }
 

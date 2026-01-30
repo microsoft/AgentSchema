@@ -9,8 +9,8 @@ Set-Location $scriptDir
 # Define folders to clean + add base location
 $foldersToClean = @(
   $scriptDir + "\docs", 
-  $scriptDir + "\runtime\csharp\Agentschema.Core\Model", 
-  $scriptDir + "\runtime\csharp\Agentschema.Core.Tests\Model", 
+  $scriptDir + "\runtime\csharp\AgentSchema", 
+  $scriptDir + "\runtime\csharp\AgentSchema.Tests", 
   $scriptDir + "\runtime\python\agentschema\src\agentschema\core",
   $scriptDir + "\runtime\python\agentschema\tests\core",
   $scriptDir + "\runtime\definition"
