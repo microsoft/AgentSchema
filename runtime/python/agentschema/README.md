@@ -255,6 +255,7 @@ yaml_output = agent.to_yaml(context)
 **Collection formats:**
 
 - `"object"` (default): Collections use the item's name as the key
+
   ```yaml
   tools:
     my_tool:
@@ -263,6 +264,7 @@ yaml_output = agent.to_yaml(context)
   ```
 
 - `"array"`: Collections are lists of objects
+
   ```yaml
   tools:
     - name: my_tool
@@ -364,6 +366,7 @@ This package includes type stubs (`py.typed`) for full IDE support with type che
 ## Documentation
 
 For more information about the AgentSchema specification, visit:
+
 - [AgentSchema Documentation](https://microsoft.github.io/AgentSchema/)
 - [Object Model Reference](https://microsoft.github.io/AgentSchema/reference/)
 - [GitHub Repository](https://github.com/microsoft/AgentSchema)

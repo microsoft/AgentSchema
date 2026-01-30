@@ -6,6 +6,7 @@ export interface EmitTarget {
   "test-dir"?: string;
   "alias"?: { [key: string]: any };
   "format"?: boolean;
+  "namespace"?: string;
 }
 export interface AgentSchemaEmitterOptions {
   "root-object": string;
@@ -43,7 +44,12 @@ const AgentSchemaEmitterOptionsSchema: JSONSchemaType<AgentSchemaEmitterOptions>
             type: "boolean",
             nullable: true,
             default: true,
-            description: "Run formatters (ruff, black) on emitted Python files"
+            description: "Run formatters on emitted files"
+          },
+          "namespace": {
+            type: "string",
+            nullable: true,
+            description: "Override the namespace for the emitted code"
           }
         },
         required: ["type"]

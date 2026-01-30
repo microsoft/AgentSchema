@@ -32,8 +32,6 @@ classDiagram
     }
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -43,9 +41,6 @@ target: my-target-resource
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -53,11 +48,3 @@ target: my-target-resource
 | kind | string | The Authentication kind for the AI service (e.g., &#39;key&#39; for API key, &#39;oauth&#39; for OAuth tokens)  |
 | name | string | The name of the connection  |
 | target | string | The target resource or service that this connection refers to  |
-
-
-
-
-
-
-
-

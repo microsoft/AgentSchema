@@ -5,6 +5,9 @@ import * as nunjucks from "nunjucks";
 import { getCombinations, scalarValue } from "./utilities.js";
 import * as YAML from "yaml";
 import path from "path";
+import { resolve, dirname } from "path";
+import { execSync } from "child_process";
+import { existsSync, readdirSync } from "fs";
 
 const csharpTypeMapper: Record<string, string> = {
   "string": "string",
@@ -18,6 +21,15 @@ const csharpTypeMapper: Record<string, string> = {
   "float32": "float",
   "integer": "int",
   "dictionary": "IDictionary<string, object>",
+};
+
+// Maps C# types to Convert.ToXXX method suffixes
+const convertMethodMapper: Record<string, string> = {
+  "bool": "Boolean",
+  "int": "Int32",
+  "long": "Int64",
+  "float": "Single",
+  "double": "Double",
 };
 
 const jsonConverterMapper: Record<string, string> = {
@@ -53,43 +65,50 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
     return isFloat;
   });
   const classTemplate = env.getTemplate('dataclass.njk', true);
-  const jsonTemplate = env.getTemplate('json.njk', true);
-  const yamlTemplate = env.getTemplate('yaml.njk', true);
   const utilsTemplate = env.getTemplate('utils.njk', true);
-  const deserializerTemplate = env.getTemplate('deserializer.njk', true);
   const testTemplate = env.getTemplate('test.njk', true);
+  const contextTemplate = env.getTemplate('context.cs.njk', true);
 
   const nodes = Array.from(enumerateTypes(node));
 
+  // Determine namespace: use override, or default to removing '.Core' suffix
+  const originalNamespace = node.typeName.namespace;
+  const csharpNamespace = emitTarget.namespace ?? originalNamespace.replace(/\.Core$/, '');
+
+  // Emit context classes (LoadContext, SaveContext)
+  const contextCode = contextTemplate.render({
+    namespace: csharpNamespace,
+  });
+  await emitCsharpFile(context, node, contextCode, "Context.cs", emitTarget["output-dir"]);
+
   const utils = utilsTemplate.render({
-    namespace: node.typeName.namespace,
+    namespace: csharpNamespace,
   });
-
-  const deserializer = deserializerTemplate.render({
-    namespace: node.typeName.namespace,
-    types: nodes,
-  });
-
-  await emitCsharpFile(context, node, deserializer, "YamlConverter.cs", emitTarget["output-dir"]);
 
   await emitCsharpFile(context, node, utils, "Utils.cs", emitTarget["output-dir"]);
 
-
-
-
-  for (const node of nodes) {
-    //const className = getClassName(node.typeName.name);
-    await emitCsharpFile(context, node, renderCSharp(nodes, node, classTemplate), `${node.typeName.name}.cs`, emitTarget["output-dir"]);
-    await emitCsharpFile(context, node, renderJsonConverter(nodes, node, jsonTemplate), `${node.typeName.name}JsonConverter.cs`, emitTarget["output-dir"]);
-    await emitCsharpFile(context, node, renderYamlConverter(nodes, node, yamlTemplate), `${node.typeName.name}YamlConverter.cs`, emitTarget["output-dir"]);
+  for (const n of nodes) {
+    await emitCsharpFile(context, n, renderCSharp(nodes, n, classTemplate, csharpNamespace), `${n.typeName.name}.cs`, emitTarget["output-dir"]);
     if (emitTarget["test-dir"]) {
-      await emitCsharpFile(context, node, renderTests(node, testTemplate), `${node.typeName.name}ConversionTests.cs`, emitTarget["test-dir"]);
+      await emitCsharpFile(context, n, renderTests(n, testTemplate, csharpNamespace), `${n.typeName.name}ConversionTests.cs`, emitTarget["test-dir"]);
     }
   }
+
+  // Format emitted files if format option is enabled (default: true)
+  if (emitTarget.format !== false) {
+    const outputDir = emitTarget["output-dir"]
+      ? resolve(process.cwd(), emitTarget["output-dir"])
+      : context.emitterOutputDir;
+    const testDir = emitTarget["test-dir"]
+      ? resolve(process.cwd(), emitTarget["test-dir"])
+      : undefined;
+
+    formatCSharpFiles(outputDir, testDir);
+  }
 };
 
 
-const renderYamlConverter = (nodes: TypeNode[], node: TypeNode, yamlTemplate: nunjucks.Template): string => {
+const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks.Template, namespace: string): string => {
   const polymorphicTypes = node.retrievePolymorphicTypes();
   const findType = (typeName: string): TypeNode | undefined => {
     return nodes.find(n => n.typeName.name === typeName);
@@ -97,61 +116,47 @@ const renderYamlConverter = (nodes: TypeNode[], node: TypeNode, yamlTemplate: nu
   const alternates = generateAlternates(node).filter(alt => alt.scalar !== "float" && alt.scalar !== "int");
   const numericAlternates = generateAlternates(node).filter(alt => alt.scalar === "float" || alt.scalar === "int");
 
-  const csharp = yamlTemplate.render({
-    node: node,
-    renderPropertyName: renderPropertyName,
-    renderName: renderName,
-    renderType: renderType,
-    renderDefault: renderDefault,
-    renderSetInstance: renderSetInstance,
-    renderSummary: renderSummary,
-    renderPropertyModifier: renderPropertyModifier(findType, node),
-    renderNullCoalescing: renderNullCoalescing,
-    converterMapper: (s: string) => jsonConverterMapper[s] || `Get${s.charAt(0).toUpperCase() + s.slice(1)}`,
-    polymorphicTypes: polymorphicTypes,
-    collectionTypes: node.properties.filter(p => p.isCollection && !p.isScalar),
-    alternates: alternates,
-    numericAlternates: numericAlternates,
+  // Separate int and float alternates for proper long/double mapping
+  const intAlternate = numericAlternates.find(alt => alt.scalar === "int") || null;
+  const floatAlternate = numericAlternates.find(alt => alt.scalar === "float") || null;
+
+  // Determine shorthand property (first property in first alternate expansion)
+  let shorthandProperty: string | null = null;
+  if (node.alternates && node.alternates.length > 0) {
+    const firstAlt = node.alternates[0];
+    if (firstAlt.expansion) {
+      const keys = Object.keys(firstAlt.expansion);
+      // Find the key that uses {value}
+      for (const key of keys) {
+        if (firstAlt.expansion[key] === "{value}") {
+          shorthandProperty = key;
+          break;
+        }
+      }
+    }
+  }
+
+  // Collection types with their primary property for shorthand
+  // Filter out dictionary collections since they don't have Load methods
+  const collectionTypes = node.properties.filter(p => p.isCollection && !p.isScalar && !p.isDict).map(p => {
+    const itemType = findType(p.typeName.name);
+    let primaryProp: string | null = null;
+    if (itemType && itemType.alternates && itemType.alternates.length > 0) {
+      const firstAlt = itemType.alternates[0];
+      if (firstAlt.expansion) {
+        for (const key of Object.keys(firstAlt.expansion)) {
+          if (firstAlt.expansion[key] === "{value}") {
+            primaryProp = key;
+            break;
+          }
+        }
+      }
+    }
+    return {
+      prop: p,
+      type: primaryProp ? [primaryProp] : [],
+    };
   });
-
-  return csharp;
-};
-
-const renderJsonConverter = (nodes: TypeNode[], node: TypeNode, jsonTemplate: nunjucks.Template): string => {
-  const polymorphicTypes = node.retrievePolymorphicTypes();
-  const findType = (typeName: string): TypeNode | undefined => {
-    return nodes.find(n => n.typeName.name === typeName);
-  }
-  const alternates = generateAlternates(node).filter(alt => alt.scalar !== "float" && alt.scalar !== "int");
-  const numericAlternates = generateAlternates(node).filter(alt => alt.scalar === "float" || alt.scalar === "int");
-
-  const csharp = jsonTemplate.render({
-    node: node,
-    renderPropertyName: renderPropertyName,
-    renderName: renderName,
-    renderType: renderType,
-    renderDefault: renderDefault,
-    renderSetInstance: renderSetInstance,
-    renderSummary: renderSummary,
-    renderPropertyModifier: renderPropertyModifier(findType, node),
-    renderNullCoalescing: renderNullCoalescing,
-    converterMapper: (s: string) => jsonConverterMapper[s] || `Get${s.charAt(0).toUpperCase() + s.slice(1)}`,
-    polymorphicTypes: polymorphicTypes,
-    collectionTypes: node.properties.filter(p => p.isCollection && !p.isScalar),
-    alternates: alternates,
-    numericAlternates: numericAlternates,
-  });
-
-  return csharp;
-};
-
-const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks.Template): string => {
-  const polymorphicTypes = node.retrievePolymorphicTypes();
-  const findType = (typeName: string): TypeNode | undefined => {
-    return nodes.find(n => n.typeName.name === typeName);
-  }
-  const alternates = generateAlternates(node).filter(alt => alt.scalar !== "float" && alt.scalar !== "int");
-  const numericAlternates = generateAlternates(node).filter(alt => alt.scalar === "float" || alt.scalar === "int");
 
   const csharp = classTemplate.render({
     node: node,
@@ -164,17 +169,23 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
     renderSummary: renderSummary,
     renderPropertyModifier: renderPropertyModifier(findType, node),
     renderNullCoalescing: renderNullCoalescing,
+    renderLoadProperty: renderLoadProperty(findType),
+    renderSaveProperty: renderSaveProperty,
     converterMapper: (s: string) => jsonConverterMapper[s] || `Get${s.charAt(0).toUpperCase() + s.slice(1)}`,
     polymorphicTypes: polymorphicTypes,
-    collectionTypes: node.properties.filter(p => p.isCollection && !p.isScalar),
+    collectionTypes: collectionTypes,
     alternates: alternates,
     numericAlternates: numericAlternates,
+    intAlternate: intAlternate,
+    floatAlternate: floatAlternate,
+    shorthandProperty: shorthandProperty,
+    namespace: namespace,
   });
 
   return csharp;
 }
 
-const renderTests = (node: TypeNode, testTemplate: nunjucks.Template): string => {
+const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace: string): string => {
   const samples = node.properties.filter(p => p.samples && p.samples.length > 0).map(p => {
     return p.samples?.map(s => ({
       ...s.sample,
@@ -190,7 +201,7 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template): string =>
     const sample = Object.assign({}, ...c);
     return {
       json: JSON.stringify(sample, null, 2).split('\n'),
-      yaml: YAML.stringify(sample, { indent: 2 }).split('\n'),
+      yaml: YAML.stringify(sample, { indent: 2, lineWidth: 0, defaultStringType: 'QUOTE_DOUBLE' }).split('\n'),
       // get all scalars in the sample
       validation: Object.keys(sample).filter(key => typeof sample[key] !== 'object').map(key => ({
         key: renderName(key),
@@ -225,6 +236,7 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template): string =>
     examples: examples,
     alternates: alternates,
     renderName: renderName,
+    namespace: namespace,
   });
   return test;
 };
@@ -380,6 +392,69 @@ const renderSetInstance = (prop: PropertyNode, variable: string, dictArg: string
   }
 }
 
+/**
+ * Renders the property loading code for the Load() method
+ */
+const renderLoadProperty = (findType: (typeName: string) => TypeNode | undefined) => (prop: PropertyNode): string => {
+  const propertyName = renderPropertyName(prop);
+  const propertyType = renderSimpleType(prop);
+
+  if (prop.isScalar) {
+    if (prop.isDict) {
+      if (prop.isCollection) {
+        // Dictionary collection - convert each item to proper dictionary type
+        return `instance.${propertyName} = (${prop.name}Value as IEnumerable<object>)?.Select(x => x.GetDictionary()).Cast<IDictionary<string, object>>().ToList() ?? [];`;
+      }
+      return `instance.${propertyName} = ${prop.name}Value.GetDictionary()!;`;
+    }
+    const csharpType = csharpTypeMapper[prop.typeName.name] || "object";
+
+    // Handle scalar collections (e.g., IList<string>)
+    if (prop.isCollection) {
+      if (csharpType === "string") {
+        return `instance.${propertyName} = (${prop.name}Value as IEnumerable<object>)?.Select(x => x?.ToString()!).ToList() ?? [];`;
+      } else if (isNonNullableValueType(csharpType)) {
+        const convertMethod = convertMethodMapper[csharpType] || "ToString";
+        return `instance.${propertyName} = (${prop.name}Value as IEnumerable<object>)?.Select(x => Convert.To${convertMethod}(x)).ToList() ?? [];`;
+      } else {
+        return `instance.${propertyName} = (${prop.name}Value as IEnumerable<object>)?.ToList() ?? [];`;
+      }
+    }
+
+    if (isNonNullableValueType(csharpType)) {
+      const convertMethod = convertMethodMapper[csharpType] || "ToString";
+      return `instance.${propertyName} = Convert.To${convertMethod}(${prop.name}Value);`;
+    } else if (csharpType === "string") {
+      return `instance.${propertyName} = ${prop.name}Value?.ToString()!;`;
+    } else {
+      return `instance.${propertyName} = ${prop.name}Value;`;
+    }
+  } else if (prop.isCollection) {
+    if (prop.isDict) {
+      // Dictionary collection - convert each item to proper dictionary type
+      return `instance.${propertyName} = (${prop.name}Value as IEnumerable<object>)?.Select(x => x.GetDictionary()).Cast<IDictionary<string, object>>().ToList() ?? [];`;
+    }
+    return `instance.${propertyName} = Load${propertyName}(${prop.name}Value, context);`;
+  } else {
+    return `instance.${propertyName} = ${prop.typeName.name}.Load(${prop.name}Value.GetDictionary(), context);`;
+  }
+};
+
+/**
+ * Renders the property saving code for the Save() method
+ */
+const renderSaveProperty = (prop: PropertyNode): string => {
+  const propertyName = renderPropertyName(prop);
+
+  if (prop.isScalar || prop.isDict) {
+    return `result["${prop.name}"] = obj.${propertyName};`;
+  } else if (prop.isCollection) {
+    return `result["${prop.name}"] = Save${propertyName}(obj.${propertyName}, context);`;
+  } else {
+    return `result["${prop.name}"] = obj.${propertyName}?.Save(context);`;
+  }
+};
+
 const renderSummary = (prop: PropertyNode): string => {
   return "/// <summary>\n    /// " + prop.description + "\n    /// </summary>";
 };
@@ -406,4 +481,56 @@ const emitCsharpFile = async (context: EmitContext<AgentSchemaEmitterOptions>, t
     path,
     content: python,
   });
+}
+
+/**
+ * Format C# files using dotnet format.
+ * Runs formatter from the .NET project root (where .csproj or .sln is located).
+ */
+function formatCSharpFiles(outputDir: string, testDir?: string): void {
+  // Find the .NET project root by looking for .csproj or .sln
+  const projectRoot = findDotNetProjectRoot(outputDir);
+  if (!projectRoot) {
+    console.warn(`Warning: Could not find .csproj or .sln file. Skipping formatting.`);
+    return;
+  }
+
+  try {
+    execSync(`dotnet format "${projectRoot}"`, {
+      cwd: dirname(projectRoot),
+      stdio: 'pipe',
+      encoding: 'utf-8'
+    });
+  } catch (error) {
+    console.warn(`Warning: dotnet format failed. You may need to run it manually.`);
+  }
+}
+
+/**
+ * Find the .NET project root by traversing up from the output directory
+ * looking for .csproj or .sln files.
+ */
+function findDotNetProjectRoot(startDir: string): string | undefined {
+  let currentDir = resolve(startDir);
+  const root = resolve('/');
+
+  // On Windows, also check for drive root (e.g., "C:\")
+  while (currentDir !== root && currentDir !== dirname(currentDir)) {
+    // First check for .csproj (more specific)
+    const files = existsSync(currentDir) ? readdirSync(currentDir) : [];
+    const csprojFile = files.find((f: string) => f.endsWith('.csproj'));
+    if (csprojFile) {
+      return resolve(currentDir, csprojFile);
+    }
+
+    // Then check for .sln
+    const slnFile = files.find((f: string) => f.endsWith('.sln'));
+    if (slnFile) {
+      return resolve(currentDir, slnFile);
+    }
+
+    currentDir = dirname(currentDir);
+  }
+
+  return undefined;
 }

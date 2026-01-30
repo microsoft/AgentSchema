@@ -115,102 +115,41 @@ public class {{ node.typeName.name }}JsonConverter: JsonConverter<{{ node.typeNa
             throw new JsonException($"Unexpected JSON token when parsing {{ node.typeName.name }}: {reader.TokenType}");
         }
 
-        using (var jsonDocument = JsonDocument.ParseValue(ref reader))
+        // Parse JSON to Dictionary and delegate to Load method
+        using var jsonDocument = JsonDocument.ParseValue(ref reader);
+        var data = JsonElementToDictionary(jsonDocument.RootElement);
+        return {{ node.typeName.name }}.Load(data);
+    }
+
+    private static Dictionary<string, object?> JsonElementToDictionary(JsonElement element)
+    {
+        var dict = new Dictionary<string, object?>();
+        foreach (var property in element.EnumerateObject())
         {
-            var rootElement = jsonDocument.RootElement;
-            {% if polymorphicTypes %}
-            // load polymorphic {{ node.typeName.name }} instance
-            {{ node.typeName.name }} instance;
-            if (rootElement.TryGetProperty("{{ node.discriminator }}", out JsonElement discriminatorValue))
-            {
-                var discriminator = discriminatorValue.GetString() 
-                    ?? throw new JsonException("Empty discriminator value for {{ node.typeName.name }} is not supported");
-                instance = discriminator switch 
-                {
-                    {%- for type in polymorphicTypes.types %}
-                    "{{ type.value }}" => JsonSerializer.Deserialize<{{ type.instance.typeName.name }}> (rootElement, options)
-                        ?? throw new JsonException("Empty {{ type.instance.typeName.name }} instances are not supported"),
-                    {%- endfor %}
-                    {%- if polymorphicTypes.default %}
-                    _ => new {{ polymorphicTypes.default.instance.typeName.name }}(),
-                    {%- else %}
-                    _ => throw new JsonException($"Unknown {{ node.typeName.name }} discriminator value: {discriminator}"),
-                    {%- endif %}
-                };
-            }
-            else
-            {
-                throw new JsonException("Missing {{ node.typeName.name }} discriminator property: '{{ node.discriminator }}'");
-            }
-
-            {%- else %}
-            // create new instance
-            var instance = new {{ node.typeName.name }}();
-            {%- endif %}
-
-            {%- for prop in node.properties %}
-            if (rootElement.TryGetProperty("{{ prop.name }}", out JsonElement {{ prop.name }}Value))
-            {
-                {%- if prop.isDict %}
-                instance.{{ renderPropertyName(prop) }} = JsonSerializer.Deserialize<Dictionary<string, object>{% if prop.isCollection %}[]{% endif %}>({{ prop.name }}Value.GetRawText(), options){{ renderNullCoalescing(prop) | safe }};
-                {%- elif prop.isCollection %}
-                    {%- if prop.isScalar %}
-                instance.{{ renderPropertyName(prop) }} = [.. {{ prop.name }}Value.EnumerateArray().Select(x => x.{{ converterMapper(prop.typeName.name) }}() ?? throw new JsonException("Empty array elements for {{ prop.name }} are not supported"))];
-                    {%- else %}
-                if ({{ prop.name }}Value.ValueKind == JsonValueKind.Array)
-                {
-                    instance.{{ renderPropertyName(prop) }} = 
-                        [.. {{ prop.name }}Value.EnumerateArray()
-                            .Select(x => JsonSerializer.Deserialize<{{ prop.typeName.name }}> (x.GetRawText(), options)
-                                ?? throw new JsonException("Empty array elements for {{ renderPropertyName(prop) }} are not supported"))];
-                }
-                {%- if prop.typeName.name != "Model" and prop.typeName.name != "ProtocolVersionRecord" %}
-                else if ({{ prop.name }}Value.ValueKind == JsonValueKind.Object)
-                {
-                    instance.{{ renderPropertyName(prop) }} = 
-                        [.. {{ prop.name }}Value.EnumerateObject()
-                            .Select(property =>
-                            {
-                                var item = JsonSerializer.Deserialize<{{ prop.typeName.name }}>(property.Value.GetRawText(), options)
-                                    ?? throw new JsonException("Empty array elements for {{ renderPropertyName(prop) }} are not supported");
-                                item.Name = property.Name;
-                                return item;
-                            })];
-                }
-                {% endif %}
-                else
-                {
-                    throw new JsonException("Invalid JSON token for {{ prop.name }}");
-                }
-                    {%- endif %}
-                {%- else %}
-                    {%- if prop.isScalar %}
-                instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Value.{{ converterMapper(prop.typeName.name) }}(){{ renderNullCoalescing(prop) | safe }};
-                    {%- else %}
-                instance.{{ renderPropertyName(prop) }} = JsonSerializer.Deserialize<{{ renderType(prop) | safe }}>({{ prop.name }}Value.GetRawText(), options){{ renderNullCoalescing(prop) | safe }};
-                    {%- endif %}
-                {%- endif %}
-            }
-            {% endfor %}
-            return instance;
+            dict[property.Name] = JsonElementToObject(property.Value);
         }
+        return dict;
+    }
+
+    private static object? JsonElementToObject(JsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            JsonValueKind.Object => JsonElementToDictionary(element),
+            JsonValueKind.Array => element.EnumerateArray().Select(JsonElementToObject).ToList(),
+            JsonValueKind.String => element.GetString(),
+            JsonValueKind.Number => element.TryGetInt32(out var i) ? i : element.GetDouble(),
+            JsonValueKind.True => true,
+            JsonValueKind.False => false,
+            JsonValueKind.Null => null,
+            _ => null
+        };
     }
 
     public override void Write(Utf8JsonWriter writer, {{ node.typeName.name }} value, JsonSerializerOptions options)
     {
-        writer.WriteStartObject();
-        {%- for prop in node.properties %}
-        {%- if prop.isOptional %}
-        if(value.{{ renderPropertyName(prop) }} != null)
-        {
-            writer.WritePropertyName("{{ prop.name }}");
-            JsonSerializer.Serialize(writer, value.{{ renderPropertyName(prop) }}, options);
-        }
-        {%- else %}
-        writer.WritePropertyName("{{ prop.name }}");
-        JsonSerializer.Serialize(writer, value.{{ renderPropertyName(prop) }}, options);
-        {%- endif %}
-        {% endfor %}
-        writer.WriteEndObject();
+        // Delegate to Save method and write the dictionary
+        var dict = value.Save();
+        JsonSerializer.Serialize(writer, dict, options);
     }
 }

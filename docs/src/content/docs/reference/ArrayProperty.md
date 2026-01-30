@@ -45,8 +45,6 @@ classDiagram
     ArrayProperty *-- Property
 ```
 
-
-
 ## Yaml Example
 
 ```yaml
@@ -55,9 +53,6 @@ items:
 
 ```
 
-
-
-
 ## Properties
 
 | Name | Type | Description |
@@ -65,15 +60,8 @@ items:
 | kind | string |   |
 | items | [Property](../property/) | The type of items contained in the array (Related Types: [ObjectProperty](../objectproperty/)) |
 
-
-
-
-
-
-
 ## Composed Types
+
 The following types are composed within `ArrayProperty`:
 
 - [Property](../property/)
-
-

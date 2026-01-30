@@ -16,138 +16,17 @@ public class {{ node.typeName.name }}YamlConverter: YamlConverter<{{ node.typeNa
 
     public override {{ node.typeName.name }} Read(IParser parser, ObjectDeserializer rootDeserializer)
     {
+        // Parse YAML to Dictionary first
+        var dict = rootDeserializer(typeof(Dictionary<string, object?>)) as Dictionary<string, object?>
+            ?? throw new YamlException("Failed to parse {{ node.typeName.name }} as dictionary");
         
-        parser.Consume<MappingStart>();
-
-        {%- if polymorphicTypes %}
-        // load polymorphic {{ node.typeName.name }} instance
-        {{ node.typeName.name }} instance;
-        parser.TryFindMappingEntry((Scalar s) => s.Value == "{{ node.discriminator }}", out var {{ node.discriminator }}Value, out var {{ node.discriminator }}ParsingEvent);
-        if ({{ node.discriminator }}Value != null)
-        {
-            var discriminator = {{ node.discriminator }}Value.Value
-                ?? throw new YamlException("Empty discriminator value for {{ node.typeName.name }} is not supported");
-            instance = discriminator.ToLowerInvariant() switch 
-            {
-                {%- for type in polymorphicTypes.types %}
-                "{{ type.value }}" => rootDeserializer(typeof({{ type.instance.typeName.name }})) as {{ type.instance.typeName.name }} ??
-                    throw new YamlException("Empty {{ type.instance.typeName.name }} instances are not supported"),
-                {%- endfor %}
-                {%- if polymorphicTypes.default %}
-                _ => new {{ polymorphicTypes.default.instance.typeName.name }}(),
-                {%- else %}
-                _ => throw new YamlException($"Unknown {{ node.typeName.name }} discriminator value: {discriminator}"),
-                {%- endif %}
-            };
-        }
-        else
-        {
-            throw new YamlException("Missing {{ node.typeName.name }} discriminator property: '{{ node.discriminator }}'");
-        }
-        {%- else %}
-        // create new instance
-        var instance = new {{ node.typeName.name }}();
-        {%- endif %}
-
-        while (!parser.TryConsume<MappingEnd>(out _))
-        {
-            var propertyName = parser.Consume<Scalar>().Value;
-            switch (propertyName)
-            {
-                {%- for prop in node.properties %}
-                case "{{ prop.name }}":
-                    {%- if prop.isDict %}
-                    var {{ prop.name }}Value = rootDeserializer(typeof(Dictionary<string, object>{% if prop.isCollection %}[]{% endif %})) as Dictionary<string, object>{% if prop.isCollection %}[]{% endif %}{{ renderNullCoalescing(prop) | safe }};
-                    instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Value;
-                    {%- elif prop.isCollection %}
-                        {%- if prop.isScalar %}
-                            /*
-                    instance.{{ renderPropertyName(prop) }} = [.. {{ prop.name }}Value.EnumerateArray().Select(x => x.{{ converterMapper(prop.typeName.name) }}() ?? throw new YamlException("Empty array elements for {{ prop.name }} are not supported"))];
-                            */
-                        {%- else %}
-                            /*
-                    if ({{ prop.name }}Value.ValueKind == JsonValueKind.Array)
-                    {
-                            
-                        instance.{{ renderPropertyName(prop) }} = 
-                            [.. {{ prop.name }}Value.EnumerateArray()
-                                .Select(x => JsonSerializer.Deserialize<{{ prop.typeName.name }}> (x.GetRawText(), options)
-                                    ?? throw new YamlException("Empty array elements for {{ renderPropertyName(prop) }} are not supported"))];
-                    }
-                            */
-                    {%- if prop.typeName.name != "Model" and prop.typeName.name != "ProtocolVersionRecord" %}
-                            /*
-                    else if ({{ prop.name }}Value.ValueKind == JsonValueKind.Object)
-                    {
-                        instance.{{ renderPropertyName(prop) }} = 
-                            [.. {{ prop.name }}Value.EnumerateObject()
-                                .Select(property =>
-                                {
-                                    var item = JsonSerializer.Deserialize<{{ prop.typeName.name }}>(property.Value.GetRawText(), options)
-                                        ?? throw new YamlException("Empty array elements for {{ renderPropertyName(prop) }} are not supported");
-                                    item.Name = property.Name;
-                                    return item;
-                                })];
-                    }
-                            */
-                    {% endif %}
-                            /*
-                    else
-                    {
-                        throw new YamlException("Invalid JSON token for {{ prop.name }}");
-                    }
-                            */
-                        {%- endif %}
-                    {%- else %}
-                        {%- if prop.isScalar %}
-                            {%- if node.discriminator == prop.name and polymorphicTypes %}
-                    // discriminator property already processed
-                    instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Value.Value{{ renderNullCoalescing(prop) | safe }};
-                            {%- else %}
-                    
-                                {%- if prop.typeName.name == "string" %}
-                    var {{ prop.name }}Value = parser.Consume<Scalar>();
-                    instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Value.Value{{ renderNullCoalescing(prop) | safe }};
-                                {%- elif prop.typeName.name == "unknown" %}
-                    instance.{{ renderPropertyName(prop) }} = rootDeserializer(typeof(object)){{ renderNullCoalescing(prop) | safe }};
-                                {%- else %}
-                    var {{ prop.name }}Value = parser.Consume<Scalar>();
-                    if({{ renderType(prop, true) | safe }}.TryParse({{ prop.name }}Value.Value, out var {{ prop.name }}Item))
-                    {
-                        instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Item;
-                    }
-                                {%- endif %}
-                            {%- endif %}
-                        {%- else %}
-                    var {{ prop.name }}Value = rootDeserializer(typeof({{ renderType(prop, true) | safe }})) as {{ renderType(prop, true) | safe }}{{ renderNullCoalescing(prop) | safe }};
-                    instance.{{ renderPropertyName(prop) }} = {{ prop.name }}Value;
-                        {%- endif %}
-                    {%- endif %}
-                    break;
-                {%- endfor %}
-                default:
-                    throw new YamlException($"Unknown property '{propertyName}' in {{ node.typeName.name }}.");
-            }
-        }
-
-        return instance;
+        return {{ node.typeName.name }}.Load(dict);
     }
 
     public override void Write(IEmitter emitter, {{ node.typeName.name }} value, ObjectSerializer serializer)
     {
-        emitter.Emit(new MappingStart());
-        {%- for prop in node.properties %}
-        {%- if prop.isOptional %}
-        if(value.{{ renderPropertyName(prop) }} != null)
-        {
-            emitter.Emit(new Scalar("{{ prop.name }}"));
-            serializer(value.{{ renderPropertyName(prop) }}, typeof({{ renderType(prop, true) | safe }}));
-        }
-        {%- else %}
-        emitter.Emit(new Scalar("{{ prop.name }}"));
-        serializer(value.{{ renderPropertyName(prop) }}, typeof({{ renderType(prop, true) | safe }}));
-        {%- endif %}
-        {% endfor %}
-        emitter.Emit(new MappingEnd());
+        // Delegate to Save method and serialize the dictionary
+        var dict = value.Save();
+        serializer(dict, typeof(Dictionary<string, object?>));
     }
 }
