@@ -1,0 +1,107 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - "typescript-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version (e.g., 1.0.0-beta.1)"
+        required: false
+        type: string
+
+env:
+  NODE_VERSION: "20"
+  PACKAGE_PATH: "runtime/typescript/agentschema"
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    # Only run on microsoft/AgentSchema repo
+    if: github.repository == 'microsoft/AgentSchema'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm ci
+
+      - name: Build package
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm run build
+
+      - name: Run tests
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm test
+
+      - name: Store build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-package-build
+          path: |
+            ${{ env.PACKAGE_PATH }}/dist/
+            ${{ env.PACKAGE_PATH }}/package.json
+            ${{ env.PACKAGE_PATH }}/README.md
+
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Extract version from tag or input
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/typescript-v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#typescript-v}"
+          else
+            echo "No version specified and not a version tag"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Install dependencies
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm ci
+
+      - name: Update package version
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm version ${{ steps.version.outputs.version }} --no-git-tag-version --allow-same-version
+
+      - name: Build package
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm run build
+
+      - name: Publish to npm
+        working-directory: ${{ env.PACKAGE_PATH }}
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

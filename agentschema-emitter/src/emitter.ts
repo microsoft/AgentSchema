@@ -10,6 +10,7 @@ import { AgentSchemaEmitterOptions } from "./lib.js";
 import { generateMarkdown } from "./markdown.js";
 import { generatePython } from "./python.js";
 import { generateCsharp } from "./csharp.js";
+import { generateTypeScript } from "./typescript.js";
 import { generateBotDefinition } from './bot.js';
 
 
@@ -63,6 +64,13 @@ export async function $onEmit(context: EmitContext<AgentSchemaEmitterOptions>) {
     const target = targets[idx];
     // emit csharp
     await generateCsharp(context, options.templateDir, model, target);
+  }
+
+  if (targetNames.includes("typescript")) {
+    const idx = targetNames.indexOf("typescript");
+    const target = targets[idx];
+    // emit typescript
+    await generateTypeScript(context, options.templateDir, model, target);
   }
 
   if (targetNames.includes("botdefinition")) {
