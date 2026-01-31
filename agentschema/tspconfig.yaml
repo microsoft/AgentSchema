@@ -22,4 +22,5 @@ options:
       - type: BotDefinition
         output-dir: "../runtime/definition"
       - type: TypeScript
-        output-dir: "./tsp-output/typescript"
+        output-dir: "../runtime/typescript/agentschema/src"
+        test-dir: "../runtime/typescript/agentschema/tests"
