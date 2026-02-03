@@ -97,7 +97,7 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 ### Template Syntax
 
-```jinja2
+```twig
 {# Comment #}
 {{ variable }}                    {# Output variable #}
 {{ value | lower }}               {# Apply filter #}
@@ -110,7 +110,7 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 **Rendering property names:**
 
-```jinja2
+```twig
 {# C# - PascalCase #}
 {{ renderName(prop.name) }}
 
@@ -123,7 +123,7 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 **Type mapping:**
 
-```jinja2
+```twig
 {% if prop.isScalar %}
   {{ typeMapper[prop.typeName.name] }}
 {% else %}
@@ -133,7 +133,7 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 **Handling optionals:**
 
-```jinja2
+```twig
 {# C# #}
 {{ type }}{% if prop.isOptional %}?{% endif %}
 
@@ -161,7 +161,7 @@ const context = {
 
 1. **Update the template** (e.g., `templates/csharp/dataclass.njk`):
 
-```jinja2
+```twig
 {% if newFeature %}
 /// <summary>New feature documentation</summary>
 public string NewFeature => "{{ newFeature }}";
