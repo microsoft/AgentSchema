@@ -57,6 +57,7 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
+    environment: npm
     permissions:
       contents: read
       id-token: write
@@ -103,5 +104,4 @@ jobs:
       - name: Publish to npm
         working-directory: ${{ env.PACKAGE_PATH }}
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # No token needed - using Trusted Publishing with OIDC
