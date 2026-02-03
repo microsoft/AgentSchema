@@ -21,7 +21,7 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
 ### Individual Runtimes
 
 <Tabs syncKey="language">
-  <TabItem label="C#" icon="seti:csharp">
+  <TabItem label="C#" icon="seti:c-sharp">
     ```bash
     cd runtime/csharp
     dotnet test                           # All tests
@@ -41,6 +41,14 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
     cd runtime/typescript/agentschema
     npm test                              # All tests
     npm test -- --grep "Model"           # Filter by name
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```bash
+    cd runtime/go/agentschema
+    go test ./...                         # All tests
+    go test -run "TestModel"              # Filter by name
+    go test -v ./...                      # Verbose output
     ```
   </TabItem>
 </Tabs>
@@ -134,9 +142,10 @@ Some tests are not auto-generated and can be edited:
 | C# | `runtime/csharp/AgentSchema.Tests/` | Project files are preserved |
 | Python | `runtime/python/agentschema/tests/` | `conftest.py` is preserved |
 | TypeScript | `runtime/typescript/agentschema/tests/` | Config files are preserved |
+| Go | `runtime/go/agentschema/` | `go.mod` is preserved |
 
 :::caution
-Test files matching `test_load_*.py`, `*ConversionTests.cs`, or `*.test.ts` patterns ARE regenerated. Add custom tests with different naming patterns.
+Test files matching `test_load_*.py`, `*ConversionTests.cs`, `*.test.ts`, or `*_test.go` patterns ARE regenerated. Add custom tests with different naming patterns.
 :::
 
 ## Test Validation Patterns
@@ -156,6 +165,11 @@ expect(instance.name).toEqual("expected-value");
 
 # C#
 Assert.Equal("expected-value", instance.Name);
+
+# Go
+if instance.Name != "expected-value" {
+    t.Errorf("Expected name to be 'expected-value', got %v", instance.Name)
+}
 ```
 
 ### Type Checks
@@ -169,6 +183,11 @@ expect(Array.isArray(instance.items)).toBe(true);
 
 # C#
 Assert.IsType<List<string>>(instance.Items);
+
+# Go
+if len(instance.Items) == 0 {
+    t.Error("Expected items to be non-empty")
+}
 ```
 
 ## Debugging Test Failures
@@ -216,6 +235,9 @@ npm test -- --grep "Model" --reporter verbose
 
 # C#
 dotnet test --filter "ModelConversionTests" --logger "console;verbosity=detailed"
+
+# Go
+go test -v -run "TestModel" ./...
 ```
 
 ## CI/CD

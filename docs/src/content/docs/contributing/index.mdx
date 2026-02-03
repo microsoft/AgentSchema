@@ -15,7 +15,7 @@ AgentSchema uses a code generation approach where:
 
 1. **TypeSpec definitions** define the schema (source of truth)
 2. **Custom emitter** generates runtime code for multiple languages
-3. **Runtime libraries** are auto-generated (C#, Python, TypeScript)
+3. **Runtime libraries** are auto-generated (C#, Python, TypeScript, Go)
 
 ```mermaid
 flowchart TD
@@ -23,6 +23,7 @@ flowchart TD
     B --> C[C# Runtime<br/>runtime/csharp/]
     B --> D[Python Runtime<br/>runtime/python/]
     B --> E[TypeScript Runtime<br/>runtime/typescript/]
+    B --> H[Go Runtime<br/>runtime/go/]
     B --> F[JSON Schemas<br/>schemas/]
     B --> G[Reference Docs<br/>docs/reference/]
     
@@ -31,6 +32,7 @@ flowchart TD
     style C fill:#9E9E9E,color:#fff
     style D fill:#9E9E9E,color:#fff
     style E fill:#9E9E9E,color:#fff
+    style H fill:#9E9E9E,color:#fff
     style F fill:#9E9E9E,color:#fff
     style G fill:#9E9E9E,color:#fff
 ```
@@ -49,6 +51,7 @@ flowchart TD
   - csharp/
   - python/
   - typescript/
+  - go/
 - schemas/ ⚠️ DO NOT edit directly
 
 </FileTree>

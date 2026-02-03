@@ -19,6 +19,7 @@ You'll need the following tools installed:
 | **.NET SDK** (9.0+) | C# runtime development | [dotnet.microsoft.com](https://dotnet.microsoft.com/download) |
 | **Python** (3.11+) | Python runtime development | [python.org](https://www.python.org/downloads/) |
 | **uv** | Python package manager | `pip install uv` or [docs.astral.sh](https://docs.astral.sh/uv/) |
+| **Go** (1.21+) | Go runtime development | [go.dev](https://go.dev/dl/) |
 
 ## Clone & Install
 
@@ -84,11 +85,13 @@ You'll need the following tools installed:
         - csharp/
         - python/
         - typescript/
+        - go/
     - dist/ compiled output
   - runtime/ Generated libraries (DO NOT EDIT)
     - csharp/
     - python/
     - typescript/
+    - go/
   - schemas/ Generated JSON schemas (DO NOT EDIT)
   - docs/ Documentation site
 
@@ -112,6 +115,7 @@ npm run generate
 cd ../runtime/csharp && dotnet test
 cd ../python/agentschema && uv run pytest tests/
 cd ../../typescript/agentschema && npm test
+cd ../../go/agentschema && go test ./...
 ```
 
 All tests should pass. If you encounter issues, check:
