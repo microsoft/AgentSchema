@@ -44,7 +44,7 @@ t.Fatalf("Failed to load {{ node.typeName.name }}: %v", err)
 
 {%- for validation in sample.validation %}
 if instance.{{ validation.key }} != {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }} {
-t.Errorf(`Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}"{% endif %}, got %v`, instance.{{ validation.key }})
+t.Errorf("Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}\"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}\"{% endif %}, got %v", instance.{{ validation.key }})
 }
 {%- endfor %}
 }
@@ -69,7 +69,7 @@ t.Fatalf("Failed to load {{ node.typeName.name }}: %v", err)
 
 {%- for validation in sample.validation %}
 if instance.{{ validation.key }} != {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }} {
-t.Errorf(`Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}"{% endif %}, got %v`, instance.{{ validation.key }})
+t.Errorf("Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}\"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}\"{% endif %}, got %v", instance.{{ validation.key }})
 }
 {%- endfor %}
 }
@@ -102,7 +102,7 @@ t.Fatalf("Failed to reload {{ node.typeName.name }}: %v", err)
 
 {%- for validation in sample.validation %}
 if reloaded.{{ validation.key }} != {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }} {
-t.Errorf(`Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}"{% endif %}, got %v`, reloaded.{{ validation.key }})
+t.Errorf("Expected {{ validation.key }} to be {% if validation.delimeter == '"' %}\"{% endif %}{{ validation.value }}{% if validation.delimeter == '"' %}\"{% endif %}, got %v", reloaded.{{ validation.key }})
 }
 {%- endfor %}
 }
@@ -178,7 +178,7 @@ t.Fatalf("Failed to load {{ node.typeName.name }} from {{ alt.scalar }}: %v", er
 
 {%- for item in alt.validation %}
 if instance.{{ item.key }} != {{ item.delimeter }}{{ item.value }}{{ item.delimeter }} {
-t.Errorf(`Expected {{ item.key }} to be {% if item.delimeter == '"' %}"{% endif %}{{ item.value }}{% if item.delimeter == '"' %}"{% endif %}, got %v`, instance.{{ item.key }})
+t.Errorf("Expected {{ item.key }} to be {% if item.delimeter == '"' %}\"{% endif %}{{ item.value }}{% if item.delimeter == '"' %}\"{% endif %}, got %v", instance.{{ item.key }})
 }
 {%- endfor %}
 }

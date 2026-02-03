@@ -46,10 +46,10 @@ func TestFunctionToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -82,10 +82,10 @@ strict: true
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -132,10 +132,10 @@ func TestFunctionToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload FunctionTool: %v", err)
 	}
 	if reloaded.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, reloaded.Kind)
 	}
 	if reloaded.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", reloaded.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
 
@@ -269,10 +269,10 @@ func TestFunctionToolLoadJSON1(t *testing.T) {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -305,10 +305,10 @@ strict: true
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -358,10 +358,10 @@ func TestFunctionToolRoundtrip1(t *testing.T) {
 		t.Fatalf("Failed to reload FunctionTool: %v", err)
 	}
 	if reloaded.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, reloaded.Kind)
 	}
 	if reloaded.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", reloaded.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
 

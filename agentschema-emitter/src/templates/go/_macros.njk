@@ -92,19 +92,13 @@ map[string]interface{}
 
 {#
   Render property name in PascalCase for exported fields.
+  Handles both snake_case and camelCase input.
   
   @param name - Property name (may be camelCase or snake_case)
   
   Usage: {{ propName(prop.name) }}
 #}
-{% macro propName(name) %}
-{%- set parts = name.split('_') -%}
-{%- if parts.length > 1 -%}
-{%- for part in parts %}{{ part | capitalize }}{% endfor -%}
-{%- else -%}
-{{ name | capitalize }}
-{%- endif -%}
-{% endmacro %}
+{% macro propName(name) %}{{ name | pascalCase }}{% endmacro %}
 
 
 {# ============================================================================
@@ -168,10 +162,11 @@ nil
   @param prop - PropertyNode
   @param varName - Variable name containing the data
   @param typeMapper - Type mapping dictionary
+  @param polymorphicTypeNames - Array of type names that are polymorphic (return interface{})
   
-  Usage: {{ loadProperty(prop, "data", typeMapper) }}
+  Usage: {{ loadProperty(prop, "data", typeMapper, polymorphicTypeNames) }}
 #}
-{% macro loadProperty(prop, varName, typeMapper) -%}
+{% macro loadProperty(prop, varName, typeMapper, polymorphicTypeNames) -%}
 {%- set propNameGo = propName(prop.name) -%}
 {%- if prop.isCollection and not prop.isDict -%}
 {%- if prop.isScalar -%}
@@ -198,7 +193,12 @@ nil
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := Load{{ prop.typeName.name }}(item, ctx)
+						{%- if prop.typeName.name in polymorphicTypeNames %}
+						// Type assert from interface{} in case Load returns interface{} for polymorphic types
+						result.{{ propNameGo }}[i] = loaded.({{ prop.typeName.name }})
+						{%- else %}
 						result.{{ propNameGo }}[i] = loaded
+						{%- endif %}
 					}
 				}
 			}
@@ -232,9 +232,20 @@ nil
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := Load{{ prop.typeName.name }}(m, ctx)
 {%- if prop.isOptional %}
+				{%- if prop.typeName.name in polymorphicTypeNames %}
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				typedLoaded := loaded.({{ prop.typeName.name }})
+				result.{{ propNameGo }} = &typedLoaded
+				{%- else %}
 				result.{{ propNameGo }} = &loaded
+				{%- endif %}
 {%- else %}
+				{%- if prop.typeName.name in polymorphicTypeNames %}
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.{{ propNameGo }} = loaded.({{ prop.typeName.name }})
+				{%- else %}
 				result.{{ propNameGo }} = loaded
+				{%- endif %}
 {%- endif %}
 			}
 		}

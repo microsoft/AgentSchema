@@ -31,13 +31,13 @@ func TestApiKeyConnectionLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ApiKeyConnection: %v", err)
 	}
 	if instance.Kind != "key" {
-		t.Errorf("Expected Kind to be \"key\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "key", got %v`, instance.Kind)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 	if instance.ApiKey != "your-api-key" {
-		t.Errorf("Expected ApiKey to be \"your-api-key\", got %v", instance.ApiKey)
+		t.Errorf(`Expected ApiKey to be "your-api-key", got %v`, instance.ApiKey)
 	}
 }
 
@@ -60,13 +60,13 @@ apiKey: your-api-key
 		t.Fatalf("Failed to load ApiKeyConnection: %v", err)
 	}
 	if instance.Kind != "key" {
-		t.Errorf("Expected Kind to be \"key\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "key", got %v`, instance.Kind)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 	if instance.ApiKey != "your-api-key" {
-		t.Errorf("Expected ApiKey to be \"your-api-key\", got %v", instance.ApiKey)
+		t.Errorf(`Expected ApiKey to be "your-api-key", got %v`, instance.ApiKey)
 	}
 }
 
@@ -98,13 +98,13 @@ func TestApiKeyConnectionRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ApiKeyConnection: %v", err)
 	}
 	if reloaded.Kind != "key" {
-		t.Errorf("Expected Kind to be \"key\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "key", got %v`, reloaded.Kind)
 	}
 	if reloaded.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", reloaded.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, reloaded.Endpoint)
 	}
 	if reloaded.ApiKey != "your-api-key" {
-		t.Errorf("Expected ApiKey to be \"your-api-key\", got %v", reloaded.ApiKey)
+		t.Errorf(`Expected ApiKey to be "your-api-key", got %v`, reloaded.ApiKey)
 	}
 }
 

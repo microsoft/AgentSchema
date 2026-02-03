@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -15,12 +14,13 @@ import (
 
 type Connection struct {
 	Kind               string  `json:"kind" yaml:"kind"`
-	Authenticationmode string  `json:"authenticationMode" yaml:"authenticationMode"`
-	Usagedescription   *string `json:"usageDescription,omitempty" yaml:"usageDescription,omitempty"`
+	AuthenticationMode string  `json:"authenticationMode" yaml:"authenticationMode"`
+	UsageDescription   *string `json:"usageDescription,omitempty" yaml:"usageDescription,omitempty"`
 }
 
 // LoadConnection creates a Connection from a map[string]interface{}
-func LoadConnection(data interface{}, ctx *LoadContext) (Connection, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadConnection(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := Connection{}
 
 	// Handle polymorphic types based on discriminator
@@ -44,11 +44,11 @@ func LoadConnection(data interface{}, ctx *LoadContext) (Connection, error) {
 			result.Kind = val.(string)
 		}
 		if val, ok := m["authenticationMode"]; ok && val != nil {
-			result.Authenticationmode = val.(string)
+			result.AuthenticationMode = val.(string)
 		}
 		if val, ok := m["usageDescription"]; ok && val != nil {
 			v := val.(string)
-			result.Usagedescription = &v
+			result.UsageDescription = &v
 		}
 	}
 
@@ -59,9 +59,9 @@ func LoadConnection(data interface{}, ctx *LoadContext) (Connection, error) {
 func (obj *Connection) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["authenticationMode"] = obj.Authenticationmode
-	if obj.Usagedescription != nil {
-		result["usageDescription"] = *obj.Usagedescription
+	result["authenticationMode"] = obj.AuthenticationMode
+	if obj.UsageDescription != nil {
+		result["usageDescription"] = *obj.UsageDescription
 	}
 
 	return result
@@ -90,20 +90,22 @@ func (obj *Connection) ToYAML() (string, error) {
 }
 
 // FromJSON creates Connection from JSON string
-func ConnectionFromJSON(jsonStr string) (Connection, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ConnectionFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return Connection{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadConnection(data, ctx)
 }
 
 // FromYAML creates Connection from YAML string
-func ConnectionFromYAML(yamlStr string) (Connection, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ConnectionFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return Connection{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadConnection(data, ctx)
@@ -277,7 +279,7 @@ func RemoteConnectionFromYAML(yamlStr string) (RemoteConnection, error) {
 type ApiKeyConnection struct {
 	Kind     string `json:"kind" yaml:"kind"`
 	Endpoint string `json:"endpoint" yaml:"endpoint"`
-	Apikey   string `json:"apiKey" yaml:"apiKey"`
+	ApiKey   string `json:"apiKey" yaml:"apiKey"`
 }
 
 // LoadApiKeyConnection creates a ApiKeyConnection from a map[string]interface{}
@@ -293,7 +295,7 @@ func LoadApiKeyConnection(data interface{}, ctx *LoadContext) (ApiKeyConnection,
 			result.Endpoint = val.(string)
 		}
 		if val, ok := m["apiKey"]; ok && val != nil {
-			result.Apikey = val.(string)
+			result.ApiKey = val.(string)
 		}
 	}
 
@@ -305,7 +307,7 @@ func (obj *ApiKeyConnection) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
 	result["endpoint"] = obj.Endpoint
-	result["apiKey"] = obj.Apikey
+	result["apiKey"] = obj.ApiKey
 
 	return result
 }

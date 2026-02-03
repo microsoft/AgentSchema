@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -25,7 +24,7 @@ func LoadFormat(data interface{}, ctx *LoadContext) (Format, error) {
 	switch v := data.(type) {
 	case string:
 		// Shorthand: string -> Format
-		expansion := map[string]interface{}{"kind": data}
+		expansion := map[string]interface{}{"kind": v}
 		return LoadFormat(expansion, ctx)
 	}
 	// Load from map

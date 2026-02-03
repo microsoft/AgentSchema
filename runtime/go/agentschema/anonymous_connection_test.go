@@ -30,10 +30,10 @@ func TestAnonymousConnectionLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load AnonymousConnection: %v", err)
 	}
 	if instance.Kind != "anonymous" {
-		t.Errorf("Expected Kind to be \"anonymous\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "anonymous", got %v`, instance.Kind)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 }
 
@@ -55,10 +55,10 @@ endpoint: https://{your-custom-endpoint}.openai.azure.com/
 		t.Fatalf("Failed to load AnonymousConnection: %v", err)
 	}
 	if instance.Kind != "anonymous" {
-		t.Errorf("Expected Kind to be \"anonymous\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "anonymous", got %v`, instance.Kind)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestAnonymousConnectionRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload AnonymousConnection: %v", err)
 	}
 	if reloaded.Kind != "anonymous" {
-		t.Errorf("Expected Kind to be \"anonymous\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "anonymous", got %v`, reloaded.Kind)
 	}
 	if reloaded.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", reloaded.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, reloaded.Endpoint)
 	}
 }
 

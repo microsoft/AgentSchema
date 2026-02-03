@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -39,7 +38,8 @@ func LoadPropertySchema(data interface{}, ctx *LoadContext) (PropertySchema, err
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadProperty(item, ctx)
-						result.Properties[i] = loaded
+						// Type assert from interface{} in case Load returns interface{} for polymorphic types
+						result.Properties[i] = loaded.(Property)
 					}
 				}
 			}

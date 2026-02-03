@@ -35,7 +35,7 @@ func TestMcpServerToolSpecifyApprovalModeLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load McpServerToolSpecifyApprovalMode: %v", err)
 	}
 	if instance.Kind != "specify" {
-		t.Errorf("Expected Kind to be \"specify\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "specify", got %v`, instance.Kind)
 	}
 }
 
@@ -60,7 +60,7 @@ neverRequireApprovalTools:
 		t.Fatalf("Failed to load McpServerToolSpecifyApprovalMode: %v", err)
 	}
 	if instance.Kind != "specify" {
-		t.Errorf("Expected Kind to be \"specify\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "specify", got %v`, instance.Kind)
 	}
 }
 
@@ -96,7 +96,7 @@ func TestMcpServerToolSpecifyApprovalModeRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload McpServerToolSpecifyApprovalMode: %v", err)
 	}
 	if reloaded.Kind != "specify" {
-		t.Errorf("Expected Kind to be \"specify\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "specify", got %v`, reloaded.Kind)
 	}
 }
 

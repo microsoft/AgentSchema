@@ -31,13 +31,13 @@ func TestRemoteConnectionLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load RemoteConnection: %v", err)
 	}
 	if instance.Kind != "remote" {
-		t.Errorf("Expected Kind to be \"remote\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "remote", got %v`, instance.Kind)
 	}
 	if instance.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 }
 
@@ -60,13 +60,13 @@ endpoint: https://{your-custom-endpoint}.openai.azure.com/
 		t.Fatalf("Failed to load RemoteConnection: %v", err)
 	}
 	if instance.Kind != "remote" {
-		t.Errorf("Expected Kind to be \"remote\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "remote", got %v`, instance.Kind)
 	}
 	if instance.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
 	if instance.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", instance.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, instance.Endpoint)
 	}
 }
 
@@ -98,13 +98,13 @@ func TestRemoteConnectionRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload RemoteConnection: %v", err)
 	}
 	if reloaded.Kind != "remote" {
-		t.Errorf("Expected Kind to be \"remote\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "remote", got %v`, reloaded.Kind)
 	}
 	if reloaded.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, reloaded.Name)
 	}
 	if reloaded.Endpoint != "https://{your-custom-endpoint}.openai.azure.com/" {
-		t.Errorf("Expected Endpoint to be \"https://{your-custom-endpoint}.openai.azure.com/\", got %v", reloaded.Endpoint)
+		t.Errorf(`Expected Endpoint to be "https://{your-custom-endpoint}.openai.azure.com/", got %v`, reloaded.Endpoint)
 	}
 }
 

@@ -41,13 +41,13 @@ func TestMcpToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load McpTool: %v", err)
 	}
 	if instance.Kind != "mcp" {
-		t.Errorf("Expected Kind to be \"mcp\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "mcp", got %v`, instance.Kind)
 	}
 	if instance.ServerName != "My MCP Server" {
-		t.Errorf("Expected ServerName to be \"My MCP Server\", got %v", instance.ServerName)
+		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, instance.ServerName)
 	}
 	if instance.ServerDescription != "This tool allows access to MCP services." {
-		t.Errorf("Expected ServerDescription to be \"This tool allows access to MCP services.\", got %v", instance.ServerDescription)
+		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, instance.ServerDescription)
 	}
 }
 
@@ -77,13 +77,13 @@ allowedTools:
 		t.Fatalf("Failed to load McpTool: %v", err)
 	}
 	if instance.Kind != "mcp" {
-		t.Errorf("Expected Kind to be \"mcp\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "mcp", got %v`, instance.Kind)
 	}
 	if instance.ServerName != "My MCP Server" {
-		t.Errorf("Expected ServerName to be \"My MCP Server\", got %v", instance.ServerName)
+		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, instance.ServerName)
 	}
 	if instance.ServerDescription != "This tool allows access to MCP services." {
-		t.Errorf("Expected ServerDescription to be \"This tool allows access to MCP services.\", got %v", instance.ServerDescription)
+		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, instance.ServerDescription)
 	}
 }
 
@@ -125,13 +125,13 @@ func TestMcpToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload McpTool: %v", err)
 	}
 	if reloaded.Kind != "mcp" {
-		t.Errorf("Expected Kind to be \"mcp\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "mcp", got %v`, reloaded.Kind)
 	}
 	if reloaded.ServerName != "My MCP Server" {
-		t.Errorf("Expected ServerName to be \"My MCP Server\", got %v", reloaded.ServerName)
+		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, reloaded.ServerName)
 	}
 	if reloaded.ServerDescription != "This tool allows access to MCP services." {
-		t.Errorf("Expected ServerDescription to be \"This tool allows access to MCP services.\", got %v", reloaded.ServerDescription)
+		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, reloaded.ServerDescription)
 	}
 }
 

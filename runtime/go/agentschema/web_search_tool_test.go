@@ -39,7 +39,7 @@ func TestWebSearchToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load WebSearchTool: %v", err)
 	}
 	if instance.Kind != "bing_search" {
-		t.Errorf("Expected Kind to be \"bing_search\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "bing_search", got %v`, instance.Kind)
 	}
 }
 
@@ -68,7 +68,7 @@ options:
 		t.Fatalf("Failed to load WebSearchTool: %v", err)
 	}
 	if instance.Kind != "bing_search" {
-		t.Errorf("Expected Kind to be \"bing_search\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "bing_search", got %v`, instance.Kind)
 	}
 }
 
@@ -108,7 +108,7 @@ func TestWebSearchToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload WebSearchTool: %v", err)
 	}
 	if reloaded.Kind != "bing_search" {
-		t.Errorf("Expected Kind to be \"bing_search\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "bing_search", got %v`, reloaded.Kind)
 	}
 }
 

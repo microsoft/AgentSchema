@@ -33,7 +33,7 @@ func TestCodeInterpreterToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load CodeInterpreterTool: %v", err)
 	}
 	if instance.Kind != "code_interpreter" {
-		t.Errorf("Expected Kind to be \"code_interpreter\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "code_interpreter", got %v`, instance.Kind)
 	}
 }
 
@@ -57,7 +57,7 @@ fileIds:
 		t.Fatalf("Failed to load CodeInterpreterTool: %v", err)
 	}
 	if instance.Kind != "code_interpreter" {
-		t.Errorf("Expected Kind to be \"code_interpreter\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "code_interpreter", got %v`, instance.Kind)
 	}
 }
 
@@ -91,7 +91,7 @@ func TestCodeInterpreterToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload CodeInterpreterTool: %v", err)
 	}
 	if reloaded.Kind != "code_interpreter" {
-		t.Errorf("Expected Kind to be \"code_interpreter\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "code_interpreter", got %v`, reloaded.Kind)
 	}
 }
 

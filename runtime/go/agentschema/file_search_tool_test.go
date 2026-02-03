@@ -43,16 +43,16 @@ func TestFileSearchToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load FileSearchTool: %v", err)
 	}
 	if instance.Kind != "file_search" {
-		t.Errorf("Expected Kind to be \"file_search\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "file_search", got %v`, instance.Kind)
 	}
 	if instance.MaximumResultCount != 10 {
-		t.Errorf("Expected MaximumResultCount to be 10, got %v", instance.MaximumResultCount)
+		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, instance.MaximumResultCount)
 	}
 	if instance.Ranker != "auto" {
-		t.Errorf("Expected Ranker to be \"auto\", got %v", instance.Ranker)
+		t.Errorf(`Expected Ranker to be "auto", got %v`, instance.Ranker)
 	}
 	if instance.ScoreThreshold != 0.5 {
-		t.Errorf("Expected ScoreThreshold to be 0.5, got %v", instance.ScoreThreshold)
+		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, instance.ScoreThreshold)
 	}
 }
 
@@ -84,16 +84,16 @@ filters:
 		t.Fatalf("Failed to load FileSearchTool: %v", err)
 	}
 	if instance.Kind != "file_search" {
-		t.Errorf("Expected Kind to be \"file_search\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "file_search", got %v`, instance.Kind)
 	}
 	if instance.MaximumResultCount != 10 {
-		t.Errorf("Expected MaximumResultCount to be 10, got %v", instance.MaximumResultCount)
+		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, instance.MaximumResultCount)
 	}
 	if instance.Ranker != "auto" {
-		t.Errorf("Expected Ranker to be \"auto\", got %v", instance.Ranker)
+		t.Errorf(`Expected Ranker to be "auto", got %v`, instance.Ranker)
 	}
 	if instance.ScoreThreshold != 0.5 {
-		t.Errorf("Expected ScoreThreshold to be 0.5, got %v", instance.ScoreThreshold)
+		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, instance.ScoreThreshold)
 	}
 }
 
@@ -137,16 +137,16 @@ func TestFileSearchToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload FileSearchTool: %v", err)
 	}
 	if reloaded.Kind != "file_search" {
-		t.Errorf("Expected Kind to be \"file_search\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "file_search", got %v`, reloaded.Kind)
 	}
 	if reloaded.MaximumResultCount != 10 {
-		t.Errorf("Expected MaximumResultCount to be 10, got %v", reloaded.MaximumResultCount)
+		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, reloaded.MaximumResultCount)
 	}
 	if reloaded.Ranker != "auto" {
-		t.Errorf("Expected Ranker to be \"auto\", got %v", reloaded.Ranker)
+		t.Errorf(`Expected Ranker to be "auto", got %v`, reloaded.Ranker)
 	}
 	if reloaded.ScoreThreshold != 0.5 {
-		t.Errorf("Expected ScoreThreshold to be 0.5, got %v", reloaded.ScoreThreshold)
+		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, reloaded.ScoreThreshold)
 	}
 }
 

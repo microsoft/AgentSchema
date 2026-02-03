@@ -74,13 +74,13 @@ func TestAgentManifestLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
 	if instance.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, instance.Name)
 	}
 	if instance.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", instance.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
 	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
 
@@ -132,13 +132,13 @@ resources:
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
 	if instance.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, instance.Name)
 	}
 	if instance.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", instance.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
 	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
 
@@ -213,13 +213,13 @@ func TestAgentManifestRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload AgentManifest: %v", err)
 	}
 	if reloaded.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, reloaded.Name)
 	}
 	if reloaded.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", reloaded.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, reloaded.DisplayName)
 	}
 	if reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", reloaded.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, reloaded.Description)
 	}
 }
 
@@ -436,13 +436,13 @@ func TestAgentManifestLoadJSON1(t *testing.T) {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
 	if instance.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, instance.Name)
 	}
 	if instance.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", instance.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
 	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
 
@@ -494,13 +494,13 @@ resources:
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
 	if instance.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, instance.Name)
 	}
 	if instance.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", instance.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
 	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
 
@@ -577,13 +577,13 @@ func TestAgentManifestRoundtrip1(t *testing.T) {
 		t.Fatalf("Failed to reload AgentManifest: %v", err)
 	}
 	if reloaded.Name != "basic-prompt" {
-		t.Errorf("Expected Name to be \"basic-prompt\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "basic-prompt", got %v`, reloaded.Name)
 	}
 	if reloaded.DisplayName != "My Basic Prompt" {
-		t.Errorf("Expected DisplayName to be \"My Basic Prompt\", got %v", reloaded.DisplayName)
+		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, reloaded.DisplayName)
 	}
 	if reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
-		t.Errorf("Expected Description to be \"A basic prompt that uses the GPT-3 chat API to answer questions\", got %v", reloaded.Description)
+		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, reloaded.Description)
 	}
 }
 

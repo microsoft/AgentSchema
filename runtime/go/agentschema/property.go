@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -23,11 +22,12 @@ type Property struct {
 	Required    *bool         `json:"required,omitempty" yaml:"required,omitempty"`
 	Default     *interface{}  `json:"default,omitempty" yaml:"default,omitempty"`
 	Example     *interface{}  `json:"example,omitempty" yaml:"example,omitempty"`
-	Enumvalues  []interface{} `json:"enumValues,omitempty" yaml:"enumValues,omitempty"`
+	EnumValues  []interface{} `json:"enumValues,omitempty" yaml:"enumValues,omitempty"`
 }
 
 // LoadProperty creates a Property from a map[string]interface{}
-func LoadProperty(data interface{}, ctx *LoadContext) (Property, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadProperty(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := Property{}
 
 	// Handle polymorphic types based on discriminator
@@ -47,19 +47,19 @@ func LoadProperty(data interface{}, ctx *LoadContext) (Property, error) {
 	switch v := data.(type) {
 	case bool:
 		// Shorthand: bool -> Property
-		expansion := map[string]interface{}{"kind": "boolean", "example": data}
+		expansion := map[string]interface{}{"kind": "boolean", "example": v}
 		return LoadProperty(expansion, ctx)
 	case float32:
 		// Shorthand: float32 -> Property
-		expansion := map[string]interface{}{"kind": "float", "example": data}
+		expansion := map[string]interface{}{"kind": "float", "example": v}
 		return LoadProperty(expansion, ctx)
 	case int:
 		// Shorthand: int -> Property
-		expansion := map[string]interface{}{"kind": "integer", "example": data}
+		expansion := map[string]interface{}{"kind": "integer", "example": v}
 		return LoadProperty(expansion, ctx)
 	case string:
 		// Shorthand: string -> Property
-		expansion := map[string]interface{}{"kind": "string", "example": data}
+		expansion := map[string]interface{}{"kind": "string", "example": v}
 		return LoadProperty(expansion, ctx)
 	}
 	// Load from map
@@ -86,7 +86,7 @@ func LoadProperty(data interface{}, ctx *LoadContext) (Property, error) {
 		}
 		if val, ok := m["enumValues"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Enumvalues = arr
+				result.EnumValues = arr
 			}
 		}
 	}
@@ -111,7 +111,7 @@ func (obj *Property) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Example != nil {
 		result["example"] = *obj.Example
 	}
-	result["enumValues"] = obj.Enumvalues
+	result["enumValues"] = obj.EnumValues
 
 	return result
 }
@@ -139,20 +139,22 @@ func (obj *Property) ToYAML() (string, error) {
 }
 
 // FromJSON creates Property from JSON string
-func PropertyFromJSON(jsonStr string) (Property, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func PropertyFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return Property{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadProperty(data, ctx)
 }
 
 // FromYAML creates Property from YAML string
-func PropertyFromYAML(yamlStr string) (Property, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func PropertyFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return Property{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadProperty(data, ctx)
@@ -178,7 +180,8 @@ func LoadArrayProperty(data interface{}, ctx *LoadContext) (ArrayProperty, error
 		if val, ok := m["items"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadProperty(m, ctx)
-				result.Items = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Items = loaded.(Property)
 			}
 		}
 	}
@@ -260,7 +263,8 @@ func LoadObjectProperty(data interface{}, ctx *LoadContext) (ObjectProperty, err
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadProperty(item, ctx)
-						result.Properties[i] = loaded
+						// Type assert from interface{} in case Load returns interface{} for polymorphic types
+						result.Properties[i] = loaded.(Property)
 					}
 				}
 			}

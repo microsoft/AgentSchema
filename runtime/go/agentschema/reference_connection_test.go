@@ -31,13 +31,13 @@ func TestReferenceConnectionLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ReferenceConnection: %v", err)
 	}
 	if instance.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, instance.Kind)
 	}
 	if instance.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
 	if instance.Target != "my-target-resource" {
-		t.Errorf("Expected Target to be \"my-target-resource\", got %v", instance.Target)
+		t.Errorf(`Expected Target to be "my-target-resource", got %v`, instance.Target)
 	}
 }
 
@@ -60,13 +60,13 @@ target: my-target-resource
 		t.Fatalf("Failed to load ReferenceConnection: %v", err)
 	}
 	if instance.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, instance.Kind)
 	}
 	if instance.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
 	if instance.Target != "my-target-resource" {
-		t.Errorf("Expected Target to be \"my-target-resource\", got %v", instance.Target)
+		t.Errorf(`Expected Target to be "my-target-resource", got %v`, instance.Target)
 	}
 }
 
@@ -98,13 +98,13 @@ func TestReferenceConnectionRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ReferenceConnection: %v", err)
 	}
 	if reloaded.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, reloaded.Kind)
 	}
 	if reloaded.Name != "my-reference-connection" {
-		t.Errorf("Expected Name to be \"my-reference-connection\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, reloaded.Name)
 	}
 	if reloaded.Target != "my-target-resource" {
-		t.Errorf("Expected Target to be \"my-target-resource\", got %v", reloaded.Target)
+		t.Errorf(`Expected Target to be "my-target-resource", got %v`, reloaded.Target)
 	}
 }
 

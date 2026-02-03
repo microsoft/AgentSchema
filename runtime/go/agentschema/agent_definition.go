@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -17,15 +16,16 @@ import (
 type AgentDefinition struct {
 	Kind         string                 `json:"kind" yaml:"kind"`
 	Name         string                 `json:"name" yaml:"name"`
-	Displayname  *string                `json:"displayName,omitempty" yaml:"displayName,omitempty"`
+	DisplayName  *string                `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	Description  *string                `json:"description,omitempty" yaml:"description,omitempty"`
 	Metadata     map[string]interface{} `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Inputschema  *PropertySchema        `json:"inputSchema,omitempty" yaml:"inputSchema,omitempty"`
-	Outputschema *PropertySchema        `json:"outputSchema,omitempty" yaml:"outputSchema,omitempty"`
+	InputSchema  *PropertySchema        `json:"inputSchema,omitempty" yaml:"inputSchema,omitempty"`
+	OutputSchema *PropertySchema        `json:"outputSchema,omitempty" yaml:"outputSchema,omitempty"`
 }
 
 // LoadAgentDefinition creates a AgentDefinition from a map[string]interface{}
-func LoadAgentDefinition(data interface{}, ctx *LoadContext) (AgentDefinition, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadAgentDefinition(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := AgentDefinition{}
 
 	// Handle polymorphic types based on discriminator
@@ -51,7 +51,7 @@ func LoadAgentDefinition(data interface{}, ctx *LoadContext) (AgentDefinition, e
 		}
 		if val, ok := m["displayName"]; ok && val != nil {
 			v := val.(string)
-			result.Displayname = &v
+			result.DisplayName = &v
 		}
 		if val, ok := m["description"]; ok && val != nil {
 			v := val.(string)
@@ -65,13 +65,13 @@ func LoadAgentDefinition(data interface{}, ctx *LoadContext) (AgentDefinition, e
 		if val, ok := m["inputSchema"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadPropertySchema(m, ctx)
-				result.Inputschema = &loaded
+				result.InputSchema = &loaded
 			}
 		}
 		if val, ok := m["outputSchema"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadPropertySchema(m, ctx)
-				result.Outputschema = &loaded
+				result.OutputSchema = &loaded
 			}
 		}
 	}
@@ -84,8 +84,8 @@ func (obj *AgentDefinition) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
 	result["name"] = obj.Name
-	if obj.Displayname != nil {
-		result["displayName"] = *obj.Displayname
+	if obj.DisplayName != nil {
+		result["displayName"] = *obj.DisplayName
 	}
 	if obj.Description != nil {
 		result["description"] = *obj.Description
@@ -93,11 +93,11 @@ func (obj *AgentDefinition) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Metadata != nil {
 		result["metadata"] = obj.Metadata
 	}
-	if obj.Inputschema != nil {
-		result["inputSchema"] = obj.Inputschema.Save(ctx)
+	if obj.InputSchema != nil {
+		result["inputSchema"] = obj.InputSchema.Save(ctx)
 	}
-	if obj.Outputschema != nil {
-		result["outputSchema"] = obj.Outputschema.Save(ctx)
+	if obj.OutputSchema != nil {
+		result["outputSchema"] = obj.OutputSchema.Save(ctx)
 	}
 
 	return result
@@ -126,20 +126,22 @@ func (obj *AgentDefinition) ToYAML() (string, error) {
 }
 
 // FromJSON creates AgentDefinition from JSON string
-func AgentDefinitionFromJSON(jsonStr string) (AgentDefinition, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func AgentDefinitionFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return AgentDefinition{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadAgentDefinition(data, ctx)
 }
 
 // FromYAML creates AgentDefinition from YAML string
-func AgentDefinitionFromYAML(yamlStr string) (AgentDefinition, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func AgentDefinitionFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return AgentDefinition{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadAgentDefinition(data, ctx)
@@ -155,7 +157,7 @@ type PromptAgent struct {
 	Tools                  []Tool    `json:"tools,omitempty" yaml:"tools,omitempty"`
 	Template               *Template `json:"template,omitempty" yaml:"template,omitempty"`
 	Instructions           *string   `json:"instructions,omitempty" yaml:"instructions,omitempty"`
-	Additionalinstructions *string   `json:"additionalInstructions,omitempty" yaml:"additionalInstructions,omitempty"`
+	AdditionalInstructions *string   `json:"additionalInstructions,omitempty" yaml:"additionalInstructions,omitempty"`
 }
 
 // LoadPromptAgent creates a PromptAgent from a map[string]interface{}
@@ -179,7 +181,8 @@ func LoadPromptAgent(data interface{}, ctx *LoadContext) (PromptAgent, error) {
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadTool(item, ctx)
-						result.Tools[i] = loaded
+						// Type assert from interface{} in case Load returns interface{} for polymorphic types
+						result.Tools[i] = loaded.(Tool)
 					}
 				}
 			}
@@ -196,7 +199,7 @@ func LoadPromptAgent(data interface{}, ctx *LoadContext) (PromptAgent, error) {
 		}
 		if val, ok := m["additionalInstructions"]; ok && val != nil {
 			v := val.(string)
-			result.Additionalinstructions = &v
+			result.AdditionalInstructions = &v
 		}
 	}
 
@@ -221,8 +224,8 @@ func (obj *PromptAgent) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Instructions != nil {
 		result["instructions"] = *obj.Instructions
 	}
-	if obj.Additionalinstructions != nil {
-		result["additionalInstructions"] = *obj.Additionalinstructions
+	if obj.AdditionalInstructions != nil {
+		result["additionalInstructions"] = *obj.AdditionalInstructions
 	}
 
 	return result
@@ -366,7 +369,7 @@ func WorkflowFromYAML(yamlStr string) (Workflow, error) {
 type ContainerAgent struct {
 	Kind                 string                  `json:"kind" yaml:"kind"`
 	Protocols            []ProtocolVersionRecord `json:"protocols" yaml:"protocols"`
-	Environmentvariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
+	EnvironmentVariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
 }
 
 // LoadContainerAgent creates a ContainerAgent from a map[string]interface{}
@@ -391,11 +394,11 @@ func LoadContainerAgent(data interface{}, ctx *LoadContext) (ContainerAgent, err
 		}
 		if val, ok := m["environmentVariables"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Environmentvariables = make([]EnvironmentVariable, len(arr))
+				result.EnvironmentVariables = make([]EnvironmentVariable, len(arr))
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadEnvironmentVariable(item, ctx)
-						result.Environmentvariables[i] = loaded
+						result.EnvironmentVariables[i] = loaded
 					}
 				}
 			}
@@ -416,9 +419,9 @@ func (obj *ContainerAgent) Save(ctx *SaveContext) map[string]interface{} {
 		}
 		result["protocols"] = arr
 	}
-	if obj.Environmentvariables != nil {
-		arr := make([]interface{}, len(obj.Environmentvariables))
-		for i, item := range obj.Environmentvariables {
+	if obj.EnvironmentVariables != nil {
+		arr := make([]interface{}, len(obj.EnvironmentVariables))
+		for i, item := range obj.EnvironmentVariables {
 			arr[i] = item.Save(ctx)
 		}
 		result["environmentVariables"] = arr

@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -19,7 +18,8 @@ type Tool struct {
 }
 
 // LoadTool creates a Tool from a map[string]interface{}
-func LoadTool(data interface{}, ctx *LoadContext) (Tool, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadTool(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := Tool{}
 
 	// Handle polymorphic types based on discriminator
@@ -113,20 +113,22 @@ func (obj *Tool) ToYAML() (string, error) {
 }
 
 // FromJSON creates Tool from JSON string
-func ToolFromJSON(jsonStr string) (Tool, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ToolFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return Tool{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadTool(data, ctx)
 }
 
 // FromYAML creates Tool from YAML string
-func ToolFromYAML(yamlStr string) (Tool, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ToolFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return Tool{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadTool(data, ctx)
@@ -242,7 +244,8 @@ func LoadCustomTool(data interface{}, ctx *LoadContext) (CustomTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Connection = loaded.(Connection)
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -327,7 +330,8 @@ func LoadWebSearchTool(data interface{}, ctx *LoadContext) (WebSearchTool, error
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Connection = loaded.(Connection)
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -400,10 +404,10 @@ func WebSearchToolFromYAML(yamlStr string) (WebSearchTool, error) {
 type FileSearchTool struct {
 	Kind               string                 `json:"kind" yaml:"kind"`
 	Connection         Connection             `json:"connection" yaml:"connection"`
-	Vectorstoreids     []string               `json:"vectorStoreIds" yaml:"vectorStoreIds"`
-	Maximumresultcount *int32                 `json:"maximumResultCount,omitempty" yaml:"maximumResultCount,omitempty"`
+	VectorStoreIds     []string               `json:"vectorStoreIds" yaml:"vectorStoreIds"`
+	MaximumResultCount *int32                 `json:"maximumResultCount,omitempty" yaml:"maximumResultCount,omitempty"`
 	Ranker             *string                `json:"ranker,omitempty" yaml:"ranker,omitempty"`
-	Scorethreshold     *float32               `json:"scoreThreshold,omitempty" yaml:"scoreThreshold,omitempty"`
+	ScoreThreshold     *float32               `json:"scoreThreshold,omitempty" yaml:"scoreThreshold,omitempty"`
 	Filters            map[string]interface{} `json:"filters,omitempty" yaml:"filters,omitempty"`
 }
 
@@ -419,20 +423,21 @@ func LoadFileSearchTool(data interface{}, ctx *LoadContext) (FileSearchTool, err
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Connection = loaded.(Connection)
 			}
 		}
 		if val, ok := m["vectorStoreIds"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Vectorstoreids = make([]string, len(arr))
+				result.VectorStoreIds = make([]string, len(arr))
 				for i, v := range arr {
-					result.Vectorstoreids[i] = v.(string)
+					result.VectorStoreIds[i] = v.(string)
 				}
 			}
 		}
 		if val, ok := m["maximumResultCount"]; ok && val != nil {
 			v := val.(int32)
-			result.Maximumresultcount = &v
+			result.MaximumResultCount = &v
 		}
 		if val, ok := m["ranker"]; ok && val != nil {
 			v := val.(string)
@@ -440,7 +445,7 @@ func LoadFileSearchTool(data interface{}, ctx *LoadContext) (FileSearchTool, err
 		}
 		if val, ok := m["scoreThreshold"]; ok && val != nil {
 			v := val.(float32)
-			result.Scorethreshold = &v
+			result.ScoreThreshold = &v
 		}
 		if val, ok := m["filters"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
@@ -457,15 +462,15 @@ func (obj *FileSearchTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
 	result["connection"] = obj.Connection.Save(ctx)
-	result["vectorStoreIds"] = obj.Vectorstoreids
-	if obj.Maximumresultcount != nil {
-		result["maximumResultCount"] = *obj.Maximumresultcount
+	result["vectorStoreIds"] = obj.VectorStoreIds
+	if obj.MaximumResultCount != nil {
+		result["maximumResultCount"] = *obj.MaximumResultCount
 	}
 	if obj.Ranker != nil {
 		result["ranker"] = *obj.Ranker
 	}
-	if obj.Scorethreshold != nil {
-		result["scoreThreshold"] = *obj.Scorethreshold
+	if obj.ScoreThreshold != nil {
+		result["scoreThreshold"] = *obj.ScoreThreshold
 	}
 	if obj.Filters != nil {
 		result["filters"] = obj.Filters
@@ -521,10 +526,10 @@ func FileSearchToolFromYAML(yamlStr string) (FileSearchTool, error) {
 type McpTool struct {
 	Kind              string                `json:"kind" yaml:"kind"`
 	Connection        Connection            `json:"connection" yaml:"connection"`
-	Servername        string                `json:"serverName" yaml:"serverName"`
-	Serverdescription *string               `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
-	Approvalmode      McpServerApprovalMode `json:"approvalMode" yaml:"approvalMode"`
-	Allowedtools      []string              `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
+	ServerName        string                `json:"serverName" yaml:"serverName"`
+	ServerDescription *string               `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
+	ApprovalMode      McpServerApprovalMode `json:"approvalMode" yaml:"approvalMode"`
+	AllowedTools      []string              `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
 }
 
 // LoadMcpTool creates a McpTool from a map[string]interface{}
@@ -539,27 +544,29 @@ func LoadMcpTool(data interface{}, ctx *LoadContext) (McpTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Connection = loaded.(Connection)
 			}
 		}
 		if val, ok := m["serverName"]; ok && val != nil {
-			result.Servername = val.(string)
+			result.ServerName = val.(string)
 		}
 		if val, ok := m["serverDescription"]; ok && val != nil {
 			v := val.(string)
-			result.Serverdescription = &v
+			result.ServerDescription = &v
 		}
 		if val, ok := m["approvalMode"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadMcpServerApprovalMode(m, ctx)
-				result.Approvalmode = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.ApprovalMode = loaded.(McpServerApprovalMode)
 			}
 		}
 		if val, ok := m["allowedTools"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Allowedtools = make([]string, len(arr))
+				result.AllowedTools = make([]string, len(arr))
 				for i, v := range arr {
-					result.Allowedtools[i] = v.(string)
+					result.AllowedTools[i] = v.(string)
 				}
 			}
 		}
@@ -573,12 +580,12 @@ func (obj *McpTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
 	result["connection"] = obj.Connection.Save(ctx)
-	result["serverName"] = obj.Servername
-	if obj.Serverdescription != nil {
-		result["serverDescription"] = *obj.Serverdescription
+	result["serverName"] = obj.ServerName
+	if obj.ServerDescription != nil {
+		result["serverDescription"] = *obj.ServerDescription
 	}
-	result["approvalMode"] = obj.Approvalmode.Save(ctx)
-	result["allowedTools"] = obj.Allowedtools
+	result["approvalMode"] = obj.ApprovalMode.Save(ctx)
+	result["allowedTools"] = obj.AllowedTools
 
 	return result
 }
@@ -644,7 +651,8 @@ func LoadOpenApiTool(data interface{}, ctx *LoadContext) (OpenApiTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Connection = loaded.(Connection)
 			}
 		}
 		if val, ok := m["specification"]; ok && val != nil {
@@ -712,7 +720,7 @@ func OpenApiToolFromYAML(yamlStr string) (OpenApiTool, error) {
 
 type CodeInterpreterTool struct {
 	Kind    string   `json:"kind" yaml:"kind"`
-	Fileids []string `json:"fileIds" yaml:"fileIds"`
+	FileIds []string `json:"fileIds" yaml:"fileIds"`
 }
 
 // LoadCodeInterpreterTool creates a CodeInterpreterTool from a map[string]interface{}
@@ -726,9 +734,9 @@ func LoadCodeInterpreterTool(data interface{}, ctx *LoadContext) (CodeInterprete
 		}
 		if val, ok := m["fileIds"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Fileids = make([]string, len(arr))
+				result.FileIds = make([]string, len(arr))
 				for i, v := range arr {
-					result.Fileids[i] = v.(string)
+					result.FileIds[i] = v.(string)
 				}
 			}
 		}
@@ -741,7 +749,7 @@ func LoadCodeInterpreterTool(data interface{}, ctx *LoadContext) (CodeInterprete
 func (obj *CodeInterpreterTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["fileIds"] = obj.Fileids
+	result["fileIds"] = obj.FileIds
 
 	return result
 }

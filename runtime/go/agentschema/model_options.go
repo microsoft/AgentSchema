@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -13,16 +12,16 @@ import (
 // `kind` is a required property here, but this section can accept additional via options.
 
 type ModelOptions struct {
-	Frequencypenalty       *float32               `json:"frequencyPenalty,omitempty" yaml:"frequencyPenalty,omitempty"`
-	Maxoutputtokens        *int32                 `json:"maxOutputTokens,omitempty" yaml:"maxOutputTokens,omitempty"`
-	Presencepenalty        *float32               `json:"presencePenalty,omitempty" yaml:"presencePenalty,omitempty"`
+	FrequencyPenalty       *float32               `json:"frequencyPenalty,omitempty" yaml:"frequencyPenalty,omitempty"`
+	MaxOutputTokens        *int32                 `json:"maxOutputTokens,omitempty" yaml:"maxOutputTokens,omitempty"`
+	PresencePenalty        *float32               `json:"presencePenalty,omitempty" yaml:"presencePenalty,omitempty"`
 	Seed                   *int32                 `json:"seed,omitempty" yaml:"seed,omitempty"`
 	Temperature            *float32               `json:"temperature,omitempty" yaml:"temperature,omitempty"`
-	Topk                   *int32                 `json:"topK,omitempty" yaml:"topK,omitempty"`
-	Topp                   *float32               `json:"topP,omitempty" yaml:"topP,omitempty"`
-	Stopsequences          []string               `json:"stopSequences,omitempty" yaml:"stopSequences,omitempty"`
-	Allowmultipletoolcalls *bool                  `json:"allowMultipleToolCalls,omitempty" yaml:"allowMultipleToolCalls,omitempty"`
-	Additionalproperties   map[string]interface{} `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
+	TopK                   *int32                 `json:"topK,omitempty" yaml:"topK,omitempty"`
+	TopP                   *float32               `json:"topP,omitempty" yaml:"topP,omitempty"`
+	StopSequences          []string               `json:"stopSequences,omitempty" yaml:"stopSequences,omitempty"`
+	AllowMultipleToolCalls *bool                  `json:"allowMultipleToolCalls,omitempty" yaml:"allowMultipleToolCalls,omitempty"`
+	AdditionalProperties   map[string]interface{} `json:"additionalProperties,omitempty" yaml:"additionalProperties,omitempty"`
 }
 
 // LoadModelOptions creates a ModelOptions from a map[string]interface{}
@@ -33,15 +32,15 @@ func LoadModelOptions(data interface{}, ctx *LoadContext) (ModelOptions, error) 
 	if m, ok := data.(map[string]interface{}); ok {
 		if val, ok := m["frequencyPenalty"]; ok && val != nil {
 			v := val.(float32)
-			result.Frequencypenalty = &v
+			result.FrequencyPenalty = &v
 		}
 		if val, ok := m["maxOutputTokens"]; ok && val != nil {
 			v := val.(int32)
-			result.Maxoutputtokens = &v
+			result.MaxOutputTokens = &v
 		}
 		if val, ok := m["presencePenalty"]; ok && val != nil {
 			v := val.(float32)
-			result.Presencepenalty = &v
+			result.PresencePenalty = &v
 		}
 		if val, ok := m["seed"]; ok && val != nil {
 			v := val.(int32)
@@ -53,27 +52,27 @@ func LoadModelOptions(data interface{}, ctx *LoadContext) (ModelOptions, error) 
 		}
 		if val, ok := m["topK"]; ok && val != nil {
 			v := val.(int32)
-			result.Topk = &v
+			result.TopK = &v
 		}
 		if val, ok := m["topP"]; ok && val != nil {
 			v := val.(float32)
-			result.Topp = &v
+			result.TopP = &v
 		}
 		if val, ok := m["stopSequences"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Stopsequences = make([]string, len(arr))
+				result.StopSequences = make([]string, len(arr))
 				for i, v := range arr {
-					result.Stopsequences[i] = v.(string)
+					result.StopSequences[i] = v.(string)
 				}
 			}
 		}
 		if val, ok := m["allowMultipleToolCalls"]; ok && val != nil {
 			v := val.(bool)
-			result.Allowmultipletoolcalls = &v
+			result.AllowMultipleToolCalls = &v
 		}
 		if val, ok := m["additionalProperties"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
-				result.Additionalproperties = m
+				result.AdditionalProperties = m
 			}
 		}
 	}
@@ -84,14 +83,14 @@ func LoadModelOptions(data interface{}, ctx *LoadContext) (ModelOptions, error) 
 // Save serializes ModelOptions to map[string]interface{}
 func (obj *ModelOptions) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
-	if obj.Frequencypenalty != nil {
-		result["frequencyPenalty"] = *obj.Frequencypenalty
+	if obj.FrequencyPenalty != nil {
+		result["frequencyPenalty"] = *obj.FrequencyPenalty
 	}
-	if obj.Maxoutputtokens != nil {
-		result["maxOutputTokens"] = *obj.Maxoutputtokens
+	if obj.MaxOutputTokens != nil {
+		result["maxOutputTokens"] = *obj.MaxOutputTokens
 	}
-	if obj.Presencepenalty != nil {
-		result["presencePenalty"] = *obj.Presencepenalty
+	if obj.PresencePenalty != nil {
+		result["presencePenalty"] = *obj.PresencePenalty
 	}
 	if obj.Seed != nil {
 		result["seed"] = *obj.Seed
@@ -99,18 +98,18 @@ func (obj *ModelOptions) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Temperature != nil {
 		result["temperature"] = *obj.Temperature
 	}
-	if obj.Topk != nil {
-		result["topK"] = *obj.Topk
+	if obj.TopK != nil {
+		result["topK"] = *obj.TopK
 	}
-	if obj.Topp != nil {
-		result["topP"] = *obj.Topp
+	if obj.TopP != nil {
+		result["topP"] = *obj.TopP
 	}
-	result["stopSequences"] = obj.Stopsequences
-	if obj.Allowmultipletoolcalls != nil {
-		result["allowMultipleToolCalls"] = *obj.Allowmultipletoolcalls
+	result["stopSequences"] = obj.StopSequences
+	if obj.AllowMultipleToolCalls != nil {
+		result["allowMultipleToolCalls"] = *obj.AllowMultipleToolCalls
 	}
-	if obj.Additionalproperties != nil {
-		result["additionalProperties"] = obj.Additionalproperties
+	if obj.AdditionalProperties != nil {
+		result["additionalProperties"] = obj.AdditionalProperties
 	}
 
 	return result

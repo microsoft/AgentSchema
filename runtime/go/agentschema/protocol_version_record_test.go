@@ -30,10 +30,10 @@ func TestProtocolVersionRecordLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ProtocolVersionRecord: %v", err)
 	}
 	if instance.Protocol != "responses" {
-		t.Errorf("Expected Protocol to be \"responses\", got %v", instance.Protocol)
+		t.Errorf(`Expected Protocol to be "responses", got %v`, instance.Protocol)
 	}
 	if instance.Version != "v0.1.1" {
-		t.Errorf("Expected Version to be \"v0.1.1\", got %v", instance.Version)
+		t.Errorf(`Expected Version to be "v0.1.1", got %v`, instance.Version)
 	}
 }
 
@@ -55,10 +55,10 @@ version: v0.1.1
 		t.Fatalf("Failed to load ProtocolVersionRecord: %v", err)
 	}
 	if instance.Protocol != "responses" {
-		t.Errorf("Expected Protocol to be \"responses\", got %v", instance.Protocol)
+		t.Errorf(`Expected Protocol to be "responses", got %v`, instance.Protocol)
 	}
 	if instance.Version != "v0.1.1" {
-		t.Errorf("Expected Version to be \"v0.1.1\", got %v", instance.Version)
+		t.Errorf(`Expected Version to be "v0.1.1", got %v`, instance.Version)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestProtocolVersionRecordRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ProtocolVersionRecord: %v", err)
 	}
 	if reloaded.Protocol != "responses" {
-		t.Errorf("Expected Protocol to be \"responses\", got %v", reloaded.Protocol)
+		t.Errorf(`Expected Protocol to be "responses", got %v`, reloaded.Protocol)
 	}
 	if reloaded.Version != "v0.1.1" {
-		t.Errorf("Expected Version to be \"v0.1.1\", got %v", reloaded.Version)
+		t.Errorf(`Expected Version to be "v0.1.1", got %v`, reloaded.Version)
 	}
 }
 

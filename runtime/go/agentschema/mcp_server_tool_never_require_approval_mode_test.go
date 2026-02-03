@@ -29,7 +29,7 @@ func TestMcpServerToolNeverRequireApprovalModeLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load McpServerToolNeverRequireApprovalMode: %v", err)
 	}
 	if instance.Kind != "never" {
-		t.Errorf("Expected Kind to be \"never\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "never", got %v`, instance.Kind)
 	}
 }
 
@@ -50,7 +50,7 @@ kind: never
 		t.Fatalf("Failed to load McpServerToolNeverRequireApprovalMode: %v", err)
 	}
 	if instance.Kind != "never" {
-		t.Errorf("Expected Kind to be \"never\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "never", got %v`, instance.Kind)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestMcpServerToolNeverRequireApprovalModeRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload McpServerToolNeverRequireApprovalMode: %v", err)
 	}
 	if reloaded.Kind != "never" {
-		t.Errorf("Expected Kind to be \"never\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "never", got %v`, reloaded.Kind)
 	}
 }
 

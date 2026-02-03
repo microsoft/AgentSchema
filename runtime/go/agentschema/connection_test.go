@@ -31,13 +31,13 @@ func TestConnectionLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load Connection: %v", err)
 	}
 	if instance.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, instance.Kind)
 	}
 	if instance.AuthenticationMode != "system" {
-		t.Errorf("Expected AuthenticationMode to be \"system\", got %v", instance.AuthenticationMode)
+		t.Errorf(`Expected AuthenticationMode to be "system", got %v`, instance.AuthenticationMode)
 	}
 	if instance.UsageDescription != "This will allow the agent to respond to an email on your behalf" {
-		t.Errorf("Expected UsageDescription to be \"This will allow the agent to respond to an email on your behalf\", got %v", instance.UsageDescription)
+		t.Errorf(`Expected UsageDescription to be "This will allow the agent to respond to an email on your behalf", got %v`, instance.UsageDescription)
 	}
 }
 
@@ -60,13 +60,13 @@ usageDescription: This will allow the agent to respond to an email on your behal
 		t.Fatalf("Failed to load Connection: %v", err)
 	}
 	if instance.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, instance.Kind)
 	}
 	if instance.AuthenticationMode != "system" {
-		t.Errorf("Expected AuthenticationMode to be \"system\", got %v", instance.AuthenticationMode)
+		t.Errorf(`Expected AuthenticationMode to be "system", got %v`, instance.AuthenticationMode)
 	}
 	if instance.UsageDescription != "This will allow the agent to respond to an email on your behalf" {
-		t.Errorf("Expected UsageDescription to be \"This will allow the agent to respond to an email on your behalf\", got %v", instance.UsageDescription)
+		t.Errorf(`Expected UsageDescription to be "This will allow the agent to respond to an email on your behalf", got %v`, instance.UsageDescription)
 	}
 }
 
@@ -98,13 +98,13 @@ func TestConnectionRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload Connection: %v", err)
 	}
 	if reloaded.Kind != "reference" {
-		t.Errorf("Expected Kind to be \"reference\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "reference", got %v`, reloaded.Kind)
 	}
 	if reloaded.AuthenticationMode != "system" {
-		t.Errorf("Expected AuthenticationMode to be \"system\", got %v", reloaded.AuthenticationMode)
+		t.Errorf(`Expected AuthenticationMode to be "system", got %v`, reloaded.AuthenticationMode)
 	}
 	if reloaded.UsageDescription != "This will allow the agent to respond to an email on your behalf" {
-		t.Errorf("Expected UsageDescription to be \"This will allow the agent to respond to an email on your behalf\", got %v", reloaded.UsageDescription)
+		t.Errorf(`Expected UsageDescription to be "This will allow the agent to respond to an email on your behalf", got %v`, reloaded.UsageDescription)
 	}
 }
 

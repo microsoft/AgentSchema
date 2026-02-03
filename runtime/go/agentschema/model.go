@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -16,7 +15,7 @@ import (
 type Model struct {
 	Id         string        `json:"id" yaml:"id"`
 	Provider   *string       `json:"provider,omitempty" yaml:"provider,omitempty"`
-	Apitype    *string       `json:"apiType,omitempty" yaml:"apiType,omitempty"`
+	ApiType    *string       `json:"apiType,omitempty" yaml:"apiType,omitempty"`
 	Connection *Connection   `json:"connection,omitempty" yaml:"connection,omitempty"`
 	Options    *ModelOptions `json:"options,omitempty" yaml:"options,omitempty"`
 }
@@ -29,7 +28,7 @@ func LoadModel(data interface{}, ctx *LoadContext) (Model, error) {
 	switch v := data.(type) {
 	case string:
 		// Shorthand: string -> Model
-		expansion := map[string]interface{}{"id": data}
+		expansion := map[string]interface{}{"id": v}
 		return LoadModel(expansion, ctx)
 	}
 	// Load from map
@@ -43,12 +42,14 @@ func LoadModel(data interface{}, ctx *LoadContext) (Model, error) {
 		}
 		if val, ok := m["apiType"]; ok && val != nil {
 			v := val.(string)
-			result.Apitype = &v
+			result.ApiType = &v
 		}
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				result.Connection = &loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				typedLoaded := loaded.(Connection)
+				result.Connection = &typedLoaded
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -69,8 +70,8 @@ func (obj *Model) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Provider != nil {
 		result["provider"] = *obj.Provider
 	}
-	if obj.Apitype != nil {
-		result["apiType"] = *obj.Apitype
+	if obj.ApiType != nil {
+		result["apiType"] = *obj.ApiType
 	}
 	if obj.Connection != nil {
 		result["connection"] = obj.Connection.Save(ctx)

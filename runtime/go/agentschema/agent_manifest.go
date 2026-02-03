@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -24,7 +23,7 @@ import (
 
 type AgentManifest struct {
 	Name        string                 `json:"name" yaml:"name"`
-	Displayname string                 `json:"displayName" yaml:"displayName"`
+	DisplayName string                 `json:"displayName" yaml:"displayName"`
 	Description *string                `json:"description,omitempty" yaml:"description,omitempty"`
 	Metadata    map[string]interface{} `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	Template    AgentDefinition        `json:"template" yaml:"template"`
@@ -42,7 +41,7 @@ func LoadAgentManifest(data interface{}, ctx *LoadContext) (AgentManifest, error
 			result.Name = val.(string)
 		}
 		if val, ok := m["displayName"]; ok && val != nil {
-			result.Displayname = val.(string)
+			result.DisplayName = val.(string)
 		}
 		if val, ok := m["description"]; ok && val != nil {
 			v := val.(string)
@@ -56,7 +55,8 @@ func LoadAgentManifest(data interface{}, ctx *LoadContext) (AgentManifest, error
 		if val, ok := m["template"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadAgentDefinition(m, ctx)
-				result.Template = loaded
+				// Type assert from interface{} in case Load returns interface{} for polymorphic types
+				result.Template = loaded.(AgentDefinition)
 			}
 		}
 		if val, ok := m["parameters"]; ok && val != nil {
@@ -71,7 +71,8 @@ func LoadAgentManifest(data interface{}, ctx *LoadContext) (AgentManifest, error
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadResource(item, ctx)
-						result.Resources[i] = loaded
+						// Type assert from interface{} in case Load returns interface{} for polymorphic types
+						result.Resources[i] = loaded.(Resource)
 					}
 				}
 			}
@@ -85,7 +86,7 @@ func LoadAgentManifest(data interface{}, ctx *LoadContext) (AgentManifest, error
 func (obj *AgentManifest) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["name"] = obj.Name
-	result["displayName"] = obj.Displayname
+	result["displayName"] = obj.DisplayName
 	if obj.Description != nil {
 		result["description"] = *obj.Description
 	}

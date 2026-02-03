@@ -41,7 +41,7 @@ func TestContainerAgentLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ContainerAgent: %v", err)
 	}
 	if instance.Kind != "hosted" {
-		t.Errorf("Expected Kind to be \"hosted\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
 }
 
@@ -68,7 +68,7 @@ environmentVariables:
 		t.Fatalf("Failed to load ContainerAgent: %v", err)
 	}
 	if instance.Kind != "hosted" {
-		t.Errorf("Expected Kind to be \"hosted\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
 }
 
@@ -110,7 +110,7 @@ func TestContainerAgentRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ContainerAgent: %v", err)
 	}
 	if reloaded.Kind != "hosted" {
-		t.Errorf("Expected Kind to be \"hosted\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "hosted", got %v`, reloaded.Kind)
 	}
 }
 

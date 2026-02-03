@@ -33,10 +33,10 @@ func TestToolResourceLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ToolResource: %v", err)
 	}
 	if instance.Kind != "tool" {
-		t.Errorf("Expected Kind to be \"tool\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "tool", got %v`, instance.Kind)
 	}
 	if instance.Id != "web-search" {
-		t.Errorf("Expected Id to be \"web-search\", got %v", instance.Id)
+		t.Errorf(`Expected Id to be "web-search", got %v`, instance.Id)
 	}
 }
 
@@ -60,10 +60,10 @@ options:
 		t.Fatalf("Failed to load ToolResource: %v", err)
 	}
 	if instance.Kind != "tool" {
-		t.Errorf("Expected Kind to be \"tool\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "tool", got %v`, instance.Kind)
 	}
 	if instance.Id != "web-search" {
-		t.Errorf("Expected Id to be \"web-search\", got %v", instance.Id)
+		t.Errorf(`Expected Id to be "web-search", got %v`, instance.Id)
 	}
 }
 
@@ -97,10 +97,10 @@ func TestToolResourceRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ToolResource: %v", err)
 	}
 	if reloaded.Kind != "tool" {
-		t.Errorf("Expected Kind to be \"tool\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "tool", got %v`, reloaded.Kind)
 	}
 	if reloaded.Id != "web-search" {
-		t.Errorf("Expected Id to be \"web-search\", got %v", reloaded.Id)
+		t.Errorf(`Expected Id to be "web-search", got %v`, reloaded.Id)
 	}
 }
 

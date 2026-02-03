@@ -34,13 +34,13 @@ func TestToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load Tool: %v", err)
 	}
 	if instance.Name != "my-tool" {
-		t.Errorf("Expected Name to be \"my-tool\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-tool", got %v`, instance.Name)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Description != "A description of the tool" {
-		t.Errorf("Expected Description to be \"A description of the tool\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A description of the tool", got %v`, instance.Description)
 	}
 }
 
@@ -65,13 +65,13 @@ bindings:
 		t.Fatalf("Failed to load Tool: %v", err)
 	}
 	if instance.Name != "my-tool" {
-		t.Errorf("Expected Name to be \"my-tool\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-tool", got %v`, instance.Name)
 	}
 	if instance.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
 	if instance.Description != "A description of the tool" {
-		t.Errorf("Expected Description to be \"A description of the tool\", got %v", instance.Description)
+		t.Errorf(`Expected Description to be "A description of the tool", got %v`, instance.Description)
 	}
 }
 
@@ -106,13 +106,13 @@ func TestToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload Tool: %v", err)
 	}
 	if reloaded.Name != "my-tool" {
-		t.Errorf("Expected Name to be \"my-tool\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "my-tool", got %v`, reloaded.Name)
 	}
 	if reloaded.Kind != "function" {
-		t.Errorf("Expected Kind to be \"function\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "function", got %v`, reloaded.Kind)
 	}
 	if reloaded.Description != "A description of the tool" {
-		t.Errorf("Expected Description to be \"A description of the tool\", got %v", reloaded.Description)
+		t.Errorf(`Expected Description to be "A description of the tool", got %v`, reloaded.Description)
 	}
 }
 

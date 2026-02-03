@@ -30,10 +30,10 @@ func TestModelResourceLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load ModelResource: %v", err)
 	}
 	if instance.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, instance.Kind)
 	}
 	if instance.Id != "gpt-4o" {
-		t.Errorf("Expected Id to be \"gpt-4o\", got %v", instance.Id)
+		t.Errorf(`Expected Id to be "gpt-4o", got %v`, instance.Id)
 	}
 }
 
@@ -55,10 +55,10 @@ id: gpt-4o
 		t.Fatalf("Failed to load ModelResource: %v", err)
 	}
 	if instance.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, instance.Kind)
 	}
 	if instance.Id != "gpt-4o" {
-		t.Errorf("Expected Id to be \"gpt-4o\", got %v", instance.Id)
+		t.Errorf(`Expected Id to be "gpt-4o", got %v`, instance.Id)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestModelResourceRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload ModelResource: %v", err)
 	}
 	if reloaded.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, reloaded.Kind)
 	}
 	if reloaded.Id != "gpt-4o" {
-		t.Errorf("Expected Id to be \"gpt-4o\", got %v", reloaded.Id)
+		t.Errorf(`Expected Id to be "gpt-4o", got %v`, reloaded.Id)
 	}
 }
 

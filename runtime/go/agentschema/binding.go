@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -24,7 +23,7 @@ func LoadBinding(data interface{}, ctx *LoadContext) (Binding, error) {
 	switch v := data.(type) {
 	case string:
 		// Shorthand: string -> Binding
-		expansion := map[string]interface{}{"input": data}
+		expansion := map[string]interface{}{"input": v}
 		return LoadBinding(expansion, ctx)
 	}
 	// Load from map

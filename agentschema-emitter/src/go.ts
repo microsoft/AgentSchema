@@ -51,6 +51,7 @@ interface GoFileContext {
   classes: GoClassContext[];
   typeMapper: Record<string, string>;
   packageName: string;
+  polymorphicTypeNames: string[];
 }
 
 interface GoTestContext {
@@ -58,15 +59,16 @@ interface GoTestContext {
   examples: Array<{
     json: string[];
     yaml: string[];
-    validation: Array<{ key: string; value: any; delimeter: string }>;
+    validation: Array<{ key: string; value: any; delimeter: string; isPointer: boolean }>;
   }>;
   alternates: Array<{
     title: string;
     scalar: string;
     value: string;
-    validation: Array<{ key: string; value: any; delimeter: string }>;
+    validation: Array<{ key: string; value: any; delimeter: string; isPointer: boolean }>;
   }>;
   packageName: string;
+  isPolymorphic: boolean;
 }
 
 interface GoContextContext {
@@ -103,6 +105,15 @@ export const generateGo = async (
   // Determine package name from root node namespace (e.g., "AgentSchema" -> "agentschema")
   const packageName = node.typeName.namespace.toLowerCase().replace(/\./g, '');
 
+  // Collect all polymorphic type names across all nodes
+  const polymorphicTypeNames = new Set<string>();
+  for (const n of nodes) {
+    const polyTypes = n.retrievePolymorphicTypes();
+    if (polyTypes) {
+      polymorphicTypeNames.add(n.typeName.name);
+    }
+  }
+
   // Render context file (LoadContext/SaveContext utilities)
   const contextContext = buildContextContext(packageName);
   const contextContent = engine.render('context.go.njk', contextContext);
@@ -112,7 +123,7 @@ export const generateGo = async (
   for (const n of nodes) {
     // Skip child types - they're rendered with their parent
     if (!n.base) {
-      const fileContext = buildFileContext(n, packageName);
+      const fileContext = buildFileContext(n, packageName, polymorphicTypeNames);
       const fileContent = engine.render('file.go.njk', fileContext);
       const fileName = toSnakeCase(n.typeName.name) + '.go';
       await emitGoFile(context, fileName, fileContent, emitTarget["output-dir"]);
@@ -187,7 +198,7 @@ function buildClassContext(node: TypeNode): GoClassContext {
 /**
  * Build context for rendering a Go file with a base type and its children.
  */
-function buildFileContext(node: TypeNode, packageName: string): GoFileContext {
+function buildFileContext(node: TypeNode, packageName: string, polymorphicTypeNames: Set<string>): GoFileContext {
   const classes: GoClassContext[] = [
     buildClassContext(node),
     ...node.childTypes.map(ct => buildClassContext(ct))
@@ -199,6 +210,7 @@ function buildFileContext(node: TypeNode, packageName: string): GoFileContext {
     classes,
     typeMapper: goTypeMapper,
     packageName,
+    polymorphicTypeNames: Array.from(polymorphicTypeNames),
   };
 }
 
@@ -221,21 +233,37 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
       yaml: YAML.stringify(sample, { indent: 2 }).split('\n'),
       validation: Object.keys(sample)
         .filter(key => typeof sample[key] !== 'object')
-        .map(key => ({
-          key: toPascalCase(key),
-          value: typeof sample[key] === 'boolean'
-            ? (sample[key] ? "true" : "false")
-            : (typeof sample[key] === 'string' ? escapeGoString(sample[key]) : sample[key]),
-          delimeter: typeof sample[key] === 'string' ? '"' : '',
-        })),
+        .map(key => {
+          const prop = node.properties.find(p => p.name === key);
+          return {
+            key: toPascalCase(key),
+            value: typeof sample[key] === 'boolean'
+              ? (sample[key] ? "true" : "false")
+              : (typeof sample[key] === 'string' ? escapeGoString(sample[key]) : sample[key]),
+            delimeter: typeof sample[key] === 'string' ? '"' : '',
+            isPointer: prop?.isOptional || false,
+          };
+        }),
     };
   });
 
   // Prepare alternate test cases
+  const goScalarValue: Record<string, string> = {
+    "boolean": "false",
+    "float": "3.14",
+    "float32": "3.14",
+    "float64": "3.14",
+    "number": "3.14",
+    "int32": "3",
+    "int64": "3",
+    "integer": "3",
+    "string": '"example"',
+  };
+
   const alternates = node.alternates.map(alt => {
     const example = alt.example
-      ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString())
-      : scalarValue[alt.scalar] || "nil";
+      ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString().toLowerCase())
+      : goScalarValue[alt.scalar] || "nil";
 
     return {
       title: alt.title || alt.scalar,
@@ -244,22 +272,28 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
       validation: Object.keys(alt.expansion)
         .filter(key => typeof alt.expansion[key] !== 'object')
         .map(key => {
+          const prop = node.properties.find(p => p.name === key);
           const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
           const needsQuotes = typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}";
           return {
             key: toPascalCase(key),
             value: needsQuotes ? escapeGoString(value) : value,
             delimeter: needsQuotes ? '"' : '',
+            isPointer: prop?.isOptional || false,
           };
         }),
     };
   });
+
+  const polyTypes = node.retrievePolymorphicTypes();
+  const isPolymorphic = polyTypes != null;  // Use != to check both null and undefined
 
   return {
     node,
     examples,
     alternates,
     packageName,
+    isPolymorphic,
   };
 }
 
@@ -285,7 +319,7 @@ function prepareAlternates(node: TypeNode): Array<{ scalar: string; alternate: s
     scalar: goTypeMapper[alt.scalar],
     alternate: JSON.stringify(alt.expansion, null, '')
       .replaceAll('\n', '')
-      .replaceAll('"{value}"', 'data'),
+      .replaceAll('"{value}"', 'v'),
   }));
 }
 
@@ -365,8 +399,19 @@ function toSnakeCase(str: string): string {
  * Convert snake_case or camelCase to PascalCase.
  */
 function toPascalCase(str: string): string {
-  return str
-    .split(/[_\-]/)
+  // First handle snake_case and kebab-case
+  if (str.includes('_') || str.includes('-')) {
+    return str
+      .split(/[_\-]/)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join('');
+  }
+  
+  // Handle camelCase by inserting boundaries at uppercase letters
+  // Then capitalize each part
+  const withBoundaries = str.replace(/([a-z])([A-Z])/g, '$1_$2');
+  return withBoundaries
+    .split('_')
     .map(part => part.charAt(0).toUpperCase() + part.slice(1))
     .join('');
 }

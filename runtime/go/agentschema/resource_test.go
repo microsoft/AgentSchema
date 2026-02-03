@@ -30,10 +30,10 @@ func TestResourceLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load Resource: %v", err)
 	}
 	if instance.Name != "my-resource" {
-		t.Errorf("Expected Name to be \"my-resource\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-resource", got %v`, instance.Name)
 	}
 	if instance.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, instance.Kind)
 	}
 }
 
@@ -55,10 +55,10 @@ kind: model
 		t.Fatalf("Failed to load Resource: %v", err)
 	}
 	if instance.Name != "my-resource" {
-		t.Errorf("Expected Name to be \"my-resource\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "my-resource", got %v`, instance.Name)
 	}
 	if instance.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, instance.Kind)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestResourceRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload Resource: %v", err)
 	}
 	if reloaded.Name != "my-resource" {
-		t.Errorf("Expected Name to be \"my-resource\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "my-resource", got %v`, reloaded.Name)
 	}
 	if reloaded.Kind != "model" {
-		t.Errorf("Expected Kind to be \"model\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "model", got %v`, reloaded.Kind)
 	}
 }
 

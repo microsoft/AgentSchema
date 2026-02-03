@@ -30,10 +30,10 @@ func TestEnvironmentVariableLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load EnvironmentVariable: %v", err)
 	}
 	if instance.Name != "MY_ENV_VAR" {
-		t.Errorf("Expected Name to be \"MY_ENV_VAR\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "MY_ENV_VAR", got %v`, instance.Name)
 	}
 	if instance.Value != "my-value" {
-		t.Errorf("Expected Value to be \"my-value\", got %v", instance.Value)
+		t.Errorf(`Expected Value to be "my-value", got %v`, instance.Value)
 	}
 }
 
@@ -55,10 +55,10 @@ value: my-value
 		t.Fatalf("Failed to load EnvironmentVariable: %v", err)
 	}
 	if instance.Name != "MY_ENV_VAR" {
-		t.Errorf("Expected Name to be \"MY_ENV_VAR\", got %v", instance.Name)
+		t.Errorf(`Expected Name to be "MY_ENV_VAR", got %v`, instance.Name)
 	}
 	if instance.Value != "my-value" {
-		t.Errorf("Expected Value to be \"my-value\", got %v", instance.Value)
+		t.Errorf(`Expected Value to be "my-value", got %v`, instance.Value)
 	}
 }
 
@@ -89,10 +89,10 @@ func TestEnvironmentVariableRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload EnvironmentVariable: %v", err)
 	}
 	if reloaded.Name != "MY_ENV_VAR" {
-		t.Errorf("Expected Name to be \"MY_ENV_VAR\", got %v", reloaded.Name)
+		t.Errorf(`Expected Name to be "MY_ENV_VAR", got %v`, reloaded.Name)
 	}
 	if reloaded.Value != "my-value" {
-		t.Errorf("Expected Value to be \"my-value\", got %v", reloaded.Value)
+		t.Errorf(`Expected Value to be "my-value", got %v`, reloaded.Value)
 	}
 }
 

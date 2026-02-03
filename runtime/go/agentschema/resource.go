@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -19,7 +18,8 @@ type Resource struct {
 }
 
 // LoadResource creates a Resource from a map[string]interface{}
-func LoadResource(data interface{}, ctx *LoadContext) (Resource, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadResource(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := Resource{}
 
 	// Handle polymorphic types based on discriminator
@@ -78,20 +78,22 @@ func (obj *Resource) ToYAML() (string, error) {
 }
 
 // FromJSON creates Resource from JSON string
-func ResourceFromJSON(jsonStr string) (Resource, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ResourceFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return Resource{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadResource(data, ctx)
 }
 
 // FromYAML creates Resource from YAML string
-func ResourceFromYAML(yamlStr string) (Resource, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func ResourceFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return Resource{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadResource(data, ctx)

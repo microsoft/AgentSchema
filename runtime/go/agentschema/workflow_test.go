@@ -29,7 +29,7 @@ func TestWorkflowLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load Workflow: %v", err)
 	}
 	if instance.Kind != "workflow" {
-		t.Errorf("Expected Kind to be \"workflow\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "workflow", got %v`, instance.Kind)
 	}
 }
 
@@ -50,7 +50,7 @@ kind: workflow
 		t.Fatalf("Failed to load Workflow: %v", err)
 	}
 	if instance.Kind != "workflow" {
-		t.Errorf("Expected Kind to be \"workflow\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "workflow", got %v`, instance.Kind)
 	}
 }
 
@@ -80,7 +80,7 @@ func TestWorkflowRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload Workflow: %v", err)
 	}
 	if reloaded.Kind != "workflow" {
-		t.Errorf("Expected Kind to be \"workflow\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "workflow", got %v`, reloaded.Kind)
 	}
 }
 

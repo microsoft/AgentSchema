@@ -48,7 +48,7 @@ func TestPropertySchemaLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -81,7 +81,7 @@ properties:
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
 	if instance.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", instance.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
 
@@ -130,7 +130,7 @@ func TestPropertySchemaRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload PropertySchema: %v", err)
 	}
 	if reloaded.Strict != true {
-		t.Errorf("Expected Strict to be true, got %v", reloaded.Strict)
+		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
 

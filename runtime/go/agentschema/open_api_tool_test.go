@@ -33,10 +33,10 @@ func TestOpenApiToolLoadJSON(t *testing.T) {
 		t.Fatalf("Failed to load OpenApiTool: %v", err)
 	}
 	if instance.Kind != "openapi" {
-		t.Errorf("Expected Kind to be \"openapi\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "openapi", got %v`, instance.Kind)
 	}
 	if instance.Specification != "full_sepcification_here" {
-		t.Errorf("Expected Specification to be \"full_sepcification_here\", got %v", instance.Specification)
+		t.Errorf(`Expected Specification to be "full_sepcification_here", got %v`, instance.Specification)
 	}
 }
 
@@ -60,10 +60,10 @@ specification: full_sepcification_here
 		t.Fatalf("Failed to load OpenApiTool: %v", err)
 	}
 	if instance.Kind != "openapi" {
-		t.Errorf("Expected Kind to be \"openapi\", got %v", instance.Kind)
+		t.Errorf(`Expected Kind to be "openapi", got %v`, instance.Kind)
 	}
 	if instance.Specification != "full_sepcification_here" {
-		t.Errorf("Expected Specification to be \"full_sepcification_here\", got %v", instance.Specification)
+		t.Errorf(`Expected Specification to be "full_sepcification_here", got %v`, instance.Specification)
 	}
 }
 
@@ -97,10 +97,10 @@ func TestOpenApiToolRoundtrip(t *testing.T) {
 		t.Fatalf("Failed to reload OpenApiTool: %v", err)
 	}
 	if reloaded.Kind != "openapi" {
-		t.Errorf("Expected Kind to be \"openapi\", got %v", reloaded.Kind)
+		t.Errorf(`Expected Kind to be "openapi", got %v`, reloaded.Kind)
 	}
 	if reloaded.Specification != "full_sepcification_here" {
-		t.Errorf("Expected Specification to be \"full_sepcification_here\", got %v", reloaded.Specification)
+		t.Errorf(`Expected Specification to be "full_sepcification_here", got %v`, reloaded.Specification)
 	}
 }
 

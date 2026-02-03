@@ -4,7 +4,6 @@ package agentschema
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"gopkg.in/yaml.v3"
 )
@@ -16,7 +15,8 @@ type McpServerApprovalMode struct {
 }
 
 // LoadMcpServerApprovalMode creates a McpServerApprovalMode from a map[string]interface{}
-func LoadMcpServerApprovalMode(data interface{}, ctx *LoadContext) (McpServerApprovalMode, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func LoadMcpServerApprovalMode(data interface{}, ctx *LoadContext) (interface{}, error) {
 	result := McpServerApprovalMode{}
 
 	// Handle polymorphic types based on discriminator
@@ -36,7 +36,7 @@ func LoadMcpServerApprovalMode(data interface{}, ctx *LoadContext) (McpServerApp
 	switch v := data.(type) {
 	case string:
 		// Shorthand: string -> McpServerApprovalMode
-		expansion := map[string]interface{}{"kind": data}
+		expansion := map[string]interface{}{"kind": v}
 		return LoadMcpServerApprovalMode(expansion, ctx)
 	}
 	// Load from map
@@ -80,20 +80,22 @@ func (obj *McpServerApprovalMode) ToYAML() (string, error) {
 }
 
 // FromJSON creates McpServerApprovalMode from JSON string
-func McpServerApprovalModeFromJSON(jsonStr string) (McpServerApprovalMode, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func McpServerApprovalModeFromJSON(jsonStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
-		return McpServerApprovalMode{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadMcpServerApprovalMode(data, ctx)
 }
 
 // FromYAML creates McpServerApprovalMode from YAML string
-func McpServerApprovalModeFromYAML(yamlStr string) (McpServerApprovalMode, error) {
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func McpServerApprovalModeFromYAML(yamlStr string) (interface{}, error) {
 	var data map[string]interface{}
 	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
-		return McpServerApprovalMode{}, err
+		return nil, err
 	}
 	ctx := NewLoadContext()
 	return LoadMcpServerApprovalMode(data, ctx)
@@ -240,8 +242,8 @@ func McpServerToolNeverRequireApprovalModeFromYAML(yamlStr string) (McpServerToo
 // McpServerToolSpecifyApprovalMode represents a schema type
 type McpServerToolSpecifyApprovalMode struct {
 	Kind                       string   `json:"kind" yaml:"kind"`
-	Alwaysrequireapprovaltools []string `json:"alwaysRequireApprovalTools" yaml:"alwaysRequireApprovalTools"`
-	Neverrequireapprovaltools  []string `json:"neverRequireApprovalTools" yaml:"neverRequireApprovalTools"`
+	AlwaysRequireApprovalTools []string `json:"alwaysRequireApprovalTools" yaml:"alwaysRequireApprovalTools"`
+	NeverRequireApprovalTools  []string `json:"neverRequireApprovalTools" yaml:"neverRequireApprovalTools"`
 }
 
 // LoadMcpServerToolSpecifyApprovalMode creates a McpServerToolSpecifyApprovalMode from a map[string]interface{}
@@ -255,17 +257,17 @@ func LoadMcpServerToolSpecifyApprovalMode(data interface{}, ctx *LoadContext) (M
 		}
 		if val, ok := m["alwaysRequireApprovalTools"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Alwaysrequireapprovaltools = make([]string, len(arr))
+				result.AlwaysRequireApprovalTools = make([]string, len(arr))
 				for i, v := range arr {
-					result.Alwaysrequireapprovaltools[i] = v.(string)
+					result.AlwaysRequireApprovalTools[i] = v.(string)
 				}
 			}
 		}
 		if val, ok := m["neverRequireApprovalTools"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Neverrequireapprovaltools = make([]string, len(arr))
+				result.NeverRequireApprovalTools = make([]string, len(arr))
 				for i, v := range arr {
-					result.Neverrequireapprovaltools[i] = v.(string)
+					result.NeverRequireApprovalTools[i] = v.(string)
 				}
 			}
 		}
@@ -278,8 +280,8 @@ func LoadMcpServerToolSpecifyApprovalMode(data interface{}, ctx *LoadContext) (M
 func (obj *McpServerToolSpecifyApprovalMode) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["alwaysRequireApprovalTools"] = obj.Alwaysrequireapprovaltools
-	result["neverRequireApprovalTools"] = obj.Neverrequireapprovaltools
+	result["alwaysRequireApprovalTools"] = obj.AlwaysRequireApprovalTools
+	result["neverRequireApprovalTools"] = obj.NeverRequireApprovalTools
 
 	return result
 }

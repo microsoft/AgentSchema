@@ -17,7 +17,6 @@ package {{ packageName }}
 
 import (
 	"encoding/json"
-	"fmt"
 	
 	"gopkg.in/yaml.v3"
 )
@@ -35,7 +34,12 @@ type {{ class.node.typeName.name }} struct {
 }
 
 // Load{{ class.node.typeName.name }} creates a {{ class.node.typeName.name }} from a map[string]interface{}
+{% if class.polymorphicTypes -%}
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func Load{{ class.node.typeName.name }}(data interface{}, ctx *LoadContext) (interface{}, error) {
+{%- else -%}
 func Load{{ class.node.typeName.name }}(data interface{}, ctx *LoadContext) ({{ class.node.typeName.name }}, error) {
+{%- endif %}
 	result := {{ class.node.typeName.name }}{}
 	
 	{% if class.polymorphicTypes -%}
@@ -71,7 +75,7 @@ func Load{{ class.node.typeName.name }}(data interface{}, ctx *LoadContext) ({{ 
 	// Load from map
 	if m, ok := data.(map[string]interface{}); ok {
 {%- for prop in class.node.properties %}
-		{{ go.loadProperty(prop, "m", typeMapper) }}
+		{{ go.loadProperty(prop, "m", typeMapper, polymorphicTypeNames) }}
 {%- endfor %}
 	}
 	
@@ -111,6 +115,28 @@ func (obj *{{ class.node.typeName.name }}) ToYAML() (string, error) {
 }
 
 // FromJSON creates {{ class.node.typeName.name }} from JSON string
+{% if class.polymorphicTypes -%}
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func {{ class.node.typeName.name }}FromJSON(jsonStr string) (interface{}, error) {
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+		return nil, err
+	}
+	ctx := NewLoadContext()
+	return Load{{ class.node.typeName.name }}(data, ctx)
+}
+
+// FromYAML creates {{ class.node.typeName.name }} from YAML string
+// Returns interface{} because this is a polymorphic base type that can resolve to different child types
+func {{ class.node.typeName.name }}FromYAML(yamlStr string) (interface{}, error) {
+	var data map[string]interface{}
+	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
+		return nil, err
+	}
+	ctx := NewLoadContext()
+	return Load{{ class.node.typeName.name }}(data, ctx)
+}
+{%- else -%}
 func {{ class.node.typeName.name }}FromJSON(jsonStr string) ({{ class.node.typeName.name }}, error) {
 	var data map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
@@ -129,5 +155,6 @@ func {{ class.node.typeName.name }}FromYAML(yamlStr string) ({{ class.node.typeN
 	ctx := NewLoadContext()
 	return Load{{ class.node.typeName.name }}(data, ctx)
 }
+{%- endif %}
 
 {% endfor %}
