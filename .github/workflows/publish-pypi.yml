@@ -1,8 +1,9 @@
 name: Publish Python Package to PyPI
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - "python-v*"
   workflow_dispatch:
 
 # Only allow one publish at a time
