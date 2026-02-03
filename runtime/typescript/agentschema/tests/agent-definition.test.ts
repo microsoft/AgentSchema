@@ -4,18 +4,6 @@
 import { AgentDefinition } from "../src/index";
 
 describe("AgentDefinition", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new AgentDefinition();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new AgentDefinition({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": {\n      "firstName": {\n        "kind": "string",\n        "value": "Jane"\n      },\n      "lastName": {\n        "kind": "string",\n        "value": "Doe"\n      },\n      "question": {\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    }\n  },\n  "outputSchema": {\n    "properties": {\n      "answer": {\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    }\n  }\n}`;
@@ -46,6 +34,15 @@ describe("AgentDefinition", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": {\n      "firstName": {\n        "kind": "string",\n        "value": "Jane"\n      },\n      "lastName": {\n        "kind": "string",\n        "value": "Doe"\n      },\n      "question": {\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    }\n  },\n  "outputSchema": {\n    "properties": {\n      "answer": {\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    }\n  }\n}`;
+      const instance = AgentDefinition.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
 
     it("should load from JSON - example 2", () => {
@@ -79,6 +76,15 @@ describe("AgentDefinition", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid JSON - example 2", () => {
+      const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": {\n      "firstName": {\n        "kind": "string",\n        "value": "Jane"\n      },\n      "lastName": {\n        "kind": "string",\n        "value": "Doe"\n      },\n      "question": {\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    }\n  },\n  "outputSchema": {\n    "properties": [\n      {\n        "name": "answer",\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    ]\n  }\n}`;
+      const instance = AgentDefinition.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
+    });
+
     it("should load from JSON - example 3", () => {
       const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "outputSchema": {\n    "properties": {\n      "answer": {\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    }\n  }\n}`;
       const instance = AgentDefinition.fromJson(json);
@@ -110,6 +116,15 @@ describe("AgentDefinition", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid JSON - example 3", () => {
+      const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "outputSchema": {\n    "properties": {\n      "answer": {\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    }\n  }\n}`;
+      const instance = AgentDefinition.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
+    });
+
     it("should load from JSON - example 4", () => {
       const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "outputSchema": {\n    "properties": [\n      {\n        "name": "answer",\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    ]\n  }\n}`;
       const instance = AgentDefinition.fromJson(json);
@@ -139,6 +154,15 @@ describe("AgentDefinition", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid JSON - example 4", () => {
+      const json = `{\n  "kind": "prompt",\n  "name": "basic-prompt",\n  "displayName": "Basic Prompt Agent",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "inputSchema": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "outputSchema": {\n    "properties": [\n      {\n        "name": "answer",\n        "kind": "string",\n        "description": "The answer to the user's question."\n      }\n    ]\n  }\n}`;
+      const instance = AgentDefinition.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -174,6 +198,16 @@ describe("AgentDefinition", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    firstName:\n      kind: string\n      value: Jane\n    lastName:\n      kind: string\n      value: Doe\n    question:\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    answer:\n      kind: string\n      description: The answer to the user's question.\n`;
+      const instance = AgentDefinition.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentDefinition.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
+
     it("should load from YAML - example 2", () => {
       const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    firstName:\n      kind: string\n      value: Jane\n    lastName:\n      kind: string\n      value: Doe\n    question:\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    - name: answer\n      kind: string\n      description: The answer to the user's question.\n`;
       const instance = AgentDefinition.fromYaml(yaml);
@@ -203,6 +237,16 @@ describe("AgentDefinition", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid YAML - example 2", () => {
+      const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    firstName:\n      kind: string\n      value: Jane\n    lastName:\n      kind: string\n      value: Doe\n    question:\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    - name: answer\n      kind: string\n      description: The answer to the user's question.\n`;
+      const instance = AgentDefinition.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentDefinition.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
 
     it("should load from YAML - example 3", () => {
@@ -236,6 +280,16 @@ describe("AgentDefinition", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid YAML - example 3", () => {
+      const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    - name: firstName\n      kind: string\n      value: Jane\n    - name: lastName\n      kind: string\n      value: Doe\n    - name: question\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    answer:\n      kind: string\n      description: The answer to the user's question.\n`;
+      const instance = AgentDefinition.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentDefinition.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
+
     it("should load from YAML - example 4", () => {
       const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    - name: firstName\n      kind: string\n      value: Jane\n    - name: lastName\n      kind: string\n      value: Doe\n    - name: question\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    - name: answer\n      kind: string\n      description: The answer to the user's question.\n`;
       const instance = AgentDefinition.fromYaml(yaml);
@@ -265,6 +319,16 @@ describe("AgentDefinition", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid YAML - example 4", () => {
+      const yaml = `kind: prompt\nname: basic-prompt\ndisplayName: Basic Prompt Agent\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ninputSchema:\n  properties:\n    - name: firstName\n      kind: string\n      value: Jane\n    - name: lastName\n      kind: string\n      value: Doe\n    - name: question\n      kind: string\n      value: What is the meaning of life?\noutputSchema:\n  properties:\n    - name: answer\n      kind: string\n      description: The answer to the user's question.\n`;
+      const instance = AgentDefinition.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentDefinition.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 });

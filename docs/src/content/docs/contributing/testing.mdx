@@ -7,7 +7,47 @@ sidebar:
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-Tests are auto-generated for runtime libraries based on `@sample` decorators in TypeSpec. This guide covers running tests and understanding the test architecture.
+Tests are auto-generated for runtime libraries based on `@sample` decorators in TypeSpec. This guide covers running tests, test standards, and how to add new test coverage.
+
+## Test Standards
+
+**All AgentSchema runtimes must implement identical test coverage.** The test categories are universal across TypeScript, Python, C#, and Go—only the syntax differs.
+
+### Required Test Categories
+
+Every generated test file must include:
+
+| Category | Description |
+|----------|-------------|
+| **JSON Load** | Parse JSON string into model instance |
+| **YAML Load** | Parse YAML string into model instance |
+| **JSON Round-trip** | Load → toJson → fromJson → compare |
+| **YAML Round-trip** | Load → toYaml → fromYaml → compare |
+| **JSON Output** | Verify `toJson()` produces valid JSON |
+| **YAML Output** | Verify `toYaml()` produces valid YAML |
+| **JSON Shorthand** | Load scalar via JSON (if `@shorthand` defined) |
+| **YAML Shorthand** | Load scalar via YAML (if `@shorthand` defined) |
+| **Dictionary Load** | Load from empty dict/map (tests defaults) |
+| **Dictionary Save** | Save to dict/map |
+
+### Context Tests
+
+Each runtime also includes tests for `LoadContext` and `SaveContext` utility classes:
+
+| Runtime | Test File |
+|---------|-----------|
+| TypeScript | `tests/context.test.ts` |
+| Python | `tests/test_context.py` |
+| C# | `AgentSchema.Tests/ContextTests.cs` |
+| Go | `context_test.go` |
+
+### Expected Test Counts
+
+All runtimes should have similar test counts (within ~5% of each other):
+
+- **~350 tests** per runtime
+- **~37 type test files** + 1 context test file
+- **~8-10 tests per type** (varies by samples/alternates)
 
 ## Running Tests
 
@@ -32,7 +72,7 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
     ```bash
     cd runtime/python/agentschema
     uv run pytest tests/                  # All tests
-    uv run pytest tests/test_load_model.py  # Specific file
+    uv run pytest tests/test_model.py     # Specific file
     uv run pytest -v                      # Verbose output
     ```
   </TabItem>
@@ -40,7 +80,7 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
     ```bash
     cd runtime/typescript/agentschema
     npm test                              # All tests
-    npm test -- --grep "Model"           # Filter by name
+    npm test -- --grep "Model"            # Filter by name
     ```
   </TabItem>
   <TabItem label="Go" icon="seti:go">
@@ -55,26 +95,29 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
 
 ## Test Architecture
 
-Tests are generated from `@sample` decorators in TypeSpec files. For each model:
+Tests are generated from `@sample` decorators in TypeSpec files:
 
 ```mermaid
 flowchart LR
     A["@sample decorator"] --> B[Emitter]
-    B --> C[test_load_*.py]
-    B --> D[*ConversionTests.cs]
+    B --> C[test_*.py]
+    B --> D[*Tests.cs]
     B --> E[*.test.ts]
-    C --> F[pytest]
-    D --> G[dotnet test]
-    E --> H[vitest]
+    B --> F[*_test.go]
+    C --> G[pytest]
+    D --> H[dotnet test]
+    E --> I[jest]
+    F --> J[go test]
 ```
 
-### What Gets Tested
+### Test File Naming Convention
 
-1. **JSON Loading** - Parse JSON into model instance
-2. **YAML Loading** - Parse YAML into model instance  
-3. **JSON Roundtrip** - Load → Save → Load produces same data
-4. **YAML Roundtrip** - Load → Save → Load produces same data
-5. **Shorthand Loading** - Scalar → Full model (if `@shorthand` defined)
+| Runtime | Pattern | Example |
+|---------|---------|---------|
+| TypeScript | `{type-name}.test.ts` | `binding.test.ts` |
+| Python | `test_{typename}.py` | `test_binding.py` |
+| C# | `{TypeName}Tests.cs` | `BindingTests.cs` |
+| Go | `{type_name}_test.go` | `binding_test.go` |
 
 ### Example Generated Test (Python)
 
@@ -145,7 +188,7 @@ Some tests are not auto-generated and can be edited:
 | Go | `runtime/go/agentschema/` | `go.mod` is preserved |
 
 :::caution
-Test files matching `test_load_*.py`, `*ConversionTests.cs`, `*.test.ts`, or `*_test.go` patterns ARE regenerated. Add custom tests with different naming patterns.
+Test files matching `test_*.py`, `*Tests.cs`, `*.test.ts`, or `*_test.go` patterns ARE regenerated. Add custom tests with different naming patterns.
 :::
 
 ## Test Validation Patterns

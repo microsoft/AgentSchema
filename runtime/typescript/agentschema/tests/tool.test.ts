@@ -4,18 +4,6 @@
 import { Tool } from "../src/index";
 
 describe("Tool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Tool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Tool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "my-tool",\n  "kind": "function",\n  "description": "A description of the tool",\n  "bindings": {\n    "input": "value"\n  }\n}`;
@@ -40,6 +28,15 @@ describe("Tool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "my-tool",\n  "kind": "function",\n  "description": "A description of the tool",\n  "bindings": {\n    "input": "value"\n  }\n}`;
+      const instance = Tool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -67,6 +64,16 @@ describe("Tool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: my-tool\nkind: function\ndescription: A description of the tool\nbindings:\n  input: value\n`;
+      const instance = Tool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Tool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 });

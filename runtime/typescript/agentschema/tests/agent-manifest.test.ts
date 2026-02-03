@@ -4,18 +4,6 @@
 import { AgentManifest } from "../src/index";
 
 describe("AgentManifest", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new AgentManifest();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new AgentManifest({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "basic-prompt",\n  "displayName": "My Basic Prompt",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "template": {\n    "kind": "prompt",\n    "model": "{{model_name}}",\n    "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."\n  },\n  "parameters": {\n    "strict": true,\n    "properties": [\n      {\n        "name": "model_name",\n        "kind": "string",\n        "value": "gpt-4o"\n      },\n      {\n        "name": "agent_name",\n        "kind": "string",\n        "value": "Research Agent"\n      }\n    ]\n  },\n  "resources": {\n    "gptModelDeployment": {\n      "kind": "model",\n      "id": "gpt-4o"\n    },\n    "webSearchInstance": {\n      "kind": "tool",\n      "id": "web-search",\n      "options": {\n        "apiKey": "my-api-key"\n      }\n    }\n  }\n}`;
@@ -44,6 +32,15 @@ describe("AgentManifest", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "basic-prompt",\n  "displayName": "My Basic Prompt",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "template": {\n    "kind": "prompt",\n    "model": "{{model_name}}",\n    "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."\n  },\n  "parameters": {\n    "strict": true,\n    "properties": [\n      {\n        "name": "model_name",\n        "kind": "string",\n        "value": "gpt-4o"\n      },\n      {\n        "name": "agent_name",\n        "kind": "string",\n        "value": "Research Agent"\n      }\n    ]\n  },\n  "resources": {\n    "gptModelDeployment": {\n      "kind": "model",\n      "id": "gpt-4o"\n    },\n    "webSearchInstance": {\n      "kind": "tool",\n      "id": "web-search",\n      "options": {\n        "apiKey": "my-api-key"\n      }\n    }\n  }\n}`;
+      const instance = AgentManifest.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
+    });
+
     it("should load from JSON - example 2", () => {
       const json = `{\n  "name": "basic-prompt",\n  "displayName": "My Basic Prompt",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "template": {\n    "kind": "prompt",\n    "model": "{{model_name}}",\n    "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."\n  },\n  "parameters": {\n    "strict": true,\n    "properties": [\n      {\n        "name": "model_name",\n        "kind": "string",\n        "value": "gpt-4o"\n      },\n      {\n        "name": "agent_name",\n        "kind": "string",\n        "value": "Research Agent"\n      }\n    ]\n  },\n  "resources": [\n    {\n      "kind": "model",\n      "name": "gptModelDeployment",\n      "id": "gpt-4o"\n    },\n    {\n      "kind": "tool",\n      "name": "webSearchInstance",\n      "id": "web-search",\n      "options": {\n        "apiKey": "my-api-key"\n      }\n    }\n  ]\n}`;
       const instance = AgentManifest.fromJson(json);
@@ -69,6 +66,15 @@ describe("AgentManifest", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid JSON - example 2", () => {
+      const json = `{\n  "name": "basic-prompt",\n  "displayName": "My Basic Prompt",\n  "description": "A basic prompt that uses the GPT-3 chat API to answer questions",\n  "metadata": {\n    "authors": [\n      "sethjuarez",\n      "jietong"\n    ],\n    "tags": [\n      "example",\n      "prompt"\n    ]\n  },\n  "template": {\n    "kind": "prompt",\n    "model": "{{model_name}}",\n    "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."\n  },\n  "parameters": {\n    "strict": true,\n    "properties": [\n      {\n        "name": "model_name",\n        "kind": "string",\n        "value": "gpt-4o"\n      },\n      {\n        "name": "agent_name",\n        "kind": "string",\n        "value": "Research Agent"\n      }\n    ]\n  },\n  "resources": [\n    {\n      "kind": "model",\n      "name": "gptModelDeployment",\n      "id": "gpt-4o"\n    },\n    {\n      "kind": "tool",\n      "name": "webSearchInstance",\n      "id": "web-search",\n      "options": {\n        "apiKey": "my-api-key"\n      }\n    }\n  ]\n}`;
+      const instance = AgentManifest.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -100,6 +106,16 @@ describe("AgentManifest", () => {
       expect(reloaded.description).toEqual(instance.description);
     });
 
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: basic-prompt\ndisplayName: My Basic Prompt\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ntemplate:\n  kind: prompt\n  model: "{{model_name}}"\n  instructions: You are a poet named {{agent_name}}. Rhyme all your responses.\nparameters:\n  strict: true\n  properties:\n    - name: model_name\n      kind: string\n      value: gpt-4o\n    - name: agent_name\n      kind: string\n      value: Research Agent\nresources:\n  gptModelDeployment:\n    kind: model\n    id: gpt-4o\n  webSearchInstance:\n    kind: tool\n    id: web-search\n    options:\n      apiKey: my-api-key\n`;
+      const instance = AgentManifest.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentManifest.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
+
     it("should load from YAML - example 2", () => {
       const yaml = `name: basic-prompt\ndisplayName: My Basic Prompt\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ntemplate:\n  kind: prompt\n  model: "{{model_name}}"\n  instructions: You are a poet named {{agent_name}}. Rhyme all your responses.\nparameters:\n  strict: true\n  properties:\n    - name: model_name\n      kind: string\n      value: gpt-4o\n    - name: agent_name\n      kind: string\n      value: Research Agent\nresources:\n  - kind: model\n    name: gptModelDeployment\n    id: gpt-4o\n  - kind: tool\n    name: webSearchInstance\n    id: web-search\n    options:\n      apiKey: my-api-key\n`;
       const instance = AgentManifest.fromYaml(yaml);
@@ -125,6 +141,16 @@ describe("AgentManifest", () => {
       expect(reloaded.displayName).toEqual(instance.displayName);
 
       expect(reloaded.description).toEqual(instance.description);
+    });
+
+    it("should serialize to valid YAML - example 2", () => {
+      const yaml = `name: basic-prompt\ndisplayName: My Basic Prompt\ndescription: A basic prompt that uses the GPT-3 chat API to answer questions\nmetadata:\n  authors:\n    - sethjuarez\n    - jietong\n  tags:\n    - example\n    - prompt\ntemplate:\n  kind: prompt\n  model: "{{model_name}}"\n  instructions: You are a poet named {{agent_name}}. Rhyme all your responses.\nparameters:\n  strict: true\n  properties:\n    - name: model_name\n      kind: string\n      value: gpt-4o\n    - name: agent_name\n      kind: string\n      value: Research Agent\nresources:\n  - kind: model\n    name: gptModelDeployment\n    id: gpt-4o\n  - kind: tool\n    name: webSearchInstance\n    id: web-search\n    options:\n      apiKey: my-api-key\n`;
+      const instance = AgentManifest.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AgentManifest.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

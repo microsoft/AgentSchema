@@ -4,18 +4,6 @@
 import { Resource } from "../src/index";
 
 describe("Resource", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Resource();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Resource({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "my-resource",\n  "kind": "model"\n}`;
@@ -36,6 +24,15 @@ describe("Resource", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "my-resource",\n  "kind": "model"\n}`;
+      const instance = Resource.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("Resource", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: my-resource\nkind: model\n`;
+      const instance = Resource.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Resource.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 });

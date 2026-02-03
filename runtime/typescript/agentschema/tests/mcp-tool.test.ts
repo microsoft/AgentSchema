@@ -4,18 +4,6 @@
 import { McpTool } from "../src/index";
 
 describe("McpTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new McpTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new McpTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ]\n}`;
@@ -40,6 +28,15 @@ describe("McpTool", () => {
       expect(reloaded.serverName).toEqual(instance.serverName);
 
       expect(reloaded.serverDescription).toEqual(instance.serverDescription);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ]\n}`;
+      const instance = McpTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -67,6 +64,16 @@ describe("McpTool", () => {
       expect(reloaded.serverName).toEqual(instance.serverName);
 
       expect(reloaded.serverDescription).toEqual(instance.serverDescription);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: mcp\nconnection:\n  kind: reference\nserverName: My MCP Server\nserverDescription: This tool allows access to MCP services.\napprovalMode:\n  kind: always\nallowedTools:\n  - operation1\n  - operation2\n`;
+      const instance = McpTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = McpTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

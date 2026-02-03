@@ -4,18 +4,6 @@
 import { ReferenceConnection } from "../src/index";
 
 describe("ReferenceConnection", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ReferenceConnection();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ReferenceConnection({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "reference",\n  "name": "my-reference-connection",\n  "target": "my-target-resource"\n}`;
@@ -40,6 +28,15 @@ describe("ReferenceConnection", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.target).toEqual(instance.target);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "reference",\n  "name": "my-reference-connection",\n  "target": "my-target-resource"\n}`;
+      const instance = ReferenceConnection.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -67,6 +64,16 @@ describe("ReferenceConnection", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.target).toEqual(instance.target);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: reference\nname: my-reference-connection\ntarget: my-target-resource\n`;
+      const instance = ReferenceConnection.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ReferenceConnection.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

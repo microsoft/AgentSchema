@@ -4,18 +4,6 @@
 import { ModelResource } from "../src/index";
 
 describe("ModelResource", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ModelResource();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ModelResource({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "model",\n  "id": "gpt-4o"\n}`;
@@ -36,6 +24,15 @@ describe("ModelResource", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.id).toEqual(instance.id);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "model",\n  "id": "gpt-4o"\n}`;
+      const instance = ModelResource.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("ModelResource", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.id).toEqual(instance.id);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: model\nid: gpt-4o\n`;
+      const instance = ModelResource.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ModelResource.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

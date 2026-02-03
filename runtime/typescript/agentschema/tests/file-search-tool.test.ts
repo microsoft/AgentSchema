@@ -4,18 +4,6 @@
 import { FileSearchTool } from "../src/index";
 
 describe("FileSearchTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new FileSearchTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new FileSearchTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "file_search",\n  "connection": {\n    "kind": "reference"\n  },\n  "vectorStoreIds": [\n    "vectorStore1",\n    "vectorStore2"\n  ],\n  "maximumResultCount": 10,\n  "ranker": "auto",\n  "scoreThreshold": 0.5,\n  "filters": {\n    "fileType": "pdf",\n    "createdAfter": "2023-01-01"\n  }\n}`;
@@ -44,6 +32,15 @@ describe("FileSearchTool", () => {
       expect(reloaded.ranker).toEqual(instance.ranker);
 
       expect(reloaded.scoreThreshold).toEqual(instance.scoreThreshold);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "file_search",\n  "connection": {\n    "kind": "reference"\n  },\n  "vectorStoreIds": [\n    "vectorStore1",\n    "vectorStore2"\n  ],\n  "maximumResultCount": 10,\n  "ranker": "auto",\n  "scoreThreshold": 0.5,\n  "filters": {\n    "fileType": "pdf",\n    "createdAfter": "2023-01-01"\n  }\n}`;
+      const instance = FileSearchTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -75,6 +72,16 @@ describe("FileSearchTool", () => {
       expect(reloaded.ranker).toEqual(instance.ranker);
 
       expect(reloaded.scoreThreshold).toEqual(instance.scoreThreshold);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: file_search\nconnection:\n  kind: reference\nvectorStoreIds:\n  - vectorStore1\n  - vectorStore2\nmaximumResultCount: 10\nranker: auto\nscoreThreshold: 0.5\nfilters:\n  fileType: pdf\n  createdAfter: 2023-01-01\n`;
+      const instance = FileSearchTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = FileSearchTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

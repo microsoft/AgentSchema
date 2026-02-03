@@ -68,7 +68,7 @@ export const generatePython = async (
   if (emitTarget["test-dir"]) {
     const testContextContext = buildLoadContextContext(packageName);
     const testContextContent = engine.render('test_context.py.njk', testContextContext);
-    await emitPythonFile(context, 'test_load_context.py', testContextContent, emitTarget["test-dir"]);
+    await emitPythonFile(context, 'test_context.py', testContextContent, emitTarget["test-dir"]);
   }
 
   // Render init file
@@ -89,7 +89,7 @@ export const generatePython = async (
     if (emitTarget["test-dir"]) {
       const testContext = buildTestContext(n);
       const testContent = engine.render('test.py.njk', testContext);
-      await emitPythonFile(context, `test_load_${n.typeName.name.toLowerCase()}.py`, testContent, emitTarget["test-dir"]);
+      await emitPythonFile(context, `test_${n.typeName.name.toLowerCase()}.py`, testContent, emitTarget["test-dir"]);
     }
   }
 
@@ -243,6 +243,9 @@ function buildTestContext(node: TypeNode): PythonTestContext {
 
   // Prepare alternate test cases
   const alternates = node.alternates.map(alt => {
+    const rawExample = alt.example
+      ? (typeof alt.example === "string" ? alt.example : alt.example.toString())
+      : (alt.scalar === "string" ? "example" : scalarValue[alt.scalar]?.replace(/"/g, '') || "");
     const example = alt.example
       ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString())
       : scalarValue[alt.scalar] || "None";
@@ -251,6 +254,7 @@ function buildTestContext(node: TypeNode): PythonTestContext {
       title: alt.title || alt.scalar,
       scalar: alt.scalar,
       value: example,
+      rawValue: rawExample,
       validation: Object.keys(alt.expansion)
         .filter(key => typeof alt.expansion[key] !== 'object')
         .map(key => {
@@ -264,10 +268,13 @@ function buildTestContext(node: TypeNode): PythonTestContext {
     };
   });
 
+  const isAbstract = node.isAbstract || (node.discriminator !== undefined && node.discriminator.length > 0);
+
   return {
     node,
     examples,
     alternates,
+    isAbstract,
   };
 }
 

@@ -4,18 +4,6 @@
 import { FunctionTool } from "../src/index";
 
 describe("FunctionTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new FunctionTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new FunctionTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "function",\n  "parameters": {\n    "properties": {\n      "firstName": {\n        "kind": "string",\n        "value": "Jane"\n      },\n      "lastName": {\n        "kind": "string",\n        "value": "Doe"\n      },\n      "question": {\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    }\n  },\n  "strict": true\n}`;
@@ -38,6 +26,15 @@ describe("FunctionTool", () => {
       expect(reloaded.strict).toEqual(instance.strict);
     });
 
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "function",\n  "parameters": {\n    "properties": {\n      "firstName": {\n        "kind": "string",\n        "value": "Jane"\n      },\n      "lastName": {\n        "kind": "string",\n        "value": "Doe"\n      },\n      "question": {\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    }\n  },\n  "strict": true\n}`;
+      const instance = FunctionTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
+    });
+
     it("should load from JSON - example 2", () => {
       const json = `{\n  "kind": "function",\n  "parameters": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "strict": true\n}`;
       const instance = FunctionTool.fromJson(json);
@@ -57,6 +54,15 @@ describe("FunctionTool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.strict).toEqual(instance.strict);
+    });
+
+    it("should serialize to valid JSON - example 2", () => {
+      const json = `{\n  "kind": "function",\n  "parameters": {\n    "properties": [\n      {\n        "name": "firstName",\n        "kind": "string",\n        "value": "Jane"\n      },\n      {\n        "name": "lastName",\n        "kind": "string",\n        "value": "Doe"\n      },\n      {\n        "name": "question",\n        "kind": "string",\n        "value": "What is the meaning of life?"\n      }\n    ]\n  },\n  "strict": true\n}`;
+      const instance = FunctionTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -82,6 +88,16 @@ describe("FunctionTool", () => {
       expect(reloaded.strict).toEqual(instance.strict);
     });
 
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: function\nparameters:\n  properties:\n    firstName:\n      kind: string\n      value: Jane\n    lastName:\n      kind: string\n      value: Doe\n    question:\n      kind: string\n      value: What is the meaning of life?\nstrict: true\n`;
+      const instance = FunctionTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = FunctionTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
+
     it("should load from YAML - example 2", () => {
       const yaml = `kind: function\nparameters:\n  properties:\n    - name: firstName\n      kind: string\n      value: Jane\n    - name: lastName\n      kind: string\n      value: Doe\n    - name: question\n      kind: string\n      value: What is the meaning of life?\nstrict: true\n`;
       const instance = FunctionTool.fromYaml(yaml);
@@ -101,6 +117,16 @@ describe("FunctionTool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.strict).toEqual(instance.strict);
+    });
+
+    it("should serialize to valid YAML - example 2", () => {
+      const yaml = `kind: function\nparameters:\n  properties:\n    - name: firstName\n      kind: string\n      value: Jane\n    - name: lastName\n      kind: string\n      value: Doe\n    - name: question\n      kind: string\n      value: What is the meaning of life?\nstrict: true\n`;
+      const instance = FunctionTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = FunctionTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

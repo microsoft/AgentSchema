@@ -4,18 +4,6 @@
 import { EnvironmentVariable } from "../src/index";
 
 describe("EnvironmentVariable", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new EnvironmentVariable();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new EnvironmentVariable({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "MY_ENV_VAR",\n  "value": "my-value"\n}`;
@@ -36,6 +24,15 @@ describe("EnvironmentVariable", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.value).toEqual(instance.value);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "MY_ENV_VAR",\n  "value": "my-value"\n}`;
+      const instance = EnvironmentVariable.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("EnvironmentVariable", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.value).toEqual(instance.value);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: MY_ENV_VAR\nvalue: my-value\n`;
+      const instance = EnvironmentVariable.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = EnvironmentVariable.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

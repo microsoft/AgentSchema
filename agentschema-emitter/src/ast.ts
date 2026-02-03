@@ -656,6 +656,8 @@ export interface PythonTestContext {
     value: string;
     validation: Array<{ key: string; value: any; delimeter: string }>;
   }>;
+  /** Whether the type is abstract (has discriminator or isAbstract) */
+  isAbstract: boolean;
 }
 
 /**

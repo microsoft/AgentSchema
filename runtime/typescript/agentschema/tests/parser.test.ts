@@ -4,18 +4,6 @@
 import { Parser } from "../src/index";
 
 describe("Parser", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Parser();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Parser({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "prompty",\n  "options": {\n    "key": "value"\n  }\n}`;
@@ -32,6 +20,15 @@ describe("Parser", () => {
       const reloaded = Parser.fromJson(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "prompty",\n  "options": {\n    "key": "value"\n  }\n}`;
+      const instance = Parser.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -52,13 +49,32 @@ describe("Parser", () => {
 
       expect(reloaded.kind).toEqual(instance.kind);
     });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: prompty\noptions:\n  key: value\n`;
+      const instance = Parser.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Parser.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
   });
 
   describe("alternate representations", () => {
-    it("should handle parser alternate representation", () => {
+    it("should handle parser alternate representation from JSON", () => {
       const value = "example";
       const json = JSON.stringify(value);
       const instance = Parser.fromJson(json);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("example");
+    });
+
+    it("should handle parser alternate representation from YAML", () => {
+      const value = "example";
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Parser.fromYaml(yaml);
       expect(instance).toBeDefined();
 
       expect(instance.kind).toEqual("example");

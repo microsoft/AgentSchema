@@ -4,18 +4,6 @@
 import { RemoteConnection } from "../src/index";
 
 describe("RemoteConnection", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new RemoteConnection();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new RemoteConnection({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "remote",\n  "name": "my-reference-connection",\n  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"\n}`;
@@ -40,6 +28,15 @@ describe("RemoteConnection", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.endpoint).toEqual(instance.endpoint);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "remote",\n  "name": "my-reference-connection",\n  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"\n}`;
+      const instance = RemoteConnection.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -67,6 +64,16 @@ describe("RemoteConnection", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.endpoint).toEqual(instance.endpoint);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: remote\nname: my-reference-connection\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const instance = RemoteConnection.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = RemoteConnection.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

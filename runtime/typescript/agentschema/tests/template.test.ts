@@ -4,18 +4,6 @@
 import { Template } from "../src/index";
 
 describe("Template", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Template();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Template({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "format": {\n    "kind": "mustache"\n  },\n  "parser": {\n    "kind": "mustache"\n  }\n}`;
@@ -28,6 +16,15 @@ describe("Template", () => {
       const instance = Template.fromJson(json);
       const output = instance.toJson();
       const reloaded = Template.fromJson(output);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "format": {\n    "kind": "mustache"\n  },\n  "parser": {\n    "kind": "mustache"\n  }\n}`;
+      const instance = Template.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -43,6 +40,16 @@ describe("Template", () => {
       const instance = Template.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = Template.fromYaml(output);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `format:\n  kind: mustache\nparser:\n  kind: mustache\n`;
+      const instance = Template.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Template.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

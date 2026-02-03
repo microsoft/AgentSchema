@@ -4,18 +4,6 @@
 import { OpenApiTool } from "../src/index";
 
 describe("OpenApiTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new OpenApiTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new OpenApiTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "openapi",\n  "connection": {\n    "kind": "reference"\n  },\n  "specification": "full_sepcification_here"\n}`;
@@ -36,6 +24,15 @@ describe("OpenApiTool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.specification).toEqual(instance.specification);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "openapi",\n  "connection": {\n    "kind": "reference"\n  },\n  "specification": "full_sepcification_here"\n}`;
+      const instance = OpenApiTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("OpenApiTool", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.specification).toEqual(instance.specification);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: openapi\nconnection:\n  kind: reference\nspecification: full_sepcification_here\n`;
+      const instance = OpenApiTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = OpenApiTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

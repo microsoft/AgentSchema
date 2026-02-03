@@ -4,18 +4,6 @@
 import { ProtocolVersionRecord } from "../src/index";
 
 describe("ProtocolVersionRecord", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ProtocolVersionRecord();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ProtocolVersionRecord({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "protocol": "responses",\n  "version": "v0.1.1"\n}`;
@@ -36,6 +24,15 @@ describe("ProtocolVersionRecord", () => {
       expect(reloaded.protocol).toEqual(instance.protocol);
 
       expect(reloaded.version).toEqual(instance.version);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "protocol": "responses",\n  "version": "v0.1.1"\n}`;
+      const instance = ProtocolVersionRecord.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("ProtocolVersionRecord", () => {
       expect(reloaded.protocol).toEqual(instance.protocol);
 
       expect(reloaded.version).toEqual(instance.version);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `protocol: responses\nversion: v0.1.1\n`;
+      const instance = ProtocolVersionRecord.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ProtocolVersionRecord.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

@@ -64,10 +64,11 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
     const isFloat = value.toString().includes('.');
     return isFloat;
   });
-  const classTemplate = env.getTemplate('dataclass.njk', true);
-  const utilsTemplate = env.getTemplate('utils.njk', true);
-  const testTemplate = env.getTemplate('test.njk', true);
+  const classTemplate = env.getTemplate('file.cs.njk', true);
+  const utilsTemplate = env.getTemplate('utils.cs.njk', true);
+  const testTemplate = env.getTemplate('test.cs.njk', true);
   const contextTemplate = env.getTemplate('context.cs.njk', true);
+  const testContextTemplate = env.getTemplate('test_context.cs.njk', true);
 
   const nodes = Array.from(enumerateTypes(node));
 
@@ -90,8 +91,16 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
   for (const n of nodes) {
     await emitCsharpFile(context, n, renderCSharp(nodes, n, classTemplate, csharpNamespace), `${n.typeName.name}.cs`, emitTarget["output-dir"]);
     if (emitTarget["test-dir"]) {
-      await emitCsharpFile(context, n, renderTests(n, testTemplate, csharpNamespace), `${n.typeName.name}ConversionTests.cs`, emitTarget["test-dir"]);
+      await emitCsharpFile(context, n, renderTests(n, testTemplate, csharpNamespace), `${n.typeName.name}Tests.cs`, emitTarget["test-dir"]);
     }
+  }
+
+  // Emit context test file
+  if (emitTarget["test-dir"]) {
+    const contextTestCode = testContextTemplate.render({
+      namespace: csharpNamespace,
+    });
+    await emitCsharpFile(context, node, contextTestCode, "ContextTests.cs", emitTarget["test-dir"]);
   }
 
   // Format emitted files if format option is enabled (default: true)
@@ -152,9 +161,12 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
         }
       }
     }
+    // Check if the item type has a 'name' property (for object-format save)
+    const hasNameProperty = p.type?.properties.some((t) => t.name === "name") || false;
     return {
       prop: p,
       type: primaryProp ? [primaryProp] : [],
+      hasNameProperty: hasNameProperty,
     };
   });
 
@@ -243,6 +255,8 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace:
     };
   });
 
+  const isAbstract = node.isAbstract || (node.discriminator !== undefined && node.discriminator.length > 0);
+
   const test = testTemplate.render({
     node: node,
     // replace control characters in samples
@@ -250,6 +264,7 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace:
     alternates: alternates,
     renderName: renderName,
     namespace: namespace,
+    isAbstract: isAbstract,
   });
   return test;
 };

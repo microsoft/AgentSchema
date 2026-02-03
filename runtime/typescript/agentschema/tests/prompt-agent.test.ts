@@ -4,18 +4,6 @@
 import { PromptAgent } from "../src/index";
 
 describe("PromptAgent", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new PromptAgent();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new PromptAgent({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "prompt",\n  "model": {\n    "id": "gpt-35-turbo",\n    "connection": {\n      "kind": "key",\n      "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n      "key": "{your-api-key}"\n    }\n  },\n  "tools": [\n    {\n      "name": "getCurrentWeather",\n      "kind": "function",\n      "description": "Get the current weather in a given location",\n      "parameters": {\n        "location": {\n          "kind": "string",\n          "description": "The city and state, e.g. San Francisco, CA"\n        },\n        "unit": {\n          "kind": "string",\n          "description": "The unit of temperature, e.g. Celsius or Fahrenheit"\n        }\n      }\n    }\n  ],\n  "template": {\n    "format": "mustache",\n    "parser": "prompty"\n  },\n  "instructions": "system:\\nYou are an AI assistant who helps people find information.\\nAs the assistant, you answer questions briefly, succinctly,\\nand in a personable manner using markdown and even add some \\npersonal flair with appropriate emojis.\\n\\n# Customer\\nYou are helping {{firstName}} {{lastName}} to find answers to \\ntheir questions. Use their name to address them in your responses.\\nuser:\\n{{question}}"\n}`;
@@ -40,6 +28,15 @@ describe("PromptAgent", () => {
       expect(reloaded.instructions).toEqual(instance.instructions);
     });
 
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "prompt",\n  "model": {\n    "id": "gpt-35-turbo",\n    "connection": {\n      "kind": "key",\n      "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n      "key": "{your-api-key}"\n    }\n  },\n  "tools": [\n    {\n      "name": "getCurrentWeather",\n      "kind": "function",\n      "description": "Get the current weather in a given location",\n      "parameters": {\n        "location": {\n          "kind": "string",\n          "description": "The city and state, e.g. San Francisco, CA"\n        },\n        "unit": {\n          "kind": "string",\n          "description": "The unit of temperature, e.g. Celsius or Fahrenheit"\n        }\n      }\n    }\n  ],\n  "template": {\n    "format": "mustache",\n    "parser": "prompty"\n  },\n  "instructions": "system:\\nYou are an AI assistant who helps people find information.\\nAs the assistant, you answer questions briefly, succinctly,\\nand in a personable manner using markdown and even add some \\npersonal flair with appropriate emojis.\\n\\n# Customer\\nYou are helping {{firstName}} {{lastName}} to find answers to \\ntheir questions. Use their name to address them in your responses.\\nuser:\\n{{question}}"\n}`;
+      const instance = PromptAgent.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
+    });
+
     it("should load from JSON - example 2", () => {
       const json = `{\n  "kind": "prompt",\n  "model": {\n    "id": "gpt-35-turbo",\n    "connection": {\n      "kind": "key",\n      "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n      "key": "{your-api-key}"\n    }\n  },\n  "tools": {\n    "getCurrentWeather": {\n      "kind": "function",\n      "description": "Get the current weather in a given location",\n      "parameters": {\n        "location": {\n          "kind": "string",\n          "description": "The city and state, e.g. San Francisco, CA"\n        },\n        "unit": {\n          "kind": "string",\n          "description": "The unit of temperature, e.g. Celsius or Fahrenheit"\n        }\n      }\n    }\n  },\n  "template": {\n    "format": "mustache",\n    "parser": "prompty"\n  },\n  "instructions": "system:\\nYou are an AI assistant who helps people find information.\\nAs the assistant, you answer questions briefly, succinctly,\\nand in a personable manner using markdown and even add some \\npersonal flair with appropriate emojis.\\n\\n# Customer\\nYou are helping {{firstName}} {{lastName}} to find answers to \\ntheir questions. Use their name to address them in your responses.\\nuser:\\n{{question}}"\n}`;
       const instance = PromptAgent.fromJson(json);
@@ -61,6 +58,15 @@ describe("PromptAgent", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.instructions).toEqual(instance.instructions);
+    });
+
+    it("should serialize to valid JSON - example 2", () => {
+      const json = `{\n  "kind": "prompt",\n  "model": {\n    "id": "gpt-35-turbo",\n    "connection": {\n      "kind": "key",\n      "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n      "key": "{your-api-key}"\n    }\n  },\n  "tools": {\n    "getCurrentWeather": {\n      "kind": "function",\n      "description": "Get the current weather in a given location",\n      "parameters": {\n        "location": {\n          "kind": "string",\n          "description": "The city and state, e.g. San Francisco, CA"\n        },\n        "unit": {\n          "kind": "string",\n          "description": "The unit of temperature, e.g. Celsius or Fahrenheit"\n        }\n      }\n    }\n  },\n  "template": {\n    "format": "mustache",\n    "parser": "prompty"\n  },\n  "instructions": "system:\\nYou are an AI assistant who helps people find information.\\nAs the assistant, you answer questions briefly, succinctly,\\nand in a personable manner using markdown and even add some \\npersonal flair with appropriate emojis.\\n\\n# Customer\\nYou are helping {{firstName}} {{lastName}} to find answers to \\ntheir questions. Use their name to address them in your responses.\\nuser:\\n{{question}}"\n}`;
+      const instance = PromptAgent.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -88,6 +94,16 @@ describe("PromptAgent", () => {
       expect(reloaded.instructions).toEqual(instance.instructions);
     });
 
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: prompt\nmodel:\n  id: gpt-35-turbo\n  connection:\n    kind: key\n    endpoint: https://{your-custom-endpoint}.openai.azure.com/\n    key: "{your-api-key}"\ntools:\n  - name: getCurrentWeather\n    kind: function\n    description: Get the current weather in a given location\n    parameters:\n      location:\n        kind: string\n        description: The city and state, e.g. San Francisco, CA\n      unit:\n        kind: string\n        description: The unit of temperature, e.g. Celsius or Fahrenheit\ntemplate:\n  format: mustache\n  parser: prompty\ninstructions: |-\n  system:\n  You are an AI assistant who helps people find information.\n  As the assistant, you answer questions briefly, succinctly,\n  and in a personable manner using markdown and even add some \n  personal flair with appropriate emojis.\n\n  # Customer\n  You are helping {{firstName}} {{lastName}} to find answers to \n  their questions. Use their name to address them in your responses.\n  user:\n  {{question}}\n`;
+      const instance = PromptAgent.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = PromptAgent.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
+
     it("should load from YAML - example 2", () => {
       const yaml = `kind: prompt\nmodel:\n  id: gpt-35-turbo\n  connection:\n    kind: key\n    endpoint: https://{your-custom-endpoint}.openai.azure.com/\n    key: "{your-api-key}"\ntools:\n  getCurrentWeather:\n    kind: function\n    description: Get the current weather in a given location\n    parameters:\n      location:\n        kind: string\n        description: The city and state, e.g. San Francisco, CA\n      unit:\n        kind: string\n        description: The unit of temperature, e.g. Celsius or Fahrenheit\ntemplate:\n  format: mustache\n  parser: prompty\ninstructions: |-\n  system:\n  You are an AI assistant who helps people find information.\n  As the assistant, you answer questions briefly, succinctly,\n  and in a personable manner using markdown and even add some \n  personal flair with appropriate emojis.\n\n  # Customer\n  You are helping {{firstName}} {{lastName}} to find answers to \n  their questions. Use their name to address them in your responses.\n  user:\n  {{question}}\n`;
       const instance = PromptAgent.fromYaml(yaml);
@@ -109,6 +125,16 @@ describe("PromptAgent", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.instructions).toEqual(instance.instructions);
+    });
+
+    it("should serialize to valid YAML - example 2", () => {
+      const yaml = `kind: prompt\nmodel:\n  id: gpt-35-turbo\n  connection:\n    kind: key\n    endpoint: https://{your-custom-endpoint}.openai.azure.com/\n    key: "{your-api-key}"\ntools:\n  getCurrentWeather:\n    kind: function\n    description: Get the current weather in a given location\n    parameters:\n      location:\n        kind: string\n        description: The city and state, e.g. San Francisco, CA\n      unit:\n        kind: string\n        description: The unit of temperature, e.g. Celsius or Fahrenheit\ntemplate:\n  format: mustache\n  parser: prompty\ninstructions: |-\n  system:\n  You are an AI assistant who helps people find information.\n  As the assistant, you answer questions briefly, succinctly,\n  and in a personable manner using markdown and even add some \n  personal flair with appropriate emojis.\n\n  # Customer\n  You are helping {{firstName}} {{lastName}} to find answers to \n  their questions. Use their name to address them in your responses.\n  user:\n  {{question}}\n`;
+      const instance = PromptAgent.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = PromptAgent.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

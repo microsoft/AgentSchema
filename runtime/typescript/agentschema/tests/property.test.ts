@@ -4,18 +4,6 @@
 import { Property } from "../src/index";
 
 describe("Property", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Property();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Property({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "my-input",\n  "kind": "string",\n  "description": "A description of the input property",\n  "required": true,\n  "default": "default value",\n  "example": "example value",\n  "enumValues": [\n    "value1",\n    "value2",\n    "value3"\n  ]\n}`;
@@ -52,6 +40,15 @@ describe("Property", () => {
       expect(reloaded.default).toEqual(instance.default);
 
       expect(reloaded.example).toEqual(instance.example);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "my-input",\n  "kind": "string",\n  "description": "A description of the input property",\n  "required": true,\n  "default": "default value",\n  "example": "example value",\n  "enumValues": [\n    "value1",\n    "value2",\n    "value3"\n  ]\n}`;
+      const instance = Property.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -92,10 +89,20 @@ describe("Property", () => {
 
       expect(reloaded.example).toEqual(instance.example);
     });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: my-input\nkind: string\ndescription: A description of the input property\nrequired: true\ndefault: default value\nexample: example value\nenumValues:\n  - value1\n  - value2\n  - value3\n`;
+      const instance = Property.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Property.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
   });
 
   describe("alternate representations", () => {
-    it("should handle input alternate representation", () => {
+    it("should handle input alternate representation from JSON", () => {
       const value = false;
       const json = JSON.stringify(value);
       const instance = Property.fromJson(json);
@@ -106,7 +113,18 @@ describe("Property", () => {
       expect(instance.example).toEqual(false);
     });
 
-    it("should handle input alternate representation", () => {
+    it("should handle input alternate representation from YAML", () => {
+      const value = false;
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Property.fromYaml(yaml);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("boolean");
+
+      expect(instance.example).toEqual(false);
+    });
+
+    it("should handle input alternate representation from JSON", () => {
       const value = 3.14;
       const json = JSON.stringify(value);
       const instance = Property.fromJson(json);
@@ -117,7 +135,18 @@ describe("Property", () => {
       expect(instance.example).toEqual(3.14);
     });
 
-    it("should handle input alternate representation", () => {
+    it("should handle input alternate representation from YAML", () => {
+      const value = 3.14;
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Property.fromYaml(yaml);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("float");
+
+      expect(instance.example).toEqual(3.14);
+    });
+
+    it("should handle input alternate representation from JSON", () => {
       const value = 4;
       const json = JSON.stringify(value);
       const instance = Property.fromJson(json);
@@ -128,10 +157,32 @@ describe("Property", () => {
       expect(instance.example).toEqual(4);
     });
 
-    it("should handle input alternate representation", () => {
+    it("should handle input alternate representation from YAML", () => {
+      const value = 4;
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Property.fromYaml(yaml);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("integer");
+
+      expect(instance.example).toEqual(4);
+    });
+
+    it("should handle input alternate representation from JSON", () => {
       const value = "example";
       const json = JSON.stringify(value);
       const instance = Property.fromJson(json);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("string");
+
+      expect(instance.example).toEqual("example");
+    });
+
+    it("should handle input alternate representation from YAML", () => {
+      const value = "example";
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Property.fromYaml(yaml);
       expect(instance).toBeDefined();
 
       expect(instance.kind).toEqual("string");

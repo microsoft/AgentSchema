@@ -4,18 +4,6 @@
 import { ContainerAgent } from "../src/index";
 
 describe("ContainerAgent", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ContainerAgent();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ContainerAgent({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
@@ -32,6 +20,15 @@ describe("ContainerAgent", () => {
       const reloaded = ContainerAgent.fromJson(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
+      const instance = ContainerAgent.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -51,6 +48,16 @@ describe("ContainerAgent", () => {
       const reloaded = ContainerAgent.fromYaml(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: hosted\nprotocols:\n  - protocol: responses\n    version: v0.1.1\nenvironmentVariables:\n  - name: MY_ENV_VAR\n    value: my-value\n`;
+      const instance = ContainerAgent.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ContainerAgent.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

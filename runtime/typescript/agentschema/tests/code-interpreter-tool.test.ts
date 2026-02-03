@@ -4,18 +4,6 @@
 import { CodeInterpreterTool } from "../src/index";
 
 describe("CodeInterpreterTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new CodeInterpreterTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new CodeInterpreterTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "code_interpreter",\n  "fileIds": [\n    "file1",\n    "file2"\n  ]\n}`;
@@ -32,6 +20,15 @@ describe("CodeInterpreterTool", () => {
       const reloaded = CodeInterpreterTool.fromJson(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "code_interpreter",\n  "fileIds": [\n    "file1",\n    "file2"\n  ]\n}`;
+      const instance = CodeInterpreterTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -51,6 +48,16 @@ describe("CodeInterpreterTool", () => {
       const reloaded = CodeInterpreterTool.fromYaml(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: code_interpreter\nfileIds:\n  - file1\n  - file2\n`;
+      const instance = CodeInterpreterTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = CodeInterpreterTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

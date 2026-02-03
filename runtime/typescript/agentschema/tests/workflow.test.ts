@@ -4,18 +4,6 @@
 import { Workflow } from "../src/index";
 
 describe("Workflow", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Workflow();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Workflow({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "workflow"\n}`;
@@ -32,6 +20,15 @@ describe("Workflow", () => {
       const reloaded = Workflow.fromJson(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "workflow"\n}`;
+      const instance = Workflow.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -51,6 +48,16 @@ describe("Workflow", () => {
       const reloaded = Workflow.fromYaml(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: workflow\n`;
+      const instance = Workflow.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Workflow.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

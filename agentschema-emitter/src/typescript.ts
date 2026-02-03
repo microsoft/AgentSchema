@@ -113,6 +113,7 @@ export const generateTypeScript = async (
   const contextTemplate = env.getTemplate("context.ts.njk", true);
   const indexTemplate = env.getTemplate("index.ts.njk", true);
   const testTemplate = env.getTemplate("test.ts.njk", true);
+  const testContextTemplate = env.getTemplate("test_context.ts.njk", true);
 
   const nodes = Array.from(enumerateTypes(node));
 
@@ -159,6 +160,13 @@ export const generateTypeScript = async (
       });
       await emitTypeScriptFile(context, `${toKebabCase(n.typeName.name)}.test.ts`, testCode, emitTarget["test-dir"]);
     }
+
+    // Emit context test file
+    const contextTestCode = testContextTemplate.render({
+      header: "AgentSchema Context Tests",
+      package: tsNamespace,
+    });
+    await emitTypeScriptFile(context, "context.test.ts", contextTestCode, emitTarget["test-dir"]);
   }
 
   // Emit index.ts file

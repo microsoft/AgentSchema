@@ -4,18 +4,6 @@
 import { ModelOptions } from "../src/index";
 
 describe("ModelOptions", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ModelOptions();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ModelOptions({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "frequencyPenalty": 0.5,\n  "maxOutputTokens": 2048,\n  "presencePenalty": 0.3,\n  "seed": 42,\n  "temperature": 0.7,\n  "topK": 40,\n  "topP": 0.9,\n  "stopSequences": [\n    "\\n",\n    "###"\n  ],\n  "allowMultipleToolCalls": true,\n  "additionalProperties": {\n    "customProperty": "value",\n    "anotherProperty": "anotherValue"\n  }\n}`;
@@ -60,6 +48,15 @@ describe("ModelOptions", () => {
       expect(reloaded.topP).toEqual(instance.topP);
 
       expect(reloaded.allowMultipleToolCalls).toEqual(instance.allowMultipleToolCalls);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "frequencyPenalty": 0.5,\n  "maxOutputTokens": 2048,\n  "presencePenalty": 0.3,\n  "seed": 42,\n  "temperature": 0.7,\n  "topK": 40,\n  "topP": 0.9,\n  "stopSequences": [\n    "\\n",\n    "###"\n  ],\n  "allowMultipleToolCalls": true,\n  "additionalProperties": {\n    "customProperty": "value",\n    "anotherProperty": "anotherValue"\n  }\n}`;
+      const instance = ModelOptions.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -107,6 +104,16 @@ describe("ModelOptions", () => {
       expect(reloaded.topP).toEqual(instance.topP);
 
       expect(reloaded.allowMultipleToolCalls).toEqual(instance.allowMultipleToolCalls);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `frequencyPenalty: 0.5\nmaxOutputTokens: 2048\npresencePenalty: 0.3\nseed: 42\ntemperature: 0.7\ntopK: 40\ntopP: 0.9\nstopSequences:\n  - |+\n    \n  - "###"\nallowMultipleToolCalls: true\nadditionalProperties:\n  customProperty: value\n  anotherProperty: anotherValue\n`;
+      const instance = ModelOptions.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ModelOptions.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

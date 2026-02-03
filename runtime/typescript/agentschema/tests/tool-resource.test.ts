@@ -4,18 +4,6 @@
 import { ToolResource } from "../src/index";
 
 describe("ToolResource", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ToolResource();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ToolResource({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "tool",\n  "id": "web-search",\n  "options": {\n    "myToolResourceProperty": "myValue"\n  }\n}`;
@@ -36,6 +24,15 @@ describe("ToolResource", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.id).toEqual(instance.id);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "tool",\n  "id": "web-search",\n  "options": {\n    "myToolResourceProperty": "myValue"\n  }\n}`;
+      const instance = ToolResource.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("ToolResource", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.id).toEqual(instance.id);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: tool\nid: web-search\noptions:\n  myToolResourceProperty: myValue\n`;
+      const instance = ToolResource.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ToolResource.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

@@ -4,18 +4,6 @@
 import { Format } from "../src/index";
 
 describe("Format", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Format();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Format({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "mustache",\n  "strict": true,\n  "options": {\n    "key": "value"\n  }\n}`;
@@ -36,6 +24,15 @@ describe("Format", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.strict).toEqual(instance.strict);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "mustache",\n  "strict": true,\n  "options": {\n    "key": "value"\n  }\n}`;
+      const instance = Format.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -60,13 +57,32 @@ describe("Format", () => {
 
       expect(reloaded.strict).toEqual(instance.strict);
     });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: mustache\nstrict: true\noptions:\n  key: value\n`;
+      const instance = Format.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Format.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
   });
 
   describe("alternate representations", () => {
-    it("should handle format alternate representation", () => {
+    it("should handle format alternate representation from JSON", () => {
       const value = "example";
       const json = JSON.stringify(value);
       const instance = Format.fromJson(json);
+      expect(instance).toBeDefined();
+
+      expect(instance.kind).toEqual("example");
+    });
+
+    it("should handle format alternate representation from YAML", () => {
+      const value = "example";
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Format.fromYaml(yaml);
       expect(instance).toBeDefined();
 
       expect(instance.kind).toEqual("example");

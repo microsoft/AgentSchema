@@ -4,18 +4,6 @@
 import { Connection } from "../src/index";
 
 describe("Connection", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Connection();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Connection({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "reference",\n  "authenticationMode": "system",\n  "usageDescription": "This will allow the agent to respond to an email on your behalf"\n}`;
@@ -42,6 +30,15 @@ describe("Connection", () => {
       expect(reloaded.authenticationMode).toEqual(instance.authenticationMode);
 
       expect(reloaded.usageDescription).toEqual(instance.usageDescription);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "reference",\n  "authenticationMode": "system",\n  "usageDescription": "This will allow the agent to respond to an email on your behalf"\n}`;
+      const instance = Connection.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -71,6 +68,16 @@ describe("Connection", () => {
       expect(reloaded.authenticationMode).toEqual(instance.authenticationMode);
 
       expect(reloaded.usageDescription).toEqual(instance.usageDescription);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: reference\nauthenticationMode: system\nusageDescription: This will allow the agent to respond to an email on your behalf\n`;
+      const instance = Connection.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Connection.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 });

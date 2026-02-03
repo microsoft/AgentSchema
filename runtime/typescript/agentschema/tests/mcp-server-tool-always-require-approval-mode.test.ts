@@ -4,18 +4,6 @@
 import { McpServerToolAlwaysRequireApprovalMode } from "../src/index";
 
 describe("McpServerToolAlwaysRequireApprovalMode", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new McpServerToolAlwaysRequireApprovalMode();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new McpServerToolAlwaysRequireApprovalMode({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "always"\n}`;
@@ -32,6 +20,15 @@ describe("McpServerToolAlwaysRequireApprovalMode", () => {
       const reloaded = McpServerToolAlwaysRequireApprovalMode.fromJson(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "always"\n}`;
+      const instance = McpServerToolAlwaysRequireApprovalMode.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -51,6 +48,16 @@ describe("McpServerToolAlwaysRequireApprovalMode", () => {
       const reloaded = McpServerToolAlwaysRequireApprovalMode.fromYaml(output);
 
       expect(reloaded.kind).toEqual(instance.kind);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: always\n`;
+      const instance = McpServerToolAlwaysRequireApprovalMode.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = McpServerToolAlwaysRequireApprovalMode.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

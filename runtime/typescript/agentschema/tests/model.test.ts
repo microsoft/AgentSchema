@@ -4,18 +4,6 @@
 import { Model } from "../src/index";
 
 describe("Model", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Model();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Model({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "id": "gpt-35-turbo",\n  "provider": "azure",\n  "apiType": "chat",\n  "connection": {\n    "kind": "key",\n    "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n    "key": "{your-api-key}"\n  },\n  "options": {\n    "type": "chat",\n    "temperature": 0.7,\n    "maxTokens": 1000\n  }\n}`;
@@ -40,6 +28,15 @@ describe("Model", () => {
       expect(reloaded.provider).toEqual(instance.provider);
 
       expect(reloaded.apiType).toEqual(instance.apiType);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "id": "gpt-35-turbo",\n  "provider": "azure",\n  "apiType": "chat",\n  "connection": {\n    "kind": "key",\n    "endpoint": "https://{your-custom-endpoint}.openai.azure.com/",\n    "key": "{your-api-key}"\n  },\n  "options": {\n    "type": "chat",\n    "temperature": 0.7,\n    "maxTokens": 1000\n  }\n}`;
+      const instance = Model.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -68,13 +65,32 @@ describe("Model", () => {
 
       expect(reloaded.apiType).toEqual(instance.apiType);
     });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `id: gpt-35-turbo\nprovider: azure\napiType: chat\nconnection:\n  kind: key\n  endpoint: https://{your-custom-endpoint}.openai.azure.com/\n  key: "{your-api-key}"\noptions:\n  type: chat\n  temperature: 0.7\n  maxTokens: 1000\n`;
+      const instance = Model.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Model.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
   });
 
   describe("alternate representations", () => {
-    it("should handle model alternate representation", () => {
+    it("should handle model alternate representation from JSON", () => {
       const value = "example";
       const json = JSON.stringify(value);
       const instance = Model.fromJson(json);
+      expect(instance).toBeDefined();
+
+      expect(instance.id).toEqual("example");
+    });
+
+    it("should handle model alternate representation from YAML", () => {
+      const value = "example";
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Model.fromYaml(yaml);
       expect(instance).toBeDefined();
 
       expect(instance.id).toEqual("example");

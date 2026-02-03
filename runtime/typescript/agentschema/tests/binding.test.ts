@@ -4,18 +4,6 @@
 import { Binding } from "../src/index";
 
 describe("Binding", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new Binding();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new Binding({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "name": "my-tool",\n  "input": "input-variable"\n}`;
@@ -36,6 +24,15 @@ describe("Binding", () => {
       expect(reloaded.name).toEqual(instance.name);
 
       expect(reloaded.input).toEqual(instance.input);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "name": "my-tool",\n  "input": "input-variable"\n}`;
+      const instance = Binding.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -60,13 +57,32 @@ describe("Binding", () => {
 
       expect(reloaded.input).toEqual(instance.input);
     });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `name: my-tool\ninput: input-variable\n`;
+      const instance = Binding.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = Binding.fromYaml(output);
+      expect(reloaded).toBeDefined();
+    });
   });
 
   describe("alternate representations", () => {
-    it("should handle string alternate representation", () => {
+    it("should handle string alternate representation from JSON", () => {
       const value = "example";
       const json = JSON.stringify(value);
       const instance = Binding.fromJson(json);
+      expect(instance).toBeDefined();
+
+      expect(instance.input).toEqual("example");
+    });
+
+    it("should handle string alternate representation from YAML", () => {
+      const value = "example";
+      const yaml = typeof value === "string" ? `"${value}"` : String(value);
+      const instance = Binding.fromYaml(yaml);
       expect(instance).toBeDefined();
 
       expect(instance.input).toEqual("example");

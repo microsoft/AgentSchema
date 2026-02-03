@@ -4,18 +4,6 @@
 import { AnonymousConnection } from "../src/index";
 
 describe("AnonymousConnection", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new AnonymousConnection();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new AnonymousConnection({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "kind": "anonymous",\n  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"\n}`;
@@ -36,6 +24,15 @@ describe("AnonymousConnection", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.endpoint).toEqual(instance.endpoint);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "kind": "anonymous",\n  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"\n}`;
+      const instance = AnonymousConnection.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -59,6 +56,16 @@ describe("AnonymousConnection", () => {
       expect(reloaded.kind).toEqual(instance.kind);
 
       expect(reloaded.endpoint).toEqual(instance.endpoint);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `kind: anonymous\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const instance = AnonymousConnection.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = AnonymousConnection.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

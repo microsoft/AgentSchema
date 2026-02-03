@@ -4,18 +4,6 @@
 import { ObjectProperty } from "../src/index";
 
 describe("ObjectProperty", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new ObjectProperty();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new ObjectProperty({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "properties": {\n    "property1": {\n      "kind": "string"\n    },\n    "property2": {\n      "kind": "number"\n    }\n  }\n}`;
@@ -28,6 +16,15 @@ describe("ObjectProperty", () => {
       const instance = ObjectProperty.fromJson(json);
       const output = instance.toJson();
       const reloaded = ObjectProperty.fromJson(output);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "properties": {\n    "property1": {\n      "kind": "string"\n    },\n    "property2": {\n      "kind": "number"\n    }\n  }\n}`;
+      const instance = ObjectProperty.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -43,6 +40,16 @@ describe("ObjectProperty", () => {
       const instance = ObjectProperty.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ObjectProperty.fromYaml(output);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `properties:\n  property1:\n    kind: string\n  property2:\n    kind: number\n`;
+      const instance = ObjectProperty.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = ObjectProperty.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

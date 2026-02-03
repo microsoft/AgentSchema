@@ -69,6 +69,7 @@ interface GoTestContext {
   }>;
   packageName: string;
   isPolymorphic: boolean;
+  isAbstract: boolean;
 }
 
 interface GoContextContext {
@@ -136,6 +137,12 @@ export const generateGo = async (
       const testFileName = toSnakeCase(n.typeName.name) + '_test.go';
       await emitGoFile(context, testFileName, testContent, emitTarget["test-dir"]);
     }
+  }
+
+  // Render context test file
+  if (emitTarget["test-dir"]) {
+    const contextTestContent = engine.render('test_context.go.njk', { packageName });
+    await emitGoFile(context, 'context_test.go', contextTestContent, emitTarget["test-dir"]);
   }
 
   // Format emitted files if format option is enabled (default: true)
@@ -261,6 +268,9 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
   };
 
   const alternates = node.alternates.map(alt => {
+    const rawExample = alt.example
+      ? (typeof alt.example === "string" ? alt.example : alt.example.toString().toLowerCase())
+      : (alt.scalar === "string" ? "example" : goScalarValue[alt.scalar]?.replace(/"/g, '') || "");
     const example = alt.example
       ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString().toLowerCase())
       : goScalarValue[alt.scalar] || "nil";
@@ -269,6 +279,7 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
       title: alt.title || alt.scalar,
       scalar: alt.scalar,
       value: example,
+      rawValue: rawExample,
       validation: Object.keys(alt.expansion)
         .filter(key => typeof alt.expansion[key] !== 'object')
         .map(key => {
@@ -287,6 +298,7 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
 
   const polyTypes = node.retrievePolymorphicTypes();
   const isPolymorphic = polyTypes != null;  // Use != to check both null and undefined
+  const isAbstract = node.isAbstract || (node.discriminator !== undefined && node.discriminator.length > 0);
 
   return {
     node,
@@ -294,6 +306,7 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
     alternates,
     packageName,
     isPolymorphic,
+    isAbstract,
   };
 }
 
@@ -406,7 +419,7 @@ function toPascalCase(str: string): string {
       .map(part => part.charAt(0).toUpperCase() + part.slice(1))
       .join('');
   }
-  
+
   // Handle camelCase by inserting boundaries at uppercase letters
   // Then capitalize each part
   const withBoundaries = str.replace(/([a-z])([A-Z])/g, '$1_$2');

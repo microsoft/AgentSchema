@@ -4,18 +4,6 @@
 import { PropertySchema } from "../src/index";
 
 describe("PropertySchema", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new PropertySchema();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new PropertySchema({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "examples": [\n    {\n      "key": "value"\n    }\n  ],\n  "strict": true,\n  "properties": {\n    "firstName": {\n      "kind": "string",\n      "sample": "Jane"\n    },\n    "lastName": {\n      "kind": "string",\n      "sample": "Doe"\n    },\n    "question": {\n      "kind": "string",\n      "sample": "What is the meaning of life?"\n    }\n  }\n}`;
@@ -32,6 +20,15 @@ describe("PropertySchema", () => {
       const reloaded = PropertySchema.fromJson(output);
 
       expect(reloaded.strict).toEqual(instance.strict);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "examples": [\n    {\n      "key": "value"\n    }\n  ],\n  "strict": true,\n  "properties": {\n    "firstName": {\n      "kind": "string",\n      "sample": "Jane"\n    },\n    "lastName": {\n      "kind": "string",\n      "sample": "Doe"\n    },\n    "question": {\n      "kind": "string",\n      "sample": "What is the meaning of life?"\n    }\n  }\n}`;
+      const instance = PropertySchema.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -51,6 +48,16 @@ describe("PropertySchema", () => {
       const reloaded = PropertySchema.fromYaml(output);
 
       expect(reloaded.strict).toEqual(instance.strict);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `examples:\n  - key: value\nstrict: true\nproperties:\n  firstName:\n    kind: string\n    sample: Jane\n  lastName:\n    kind: string\n    sample: Doe\n  question:\n    kind: string\n    sample: What is the meaning of life?\n`;
+      const instance = PropertySchema.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = PropertySchema.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 

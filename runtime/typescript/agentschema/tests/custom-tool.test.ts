@@ -4,18 +4,6 @@
 import { CustomTool } from "../src/index";
 
 describe("CustomTool", () => {
-  describe("construction", () => {
-    it("should create a new instance with defaults", () => {
-      const instance = new CustomTool();
-      expect(instance).toBeDefined();
-    });
-
-    it("should create a new instance with partial initialization", () => {
-      const instance = new CustomTool({});
-      expect(instance).toBeDefined();
-    });
-  });
-
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
       const json = `{\n  "connection": {\n    "kind": "reference"\n  },\n  "options": {\n    "timeout": 30,\n    "retries": 3\n  }\n}`;
@@ -28,6 +16,15 @@ describe("CustomTool", () => {
       const instance = CustomTool.fromJson(json);
       const output = instance.toJson();
       const reloaded = CustomTool.fromJson(output);
+    });
+
+    it("should serialize to valid JSON - example 1", () => {
+      const json = `{\n  "connection": {\n    "kind": "reference"\n  },\n  "options": {\n    "timeout": 30,\n    "retries": 3\n  }\n}`;
+      const instance = CustomTool.fromJson(json);
+      const output = instance.toJson();
+      expect(output).toBeDefined();
+      const parsed = JSON.parse(output);
+      expect(typeof parsed).toBe("object");
     });
   });
 
@@ -43,6 +40,16 @@ describe("CustomTool", () => {
       const instance = CustomTool.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = CustomTool.fromYaml(output);
+    });
+
+    it("should serialize to valid YAML - example 1", () => {
+      const yaml = `connection:\n  kind: reference\noptions:\n  timeout: 30\n  retries: 3\n`;
+      const instance = CustomTool.fromYaml(yaml);
+      const output = instance.toYaml();
+      expect(output).toBeDefined();
+      // YAML output should be parseable back
+      const reloaded = CustomTool.fromYaml(output);
+      expect(reloaded).toBeDefined();
     });
   });
 
