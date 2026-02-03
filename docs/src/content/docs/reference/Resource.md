@@ -43,15 +43,14 @@ classDiagram
 ```yaml
 name: my-resource
 kind: model
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| name | string | Name of the resource  |
-| kind | string | The kind of resource (e.g., model, tool)  |
+| name | string | Name of the resource |
+| kind | string | The kind of resource (e.g., model, tool) |
 
 ## Child Types
 

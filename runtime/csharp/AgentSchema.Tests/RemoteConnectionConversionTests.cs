@@ -11,9 +11,9 @@ public class RemoteConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "remote"
-"name": "my-reference-connection"
-"endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
+kind: remote
+name: my-reference-connection
+endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
 
 """;
 

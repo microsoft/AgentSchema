@@ -53,7 +53,7 @@ export const generatePython = async (
 
   const nodes = Array.from(enumerateTypes(node));
 
-  // Determine package name from root node namespace (e.g., "agentschema.core")
+  // Determine package name from root node namespace (e.g., "AgentSchema" -> "agentschema")
   const packageName = node.typeName.namespace.toLowerCase();
 
   // Emit py.typed marker for PEP 561 compliance

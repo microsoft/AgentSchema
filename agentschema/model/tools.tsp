@@ -5,7 +5,7 @@ import "./properties.tsp";
 
 // TODO: MATCH THESE https://github.com/dotnet/extensions/blob/main/src/Libraries/Microsoft.Extensions.AI.Abstractions/Tools/AITool.cs
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 /**
  * Represents a binding between an input property and a tool parameter.

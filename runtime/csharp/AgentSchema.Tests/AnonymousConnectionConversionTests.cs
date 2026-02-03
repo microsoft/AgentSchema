@@ -11,8 +11,8 @@ public class AnonymousConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "anonymous"
-"endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
+kind: anonymous
+endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
 
 """;
 

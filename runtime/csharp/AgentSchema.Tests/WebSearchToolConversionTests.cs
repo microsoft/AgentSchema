@@ -11,15 +11,15 @@ public class WebSearchToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "bing_search"
-"connection":
-  "kind": "reference"
-"options":
-  "instanceName": "MyBingInstance"
-  "market": "en-US"
-  "setLang": "en"
-  "count": 10
-  "freshness": "Day"
+kind: bing_search
+connection:
+  kind: reference
+options:
+  instanceName: MyBingInstance
+  market: en-US
+  setLang: en
+  count: 10
+  freshness: Day
 
 """;
 

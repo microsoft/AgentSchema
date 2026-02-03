@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "generate": "tsp compile ./model/agent.tsp --config ./tspconfig.yaml",
-    "generate-objects": "tsp compile ./model/agent.tsp --config ./tspconfig.yaml"
+    "generate": "tsp compile ./model/main.tsp --config ./tspconfig.yaml",
+    "generate-objects": "tsp compile ./model/main.tsp --config ./tspconfig.yaml"
   },
   "dependencies": {
     "@typespec/compiler": "latest",

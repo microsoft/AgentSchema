@@ -42,14 +42,13 @@ classDiagram
 
 ```yaml
 kind: never
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for string approval modes  |
+| kind | string | The kind identifier for string approval modes |
 
 ## Child Types
 
@@ -72,7 +71,6 @@ The following simplified representation can be used:
 
 ```yaml
 kind: "example"
-
 ```
 
 This is equivalent to the full representation:
@@ -80,5 +78,4 @@ This is equivalent to the full representation:
 ```yaml
 kind:
   kind: "example"
-
 ```

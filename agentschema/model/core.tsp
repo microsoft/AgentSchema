@@ -1,6 +1,6 @@
 import "@agentschema/emitter";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 model Named<
   Item,

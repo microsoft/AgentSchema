@@ -40,12 +40,11 @@ kind: code_interpreter
 fileIds:
   - file1
   - file2
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for code interpreter tools  |
-| fileIds | string[] | The IDs of the files to be used by the code interpreter tool.  |
+| kind | string | The kind identifier for code interpreter tools |
+| fileIds | string[] | The IDs of the files to be used by the code interpreter tool. |

@@ -40,13 +40,12 @@ kind: openapi
 connection:
   kind: reference
 specification: full_sepcification_here
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for OpenAPI tools  |
-| connection | [Connection](../connection/) | The connection configuration for the OpenAPI tool  |
-| specification | string | The full OpenAPI specification  |
+| kind | string | The kind identifier for OpenAPI tools |
+| connection | [Connection](../connection/) | The connection configuration for the OpenAPI tool |
+| specification | string | The full OpenAPI specification |

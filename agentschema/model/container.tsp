@@ -4,7 +4,7 @@ import "./connection.tsp";
 import "./tools.tsp";
 import "./agent.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 /**
  * Definition for an environment variable used in containerized agents.

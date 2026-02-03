@@ -11,11 +11,11 @@ public class CustomToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"connection":
-  "kind": "reference"
-"options":
-  "timeout": 30
-  "retries": 3
+connection:
+  kind: reference
+options:
+  timeout: 30
+  retries: 3
 
 """;
 

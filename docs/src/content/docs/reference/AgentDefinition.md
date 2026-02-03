@@ -83,20 +83,19 @@ outputSchema:
     answer:
       kind: string
       description: The answer to the user's question.
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Kind represented by the document  |
-| name | string | Human-readable name of the agent  |
-| displayName | string | Display name of the agent for UI purposes  |
-| description | string | Description of the agent&#39;s capabilities and purpose  |
-| metadata | dictionary | Additional metadata including authors, tags, and other arbitrary properties  |
-| inputSchema | [PropertySchema](../propertyschema/) | Input parameters that participate in template rendering  |
-| outputSchema | [PropertySchema](../propertyschema/) | Expected output format and structure from the agent  |
+| kind | string | Kind represented by the document |
+| name | string | Human-readable name of the agent |
+| displayName | string | Display name of the agent for UI purposes |
+| description | string | Description of the agent&#39;s capabilities and purpose |
+| metadata | dictionary | Additional metadata including authors, tags, and other arbitrary properties |
+| inputSchema | [PropertySchema](../propertyschema/) | Input parameters that participate in template rendering |
+| outputSchema | [PropertySchema](../propertyschema/) | Expected output format and structure from the agent |
 
 ## Child Types
 

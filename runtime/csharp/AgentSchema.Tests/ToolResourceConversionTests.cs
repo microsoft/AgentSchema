@@ -11,10 +11,10 @@ public class ToolResourceConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "tool"
-"id": "web-search"
-"options":
-  "myToolResourceProperty": "myValue"
+kind: tool
+id: web-search
+options:
+  myToolResourceProperty: myValue
 
 """;
 

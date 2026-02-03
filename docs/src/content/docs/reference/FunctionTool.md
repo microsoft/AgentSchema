@@ -55,16 +55,15 @@ parameters:
       kind: string
       value: What is the meaning of life?
 strict: true
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for function tools  |
-| parameters | [PropertySchema](../propertyschema/) | Parameters accepted by the function tool  |
-| strict | boolean | Indicates whether the function tool enforces strict validation on its parameters  |
+| kind | string | The kind identifier for function tools |
+| parameters | [PropertySchema](../propertyschema/) | Parameters accepted by the function tool |
+| strict | boolean | Indicates whether the function tool enforces strict validation on its parameters |
 
 ## Composed Types
 

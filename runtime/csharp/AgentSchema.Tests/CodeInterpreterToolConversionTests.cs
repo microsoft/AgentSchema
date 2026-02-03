@@ -11,10 +11,10 @@ public class CodeInterpreterToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "code_interpreter"
-"fileIds":
-  - "file1"
-  - "file2"
+kind: code_interpreter
+fileIds:
+  - file1
+  - file2
 
 """;
 

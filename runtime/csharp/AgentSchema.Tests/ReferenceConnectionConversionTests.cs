@@ -11,9 +11,9 @@ public class ReferenceConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "reference"
-"name": "my-reference-connection"
-"target": "my-target-resource"
+kind: reference
+name: my-reference-connection
+target: my-target-resource
 
 """;
 

@@ -11,7 +11,7 @@ public class WorkflowConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "workflow"
+kind: workflow
 
 """;
 

@@ -11,8 +11,8 @@ public class ResourceConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "my-resource"
-"kind": "model"
+name: my-resource
+kind: model
 
 """;
 

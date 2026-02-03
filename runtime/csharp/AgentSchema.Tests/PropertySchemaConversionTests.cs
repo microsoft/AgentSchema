@@ -11,19 +11,19 @@ public class PropertySchemaConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"examples":
-  - "key": "value"
-"strict": true
-"properties":
-  "firstName":
-    "kind": "string"
-    "sample": "Jane"
-  "lastName":
-    "kind": "string"
-    "sample": "Doe"
-  "question":
-    "kind": "string"
-    "sample": "What is the meaning of life?"
+examples:
+  - key: value
+strict: true
+properties:
+  firstName:
+    kind: string
+    sample: Jane
+  lastName:
+    kind: string
+    sample: Doe
+  question:
+    kind: string
+    sample: What is the meaning of life?
 
 """;
 

@@ -11,17 +11,17 @@ public class ModelConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"id": "gpt-35-turbo"
-"provider": "azure"
-"apiType": "chat"
-"connection":
-  "kind": "key"
-  "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
-  "key": "{your-api-key}"
-"options":
-  "type": "chat"
-  "temperature": 0.7
-  "maxTokens": 1000
+id: gpt-35-turbo
+provider: azure
+apiType: chat
+connection:
+  kind: key
+  endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
+  key: "{your-api-key}"
+options:
+  type: chat
+  temperature: 0.7
+  maxTokens: 1000
 
 """;
 

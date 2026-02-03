@@ -38,13 +38,12 @@ kind: tool
 id: web-search
 options:
   myToolResourceProperty: myValue
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for tool resources  |
-| id | string | The unique identifier of the tool resource  |
-| options | dictionary | Configuration options for the tool resource  |
+| kind | string | The kind identifier for tool resources |
+| id | string | The unique identifier of the tool resource |
+| options | dictionary | Configuration options for the tool resource |

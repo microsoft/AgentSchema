@@ -9,7 +9,7 @@ options:
     file-type: yaml
   "@agentschema/emitter":
     emitter-output-dir: "{cwd}/tsp-output"
-    root-object: "AgentSchema.Core.AgentManifest"
+    root-object: "AgentSchema.AgentManifest"
     emit-targets:
       - type: markdown
         output-dir: "../docs/src/content/docs/reference"
@@ -17,8 +17,8 @@ options:
         output-dir: "../runtime/csharp/AgentSchema"
         test-dir: "../runtime/csharp/AgentSchema.Tests"
       - type: Python
-        output-dir: "../runtime/python/agentschema/src/agentschema/core"
-        test-dir: "../runtime/python/agentschema/tests/core"
+        output-dir: "../runtime/python/agentschema/src/agentschema"
+        test-dir: "../runtime/python/agentschema/tests"
       - type: BotDefinition
         output-dir: "../runtime/definition"
       - type: TypeScript

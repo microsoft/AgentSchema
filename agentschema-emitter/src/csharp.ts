@@ -199,9 +199,22 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace:
 
   const examples = combinations.map(c => {
     const sample = Object.assign({}, ...c);
+    // Create YAML document and customize string scalar style for values with special chars
+    const doc = new YAML.Document(sample);
+    YAML.visit(doc, {
+      Scalar(key, node) {
+        // Only quote string values that contain special characters requiring escaping
+        if (typeof node.value === 'string') {
+          const str = node.value as string;
+          if (str.includes('\n') || str.includes('\t') || str.includes('#') || str.includes(':') || str.includes('"')) {
+            node.type = 'QUOTE_DOUBLE';
+          }
+        }
+      }
+    });
     return {
       json: JSON.stringify(sample, null, 2).split('\n'),
-      yaml: YAML.stringify(sample, { indent: 2, lineWidth: 0, defaultStringType: 'QUOTE_DOUBLE' }).split('\n'),
+      yaml: doc.toString({ indent: 2, lineWidth: 0 }).split('\n'),
       // get all scalars in the sample
       validation: Object.keys(sample).filter(key => typeof sample[key] !== 'object').map(key => ({
         key: renderName(key),

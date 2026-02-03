@@ -53,16 +53,15 @@ properties:
   question:
     kind: string
     sample: What is the meaning of life?
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| examples | dictionary[] | Example records for the input schema  |
-| strict | boolean | Whether the input schema is strict - if true, only the defined properties are allowed  |
-| properties | [Property[]](../property/) | The input properties for the schema (Related Types: [ArrayProperty](../arrayproperty/), [ObjectProperty](../objectproperty/)) |
+| examples | dictionary[] | Example records for the input schema |
+| strict | boolean | Whether the input schema is strict - if true, only the defined properties are allowed |
+| properties | [Property[]](../property/) | The input properties for the schema(Related Types: [ArrayProperty](../arrayproperty/), [ObjectProperty](../objectproperty/)) |
 
 ## Composed Types
 

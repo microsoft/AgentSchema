@@ -1,6 +1,6 @@
 {
   "name": "agentschema",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "TypeScript SDK for declarative agent schema definitions",
   "type": "module",
   "main": "dist/index.js",

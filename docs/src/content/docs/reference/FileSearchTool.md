@@ -53,17 +53,16 @@ scoreThreshold: 0.5
 filters:
   fileType: pdf
   createdAfter: 2023-01-01
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for file search tools  |
-| connection | [Connection](../connection/) | The connection configuration for the file search tool  |
-| vectorStoreIds | string[] | The IDs of the vector stores to search within.  |
-| maximumResultCount | int32 | The maximum number of search results to return.  |
-| ranker | string | File search ranker.  |
-| scoreThreshold | float32 | Ranker search threshold.  |
-| filters | dictionary | Additional filters to apply during the file search.  |
+| kind | string | The kind identifier for file search tools |
+| connection | [Connection](../connection/) | The connection configuration for the file search tool |
+| vectorStoreIds | string[] | The IDs of the vector stores to search within. |
+| maximumResultCount | int32 | The maximum number of search results to return. |
+| ranker | string | File search ranker. |
+| scoreThreshold | float32 | Ranker search threshold. |
+| filters | dictionary | Additional filters to apply during the file search. |

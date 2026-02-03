@@ -1,0 +1,200 @@
+---
+title: TypeSpec Schema Guide
+description: How to edit and extend the AgentSchema TypeSpec definitions
+sidebar:
+  order: 3
+---
+
+The AgentSchema specification is defined using [TypeSpec](https://typespec.io/), a language for defining APIs and data models. All schema changes start here.
+
+## File Structure
+
+```text
+agentschema/model/
+├── main.tsp          # Entry point - imports all other files
+├── core.tsp          # Base templates (Named<>, Id<>)
+├── agent.tsp         # AgentDefinition, PromptAgent, Workflow
+├── manifest.tsp      # AgentManifest
+├── model.tsp         # Model, ModelOptions
+├── connection.tsp    # Connection types
+├── template.tsp      # Template, Format, Parser
+├── properties.tsp    # Property, PropertySchema
+├── tools.tsp         # Tool base and FunctionTool
+└── tools/            # Specialized tools
+    ├── file.tsp
+    ├── mcp.tsp
+    ├── openapi.tsp
+    ├── web.tsp
+    └── interpreter.tsp
+```
+
+## Basic Model Definition
+
+Every model needs:
+
+1. A `namespace AgentSchema;` declaration
+2. Documentation with `@doc()`
+3. Sample values with `@sample()` for test generation
+
+```typespec
+import "@agentschema/emitter";
+
+namespace AgentSchema;
+
+/**
+ * Description of the model (used in generated docs).
+ */
+model MyModel {
+  @doc("Description of this property")
+  @sample(#{ name: "example-name" })
+  name: string;
+
+  @doc("An optional property")
+  @sample(#{ count: 42 })
+  count?: int32;
+}
+```
+
+## The `@sample` Decorator
+
+The `@sample` decorator is **required** for test generation. It provides example values that:
+
+- Generate test cases in all runtime libraries
+- Validate serialization/deserialization roundtrips
+- Document expected usage
+
+```typespec
+// Simple values
+@sample(#{ myString: "hello" })
+@sample(#{ myNumber: 42 })
+@sample(#{ myBool: true })
+
+// Arrays
+@sample(#{ tags: #["tag1", "tag2"] })
+
+// Objects
+@sample(#{ metadata: #{ key: "value" } })
+```
+
+## Type Mappings
+
+| TypeSpec | C# | Python | TypeScript |
+|----------|-----|--------|------------|
+| `string` | `string` | `str` | `string` |
+| `int32` | `int` | `int` | `number` |
+| `int64` | `long` | `int` | `number` |
+| `float32` | `float` | `float` | `number` |
+| `float64` | `double` | `float` | `number` |
+| `boolean` | `bool` | `bool` | `boolean` |
+| `string[]` | `IList<string>` | `list[str]` | `string[]` |
+| `Record<unknown>` | `IDictionary<string, object>` | `dict[str, Any]` | `Record<string, unknown>` |
+
+## Polymorphic Types
+
+Use `@abstract` and `@discriminator` for type hierarchies:
+
+```typespec
+@abstract
+@discriminator("kind")
+model Tool {
+  @doc("Type discriminator")
+  @sample(#{ kind: "function" })
+  kind: string;
+
+  @doc("Tool description")
+  @sample(#{ description: "A helpful tool" })
+  description?: string;
+}
+
+model FunctionTool extends Tool {
+  @doc("Type discriminator")
+  @sample(#{ kind: "function" })
+  kind: "function";
+
+  @doc("Function name")
+  @sample(#{ name: "myFunction" })
+  name: string;
+}
+```
+
+## Shorthand Representations
+
+Allow models to be initialized from scalar values:
+
+```typespec
+@shorthand(string, #{ input: "{value}" })
+model Binding {
+  @doc("The input property to bind")
+  @sample(#{ input: "myInput" })
+  input: string;
+}
+```
+
+This allows:
+
+```yaml
+# Full form
+binding:
+  input: myInput
+
+# Shorthand form
+binding: myInput
+```
+
+## Common Patterns
+
+### Optional with Default
+
+```typespec
+@doc("Temperature setting")
+@sample(#{ temperature: 0.7 })
+temperature?: float32 = 0.7;
+```
+
+### Enum-like Strings
+
+```typespec
+alias ApiType = "chat" | "responses" | string;
+
+@doc("API type")
+@sample(#{ apiType: "chat" })
+apiType?: ApiType;
+```
+
+### Nested Objects
+
+```typespec
+@doc("Model configuration")
+@sample(#{ model: #{ id: "gpt-4" } })
+model?: Model;
+```
+
+## After Making Changes
+
+Always regenerate and test:
+
+```bash
+cd agentschema
+npm run generate
+
+# Test all runtimes
+cd ../runtime/csharp && dotnet test
+cd ../python/agentschema && uv run pytest tests/
+cd ../../typescript/agentschema && npm test
+```
+
+## Troubleshooting
+
+### "Unknown decorator @sample"
+
+Ensure you have `import "@agentschema/emitter";` at the top of your file.
+
+### "Model not found"
+
+Check that your file is imported in `main.tsp`.
+
+### Tests fail after changes
+
+- Verify `@sample` values are valid for the property type
+- Check that required properties have samples
+- Ensure discriminator values match in child classes

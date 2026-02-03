@@ -4,11 +4,11 @@ description: "Documentation for the Property type."
 slug: "reference/property"
 ---
 
-Represents a single property
+Represents a single property.
 
-* This model defines the structure of properties that can be used in prompts,
+- This model defines the structure of properties that can be used in prompts,
 including their type, description, whether they are required, and other attributes.
-* It allows for the definition of dynamic inputs that can be filled with data
+- It allows for the definition of dynamic inputs that can be filled with data
 and processed to generate prompts for AI models.
 
 ## Class Diagram
@@ -58,27 +58,26 @@ enumValues:
   - value1
   - value2
   - value3
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| name | string | Name of the property  |
-| kind | string | The data type of the input property  |
-| description | string | A short description of the input property  |
-| required | boolean | Whether the property is required  |
-| default | unknown | The default value of the property - this represents the default value if none is provided  |
-| example | unknown | Example value used for either initialization or tooling  |
-| enumValues | unknown[] | Allowed enumeration values for the property  |
+| name | string | Name of the property |
+| kind | string | The data type of the input property |
+| description | string | A short description of the input property |
+| required | boolean | Whether the property is required |
+| default | unknown | The default value of the property - this represents the default value if none is provided |
+| example | unknown | Example value used for either initialization or tooling |
+| enumValues | unknown[] | Allowed enumeration values for the property |
 
 ## Child Types
 
 The following types extend `Property`:
 
-* [ArrayProperty](../arrayproperty/)
-* [ObjectProperty](../objectproperty/)
+- [ArrayProperty](../arrayproperty/)
+- [ObjectProperty](../objectproperty/)
 
 ## Alternate Constructions
 
@@ -93,7 +92,6 @@ The following simplified representation can be used:
 
 ```yaml
 input: true
-
 ```
 
 This is equivalent to the full representation:
@@ -102,7 +100,6 @@ This is equivalent to the full representation:
 input:
   kind: boolean
   example: true
-
 ```
 
 ### float32 input
@@ -113,7 +110,6 @@ The following simplified representation can be used:
 
 ```yaml
 input: 3.14
-
 ```
 
 This is equivalent to the full representation:
@@ -122,7 +118,6 @@ This is equivalent to the full representation:
 input:
   kind: float
   example: 3.14
-
 ```
 
 ### integer input
@@ -133,7 +128,6 @@ The following simplified representation can be used:
 
 ```yaml
 input: 5
-
 ```
 
 This is equivalent to the full representation:
@@ -142,7 +136,6 @@ This is equivalent to the full representation:
 input:
   kind: integer
   example: 5
-
 ```
 
 ### string input
@@ -153,7 +146,6 @@ The following simplified representation can be used:
 
 ```yaml
 input: "example"
-
 ```
 
 This is equivalent to the full representation:
@@ -162,5 +154,4 @@ This is equivalent to the full representation:
 input:
   kind: string
   example: "example"
-
 ```

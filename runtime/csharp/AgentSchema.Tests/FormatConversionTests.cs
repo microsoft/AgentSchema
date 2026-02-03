@@ -11,10 +11,10 @@ public class FormatConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "mustache"
-"strict": true
-"options":
-  "key": "value"
+kind: mustache
+strict: true
+options:
+  key: value
 
 """;
 

@@ -136,19 +136,18 @@ instructions: |-
   their questions. Use their name to address them in your responses.
   user:
   {{question}}
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Type of agent, e.g., &#39;prompt&#39;  |
-| model | [Model](../model/) | Primary AI model configuration for the agent  |
-| tools | [Tool[]](../tool/) | Tools available to the agent for extended functionality (Related Types: [FunctionTool](../functiontool/), [CustomTool](../customtool/), [WebSearchTool](../websearchtool/), [FileSearchTool](../filesearchtool/), [McpTool](../mcptool/), [OpenApiTool](../openapitool/), [CodeInterpreterTool](../codeinterpretertool/)) |
-| template | [Template](../template/) | Template configuration for prompt rendering  |
-| instructions | string | Give your agent clear directions on what to do and how to do it. Include specific tasks, their order, and any special instructions like tone or engagement style. (can use this for a pure yaml declaration or as content in the markdown format)  |
-| additionalInstructions | string | Additional instructions or context for the agent, can be used to provide extra guidance (can use this for a pure yaml declaration)  |
+| kind | string | Type of agent, e.g., &#39;prompt&#39; |
+| model | [Model](../model/) | Primary AI model configuration for the agent |
+| tools | [Tool[]](../tool/) | Tools available to the agent for extended functionality(Related Types: [FunctionTool](../functiontool/), [CustomTool](../customtool/), [WebSearchTool](../websearchtool/), [FileSearchTool](../filesearchtool/), [McpTool](../mcptool/), [OpenApiTool](../openapitool/), [CodeInterpreterTool](../codeinterpretertool/)) |
+| template | [Template](../template/) | Template configuration for prompt rendering |
+| instructions | string | Give your agent clear directions on what to do and how to do it. Include specific tasks, their order, and any special instructions like tone or engagement style. (can use this for a pure yaml declaration or as content in the markdown format) |
+| additionalInstructions | string | Additional instructions or context for the agent, can be used to provide extra guidance (can use this for a pure yaml declaration) |
 
 ## Composed Types
 

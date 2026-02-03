@@ -11,19 +11,19 @@ public class FunctionToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "function"
-"parameters":
-  "properties":
-    "firstName":
-      "kind": "string"
-      "value": "Jane"
-    "lastName":
-      "kind": "string"
-      "value": "Doe"
-    "question":
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"strict": true
+kind: function
+parameters:
+  properties:
+    firstName:
+      kind: string
+      value: Jane
+    lastName:
+      kind: string
+      value: Doe
+    question:
+      kind: string
+      value: What is the meaning of life?
+strict: true
 
 """;
 
@@ -69,19 +69,19 @@ public class FunctionToolConversionTests
     public void LoadYamlInput1()
     {
         string yamlData = """
-"kind": "function"
-"parameters":
-  "properties":
-    - "name": "firstName"
-      "kind": "string"
-      "value": "Jane"
-    - "name": "lastName"
-      "kind": "string"
-      "value": "Doe"
-    - "name": "question"
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"strict": true
+kind: function
+parameters:
+  properties:
+    - name: firstName
+      kind: string
+      value: Jane
+    - name: lastName
+      kind: string
+      value: Doe
+    - name: question
+      kind: string
+      value: What is the meaning of life?
+strict: true
 
 """;
 
