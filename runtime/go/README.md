@@ -21,18 +21,35 @@ import (
 )
 
 func main() {
-    // From JSON
-    jsonData := `{
-        "name": "my-agent",
-        "description": "A sample agent"
-    }`
+    // From YAML
+    yamlData := `
+name: my-agent
+kind: prompt
+model: gpt-4o
+instructions: You are a helpful assistant.
+`
     
-    agent, err := agentschema.AgentDefinitionFromJSON(jsonData)
+    agent, err := agentschema.PromptAgentFromYAML(yamlData)
     if err != nil {
         panic(err)
     }
     
     fmt.Printf("Agent: %s\n", agent.Name)
+
+    // From JSON
+    jsonData := `{
+        "name": "my-agent",
+        "kind": "prompt",
+        "model": "gpt-4o",
+        "instructions": "You are a helpful assistant."
+    }`
+    
+    jsonAgent, err := agentschema.PromptAgentFromJSON(jsonData)
+    if err != nil {
+        panic(err)
+    }
+    
+    fmt.Printf("Agent: %s\n", jsonAgent.Name)
 }
 ```
 
@@ -46,10 +63,15 @@ import (
     "github.com/microsoft/agentschema-go/agentschema"
 )
 
+func strPtr(s string) *string { return &s }
+
 func main() {
-    agent := agentschema.AgentDefinition{
-        Name: "my-agent",
-        Description: strPtr("A sample agent"),
+    agent := agentschema.PromptAgent{
+        Kind:         "prompt",
+        Name:         "my-agent",
+        Description:  strPtr("A sample agent"),
+        Instructions: strPtr("You are a helpful assistant."),
+        Model:        agentschema.Model{Name: "gpt-4o"},
     }
     
     // Serialize to JSON
@@ -65,10 +87,6 @@ func main() {
         panic(err)
     }
     fmt.Println(yamlStr)
-}
-
-func strPtr(s string) *string {
-    return &s
 }
 ```
 

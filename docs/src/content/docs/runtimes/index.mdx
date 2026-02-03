@@ -41,6 +41,11 @@ AgentSchema provides official runtime libraries for multiple programming languag
     Install-Package AgentSchema
     ```
   </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```bash
+    go get github.com/microsoft/agentschema-go/agentschema
+    ```
+  </TabItem>
 </Tabs>
 
 ## Loading from YAML
@@ -90,6 +95,27 @@ Parse a YAML string into an agent definition:
     Console.WriteLine(agent.Name);  // "my-agent"
     ```
   </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    package main
+
+    import (
+        "fmt"
+        "github.com/microsoft/agentschema-go/agentschema"
+    )
+
+    func main() {
+        yamlContent := `
+    name: my-agent
+    kind: prompt
+    model: gpt-4o
+    instructions: You are a helpful assistant.
+    `
+        agent, _ := agentschema.PromptAgentFromYAML(yamlContent)
+        fmt.Println(agent.Name)  // "my-agent"
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 ## Loading from Files
@@ -133,6 +159,26 @@ Load agent definitions directly from files:
     // Load from JSON file
     var json = File.ReadAllText("agent.json");
     var agentFromJson = AgentDefinition.FromJson(json);
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    package main
+
+    import (
+        "os"
+        "github.com/microsoft/agentschema-go/agentschema"
+    )
+
+    func main() {
+        // Load from YAML file
+        yamlBytes, _ := os.ReadFile("agent.yaml")
+        agent, _ := agentschema.PromptAgentFromYAML(string(yamlBytes))
+
+        // Load from JSON file
+        jsonBytes, _ := os.ReadFile("agent.json")
+        agentFromJson, _ := agentschema.PromptAgentFromJSON(string(jsonBytes))
+    }
     ```
   </TabItem>
 </Tabs>
@@ -222,6 +268,40 @@ Create agent definitions using strongly-typed classes:
     };
     ```
   </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    package main
+
+    import "github.com/microsoft/agentschema-go/agentschema"
+
+    func strPtr(s string) *string { return &s }
+    func boolPtr(b bool) *bool { return &b }
+
+    func main() {
+        agent := agentschema.PromptAgent{
+            Kind:         "prompt",
+            Name:         "weather-agent",
+            Description:  strPtr("Helps users check the weather"),
+            Model:        agentschema.Model{Name: "gpt-4o"},
+            Instructions: strPtr("You help users check the weather."),
+            Tools: []agentschema.Tool{
+                agentschema.FunctionTool{
+                    Kind:        "function",
+                    Name:        "get_weather",
+                    Description: strPtr("Get current weather for a location"),
+                    Parameters: map[string]agentschema.Property{
+                        "location": {
+                            Kind:        "string",
+                            Description: strPtr("City name"),
+                            Required:    boolPtr(true),
+                        },
+                    },
+                },
+            },
+        }
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 ## Saving Agent Definitions
@@ -277,6 +357,25 @@ Export agent definitions to YAML or JSON:
 
     // Convert to dictionary
     var data = agent.Save();
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    import "os"
+
+    // Convert to YAML string
+    yamlStr, _ := agent.ToYAML()
+
+    // Convert to JSON string
+    jsonStr, _ := agent.ToJSON()
+
+    // Save to files
+    os.WriteFile("output.yaml", []byte(yamlStr), 0644)
+    os.WriteFile("output.json", []byte(jsonStr), 0644)
+
+    // Convert to map
+    ctx := agentschema.NewSaveContext()
+    data := agent.Save(ctx)
     ```
   </TabItem>
 </Tabs>
@@ -351,6 +450,24 @@ Customize loading and saving behavior with context objects:
     var yamlStr = agent.ToYaml(saveCtx);
     ```
   </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    import "github.com/microsoft/agentschema-go/agentschema"
+
+    // Custom load processing
+    loadCtx := agentschema.NewLoadContext()
+    loadCtx.PreProcess = func(data map[string]interface{}) map[string]interface{} {
+        fmt.Printf("Loading: %v\n", data["name"])
+        return data
+    }
+
+    // Custom save formatting
+    saveCtx := agentschema.NewSaveContext()
+    saveCtx.CollectionFormat = agentschema.CollectionFormatObject
+    saveCtx.UseShorthand = true
+    data := agent.Save(saveCtx)
+    ```
+  </TabItem>
 </Tabs>
 
 ## Choosing a Runtime
@@ -360,6 +477,7 @@ Choose the runtime that matches your development environment:
 - **Python** - For data science workflows, AI/ML pipelines, or Python-based backends
 - **TypeScript/JavaScript** - For Node.js applications, serverless functions, or web applications
 - **C# / .NET** - For enterprise applications, Azure Functions, or .NET-based services
+- **Go** - For high-performance services, CLI tools, or cloud-native applications
 
 For detailed API documentation, select your language:
 
@@ -378,5 +496,10 @@ For detailed API documentation, select your language:
     Full API reference with .NET integration.
     
     [View Details →](csharp/)
+  </Card>
+  <Card title="Go Runtime" icon="seti:go">
+    Full API reference with type-safe structs.
+    
+    [View Details →](go/)
   </Card>
 </CardGrid>
