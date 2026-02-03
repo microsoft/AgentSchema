@@ -1,0 +1,382 @@
+---
+title: Runtimes
+description: Official runtime libraries for working with AgentSchema in your preferred programming language.
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+AgentSchema provides official runtime libraries for multiple programming languages, making it easy to load, create, and manipulate agent definitions programmatically.
+
+## Installation
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```bash
+    pip install agentschema
+    ```
+    
+    Or using `uv`:
+    ```bash
+    uv add agentschema
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```bash
+    npm install agentschema
+    ```
+    
+    Or using other package managers:
+    ```bash
+    yarn add agentschema
+    pnpm add agentschema
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```bash
+    dotnet add package AgentSchema
+    ```
+    
+    Or via NuGet Package Manager:
+    ```powershell
+    Install-Package AgentSchema
+    ```
+  </TabItem>
+</Tabs>
+
+## Loading from YAML
+
+Parse a YAML string into an agent definition:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition
+
+    yaml_content = """
+    name: my-agent
+    model: gpt-4o
+    instructions: You are a helpful assistant.
+    """
+
+    agent = AgentDefinition.from_yaml(yaml_content)
+    print(agent.name)  # "my-agent"
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition } from 'agentschema';
+
+    const yamlContent = `
+    name: my-agent
+    model: gpt-4o
+    instructions: You are a helpful assistant.
+    `;
+
+    const agent = AgentDefinition.fromYaml(yamlContent);
+    console.log(agent.name);  // "my-agent"
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+
+    var yamlContent = @"
+    name: my-agent
+    model: gpt-4o
+    instructions: You are a helpful assistant.
+    ";
+
+    var agent = AgentDefinition.FromYaml(yamlContent);
+    Console.WriteLine(agent.Name);  // "my-agent"
+    ```
+  </TabItem>
+</Tabs>
+
+## Loading from Files
+
+Load agent definitions directly from files:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition
+
+    # Load from YAML file
+    agent = AgentDefinition.from_yaml_file("agent.yaml")
+
+    # Load from JSON file
+    agent = AgentDefinition.from_json_file("agent.json")
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition } from 'agentschema';
+    import { readFileSync } from 'fs';
+
+    // Load from YAML file
+    const yaml = readFileSync('agent.yaml', 'utf-8');
+    const agent = AgentDefinition.fromYaml(yaml);
+
+    // Load from JSON file
+    const json = readFileSync('agent.json', 'utf-8');
+    const agentFromJson = AgentDefinition.fromJson(json);
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+
+    // Load from YAML file
+    var yaml = File.ReadAllText("agent.yaml");
+    var agent = AgentDefinition.FromYaml(yaml);
+
+    // Load from JSON file
+    var json = File.ReadAllText("agent.json");
+    var agentFromJson = AgentDefinition.FromJson(json);
+    ```
+  </TabItem>
+</Tabs>
+
+## Programmatic Construction
+
+Create agent definitions using strongly-typed classes:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition, FunctionTool, Property
+
+    agent = AgentDefinition(
+        name="weather-agent",
+        description="Helps users check the weather",
+        model="gpt-4o",
+        instructions="You help users check the weather.",
+        tools={
+            "get_weather": FunctionTool(
+                name="get_weather",
+                description="Get current weather for a location",
+                parameters={
+                    "location": Property(
+                        kind="string",
+                        description="City name",
+                        required=True,
+                    ),
+                },
+            ),
+        },
+    )
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition, FunctionTool, Property } from 'agentschema';
+
+    const agent = new AgentDefinition({
+      name: 'weather-agent',
+      description: 'Helps users check the weather',
+      model: 'gpt-4o',
+      instructions: 'You help users check the weather.',
+      tools: {
+        get_weather: new FunctionTool({
+          name: 'get_weather',
+          description: 'Get current weather for a location',
+          parameters: {
+            location: new Property({
+              kind: 'string',
+              description: 'City name',
+              required: true,
+            }),
+          },
+        }),
+      },
+    });
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+
+    var agent = new AgentDefinition
+    {
+        Name = "weather-agent",
+        Description = "Helps users check the weather",
+        Model = "gpt-4o",
+        Instructions = "You help users check the weather.",
+        Tools = new Dictionary<string, Tool>
+        {
+            ["get_weather"] = new FunctionTool
+            {
+                Name = "get_weather",
+                Description = "Get current weather for a location",
+                Parameters = new Dictionary<string, Property>
+                {
+                    ["location"] = new Property
+                    {
+                        Kind = "string",
+                        Description = "City name",
+                        Required = true,
+                    },
+                },
+            },
+        },
+    };
+    ```
+  </TabItem>
+</Tabs>
+
+## Saving Agent Definitions
+
+Export agent definitions to YAML or JSON:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    # Convert to YAML string
+    yaml_str = agent.to_yaml()
+
+    # Convert to JSON string
+    json_str = agent.to_json(indent=2)
+
+    # Save to files
+    agent.to_yaml_file("output.yaml")
+    agent.to_json_file("output.json")
+
+    # Convert to dictionary
+    data = agent.save()
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { writeFileSync } from 'fs';
+
+    // Convert to YAML string
+    const yamlStr = agent.toYaml();
+
+    // Convert to JSON string
+    const jsonStr = agent.toJson();
+
+    // Save to files
+    writeFileSync('output.yaml', agent.toYaml());
+    writeFileSync('output.json', agent.toJson());
+
+    // Convert to object
+    const data = agent.save();
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    // Convert to YAML string
+    var yamlStr = agent.ToYaml();
+
+    // Convert to JSON string
+    var jsonStr = agent.ToJson();
+
+    // Save to files
+    File.WriteAllText("output.yaml", agent.ToYaml());
+    File.WriteAllText("output.json", agent.ToJson());
+
+    // Convert to dictionary
+    var data = agent.Save();
+    ```
+  </TabItem>
+</Tabs>
+
+## Context Objects
+
+Customize loading and saving behavior with context objects:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition, LoadContext, SaveContext
+
+    # Custom load processing
+    def pre_process(data: dict) -> dict:
+        print(f"Loading: {data.get('name')}")
+        return data
+
+    load_ctx = LoadContext(pre_process=pre_process)
+    agent = AgentDefinition.from_yaml(yaml_content, load_ctx)
+
+    # Custom save formatting
+    save_ctx = SaveContext(
+        collection_format="object",  # Use object format
+        use_shorthand=True,          # Use shorthand notation
+    )
+    yaml_str = agent.to_yaml(save_ctx)
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition, LoadContext, SaveContext } from 'agentschema';
+
+    // Custom load processing
+    const loadCtx = new LoadContext({
+      preProcess: (data) => {
+        console.log(`Loading: ${data.name}`);
+        return data;
+      },
+    });
+    const agent = AgentDefinition.fromYaml(yamlContent, loadCtx);
+
+    // Custom save formatting
+    const saveCtx = new SaveContext({
+      collectionFormat: 'object',
+      useShorthand: true,
+    });
+    const yamlStr = agent.toYaml(saveCtx);
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+
+    // Custom load processing
+    var loadCtx = new LoadContext
+    {
+        PreProcess = (data) =>
+        {
+            Console.WriteLine($"Loading: {data["name"]}");
+            return data;
+        },
+    };
+    var agent = AgentDefinition.FromYaml(yamlContent, loadCtx);
+
+    // Custom save formatting
+    var saveCtx = new SaveContext
+    {
+        CollectionFormat = CollectionFormat.Object,
+        UseShorthand = true,
+    };
+    var yamlStr = agent.ToYaml(saveCtx);
+    ```
+  </TabItem>
+</Tabs>
+
+## Choosing a Runtime
+
+Choose the runtime that matches your development environment:
+
+- **Python** - For data science workflows, AI/ML pipelines, or Python-based backends
+- **TypeScript/JavaScript** - For Node.js applications, serverless functions, or web applications
+- **C# / .NET** - For enterprise applications, Azure Functions, or .NET-based services
+
+For detailed API documentation, select your language:
+
+<CardGrid>
+  <Card title="Python Runtime" icon="seti:python">
+    Full API reference with async support and type hints.
+    
+    [View Details →](python/)
+  </Card>
+  <Card title="TypeScript Runtime" icon="seti:typescript">
+    Full API reference with TypeScript types.
+    
+    [View Details →](typescript/)
+  </Card>
+  <Card title="C# Runtime" icon="seti:csharp">
+    Full API reference with .NET integration.
+    
+    [View Details →](csharp/)
+  </Card>
+</CardGrid>
