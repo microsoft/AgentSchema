@@ -36,7 +36,7 @@ func TestReferenceConnectionLoadJSON(t *testing.T) {
 	if instance.Name != "my-reference-connection" {
 		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
-	if instance.Target != "my-target-resource" {
+	if instance.Target == nil || *instance.Target != "my-target-resource" {
 		t.Errorf(`Expected Target to be "my-target-resource", got %v`, instance.Target)
 	}
 }
@@ -65,7 +65,7 @@ target: my-target-resource
 	if instance.Name != "my-reference-connection" {
 		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, instance.Name)
 	}
-	if instance.Target != "my-target-resource" {
+	if instance.Target == nil || *instance.Target != "my-target-resource" {
 		t.Errorf(`Expected Target to be "my-target-resource", got %v`, instance.Target)
 	}
 }
@@ -89,7 +89,6 @@ func TestReferenceConnectionRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ReferenceConnection: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -103,7 +102,7 @@ func TestReferenceConnectionRoundtrip(t *testing.T) {
 	if reloaded.Name != "my-reference-connection" {
 		t.Errorf(`Expected Name to be "my-reference-connection", got %v`, reloaded.Name)
 	}
-	if reloaded.Target != "my-target-resource" {
+	if reloaded.Target == nil || *reloaded.Target != "my-target-resource" {
 		t.Errorf(`Expected Target to be "my-target-resource", got %v`, reloaded.Target)
 	}
 }
@@ -127,7 +126,6 @@ func TestReferenceConnectionToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ReferenceConnection: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -158,7 +156,6 @@ func TestReferenceConnectionToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ReferenceConnection: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

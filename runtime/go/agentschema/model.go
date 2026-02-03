@@ -16,7 +16,7 @@ type Model struct {
 	Id         string        `json:"id" yaml:"id"`
 	Provider   *string       `json:"provider,omitempty" yaml:"provider,omitempty"`
 	ApiType    *string       `json:"apiType,omitempty" yaml:"apiType,omitempty"`
-	Connection *Connection   `json:"connection,omitempty" yaml:"connection,omitempty"`
+	Connection interface{}   `json:"connection,omitempty" yaml:"connection,omitempty"`
 	Options    *ModelOptions `json:"options,omitempty" yaml:"options,omitempty"`
 }
 
@@ -47,9 +47,8 @@ func LoadModel(data interface{}, ctx *LoadContext) (Model, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				typedLoaded := loaded.(Connection)
-				result.Connection = &typedLoaded
+				// Polymorphic type - keep as interface{} (no pointer needed, interface{} can be nil)
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -74,7 +73,17 @@ func (obj *Model) Save(ctx *SaveContext) map[string]interface{} {
 		result["apiType"] = *obj.ApiType
 	}
 	if obj.Connection != nil {
-		result["connection"] = obj.Connection.Save(ctx)
+		// Handle polymorphic type (stored as interface{} without pointer)
+		if obj.Connection != nil {
+			switch v := obj.Connection.(type) {
+			case interface {
+				Save(*SaveContext) map[string]interface{}
+			}:
+				result["connection"] = v.Save(ctx)
+			default:
+				result["connection"] = obj.Connection
+			}
+		}
 	}
 	if obj.Options != nil {
 		result["options"] = obj.Options.Save(ctx)

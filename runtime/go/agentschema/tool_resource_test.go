@@ -88,7 +88,6 @@ func TestToolResourceRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ToolResource: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -125,7 +124,6 @@ func TestToolResourceToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ToolResource: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -158,7 +156,6 @@ func TestToolResourceToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ToolResource: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

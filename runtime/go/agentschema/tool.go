@@ -170,6 +170,7 @@ func LoadFunctionTool(data interface{}, ctx *LoadContext) (FunctionTool, error) 
 func (obj *FunctionTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
+
 	result["parameters"] = obj.Parameters.Save(ctx)
 	if obj.Strict != nil {
 		result["strict"] = *obj.Strict
@@ -228,7 +229,7 @@ func FunctionToolFromYAML(yamlStr string) (FunctionTool, error) {
 
 type CustomTool struct {
 	Kind       string                 `json:"kind" yaml:"kind"`
-	Connection Connection             `json:"connection" yaml:"connection"`
+	Connection interface{}            `json:"connection" yaml:"connection"`
 	Options    map[string]interface{} `json:"options" yaml:"options"`
 }
 
@@ -244,8 +245,8 @@ func LoadCustomTool(data interface{}, ctx *LoadContext) (CustomTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Connection = loaded.(Connection)
+				// Polymorphic type - keep as interface{}
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -262,7 +263,16 @@ func LoadCustomTool(data interface{}, ctx *LoadContext) (CustomTool, error) {
 func (obj *CustomTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["connection"] = obj.Connection.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Connection.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["connection"] = v.Save(ctx)
+	default:
+		result["connection"] = obj.Connection
+	}
 	result["options"] = obj.Options
 
 	return result
@@ -314,7 +324,7 @@ func CustomToolFromYAML(yamlStr string) (CustomTool, error) {
 
 type WebSearchTool struct {
 	Kind       string                 `json:"kind" yaml:"kind"`
-	Connection Connection             `json:"connection" yaml:"connection"`
+	Connection interface{}            `json:"connection" yaml:"connection"`
 	Options    map[string]interface{} `json:"options,omitempty" yaml:"options,omitempty"`
 }
 
@@ -330,8 +340,8 @@ func LoadWebSearchTool(data interface{}, ctx *LoadContext) (WebSearchTool, error
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Connection = loaded.(Connection)
+				// Polymorphic type - keep as interface{}
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["options"]; ok && val != nil {
@@ -348,7 +358,16 @@ func LoadWebSearchTool(data interface{}, ctx *LoadContext) (WebSearchTool, error
 func (obj *WebSearchTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["connection"] = obj.Connection.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Connection.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["connection"] = v.Save(ctx)
+	default:
+		result["connection"] = obj.Connection
+	}
 	if obj.Options != nil {
 		result["options"] = obj.Options
 	}
@@ -403,7 +422,7 @@ func WebSearchToolFromYAML(yamlStr string) (WebSearchTool, error) {
 
 type FileSearchTool struct {
 	Kind               string                 `json:"kind" yaml:"kind"`
-	Connection         Connection             `json:"connection" yaml:"connection"`
+	Connection         interface{}            `json:"connection" yaml:"connection"`
 	VectorStoreIds     []string               `json:"vectorStoreIds" yaml:"vectorStoreIds"`
 	MaximumResultCount *int32                 `json:"maximumResultCount,omitempty" yaml:"maximumResultCount,omitempty"`
 	Ranker             *string                `json:"ranker,omitempty" yaml:"ranker,omitempty"`
@@ -423,8 +442,8 @@ func LoadFileSearchTool(data interface{}, ctx *LoadContext) (FileSearchTool, err
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Connection = loaded.(Connection)
+				// Polymorphic type - keep as interface{}
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["vectorStoreIds"]; ok && val != nil {
@@ -461,7 +480,16 @@ func LoadFileSearchTool(data interface{}, ctx *LoadContext) (FileSearchTool, err
 func (obj *FileSearchTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["connection"] = obj.Connection.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Connection.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["connection"] = v.Save(ctx)
+	default:
+		result["connection"] = obj.Connection
+	}
 	result["vectorStoreIds"] = obj.VectorStoreIds
 	if obj.MaximumResultCount != nil {
 		result["maximumResultCount"] = *obj.MaximumResultCount
@@ -524,12 +552,12 @@ func FileSearchToolFromYAML(yamlStr string) (FileSearchTool, error) {
 // McpTool represents The MCP Server tool.
 
 type McpTool struct {
-	Kind              string                `json:"kind" yaml:"kind"`
-	Connection        Connection            `json:"connection" yaml:"connection"`
-	ServerName        string                `json:"serverName" yaml:"serverName"`
-	ServerDescription *string               `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
-	ApprovalMode      McpServerApprovalMode `json:"approvalMode" yaml:"approvalMode"`
-	AllowedTools      []string              `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
+	Kind              string      `json:"kind" yaml:"kind"`
+	Connection        interface{} `json:"connection" yaml:"connection"`
+	ServerName        string      `json:"serverName" yaml:"serverName"`
+	ServerDescription *string     `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
+	ApprovalMode      interface{} `json:"approvalMode" yaml:"approvalMode"`
+	AllowedTools      []string    `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
 }
 
 // LoadMcpTool creates a McpTool from a map[string]interface{}
@@ -544,8 +572,8 @@ func LoadMcpTool(data interface{}, ctx *LoadContext) (McpTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Connection = loaded.(Connection)
+				// Polymorphic type - keep as interface{}
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["serverName"]; ok && val != nil {
@@ -558,8 +586,8 @@ func LoadMcpTool(data interface{}, ctx *LoadContext) (McpTool, error) {
 		if val, ok := m["approvalMode"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadMcpServerApprovalMode(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.ApprovalMode = loaded.(McpServerApprovalMode)
+				// Polymorphic type - keep as interface{}
+				result.ApprovalMode = loaded
 			}
 		}
 		if val, ok := m["allowedTools"]; ok && val != nil {
@@ -579,12 +607,30 @@ func LoadMcpTool(data interface{}, ctx *LoadContext) (McpTool, error) {
 func (obj *McpTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["connection"] = obj.Connection.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Connection.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["connection"] = v.Save(ctx)
+	default:
+		result["connection"] = obj.Connection
+	}
 	result["serverName"] = obj.ServerName
 	if obj.ServerDescription != nil {
 		result["serverDescription"] = *obj.ServerDescription
 	}
-	result["approvalMode"] = obj.ApprovalMode.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.ApprovalMode.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["approvalMode"] = v.Save(ctx)
+	default:
+		result["approvalMode"] = obj.ApprovalMode
+	}
 	result["allowedTools"] = obj.AllowedTools
 
 	return result
@@ -634,9 +680,9 @@ func McpToolFromYAML(yamlStr string) (McpTool, error) {
 
 // OpenApiTool represents a schema type
 type OpenApiTool struct {
-	Kind          string     `json:"kind" yaml:"kind"`
-	Connection    Connection `json:"connection" yaml:"connection"`
-	Specification string     `json:"specification" yaml:"specification"`
+	Kind          string      `json:"kind" yaml:"kind"`
+	Connection    interface{} `json:"connection" yaml:"connection"`
+	Specification string      `json:"specification" yaml:"specification"`
 }
 
 // LoadOpenApiTool creates a OpenApiTool from a map[string]interface{}
@@ -651,8 +697,8 @@ func LoadOpenApiTool(data interface{}, ctx *LoadContext) (OpenApiTool, error) {
 		if val, ok := m["connection"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadConnection(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Connection = loaded.(Connection)
+				// Polymorphic type - keep as interface{}
+				result.Connection = loaded
 			}
 		}
 		if val, ok := m["specification"]; ok && val != nil {
@@ -667,7 +713,16 @@ func LoadOpenApiTool(data interface{}, ctx *LoadContext) (OpenApiTool, error) {
 func (obj *OpenApiTool) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["connection"] = obj.Connection.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Connection.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["connection"] = v.Save(ctx)
+	default:
+		result["connection"] = obj.Connection
+	}
 	result["specification"] = obj.Specification
 
 	return result

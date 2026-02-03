@@ -26,7 +26,7 @@ type AgentManifest struct {
 	DisplayName string                 `json:"displayName" yaml:"displayName"`
 	Description *string                `json:"description,omitempty" yaml:"description,omitempty"`
 	Metadata    map[string]interface{} `json:"metadata,omitempty" yaml:"metadata,omitempty"`
-	Template    AgentDefinition        `json:"template" yaml:"template"`
+	Template    interface{}            `json:"template" yaml:"template"`
 	Parameters  PropertySchema         `json:"parameters" yaml:"parameters"`
 	Resources   []Resource             `json:"resources" yaml:"resources"`
 }
@@ -55,8 +55,8 @@ func LoadAgentManifest(data interface{}, ctx *LoadContext) (AgentManifest, error
 		if val, ok := m["template"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadAgentDefinition(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Template = loaded.(AgentDefinition)
+				// Polymorphic type - keep as interface{}
+				result.Template = loaded
 			}
 		}
 		if val, ok := m["parameters"]; ok && val != nil {
@@ -93,7 +93,17 @@ func (obj *AgentManifest) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Metadata != nil {
 		result["metadata"] = obj.Metadata
 	}
-	result["template"] = obj.Template.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Template.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["template"] = v.Save(ctx)
+	default:
+		result["template"] = obj.Template
+	}
+
 	result["parameters"] = obj.Parameters.Save(ctx)
 	if obj.Resources != nil {
 		arr := make([]interface{}, len(obj.Resources))

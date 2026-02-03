@@ -164,8 +164,8 @@ func PropertyFromYAML(yamlStr string) (interface{}, error) {
 // This extends the base Property model to represent an array of items.
 
 type ArrayProperty struct {
-	Kind  string   `json:"kind" yaml:"kind"`
-	Items Property `json:"items" yaml:"items"`
+	Kind  string      `json:"kind" yaml:"kind"`
+	Items interface{} `json:"items" yaml:"items"`
 }
 
 // LoadArrayProperty creates a ArrayProperty from a map[string]interface{}
@@ -180,8 +180,8 @@ func LoadArrayProperty(data interface{}, ctx *LoadContext) (ArrayProperty, error
 		if val, ok := m["items"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := LoadProperty(m, ctx)
-				// Type assert from interface{} in case Load returns interface{} for polymorphic types
-				result.Items = loaded.(Property)
+				// Polymorphic type - keep as interface{}
+				result.Items = loaded
 			}
 		}
 	}
@@ -193,7 +193,16 @@ func LoadArrayProperty(data interface{}, ctx *LoadContext) (ArrayProperty, error
 func (obj *ArrayProperty) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
-	result["items"] = obj.Items.Save(ctx)
+
+	// Handle polymorphic type via type switch
+	switch v := obj.Items.(type) {
+	case interface {
+		Save(*SaveContext) map[string]interface{}
+	}:
+		result["items"] = v.Save(ctx)
+	default:
+		result["items"] = obj.Items
+	}
 
 	return result
 }

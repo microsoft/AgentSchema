@@ -33,6 +33,7 @@ func TestTemplateLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Template: %v", err)
 	}
+	_ = instance // No scalar properties to validate
 }
 
 // TestTemplateLoadYAML tests loading Template from YAML
@@ -54,6 +55,7 @@ parser:
 	if err != nil {
 		t.Fatalf("Failed to load Template: %v", err)
 	}
+	_ = instance // No scalar properties to validate
 }
 
 // TestTemplateRoundtrip tests load -> save -> load produces equivalent data
@@ -78,7 +80,6 @@ func TestTemplateRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Template: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -86,6 +87,7 @@ func TestTemplateRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to reload Template: %v", err)
 	}
+	_ = reloaded // No scalar properties to validate
 }
 
 // TestTemplateToJSON tests that ToJSON produces valid JSON
@@ -110,7 +112,6 @@ func TestTemplateToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Template: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -144,7 +145,6 @@ func TestTemplateToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Template: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

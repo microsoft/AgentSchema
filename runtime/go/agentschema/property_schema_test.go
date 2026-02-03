@@ -47,7 +47,7 @@ func TestPropertySchemaLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -80,7 +80,7 @@ properties:
 	if err != nil {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -121,7 +121,6 @@ func TestPropertySchemaRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -129,7 +128,7 @@ func TestPropertySchemaRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to reload PropertySchema: %v", err)
 	}
-	if reloaded.Strict != true {
+	if reloaded.Strict == nil || *reloaded.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
@@ -170,7 +169,6 @@ func TestPropertySchemaToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -218,7 +216,6 @@ func TestPropertySchemaToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PropertySchema: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

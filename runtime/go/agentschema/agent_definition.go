@@ -210,6 +210,7 @@ func LoadPromptAgent(data interface{}, ctx *LoadContext) (PromptAgent, error) {
 func (obj *PromptAgent) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 	result["kind"] = obj.Kind
+
 	result["model"] = obj.Model.Save(ctx)
 	if obj.Tools != nil {
 		arr := make([]interface{}, len(obj.Tools))

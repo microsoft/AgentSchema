@@ -61,7 +61,7 @@ func TestPromptAgentLoadJSON(t *testing.T) {
 	if instance.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, instance.Kind)
 	}
-	if instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if instance.Instructions == nil || *instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, instance.Instructions)
 	}
 }
@@ -117,7 +117,7 @@ instructions: |-
 	if instance.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, instance.Kind)
 	}
-	if instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if instance.Instructions == nil || *instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, instance.Instructions)
 	}
 }
@@ -169,7 +169,6 @@ func TestPromptAgentRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -180,7 +179,7 @@ func TestPromptAgentRoundtrip(t *testing.T) {
 	if reloaded.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, reloaded.Kind)
 	}
-	if reloaded.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if reloaded.Instructions == nil || *reloaded.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, reloaded.Instructions)
 	}
 }
@@ -232,7 +231,6 @@ func TestPromptAgentToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -291,7 +289,6 @@ func TestPromptAgentToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)
@@ -352,7 +349,7 @@ func TestPromptAgentLoadJSON1(t *testing.T) {
 	if instance.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, instance.Kind)
 	}
-	if instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if instance.Instructions == nil || *instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, instance.Instructions)
 	}
 }
@@ -408,7 +405,7 @@ instructions: |-
 	if instance.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, instance.Kind)
 	}
-	if instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if instance.Instructions == nil || *instance.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, instance.Instructions)
 	}
 }
@@ -459,7 +456,6 @@ func TestPromptAgentRoundtrip1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -470,7 +466,7 @@ func TestPromptAgentRoundtrip1(t *testing.T) {
 	if reloaded.Kind != "prompt" {
 		t.Errorf(`Expected Kind to be "prompt", got %v`, reloaded.Kind)
 	}
-	if reloaded.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
+	if reloaded.Instructions == nil || *reloaded.Instructions != "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}" {
 		t.Errorf(`Expected Instructions to be "system:\nYou are an AI assistant who helps people find information.\nAs the assistant, you answer questions briefly, succinctly,\nand in a personable manner using markdown and even add some \npersonal flair with appropriate emojis.\n\n# Customer\nYou are helping {{firstName}} {{lastName}} to find answers to \ntheir questions. Use their name to address them in your responses.\nuser:\n{{question}}", got %v`, reloaded.Instructions)
 	}
 }
@@ -521,7 +517,6 @@ func TestPromptAgentToJSON1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -579,7 +574,6 @@ func TestPromptAgentToYAML1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load PromptAgent: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

@@ -43,10 +43,10 @@ func TestModelLoadJSON(t *testing.T) {
 	if instance.Id != "gpt-35-turbo" {
 		t.Errorf(`Expected Id to be "gpt-35-turbo", got %v`, instance.Id)
 	}
-	if instance.Provider != "azure" {
+	if instance.Provider == nil || *instance.Provider != "azure" {
 		t.Errorf(`Expected Provider to be "azure", got %v`, instance.Provider)
 	}
-	if instance.ApiType != "chat" {
+	if instance.ApiType == nil || *instance.ApiType != "chat" {
 		t.Errorf(`Expected ApiType to be "chat", got %v`, instance.ApiType)
 	}
 }
@@ -80,10 +80,10 @@ options:
 	if instance.Id != "gpt-35-turbo" {
 		t.Errorf(`Expected Id to be "gpt-35-turbo", got %v`, instance.Id)
 	}
-	if instance.Provider != "azure" {
+	if instance.Provider == nil || *instance.Provider != "azure" {
 		t.Errorf(`Expected Provider to be "azure", got %v`, instance.Provider)
 	}
-	if instance.ApiType != "chat" {
+	if instance.ApiType == nil || *instance.ApiType != "chat" {
 		t.Errorf(`Expected ApiType to be "chat", got %v`, instance.ApiType)
 	}
 }
@@ -117,7 +117,6 @@ func TestModelRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Model: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -128,10 +127,10 @@ func TestModelRoundtrip(t *testing.T) {
 	if reloaded.Id != "gpt-35-turbo" {
 		t.Errorf(`Expected Id to be "gpt-35-turbo", got %v`, reloaded.Id)
 	}
-	if reloaded.Provider != "azure" {
+	if reloaded.Provider == nil || *reloaded.Provider != "azure" {
 		t.Errorf(`Expected Provider to be "azure", got %v`, reloaded.Provider)
 	}
-	if reloaded.ApiType != "chat" {
+	if reloaded.ApiType == nil || *reloaded.ApiType != "chat" {
 		t.Errorf(`Expected ApiType to be "chat", got %v`, reloaded.ApiType)
 	}
 }
@@ -165,7 +164,6 @@ func TestModelToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Model: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -206,7 +204,6 @@ func TestModelToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Model: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

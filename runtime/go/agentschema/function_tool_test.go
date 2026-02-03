@@ -48,7 +48,7 @@ func TestFunctionToolLoadJSON(t *testing.T) {
 	if instance.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -84,7 +84,7 @@ strict: true
 	if instance.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -123,7 +123,6 @@ func TestFunctionToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -134,7 +133,7 @@ func TestFunctionToolRoundtrip(t *testing.T) {
 	if reloaded.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, reloaded.Kind)
 	}
-	if reloaded.Strict != true {
+	if reloaded.Strict == nil || *reloaded.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
@@ -173,7 +172,6 @@ func TestFunctionToolToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -219,7 +217,6 @@ func TestFunctionToolToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)
@@ -271,7 +268,7 @@ func TestFunctionToolLoadJSON1(t *testing.T) {
 	if instance.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -307,7 +304,7 @@ strict: true
 	if instance.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -349,7 +346,6 @@ func TestFunctionToolRoundtrip1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -360,7 +356,7 @@ func TestFunctionToolRoundtrip1(t *testing.T) {
 	if reloaded.Kind != "function" {
 		t.Errorf(`Expected Kind to be "function", got %v`, reloaded.Kind)
 	}
-	if reloaded.Strict != true {
+	if reloaded.Strict == nil || *reloaded.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
@@ -402,7 +398,6 @@ func TestFunctionToolToJSON1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -451,7 +446,6 @@ func TestFunctionToolToYAML1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FunctionTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

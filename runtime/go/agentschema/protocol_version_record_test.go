@@ -80,7 +80,6 @@ func TestProtocolVersionRecordRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ProtocolVersionRecord: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -114,7 +113,6 @@ func TestProtocolVersionRecordToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ProtocolVersionRecord: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -144,7 +142,6 @@ func TestProtocolVersionRecordToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ProtocolVersionRecord: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

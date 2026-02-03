@@ -71,7 +71,6 @@ func TestMcpServerToolNeverRequireApprovalModeRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolNeverRequireApprovalMode: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -101,7 +100,6 @@ func TestMcpServerToolNeverRequireApprovalModeToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolNeverRequireApprovalMode: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -130,7 +128,6 @@ func TestMcpServerToolNeverRequireApprovalModeToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolNeverRequireApprovalMode: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

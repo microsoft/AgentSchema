@@ -43,28 +43,28 @@ func TestModelOptionsLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ModelOptions: %v", err)
 	}
-	if instance.FrequencyPenalty != 0.5 {
+	if instance.FrequencyPenalty == nil || *instance.FrequencyPenalty != 0.5 {
 		t.Errorf(`Expected FrequencyPenalty to be 0.5, got %v`, instance.FrequencyPenalty)
 	}
-	if instance.MaxOutputTokens != 2048 {
+	if instance.MaxOutputTokens == nil || *instance.MaxOutputTokens != 2048 {
 		t.Errorf(`Expected MaxOutputTokens to be 2048, got %v`, instance.MaxOutputTokens)
 	}
-	if instance.PresencePenalty != 0.3 {
+	if instance.PresencePenalty == nil || *instance.PresencePenalty != 0.3 {
 		t.Errorf(`Expected PresencePenalty to be 0.3, got %v`, instance.PresencePenalty)
 	}
-	if instance.Seed != 42 {
+	if instance.Seed == nil || *instance.Seed != 42 {
 		t.Errorf(`Expected Seed to be 42, got %v`, instance.Seed)
 	}
-	if instance.Temperature != 0.7 {
+	if instance.Temperature == nil || *instance.Temperature != 0.7 {
 		t.Errorf(`Expected Temperature to be 0.7, got %v`, instance.Temperature)
 	}
-	if instance.TopK != 40 {
+	if instance.TopK == nil || *instance.TopK != 40 {
 		t.Errorf(`Expected TopK to be 40, got %v`, instance.TopK)
 	}
-	if instance.TopP != 0.9 {
+	if instance.TopP == nil || *instance.TopP != 0.9 {
 		t.Errorf(`Expected TopP to be 0.9, got %v`, instance.TopP)
 	}
-	if instance.AllowMultipleToolCalls != true {
+	if instance.AllowMultipleToolCalls == nil || *instance.AllowMultipleToolCalls != true {
 		t.Errorf(`Expected AllowMultipleToolCalls to be true, got %v`, instance.AllowMultipleToolCalls)
 	}
 }
@@ -99,28 +99,28 @@ additionalProperties:
 	if err != nil {
 		t.Fatalf("Failed to load ModelOptions: %v", err)
 	}
-	if instance.FrequencyPenalty != 0.5 {
+	if instance.FrequencyPenalty == nil || *instance.FrequencyPenalty != 0.5 {
 		t.Errorf(`Expected FrequencyPenalty to be 0.5, got %v`, instance.FrequencyPenalty)
 	}
-	if instance.MaxOutputTokens != 2048 {
+	if instance.MaxOutputTokens == nil || *instance.MaxOutputTokens != 2048 {
 		t.Errorf(`Expected MaxOutputTokens to be 2048, got %v`, instance.MaxOutputTokens)
 	}
-	if instance.PresencePenalty != 0.3 {
+	if instance.PresencePenalty == nil || *instance.PresencePenalty != 0.3 {
 		t.Errorf(`Expected PresencePenalty to be 0.3, got %v`, instance.PresencePenalty)
 	}
-	if instance.Seed != 42 {
+	if instance.Seed == nil || *instance.Seed != 42 {
 		t.Errorf(`Expected Seed to be 42, got %v`, instance.Seed)
 	}
-	if instance.Temperature != 0.7 {
+	if instance.Temperature == nil || *instance.Temperature != 0.7 {
 		t.Errorf(`Expected Temperature to be 0.7, got %v`, instance.Temperature)
 	}
-	if instance.TopK != 40 {
+	if instance.TopK == nil || *instance.TopK != 40 {
 		t.Errorf(`Expected TopK to be 40, got %v`, instance.TopK)
 	}
-	if instance.TopP != 0.9 {
+	if instance.TopP == nil || *instance.TopP != 0.9 {
 		t.Errorf(`Expected TopP to be 0.9, got %v`, instance.TopP)
 	}
-	if instance.AllowMultipleToolCalls != true {
+	if instance.AllowMultipleToolCalls == nil || *instance.AllowMultipleToolCalls != true {
 		t.Errorf(`Expected AllowMultipleToolCalls to be true, got %v`, instance.AllowMultipleToolCalls)
 	}
 }
@@ -157,7 +157,6 @@ func TestModelOptionsRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ModelOptions: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -165,28 +164,28 @@ func TestModelOptionsRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to reload ModelOptions: %v", err)
 	}
-	if reloaded.FrequencyPenalty != 0.5 {
+	if reloaded.FrequencyPenalty == nil || *reloaded.FrequencyPenalty != 0.5 {
 		t.Errorf(`Expected FrequencyPenalty to be 0.5, got %v`, reloaded.FrequencyPenalty)
 	}
-	if reloaded.MaxOutputTokens != 2048 {
+	if reloaded.MaxOutputTokens == nil || *reloaded.MaxOutputTokens != 2048 {
 		t.Errorf(`Expected MaxOutputTokens to be 2048, got %v`, reloaded.MaxOutputTokens)
 	}
-	if reloaded.PresencePenalty != 0.3 {
+	if reloaded.PresencePenalty == nil || *reloaded.PresencePenalty != 0.3 {
 		t.Errorf(`Expected PresencePenalty to be 0.3, got %v`, reloaded.PresencePenalty)
 	}
-	if reloaded.Seed != 42 {
+	if reloaded.Seed == nil || *reloaded.Seed != 42 {
 		t.Errorf(`Expected Seed to be 42, got %v`, reloaded.Seed)
 	}
-	if reloaded.Temperature != 0.7 {
+	if reloaded.Temperature == nil || *reloaded.Temperature != 0.7 {
 		t.Errorf(`Expected Temperature to be 0.7, got %v`, reloaded.Temperature)
 	}
-	if reloaded.TopK != 40 {
+	if reloaded.TopK == nil || *reloaded.TopK != 40 {
 		t.Errorf(`Expected TopK to be 40, got %v`, reloaded.TopK)
 	}
-	if reloaded.TopP != 0.9 {
+	if reloaded.TopP == nil || *reloaded.TopP != 0.9 {
 		t.Errorf(`Expected TopP to be 0.9, got %v`, reloaded.TopP)
 	}
-	if reloaded.AllowMultipleToolCalls != true {
+	if reloaded.AllowMultipleToolCalls == nil || *reloaded.AllowMultipleToolCalls != true {
 		t.Errorf(`Expected AllowMultipleToolCalls to be true, got %v`, reloaded.AllowMultipleToolCalls)
 	}
 }
@@ -223,7 +222,6 @@ func TestModelOptionsToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ModelOptions: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -267,7 +265,6 @@ func TestModelOptionsToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ModelOptions: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

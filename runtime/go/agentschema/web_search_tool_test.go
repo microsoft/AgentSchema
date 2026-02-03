@@ -99,7 +99,6 @@ func TestWebSearchToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load WebSearchTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -139,7 +138,6 @@ func TestWebSearchToolToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load WebSearchTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -178,7 +176,6 @@ func TestWebSearchToolToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load WebSearchTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

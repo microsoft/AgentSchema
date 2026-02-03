@@ -89,7 +89,6 @@ func TestApiKeyConnectionRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ApiKeyConnection: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -127,7 +126,6 @@ func TestApiKeyConnectionToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ApiKeyConnection: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -158,7 +156,6 @@ func TestApiKeyConnectionToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ApiKeyConnection: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

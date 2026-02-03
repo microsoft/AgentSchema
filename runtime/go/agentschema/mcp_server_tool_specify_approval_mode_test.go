@@ -87,7 +87,6 @@ func TestMcpServerToolSpecifyApprovalModeRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolSpecifyApprovalMode: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -123,7 +122,6 @@ func TestMcpServerToolSpecifyApprovalModeToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolSpecifyApprovalMode: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -158,7 +156,6 @@ func TestMcpServerToolSpecifyApprovalModeToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpServerToolSpecifyApprovalMode: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

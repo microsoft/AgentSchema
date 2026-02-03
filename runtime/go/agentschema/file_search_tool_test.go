@@ -45,13 +45,13 @@ func TestFileSearchToolLoadJSON(t *testing.T) {
 	if instance.Kind != "file_search" {
 		t.Errorf(`Expected Kind to be "file_search", got %v`, instance.Kind)
 	}
-	if instance.MaximumResultCount != 10 {
+	if instance.MaximumResultCount == nil || *instance.MaximumResultCount != 10 {
 		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, instance.MaximumResultCount)
 	}
-	if instance.Ranker != "auto" {
+	if instance.Ranker == nil || *instance.Ranker != "auto" {
 		t.Errorf(`Expected Ranker to be "auto", got %v`, instance.Ranker)
 	}
-	if instance.ScoreThreshold != 0.5 {
+	if instance.ScoreThreshold == nil || *instance.ScoreThreshold != 0.5 {
 		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, instance.ScoreThreshold)
 	}
 }
@@ -86,13 +86,13 @@ filters:
 	if instance.Kind != "file_search" {
 		t.Errorf(`Expected Kind to be "file_search", got %v`, instance.Kind)
 	}
-	if instance.MaximumResultCount != 10 {
+	if instance.MaximumResultCount == nil || *instance.MaximumResultCount != 10 {
 		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, instance.MaximumResultCount)
 	}
-	if instance.Ranker != "auto" {
+	if instance.Ranker == nil || *instance.Ranker != "auto" {
 		t.Errorf(`Expected Ranker to be "auto", got %v`, instance.Ranker)
 	}
-	if instance.ScoreThreshold != 0.5 {
+	if instance.ScoreThreshold == nil || *instance.ScoreThreshold != 0.5 {
 		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, instance.ScoreThreshold)
 	}
 }
@@ -128,7 +128,6 @@ func TestFileSearchToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FileSearchTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -139,13 +138,13 @@ func TestFileSearchToolRoundtrip(t *testing.T) {
 	if reloaded.Kind != "file_search" {
 		t.Errorf(`Expected Kind to be "file_search", got %v`, reloaded.Kind)
 	}
-	if reloaded.MaximumResultCount != 10 {
+	if reloaded.MaximumResultCount == nil || *reloaded.MaximumResultCount != 10 {
 		t.Errorf(`Expected MaximumResultCount to be 10, got %v`, reloaded.MaximumResultCount)
 	}
-	if reloaded.Ranker != "auto" {
+	if reloaded.Ranker == nil || *reloaded.Ranker != "auto" {
 		t.Errorf(`Expected Ranker to be "auto", got %v`, reloaded.Ranker)
 	}
-	if reloaded.ScoreThreshold != 0.5 {
+	if reloaded.ScoreThreshold == nil || *reloaded.ScoreThreshold != 0.5 {
 		t.Errorf(`Expected ScoreThreshold to be 0.5, got %v`, reloaded.ScoreThreshold)
 	}
 }
@@ -181,7 +180,6 @@ func TestFileSearchToolToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FileSearchTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -224,7 +222,6 @@ func TestFileSearchToolToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load FileSearchTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

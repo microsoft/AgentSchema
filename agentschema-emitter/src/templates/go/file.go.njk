@@ -29,7 +29,7 @@ import (
 {%- endif %}
 type {{ class.node.typeName.name }} struct {
 {%- for prop in class.node.properties %}
-	{{ go.propName(prop.name) }} {{ go.goType(prop, typeMapper) }} {{ go.structTags(prop) }}
+	{{ go.propName(prop.name) }} {{ go.goType(prop, typeMapper, polymorphicTypeNames) }} {{ go.structTags(prop) }}
 {%- endfor %}
 }
 
@@ -86,7 +86,7 @@ func Load{{ class.node.typeName.name }}(data interface{}, ctx *LoadContext) ({{ 
 func (obj *{{ class.node.typeName.name }}) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
 {%- for prop in class.node.properties %}
-	{{ go.saveProperty(prop) }}
+	{{ go.saveProperty(prop, polymorphicTypeNames) }}
 {%- endfor %}
 	
 	return result

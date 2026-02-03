@@ -79,7 +79,6 @@ func TestParserRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Parser: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -112,7 +111,6 @@ func TestParserToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Parser: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -144,7 +142,6 @@ func TestParserToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Parser: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

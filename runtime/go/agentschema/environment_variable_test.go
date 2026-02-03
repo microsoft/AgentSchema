@@ -80,7 +80,6 @@ func TestEnvironmentVariableRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load EnvironmentVariable: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -114,7 +113,6 @@ func TestEnvironmentVariableToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load EnvironmentVariable: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -144,7 +142,6 @@ func TestEnvironmentVariableToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load EnvironmentVariable: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

@@ -82,7 +82,6 @@ func TestCodeInterpreterToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load CodeInterpreterTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -116,7 +115,6 @@ func TestCodeInterpreterToolToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load CodeInterpreterTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -149,7 +147,6 @@ func TestCodeInterpreterToolToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load CodeInterpreterTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

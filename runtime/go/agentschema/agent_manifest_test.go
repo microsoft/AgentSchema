@@ -79,7 +79,7 @@ func TestAgentManifestLoadJSON(t *testing.T) {
 	if instance.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
-	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if instance.Description == nil || *instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
@@ -137,7 +137,7 @@ resources:
 	if instance.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
-	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if instance.Description == nil || *instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
@@ -204,7 +204,6 @@ func TestAgentManifestRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -218,7 +217,7 @@ func TestAgentManifestRoundtrip(t *testing.T) {
 	if reloaded.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, reloaded.DisplayName)
 	}
-	if reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if reloaded.Description == nil || *reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, reloaded.Description)
 	}
 }
@@ -285,7 +284,6 @@ func TestAgentManifestToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -359,7 +357,6 @@ func TestAgentManifestToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)
@@ -441,7 +438,7 @@ func TestAgentManifestLoadJSON1(t *testing.T) {
 	if instance.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
-	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if instance.Description == nil || *instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
@@ -499,7 +496,7 @@ resources:
 	if instance.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, instance.DisplayName)
 	}
-	if instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if instance.Description == nil || *instance.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, instance.Description)
 	}
 }
@@ -568,7 +565,6 @@ func TestAgentManifestRoundtrip1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -582,7 +578,7 @@ func TestAgentManifestRoundtrip1(t *testing.T) {
 	if reloaded.DisplayName != "My Basic Prompt" {
 		t.Errorf(`Expected DisplayName to be "My Basic Prompt", got %v`, reloaded.DisplayName)
 	}
-	if reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
+	if reloaded.Description == nil || *reloaded.Description != "A basic prompt that uses the GPT-3 chat API to answer questions" {
 		t.Errorf(`Expected Description to be "A basic prompt that uses the GPT-3 chat API to answer questions", got %v`, reloaded.Description)
 	}
 }
@@ -651,7 +647,6 @@ func TestAgentManifestToJSON1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -727,7 +722,6 @@ func TestAgentManifestToYAML1(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load AgentManifest: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

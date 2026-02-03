@@ -35,7 +35,7 @@ func TestFormatLoadJSON(t *testing.T) {
 	if instance.Kind != "mustache" {
 		t.Errorf(`Expected Kind to be "mustache", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -62,7 +62,7 @@ options:
 	if instance.Kind != "mustache" {
 		t.Errorf(`Expected Kind to be "mustache", got %v`, instance.Kind)
 	}
-	if instance.Strict != true {
+	if instance.Strict == nil || *instance.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, instance.Strict)
 	}
 }
@@ -88,7 +88,6 @@ func TestFormatRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Format: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -99,7 +98,7 @@ func TestFormatRoundtrip(t *testing.T) {
 	if reloaded.Kind != "mustache" {
 		t.Errorf(`Expected Kind to be "mustache", got %v`, reloaded.Kind)
 	}
-	if reloaded.Strict != true {
+	if reloaded.Strict == nil || *reloaded.Strict != true {
 		t.Errorf(`Expected Strict to be true, got %v`, reloaded.Strict)
 	}
 }
@@ -125,7 +124,6 @@ func TestFormatToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Format: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -158,7 +156,6 @@ func TestFormatToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load Format: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

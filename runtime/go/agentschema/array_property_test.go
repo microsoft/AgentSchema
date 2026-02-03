@@ -30,6 +30,7 @@ func TestArrayPropertyLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ArrayProperty: %v", err)
 	}
+	_ = instance // No scalar properties to validate
 }
 
 // TestArrayPropertyLoadYAML tests loading ArrayProperty from YAML
@@ -49,6 +50,7 @@ items:
 	if err != nil {
 		t.Fatalf("Failed to load ArrayProperty: %v", err)
 	}
+	_ = instance // No scalar properties to validate
 }
 
 // TestArrayPropertyRoundtrip tests load -> save -> load produces equivalent data
@@ -70,7 +72,6 @@ func TestArrayPropertyRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ArrayProperty: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -78,6 +79,7 @@ func TestArrayPropertyRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to reload ArrayProperty: %v", err)
 	}
+	_ = reloaded // No scalar properties to validate
 }
 
 // TestArrayPropertyToJSON tests that ToJSON produces valid JSON
@@ -99,7 +101,6 @@ func TestArrayPropertyToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ArrayProperty: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -130,7 +131,6 @@ func TestArrayPropertyToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ArrayProperty: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)

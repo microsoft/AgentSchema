@@ -48,7 +48,9 @@ func LoadTemplate(data interface{}, ctx *LoadContext) (Template, error) {
 // Save serializes Template to map[string]interface{}
 func (obj *Template) Save(ctx *SaveContext) map[string]interface{} {
 	result := make(map[string]interface{})
+
 	result["format"] = obj.Format.Save(ctx)
+
 	result["parser"] = obj.Parser.Save(ctx)
 
 	return result

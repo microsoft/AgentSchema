@@ -46,7 +46,7 @@ func TestMcpToolLoadJSON(t *testing.T) {
 	if instance.ServerName != "My MCP Server" {
 		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, instance.ServerName)
 	}
-	if instance.ServerDescription != "This tool allows access to MCP services." {
+	if instance.ServerDescription == nil || *instance.ServerDescription != "This tool allows access to MCP services." {
 		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, instance.ServerDescription)
 	}
 }
@@ -82,7 +82,7 @@ allowedTools:
 	if instance.ServerName != "My MCP Server" {
 		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, instance.ServerName)
 	}
-	if instance.ServerDescription != "This tool allows access to MCP services." {
+	if instance.ServerDescription == nil || *instance.ServerDescription != "This tool allows access to MCP services." {
 		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, instance.ServerDescription)
 	}
 }
@@ -116,7 +116,6 @@ func TestMcpToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpTool: %v", err)
 	}
-
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
@@ -130,7 +129,7 @@ func TestMcpToolRoundtrip(t *testing.T) {
 	if reloaded.ServerName != "My MCP Server" {
 		t.Errorf(`Expected ServerName to be "My MCP Server", got %v`, reloaded.ServerName)
 	}
-	if reloaded.ServerDescription != "This tool allows access to MCP services." {
+	if reloaded.ServerDescription == nil || *reloaded.ServerDescription != "This tool allows access to MCP services." {
 		t.Errorf(`Expected ServerDescription to be "This tool allows access to MCP services.", got %v`, reloaded.ServerDescription)
 	}
 }
@@ -164,7 +163,6 @@ func TestMcpToolToJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpTool: %v", err)
 	}
-
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
 		t.Fatalf("Failed to convert to JSON: %v", err)
@@ -205,7 +203,6 @@ func TestMcpToolToYAML(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load McpTool: %v", err)
 	}
-
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {
 		t.Fatalf("Failed to convert to YAML: %v", err)
