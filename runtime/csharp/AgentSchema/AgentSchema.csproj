@@ -7,7 +7,7 @@
     
     <!-- Package metadata -->
     <PackageId>AgentSchema</PackageId>
-    <Version>1.0.0-beta.4</Version>
+    <Version>1.0.0-beta.5</Version>
     <Authors>Microsoft</Authors>
     <Company>Microsoft</Company>
     <Description>A declarative specification for defining AI agents in a code-first YAML format. Provides strongly-typed C# classes for loading, manipulating, and saving agent definitions.</Description>
