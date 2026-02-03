@@ -40,11 +40,13 @@ instructions: You are a helpful assistant.
 ");
 
 // Load from JSON
-var jsonAgent = AgentDefinition.FromJson(@"{
-  ""name"": ""my-agent"",
-  ""model"": ""gpt-4o"",
-  ""instructions"": ""You are a helpful assistant.""
-}");
+var jsonAgent = AgentDefinition.FromJson("""
+{
+  "name": "my-agent",
+  "model": "gpt-4o",
+  "instructions": "You are a helpful assistant."
+}
+""");
 
 Console.WriteLine(agent.Name);  // "my-agent"
 Console.WriteLine(agent.Model); // "gpt-4o"
