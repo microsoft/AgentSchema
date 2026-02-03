@@ -167,3 +167,22 @@ Files in `docs/src/content/docs/contributing/` are manually maintained. Ensure:
 1. Code blocks have language identifiers
 2. Lists use dashes (`-`)
 3. Single blank lines between sections
+
+## Git Release Tags
+
+When creating release tags, always use **annotated tags** with a message:
+
+```bash
+# Correct - annotated tag with message
+git tag -a "csharp-v1.0.0-beta.4" -m "C# SDK v1.0.0-beta.4: description of changes"
+
+# Wrong - lightweight tag (no message)
+git tag "csharp-v1.0.0-beta.4"
+```
+
+Tag naming conventions:
+
+- **C#**: `csharp-v1.0.0-beta.X`
+- **Python**: `python-v1.0.0bX` (PEP 440 format)
+- **TypeScript**: `typescript-v1.0.0-beta.X`
+- **Docs**: `docs-v1.0.0-beta.X`
