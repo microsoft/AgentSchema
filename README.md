@@ -35,7 +35,7 @@ To set up the project locally (once forked), follow these steps:
 - run `npm install` in `agentschema` folder
 - run `uv venv` and `uv sync --all-extras` in the `runtime/python/agentschema` folder
 
-This will set up all the respective dependencies for the emitter and runtime code. Make sure to also install the [dotnet SDK](https://dotnet.microsoft.com/en-us/download) if you want to build and test the C# code as well as [Node.js](https://nodejs.org/en/download/) if you want to build the emitter and [Python](https://www.python.org/downloads/) if you want to run the Python code (with `uv`).
+This will set up all the respective dependencies for the emitter and runtime code. Make sure to also install the [dotnet SDK](https://dotnet.microsoft.com/en-us/download) if you want to build and test the C# code, [Node.js](https://nodejs.org/en/download/) if you want to build the emitter, [Python](https://www.python.org/downloads/) if you want to run the Python code (with `uv`), and [Go](https://go.dev/dl/) if you want to build and test the Go code.
 
 ## Running the emitter
 
