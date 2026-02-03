@@ -3,11 +3,24 @@ title: Guide
 description: Comprehensive guides for getting started with AgentSchema and building your first agents.
 ---
 
+import { Card, CardGrid, FileTree } from '@astrojs/starlight/components';
+
 Welcome to the AgentSchema guides! This section provides step-by-step tutorials and comprehensive documentation to help you get started with AgentSchema.
 
 ## About AgentSchema
 
-AgentSchema is a declarative specification format for defining AI agents and their capabilities. It provides a standardized way to describe agent behavior, tools, connections, and resources in a structured, platform-agnostic manner. With AgentSchema, you can:
+AgentSchema is a declarative specification format for defining AI agents and their capabilities. It provides a standardized way to describe agent behavior, tools, connections, and resources in a structured, platform-agnostic manner.
+
+```mermaid
+flowchart TD
+    A[Agent YAML] --> B[AgentSchema SDK]
+    B --> C{Runtime}
+    C --> D[Microsoft Foundry]
+    C --> E[Copilot Studio]
+    C --> F[Custom Runtime]
+```
+
+With AgentSchema, you can:
 
 - **Define Agent Behavior**: Specify prompts, instructions, and conversation flows
 - **Configure Tools**: Integrate external APIs, functions, and services
@@ -15,17 +28,47 @@ AgentSchema is a declarative specification format for defining AI agents and the
 - **Template Variables**: Create reusable, configurable agent definitions
 - **Cross-Platform Support**: Deploy agents across different runtime environments
 
-AgentSchema enables you to build sophisticated AI agents with clear, maintainable specifications that can be version-controlled, shared, and deployed consistently across different platforms.
-
 ## Examples
 
-Explore real-world examples to understand how AgentSchema works in practice. Each example demonstrates different capabilities and tool integrations.
+Explore real-world examples to understand how AgentSchema works in practice:
 
-### Available Examples
+<FileTree>
 
-- **[Analyst Agent](analyst-agent/)** (`examples/analyst/`) - Sales data analysis agent using Code Interpreter and File Search tools to analyze uploaded CSV files and provide insights on sales performance, customer trends, and product analysis
-- **[QnA Agent](qna-agent/)** (`examples/qna/`) - Question and answer system that uses Azure Cognitive Language Understanding (CLU) API and Question Answering API to extract intent and provide answers to business operation questions
-- **[Travel Agent](travel-agent/)** (`examples/travel/`) - Travel planning assistant that combines Bing Search for up-to-date information (weather, events, advisories) with TripAdvisor API for recommendations on destinations, attractions, hotels, and restaurants
+- examples/
+  - analyst/ Sales data analysis with Code Interpreter
+    - **analyst.yaml**
+    - analyst_manifest.yaml
+  - qna/ Q&A with Azure CLU
+    - **qna.yml**
+    - qna_manifest.yml
+  - travel/ Travel planning with APIs
+    - **travel.yaml**
+    - travel_manifest.yaml
+
+</FileTree>
+
+<CardGrid>
+  <Card title="📊 Analyst Agent" icon="document">
+    Sales data analysis using Code Interpreter and File Search tools.
+    
+    [View Example →](analyst-agent/)
+  </Card>
+  <Card title="❓ QnA Agent" icon="comment">
+    Question answering with Azure Cognitive Language Understanding.
+    
+    [View Example →](qna-agent/)
+  </Card>
+  <Card title="✈️ Travel Agent" icon="rocket">
+    Travel planning with Bing Search and TripAdvisor APIs.
+    
+    [View Example →](travel-agent/)
+  </Card>
+  <Card title="📖 Manifest vs Definition" icon="open-book">
+    Understanding when to use templates vs direct definitions.
+    
+    [Learn More →](example/)
+  </Card>
+</CardGrid>
 
 ## Reference Documentation
 

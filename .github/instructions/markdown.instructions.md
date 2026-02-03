@@ -5,6 +5,104 @@ description: "Markdown linting rules for documentation files"
 
 # Markdown Documentation Guidelines
 
+## Starlight Components
+
+When writing documentation, use Starlight components for rich content presentation.
+
+### File Trees
+
+Use the `<FileTree>` component for directory structures instead of ASCII art:
+
+```mdx
+import { FileTree } from '@astrojs/starlight/components';
+
+<FileTree>
+
+- src
+  - components
+    - **Header.astro** an important file
+    - Title.astro
+  - pages/
+  - …
+
+</FileTree>
+```
+
+- Use `**filename**` to highlight important files
+- Add comments after filenames for descriptions
+- Use `…` as placeholder for additional files
+- End directory names with `/` if they have no children listed
+
+### Steps
+
+Use the `<Steps>` component for numbered instructions and tutorials:
+
+```mdx
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. First step with explanation
+
+   ```bash
+   npm install agentschema
+   ```
+
+2. Second step with more detail
+
+3. Final step
+
+</Steps>
+```
+
+### Tabs
+
+Use `<Tabs>` and `<TabItem>` for language-specific examples:
+
+```mdx
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition } from 'agentschema';
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+    ```
+  </TabItem>
+</Tabs>
+```
+
+- Use `syncKey="language"` to sync tabs across the page
+- Available icons: `seti:python`, `seti:typescript`, `seti:csharp`
+
+### Mermaid Diagrams
+
+Use Mermaid for process flows, architecture diagrams, and relationships:
+
+```mdx
+```mermaid
+flowchart LR
+    A[YAML File] --> B[AgentDefinition]
+    B --> C[Runtime]
+    C --> D[Agent Execution]
+```
+```
+
+Common diagram types:
+- `flowchart LR/TD` - Process flows (left-right or top-down)
+- `sequenceDiagram` - API interactions and message flows
+- `classDiagram` - Object relationships
+- `stateDiagram-v2` - State machines
+
 ## Linting
 
 All markdown files in `docs/` must pass markdownlint. Run the linter with:

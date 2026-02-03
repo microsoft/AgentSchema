@@ -3,7 +3,20 @@ title: Analyst Agent Example
 description: Learn how to build a sales data analysis agent using Code Interpreter and File Search tools.
 ---
 
+import { FileTree, Steps } from '@astrojs/starlight/components';
+
 The Analyst Agent is a sales data analysis agent that demonstrates how to use Code Interpreter and File Search tools to analyze uploaded CSV files and provide insights on sales performance, customer trends, and product analysis.
+
+## Example Structure
+
+<FileTree>
+
+- examples/analyst/
+  - **analyst.yaml** the agent definition
+  - **analyst_manifest.yaml** parameterized template
+  - sales_data.csv sample data
+
+</FileTree>
 
 ## Agent Definition (`analyst.yaml`)
 
@@ -103,11 +116,40 @@ resources:
 
 ## How It Works
 
-1. **Data Upload**: Users upload CSV files containing sales data
-2. **File Indexing**: Files are indexed in vector stores for search capabilities
-3. **Analysis**: The agent uses Code Interpreter to run Python code for data analysis
-4. **Search**: File Search tool retrieves relevant information from uploaded documents
-5. **Insights**: Agent provides detailed analysis with explanations and citations
+```mermaid
+flowchart LR
+    A[📁 CSV Upload] --> B[📊 File Indexing]
+    B --> C[🔍 Vector Store]
+    C --> D[🤖 Agent]
+    D --> E[🐍 Code Interpreter]
+    D --> F[🔎 File Search]
+    E --> G[📈 Analysis Results]
+    F --> G
+```
+
+<Steps>
+
+1. **Data Upload**
+
+   Users upload CSV files containing sales data to the agent.
+
+2. **File Indexing**
+
+   Files are indexed in vector stores for semantic search capabilities.
+
+3. **Analysis Request**
+
+   User asks a question about the sales data.
+
+4. **Tool Execution**
+
+   The agent uses Code Interpreter to run Python code for data analysis, and File Search to retrieve relevant information.
+
+5. **Insights Delivery**
+
+   Agent provides detailed analysis with explanations and citations from the source data.
+
+</Steps>
 
 ## Use Cases
 
