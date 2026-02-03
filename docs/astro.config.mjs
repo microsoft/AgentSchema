@@ -40,21 +40,21 @@ export default defineConfig({
           },
         },
         {
-          label: "SDKs",
+          label: "Runtimes",
           autogenerate: {
-            directory: "sdks",
-          },
-        },
-        {
-          label: "Reference",
-          autogenerate: {
-            directory: "reference",
+            directory: "runtimes",
           },
         },
         {
           label: "Contributing",
           autogenerate: {
             directory: "contributing",
+          },
+        },
+        {
+          label: "Reference",
+          autogenerate: {
+            directory: "reference",
           },
         },
       ],

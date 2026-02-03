@@ -14,7 +14,7 @@ When writing documentation, use Starlight components for rich content presentati
 Use the `<FileTree>` component for directory structures instead of ASCII art:
 
 ```mdx
-import { FileTree } from '@astrojs/starlight/components';
+import { FileTree } from "@astrojs/starlight/components";
 
 <FileTree>
 
@@ -37,8 +37,8 @@ import { FileTree } from '@astrojs/starlight/components';
 
 Use the `<Steps>` component for numbered instructions and tutorials:
 
-```mdx
-import { Steps } from '@astrojs/starlight/components';
+````mdx
+import { Steps } from "@astrojs/starlight/components";
 
 <Steps>
 
@@ -47,6 +47,7 @@ import { Steps } from '@astrojs/starlight/components';
    ```bash
    npm install agentschema
    ```
+````
 
 2. Second step with more detail
 
@@ -59,27 +60,21 @@ import { Steps } from '@astrojs/starlight/components';
 
 Use `<Tabs>` and `<TabItem>` for language-specific examples:
 
-```mdx
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+````mdx
+import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 <Tabs syncKey="language">
   <TabItem label="Python" icon="seti:python">
-    ```python
-    from agentschema import AgentDefinition
-    ```
+    ```python from agentschema import AgentDefinition ```
   </TabItem>
   <TabItem label="TypeScript" icon="seti:typescript">
-    ```typescript
-    import { AgentDefinition } from 'agentschema';
-    ```
+    ```typescript import {AgentDefinition} from 'agentschema'; ```
   </TabItem>
   <TabItem label="C#" icon="seti:csharp">
-    ```csharp
-    using AgentSchema;
-    ```
+    ```csharp using AgentSchema; ```
   </TabItem>
 </Tabs>
-```
+````
 
 - Use `syncKey="language"` to sync tabs across the page
 - Available icons: `seti:python`, `seti:typescript`, `seti:csharp`
@@ -88,14 +83,16 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 Use Mermaid for process flows, architecture diagrams, and relationships:
 
-```mdx
+````mdx
 ```mermaid
 flowchart LR
     A[YAML File] --> B[AgentDefinition]
     B --> C[Runtime]
     C --> D[Agent Execution]
 ```
-```
+````
+
+````
 
 Common diagram types:
 - `flowchart LR/TD` - Process flows (left-right or top-down)
@@ -109,7 +106,7 @@ All markdown files in `docs/` must pass markdownlint. Run the linter with:
 
 ```bash
 npx markdownlint-cli2 "docs/src/content/docs/**/*.md"
-```
+````
 
 ## Key Rules
 
@@ -170,4 +167,3 @@ Files in `docs/src/content/docs/contributing/` are manually maintained. Ensure:
 1. Code blocks have language identifiers
 2. Lists use dashes (`-`)
 3. Single blank lines between sections
-

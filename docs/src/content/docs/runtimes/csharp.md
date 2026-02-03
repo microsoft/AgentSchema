@@ -1,9 +1,9 @@
 ---
-title: C# SDK
-description: Official C# / .NET SDK for AgentSchema - load, create, and manipulate agent definitions.
+title: C# Runtime
+description: Official C# / .NET runtime library for AgentSchema - load, create, and manipulate agent definitions.
 ---
 
-The C# SDK provides a strongly-typed interface for working with AgentSchema definitions in .NET applications.
+The C# runtime provides a strongly-typed interface for working with AgentSchema definitions in .NET applications.
 
 ## Installation
 

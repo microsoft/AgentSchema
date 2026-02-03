@@ -1,9 +1,9 @@
 ---
-title: Python SDK
-description: Official Python SDK for AgentSchema - load, create, and manipulate agent definitions.
+title: Python Runtime
+description: Official Python runtime library for AgentSchema - load, create, and manipulate agent definitions.
 ---
 
-The Python SDK provides a Pythonic interface for working with AgentSchema definitions, with full type hints and async support.
+The Python runtime provides a Pythonic interface for working with AgentSchema definitions, with full type hints and async support.
 
 ## Installation
 

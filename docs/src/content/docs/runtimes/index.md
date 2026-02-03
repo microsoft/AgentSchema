@@ -1,11 +1,11 @@
 ---
-title: SDKs
-description: Official SDKs for working with AgentSchema in your preferred programming language.
+title: Runtimes
+description: Official runtime libraries for working with AgentSchema in your preferred programming language.
 ---
 
-AgentSchema provides official SDKs for multiple programming languages, making it easy to load, create, and manipulate agent definitions programmatically.
+AgentSchema provides official runtime libraries for multiple programming languages, making it easy to load, create, and manipulate agent definitions programmatically.
 
-## Available SDKs
+## Available Runtimes
 
 | Language | Package | Status |
 |----------|---------|--------|
@@ -15,7 +15,7 @@ AgentSchema provides official SDKs for multiple programming languages, making it
 
 ## Common Features
 
-All SDKs provide a consistent set of features:
+All runtimes provide a consistent set of features:
 
 ### Loading Agent Definitions
 
@@ -53,9 +53,9 @@ Customize loading and saving behavior:
 - **`LoadContext`** - Pre/post processing during load operations
 - **`SaveContext`** - Control output format (shorthand, collection format)
 
-## Choosing an SDK
+## Choosing a Runtime
 
-Choose the SDK that matches your development environment:
+Choose the runtime that matches your development environment:
 
 - **TypeScript/JavaScript** - For Node.js applications, serverless functions, or web applications
 - **Python** - For data science workflows, AI/ML pipelines, or Python-based backends
@@ -65,6 +65,6 @@ Choose the SDK that matches your development environment:
 
 Select your language to get started:
 
-- [TypeScript SDK →](typescript/)
-- [Python SDK →](python/)
-- [C# SDK →](csharp/)
+- [TypeScript Runtime →](typescript/)
+- [Python Runtime →](python/)
+- [C# Runtime →](csharp/)

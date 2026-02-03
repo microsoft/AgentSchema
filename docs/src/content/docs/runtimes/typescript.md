@@ -1,9 +1,9 @@
 ---
-title: TypeScript SDK
-description: Official TypeScript/JavaScript SDK for AgentSchema - load, create, and manipulate agent definitions.
+title: TypeScript Runtime
+description: Official TypeScript/JavaScript runtime library for AgentSchema - load, create, and manipulate agent definitions.
 ---
 
-The TypeScript SDK provides a strongly-typed interface for working with AgentSchema definitions in Node.js and browser environments.
+The TypeScript runtime provides a strongly-typed interface for working with AgentSchema definitions in Node.js and browser environments.
 
 ## Installation
 
