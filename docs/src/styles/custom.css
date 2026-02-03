@@ -6,20 +6,22 @@
   --sl-color-accent-high: #a5b4fc;
 
   /* Modern typography enhancements */
-  --sl-font-system: system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --sl-font-mono: "JetBrains Mono", "Fira Code", Consolas, "Liberation Mono",
-    Menlo, Monaco, "Courier New", monospace;
+  --sl-font-system:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
+  --sl-font-mono:
+    "JetBrains Mono", "Fira Code", Consolas, "Liberation Mono", Menlo, Monaco,
+    "Courier New", monospace;
 
   /* Enhanced content width */
   --sl-content-width: 65rem;
 
   /* Modern shadows */
   --sl-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --sl-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --sl-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
-    0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --sl-shadow-md:
+    0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --sl-shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 /* Dark mode accent adjustments */
@@ -120,6 +122,51 @@ pre {
 
 :root[data-theme="dark"] pre {
   border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Clean tab styling - remove unsightly lines */
+starlight-tabs {
+  --sl-color-gray-5: transparent;
+}
+
+starlight-tabs [role="tablist"] {
+  border: none;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+  gap: 0;
+}
+
+starlight-tabs [role="tab"] {
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 0.5rem 1rem;
+  margin-bottom: -1px;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+starlight-tabs [role="tab"][aria-selected="true"] {
+  border: none !important;
+  border-bottom: 2px solid var(--sl-color-accent) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+starlight-tabs [role="tab"]:hover:not([aria-selected="true"]) {
+  border-bottom-color: var(--sl-color-gray-4) !important;
+}
+
+starlight-tabs [role="tabpanel"] {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Tab focus states - subtle underline instead of box outline */
+starlight-tabs [role="tab"]:focus,
+starlight-tabs [role="tab"]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-bottom: 2px solid var(--sl-color-accent) !important;
 }
 
 /* Table styling */
