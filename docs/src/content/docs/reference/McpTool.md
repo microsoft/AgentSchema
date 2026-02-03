@@ -53,19 +53,18 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for MCP tools  |
-| connection | [Connection](../connection/) | The connection configuration for the MCP tool  |
-| serverName | string | The server name of the MCP tool  |
-| serverDescription | string | The description of the MCP tool  |
-| approvalMode | [McpServerApprovalMode](../mcpserverapprovalmode/) | The approval mode for the MCP tool, either &#39;auto&#39; or &#39;manual&#39; (Related Types: [McpServerToolAlwaysRequireApprovalMode](../mcpservertoolalwaysrequireapprovalmode/), [McpServerToolNeverRequireApprovalMode](../mcpservertoolneverrequireapprovalmode/), [McpServerToolSpecifyApprovalMode](../mcpservertoolspecifyapprovalmode/)) |
-| allowedTools | string[] | List of allowed operations or resources for the MCP tool  |
+| kind | string | The kind identifier for MCP tools |
+| connection | [Connection](../connection/) | The connection configuration for the MCP tool |
+| serverName | string | The server name of the MCP tool |
+| serverDescription | string | The description of the MCP tool |
+| approvalMode | [McpServerApprovalMode](../mcpserverapprovalmode/) | The approval mode for the MCP tool, either &#39;auto&#39; or &#39;manual&#39;(Related Types: [McpServerToolAlwaysRequireApprovalMode](../mcpservertoolalwaysrequireapprovalmode/), [McpServerToolNeverRequireApprovalMode](../mcpservertoolneverrequireapprovalmode/), [McpServerToolSpecifyApprovalMode](../mcpservertoolspecifyapprovalmode/)) |
+| allowedTools | string[] | List of allowed operations or resources for the MCP tool |
 
 ## Composed Types
 

@@ -49,12 +49,11 @@ classDiagram
 
 ```yaml
 kind: workflow
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Type of agent, e.g., &#39;workflow&#39;  |
-| trigger | dictionary | The steps that make up the workflow  |
+| kind | string | Type of agent, e.g., &#39;workflow&#39; |
+| trigger | dictionary | The steps that make up the workflow |

@@ -11,28 +11,28 @@ public class PromptAgentConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "prompt"
-"model":
-  "id": "gpt-35-turbo"
-  "connection":
-    "kind": "key"
-    "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
-    "key": "{your-api-key}"
-"tools":
-  - "name": "getCurrentWeather"
-    "kind": "function"
-    "description": "Get the current weather in a given location"
-    "parameters":
-      "location":
-        "kind": "string"
-        "description": "The city and state, e.g. San Francisco, CA"
-      "unit":
-        "kind": "string"
-        "description": "The unit of temperature, e.g. Celsius or Fahrenheit"
-"template":
-  "format": "mustache"
-  "parser": "prompty"
-"instructions": "system:
+kind: prompt
+model:
+  id: gpt-35-turbo
+  connection:
+    kind: key
+    endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
+    key: "{your-api-key}"
+tools:
+  - name: getCurrentWeather
+    kind: function
+    description: Get the current weather in a given location
+    parameters:
+      location:
+        kind: string
+        description: The city and state, e.g. San Francisco, CA
+      unit:
+        kind: string
+        description: The unit of temperature, e.g. Celsius or Fahrenheit
+template:
+  format: mustache
+  parser: prompty
+instructions: "system:
 
   You are an AI assistant who helps people find information.
 
@@ -130,28 +130,28 @@ user:
     public void LoadYamlInput1()
     {
         string yamlData = """
-"kind": "prompt"
-"model":
-  "id": "gpt-35-turbo"
-  "connection":
-    "kind": "key"
-    "endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
-    "key": "{your-api-key}"
-"tools":
-  "getCurrentWeather":
-    "kind": "function"
-    "description": "Get the current weather in a given location"
-    "parameters":
-      "location":
-        "kind": "string"
-        "description": "The city and state, e.g. San Francisco, CA"
-      "unit":
-        "kind": "string"
-        "description": "The unit of temperature, e.g. Celsius or Fahrenheit"
-"template":
-  "format": "mustache"
-  "parser": "prompty"
-"instructions": "system:
+kind: prompt
+model:
+  id: gpt-35-turbo
+  connection:
+    kind: key
+    endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
+    key: "{your-api-key}"
+tools:
+  getCurrentWeather:
+    kind: function
+    description: Get the current weather in a given location
+    parameters:
+      location:
+        kind: string
+        description: The city and state, e.g. San Francisco, CA
+      unit:
+        kind: string
+        description: The unit of temperature, e.g. Celsius or Fahrenheit
+template:
+  format: mustache
+  parser: prompty
+instructions: "system:
 
   You are an AI assistant who helps people find information.
 

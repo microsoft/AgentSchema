@@ -11,9 +11,9 @@ public class ParserConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "prompty"
-"options":
-  "key": "value"
+kind: prompty
+options:
+  key: value
 
 """;
 

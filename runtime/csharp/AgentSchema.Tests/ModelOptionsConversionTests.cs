@@ -11,20 +11,20 @@ public class ModelOptionsConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"frequencyPenalty": 0.5
-"maxOutputTokens": 2048
-"presencePenalty": 0.3
-"seed": 42
-"temperature": 0.7
-"topK": 40
-"topP": 0.9
-"stopSequences":
+frequencyPenalty: 0.5
+maxOutputTokens: 2048
+presencePenalty: 0.3
+seed: 42
+temperature: 0.7
+topK: 40
+topP: 0.9
+stopSequences:
   - "\n"
   - "###"
-"allowMultipleToolCalls": true
-"additionalProperties":
-  "customProperty": "value"
-  "anotherProperty": "anotherValue"
+allowMultipleToolCalls: true
+additionalProperties:
+  customProperty: value
+  anotherProperty: anotherValue
 
 """;
 

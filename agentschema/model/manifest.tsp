@@ -1,7 +1,7 @@
 import "@agentschema/emitter";
 import "./agent.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 /**
  * The following represents a manifest that can be used to create agents dynamically.

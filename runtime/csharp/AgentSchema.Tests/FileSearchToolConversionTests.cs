@@ -11,18 +11,18 @@ public class FileSearchToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "file_search"
-"connection":
-  "kind": "reference"
-"vectorStoreIds":
-  - "vectorStore1"
-  - "vectorStore2"
-"maximumResultCount": 10
-"ranker": "auto"
-"scoreThreshold": 0.5
-"filters":
-  "fileType": "pdf"
-  "createdAfter": "2023-01-01"
+kind: file_search
+connection:
+  kind: reference
+vectorStoreIds:
+  - vectorStore1
+  - vectorStore2
+maximumResultCount: 10
+ranker: auto
+scoreThreshold: 0.5
+filters:
+  fileType: pdf
+  createdAfter: 2023-01-01
 
 """;
 

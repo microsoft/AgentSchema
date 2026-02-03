@@ -31,15 +31,14 @@ classDiagram
 kind: prompty
 options:
   key: value
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Parser used to process the rendered template into API-compatible format  |
-| options | dictionary | Options for the parser  |
+| kind | string | Parser used to process the rendered template into API-compatible format |
+| options | dictionary | Options for the parser |
 
 ## Alternate Constructions
 
@@ -54,7 +53,6 @@ The following simplified representation can be used:
 
 ```yaml
 parser: "example"
-
 ```
 
 This is equivalent to the full representation:
@@ -62,5 +60,4 @@ This is equivalent to the full representation:
 ```yaml
 parser:
   kind: "example"
-
 ```

@@ -58,16 +58,15 @@ protocols:
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Type of agent, e.g., &#39;hosted&#39;  |
-| protocols | [ProtocolVersionRecord[]](../protocolversionrecord/) | Protocol used by the containerized agent  |
-| environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container  |
+| kind | string | Type of agent, e.g., &#39;hosted&#39; |
+| protocols | [ProtocolVersionRecord[]](../protocolversionrecord/) | Protocol used by the containerized agent |
+| environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container |
 
 ## Composed Types
 

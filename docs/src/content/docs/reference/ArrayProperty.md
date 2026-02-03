@@ -50,15 +50,14 @@ classDiagram
 ```yaml
 items:
   kind: string
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string |   |
-| items | [Property](../property/) | The type of items contained in the array (Related Types: [ObjectProperty](../objectproperty/)) |
+| kind | string |  |
+| items | [Property](../property/) | The type of items contained in the array(Related Types: [ObjectProperty](../objectproperty/)) |
 
 ## Composed Types
 

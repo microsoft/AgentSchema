@@ -50,15 +50,14 @@ format:
   kind: mustache
 parser:
   kind: mustache
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| format | [Format](../format/) | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)  |
-| parser | [Parser](../parser/) | Parser used to process the rendered template into API-compatible format  |
+| format | [Format](../format/) | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2) |
+| parser | [Parser](../parser/) | Parser used to process the rendered template into API-compatible format |
 
 ## Composed Types
 

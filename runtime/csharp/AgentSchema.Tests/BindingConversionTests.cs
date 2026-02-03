@@ -11,8 +11,8 @@ public class BindingConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "my-tool"
-"input": "input-variable"
+name: my-tool
+input: input-variable
 
 """;
 

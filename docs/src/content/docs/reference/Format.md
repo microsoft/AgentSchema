@@ -33,16 +33,15 @@ kind: mustache
 strict: true
 options:
   key: value
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)  |
-| strict | boolean | Whether the template can emit structural text for parsing output  |
-| options | dictionary | Options for the template engine  |
+| kind | string | Template rendering engine used for slot filling prompts (e.g., mustache, jinja2) |
+| strict | boolean | Whether the template can emit structural text for parsing output |
+| options | dictionary | Options for the template engine |
 
 ## Alternate Constructions
 
@@ -57,7 +56,6 @@ The following simplified representation can be used:
 
 ```yaml
 format: "example"
-
 ```
 
 This is equivalent to the full representation:
@@ -65,5 +63,4 @@ This is equivalent to the full representation:
 ```yaml
 format:
   kind: "example"
-
 ```

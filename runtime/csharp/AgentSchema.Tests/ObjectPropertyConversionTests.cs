@@ -11,11 +11,11 @@ public class ObjectPropertyConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"properties":
-  "property1":
-    "kind": "string"
-  "property2":
-    "kind": "number"
+properties:
+  property1:
+    kind: string
+  property2:
+    kind: number
 
 """;
 

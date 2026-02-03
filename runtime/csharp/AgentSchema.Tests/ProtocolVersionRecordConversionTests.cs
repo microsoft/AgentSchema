@@ -11,8 +11,8 @@ public class ProtocolVersionRecordConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"protocol": "responses"
-"version": "v0.1.1"
+protocol: responses
+version: v0.1.1
 
 """;
 

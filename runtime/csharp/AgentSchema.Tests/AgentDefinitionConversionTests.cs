@@ -11,33 +11,33 @@ public class AgentDefinitionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "prompt"
-"name": "basic-prompt"
-"displayName": "Basic Prompt Agent"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"inputSchema":
-  "properties":
-    "firstName":
-      "kind": "string"
-      "value": "Jane"
-    "lastName":
-      "kind": "string"
-      "value": "Doe"
-    "question":
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"outputSchema":
-  "properties":
-    "answer":
-      "kind": "string"
-      "description": "The answer to the user's question."
+kind: prompt
+name: basic-prompt
+displayName: Basic Prompt Agent
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+inputSchema:
+  properties:
+    firstName:
+      kind: string
+      value: Jane
+    lastName:
+      kind: string
+      value: Doe
+    question:
+      kind: string
+      value: What is the meaning of life?
+outputSchema:
+  properties:
+    answer:
+      kind: string
+      description: The answer to the user's question.
 
 """;
 
@@ -107,33 +107,33 @@ public class AgentDefinitionConversionTests
     public void LoadYamlInput1()
     {
         string yamlData = """
-"kind": "prompt"
-"name": "basic-prompt"
-"displayName": "Basic Prompt Agent"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"inputSchema":
-  "properties":
-    "firstName":
-      "kind": "string"
-      "value": "Jane"
-    "lastName":
-      "kind": "string"
-      "value": "Doe"
-    "question":
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"outputSchema":
-  "properties":
-    - "name": "answer"
-      "kind": "string"
-      "description": "The answer to the user's question."
+kind: prompt
+name: basic-prompt
+displayName: Basic Prompt Agent
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+inputSchema:
+  properties:
+    firstName:
+      kind: string
+      value: Jane
+    lastName:
+      kind: string
+      value: Doe
+    question:
+      kind: string
+      value: What is the meaning of life?
+outputSchema:
+  properties:
+    - name: answer
+      kind: string
+      description: The answer to the user's question.
 
 """;
 
@@ -204,33 +204,33 @@ public class AgentDefinitionConversionTests
     public void LoadYamlInput2()
     {
         string yamlData = """
-"kind": "prompt"
-"name": "basic-prompt"
-"displayName": "Basic Prompt Agent"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"inputSchema":
-  "properties":
-    - "name": "firstName"
-      "kind": "string"
-      "value": "Jane"
-    - "name": "lastName"
-      "kind": "string"
-      "value": "Doe"
-    - "name": "question"
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"outputSchema":
-  "properties":
-    "answer":
-      "kind": "string"
-      "description": "The answer to the user's question."
+kind: prompt
+name: basic-prompt
+displayName: Basic Prompt Agent
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+inputSchema:
+  properties:
+    - name: firstName
+      kind: string
+      value: Jane
+    - name: lastName
+      kind: string
+      value: Doe
+    - name: question
+      kind: string
+      value: What is the meaning of life?
+outputSchema:
+  properties:
+    answer:
+      kind: string
+      description: The answer to the user's question.
 
 """;
 
@@ -303,33 +303,33 @@ public class AgentDefinitionConversionTests
     public void LoadYamlInput3()
     {
         string yamlData = """
-"kind": "prompt"
-"name": "basic-prompt"
-"displayName": "Basic Prompt Agent"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"inputSchema":
-  "properties":
-    - "name": "firstName"
-      "kind": "string"
-      "value": "Jane"
-    - "name": "lastName"
-      "kind": "string"
-      "value": "Doe"
-    - "name": "question"
-      "kind": "string"
-      "value": "What is the meaning of life?"
-"outputSchema":
-  "properties":
-    - "name": "answer"
-      "kind": "string"
-      "description": "The answer to the user's question."
+kind: prompt
+name: basic-prompt
+displayName: Basic Prompt Agent
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+inputSchema:
+  properties:
+    - name: firstName
+      kind: string
+      value: Jane
+    - name: lastName
+      kind: string
+      value: Doe
+    - name: question
+      kind: string
+      value: What is the meaning of life?
+outputSchema:
+  properties:
+    - name: answer
+      kind: string
+      description: The answer to the user's question.
 
 """;
 

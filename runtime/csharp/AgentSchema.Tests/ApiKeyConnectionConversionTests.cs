@@ -11,9 +11,9 @@ public class ApiKeyConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "key"
-"endpoint": "https://{your-custom-endpoint}.openai.azure.com/"
-"apiKey": "your-api-key"
+kind: key
+endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
+apiKey: your-api-key
 
 """;
 

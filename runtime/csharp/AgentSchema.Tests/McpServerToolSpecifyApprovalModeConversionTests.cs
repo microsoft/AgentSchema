@@ -11,11 +11,11 @@ public class McpServerToolSpecifyApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "specify"
-"alwaysRequireApprovalTools":
-  - "operation1"
-"neverRequireApprovalTools":
-  - "operation2"
+kind: specify
+alwaysRequireApprovalTools:
+  - operation1
+neverRequireApprovalTools:
+  - operation2
 
 """;
 

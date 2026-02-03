@@ -32,11 +32,10 @@ classDiagram
 
 ```yaml
 kind: always
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for always approval mode  |
+| kind | string | The kind identifier for always approval mode |

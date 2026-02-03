@@ -30,15 +30,14 @@ classDiagram
 ```yaml
 name: my-tool
 input: input-variable
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| name | string | Name of the binding  |
-| input | string | The input property that will be bound to the tool parameter argument  |
+| name | string | Name of the binding |
+| input | string | The input property that will be bound to the tool parameter argument |
 
 ## Alternate Constructions
 
@@ -51,7 +50,6 @@ The following simplified representation can be used:
 
 ```yaml
 value: "example"
-
 ```
 
 This is equivalent to the full representation:
@@ -59,5 +57,4 @@ This is equivalent to the full representation:
 ```yaml
 value:
   input: "example"
-
 ```

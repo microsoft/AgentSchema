@@ -11,9 +11,9 @@ public class ConnectionConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "reference"
-"authenticationMode": "system"
-"usageDescription": "This will allow the agent to respond to an email on your behalf"
+kind: reference
+authenticationMode: system
+usageDescription: This will allow the agent to respond to an email on your behalf
 
 """;
 

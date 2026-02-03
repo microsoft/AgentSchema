@@ -1,7 +1,7 @@
 import "@agentschema/emitter";
 import "./core.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 /**
  * Definition for the property schema of a model.
@@ -28,11 +28,12 @@ model PropertySchema {
 }
 
 /**
- * Represents a single property
- * * This model defines the structure of properties that can be used in prompts,
+ * Represents a single property.
+ *
+ * - This model defines the structure of properties that can be used in prompts,
  *   including their type, description, whether they are required, and other attributes.
- * * It allows for the definition of dynamic inputs that can be filled with data
- *  and processed to generate prompts for AI models.
+ * - It allows for the definition of dynamic inputs that can be filled with data
+ *   and processed to generate prompts for AI models.
  */
 @discriminator("kind")
 @shorthand(
@@ -45,7 +46,7 @@ model PropertySchema {
   integer,
   #{ kind: "integer", example: "{value}" },
   "input",
-  "Simple construction with just a kind of integer", 
+  "Simple construction with just a kind of integer",
   4
 )
 @shorthand(

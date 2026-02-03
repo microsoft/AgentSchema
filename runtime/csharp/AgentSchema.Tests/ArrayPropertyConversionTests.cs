@@ -11,8 +11,8 @@ public class ArrayPropertyConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"items":
-  "kind": "string"
+items:
+  kind: string
 
 """;
 

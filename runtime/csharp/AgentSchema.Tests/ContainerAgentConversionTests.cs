@@ -11,13 +11,13 @@ public class ContainerAgentConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "hosted"
-"protocols":
-  - "protocol": "responses"
-    "version": "v0.1.1"
-"environmentVariables":
-  - "name": "MY_ENV_VAR"
-    "value": "my-value"
+kind: hosted
+protocols:
+  - protocol: responses
+    version: v0.1.1
+environmentVariables:
+  - name: MY_ENV_VAR
+    value: my-value
 
 """;
 

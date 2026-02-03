@@ -11,7 +11,7 @@ public class McpServerApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "never"
+kind: never
 
 """;
 

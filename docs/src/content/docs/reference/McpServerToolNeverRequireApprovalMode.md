@@ -32,11 +32,10 @@ classDiagram
 
 ```yaml
 kind: never
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string | The kind identifier for never approval mode  |
+| kind | string | The kind identifier for never approval mode |

@@ -30,12 +30,11 @@ classDiagram
 ```yaml
 name: MY_ENV_VAR
 value: my-value
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| name | string | Name of the environment variable  |
-| value | string | Environment variable resolution  |
+| name | string | Name of the environment variable |
+| value | string | Environment variable resolution |

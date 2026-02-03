@@ -54,15 +54,14 @@ properties:
     kind: string
   property2:
     kind: number
-
 ```
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| kind | string |   |
-| properties | [Property[]](../property/) | The properties contained in the object  |
+| kind | string |  |
+| properties | [Property[]](../property/) | The properties contained in the object |
 
 ## Composed Types
 

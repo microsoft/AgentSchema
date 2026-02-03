@@ -51,6 +51,12 @@ export default defineConfig({
             directory: "reference",
           },
         },
+        {
+          label: "Contributing",
+          autogenerate: {
+            directory: "contributing",
+          },
+        },
       ],
     }),
   ],

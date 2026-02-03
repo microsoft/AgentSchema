@@ -49,71 +49,73 @@ classDiagram
     {{ node.typeName.name }} *-- {{ type.typeName.name }}
     {%- endfor %}
 ```
-{% if md %}
+{%- if md %}
+
 ## Markdown Example
 
 ```markdown
-{{ md | safe }}
+{{ md | safe | trim }}
 ```
-{% endif %}
+{%- endif %}
+{%- if yml %}
 
-{% if yml %}
 ## Yaml Example
 
 ```yaml
-{{ yml | safe }}
+{{ yml | safe | trim }}
 ```
-{% endif %}
-
-{% if node.properties.length > 0 %}
+{%- endif %}
+{%- if node.properties.length > 0 %}
 
 ## Properties
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-{% for prop in node.properties -%}
-| {{ prop.name }} | {{ renderType(prop) }} | {{ prop.description }} {{ renderChildTypes(prop) | safe }} |
-{% endfor -%}
-{% endif %}
+{%- for prop in node.properties %}
+| {{ prop.name }} | {{ renderType(prop) }} | {{ prop.description | trim }}{{ renderChildTypes(prop) | safe }} |
+{%- endfor %}
+{%- endif %}
+{%- if node.childTypes.length > 0 %}
 
-
-
-{% if node.childTypes.length > 0 %}
 ## Child Types
 
 The following types extend `{{ node.typeName.name }}`:
-
-{% for type in node.childTypes -%}
+{% for type in node.childTypes %}
 - [{{ type.typeName.name }}](../{{ type.typeName.name | lower }}/)
-{% endfor -%}
-{% endif %}
+{%- endfor %}
+{%- endif %}
+{%- if compositionTypes.length > 0 %}
 
-{% if compositionTypes.length > 0 %}
 ## Composed Types
+
 The following types are composed within `{{ node.typeName.name }}`:
-
-{% for type in compositionTypes -%}
+{% for type in compositionTypes %}
 - [{{ type.typeName.name }}](../{{ type.typeName.name | lower }}/)
-{% endfor -%}
-{% endif %}
+{%- endfor %}
+{%- endif %}
+{%- if alternateCtors.length > 0 %}
 
-{% if alternateCtors.length > 0 %}
 ## Alternate Constructions
 
-The following alternate constructions are available for `{{ node.typeName.name }}`. 
+The following alternate constructions are available for `{{ node.typeName.name }}`.
 These allow for simplified creation of instances using a single property.
+{%- for ctor in alternateCtors %}
 
-{% for ctor in alternateCtors -%}
-### {{ ctor.scalar }} {{ ctor.title }}
-{{ ctor.description }}
+### {{ ctor.scalar }}{% if ctor.title %} {{ ctor.title }}{% endif %}
 
+{% if ctor.description %}{{ ctor.description }}
+
+{% endif -%}
 The following simplified representation can be used:
+
 ```yaml
-{{ ctor.simple | safe }}
+{{ ctor.simple | safe | trim }}
 ```
+
 This is equivalent to the full representation:
+
 ```yaml
-{{ ctor.expanded | safe }}
+{{ ctor.expanded | safe | trim }}
 ```
-{% endfor -%}
-{% endif %}
+{%- endfor %}
+{%- endif %}

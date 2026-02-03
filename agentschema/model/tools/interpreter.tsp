@@ -1,7 +1,7 @@
 import "../core.tsp";
 import "../tools.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 /**
  * A tool for interpreting and executing code.

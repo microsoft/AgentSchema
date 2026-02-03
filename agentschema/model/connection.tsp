@@ -1,7 +1,7 @@
 import "@agentschema/emitter";
 import "./core.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 alias ConnectionType = "remote" | "reference" | "key" | "anonymous";
 alias AuthenticationMode = "user" | "system";

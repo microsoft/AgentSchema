@@ -11,11 +11,11 @@ public class ToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "my-tool"
-"kind": "function"
-"description": "A description of the tool"
-"bindings":
-  "input": "value"
+name: my-tool
+kind: function
+description: A description of the tool
+bindings:
+  input: value
 
 """;
 

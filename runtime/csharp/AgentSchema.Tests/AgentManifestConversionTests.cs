@@ -11,38 +11,38 @@ public class AgentManifestConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "basic-prompt"
-"displayName": "My Basic Prompt"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"template":
-  "kind": "prompt"
-  "model": "{{model_name}}"
-  "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."
-"parameters":
-  "strict": true
-  "properties":
-    - "name": "model_name"
-      "kind": "string"
-      "value": "gpt-4o"
-    - "name": "agent_name"
-      "kind": "string"
-      "value": "Research Agent"
-"resources":
-  "gptModelDeployment":
-    "kind": "model"
-    "id": "gpt-4o"
-  "webSearchInstance":
-    "kind": "tool"
-    "id": "web-search"
-    "options":
-      "apiKey": "my-api-key"
+name: basic-prompt
+displayName: My Basic Prompt
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+template:
+  kind: prompt
+  model: "{{model_name}}"
+  instructions: You are a poet named {{agent_name}}. Rhyme all your responses.
+parameters:
+  strict: true
+  properties:
+    - name: model_name
+      kind: string
+      value: gpt-4o
+    - name: agent_name
+      kind: string
+      value: Research Agent
+resources:
+  gptModelDeployment:
+    kind: model
+    id: gpt-4o
+  webSearchInstance:
+    kind: tool
+    id: web-search
+    options:
+      apiKey: my-api-key
 
 """;
 
@@ -118,38 +118,38 @@ public class AgentManifestConversionTests
     public void LoadYamlInput1()
     {
         string yamlData = """
-"name": "basic-prompt"
-"displayName": "My Basic Prompt"
-"description": "A basic prompt that uses the GPT-3 chat API to answer questions"
-"metadata":
-  "authors":
-    - "sethjuarez"
-    - "jietong"
-  "tags":
-    - "example"
-    - "prompt"
-"template":
-  "kind": "prompt"
-  "model": "{{model_name}}"
-  "instructions": "You are a poet named {{agent_name}}. Rhyme all your responses."
-"parameters":
-  "strict": true
-  "properties":
-    - "name": "model_name"
-      "kind": "string"
-      "value": "gpt-4o"
-    - "name": "agent_name"
-      "kind": "string"
-      "value": "Research Agent"
-"resources":
-  - "kind": "model"
-    "name": "gptModelDeployment"
-    "id": "gpt-4o"
-  - "kind": "tool"
-    "name": "webSearchInstance"
-    "id": "web-search"
-    "options":
-      "apiKey": "my-api-key"
+name: basic-prompt
+displayName: My Basic Prompt
+description: A basic prompt that uses the GPT-3 chat API to answer questions
+metadata:
+  authors:
+    - sethjuarez
+    - jietong
+  tags:
+    - example
+    - prompt
+template:
+  kind: prompt
+  model: "{{model_name}}"
+  instructions: You are a poet named {{agent_name}}. Rhyme all your responses.
+parameters:
+  strict: true
+  properties:
+    - name: model_name
+      kind: string
+      value: gpt-4o
+    - name: agent_name
+      kind: string
+      value: Research Agent
+resources:
+  - kind: model
+    name: gptModelDeployment
+    id: gpt-4o
+  - kind: tool
+    name: webSearchInstance
+    id: web-search
+    options:
+      apiKey: my-api-key
 
 """;
 

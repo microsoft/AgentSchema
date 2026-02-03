@@ -5,7 +5,7 @@ import "./tools.tsp";
 import "./template.tsp";
 import "./container.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 alias AgentKind = "prompt" | "hosted" | "workflow";
 

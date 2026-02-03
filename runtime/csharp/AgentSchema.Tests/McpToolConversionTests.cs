@@ -11,16 +11,16 @@ public class McpToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "mcp"
-"connection":
-  "kind": "reference"
-"serverName": "My MCP Server"
-"serverDescription": "This tool allows access to MCP services."
-"approvalMode":
-  "kind": "always"
-"allowedTools":
-  - "operation1"
-  - "operation2"
+kind: mcp
+connection:
+  kind: reference
+serverName: My MCP Server
+serverDescription: This tool allows access to MCP services.
+approvalMode:
+  kind: always
+allowedTools:
+  - operation1
+  - operation2
 
 """;
 

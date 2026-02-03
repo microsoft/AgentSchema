@@ -1,7 +1,7 @@
 import "./core.tsp";
 import "./connection.tsp";
 
-namespace AgentSchema.Core;
+namespace AgentSchema;
 
 alias apiType = "chat" | "responses" | string;
 /**

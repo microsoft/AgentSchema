@@ -11,10 +11,10 @@ public class OpenApiToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "openapi"
-"connection":
-  "kind": "reference"
-"specification": "full_sepcification_here"
+kind: openapi
+connection:
+  kind: reference
+specification: full_sepcification_here
 
 """;
 

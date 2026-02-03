@@ -7,7 +7,7 @@ AgentSchema is a client facing spec designed to make creating agents easier in a
 3. Serve as an exchange format between MCS and Foundry (and hopefully more platforms in the future).
 4. Create a unified agentic primitive object model (AgentSchema)
 
-This spec is a collaboration between Microsoft Copilot Studio and Azure AI Foundry.
+This spec is a collaboration between Microsoft Copilot Studio and Microsoft Foundry.
 
 Read more about the project over at the [AgentSchema Documentation Site](https://microsoft.github.io/AgentSchema/).
 

@@ -11,10 +11,10 @@ public class TemplateConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"format":
-  "kind": "mustache"
-"parser":
-  "kind": "mustache"
+format:
+  kind: mustache
+parser:
+  kind: mustache
 
 """;
 

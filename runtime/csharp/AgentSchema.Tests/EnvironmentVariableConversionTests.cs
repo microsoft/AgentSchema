@@ -11,8 +11,8 @@ public class EnvironmentVariableConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "MY_ENV_VAR"
-"value": "my-value"
+name: MY_ENV_VAR
+value: my-value
 
 """;
 

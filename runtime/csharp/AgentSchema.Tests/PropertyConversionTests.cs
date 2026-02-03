@@ -11,16 +11,16 @@ public class PropertyConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"name": "my-input"
-"kind": "string"
-"description": "A description of the input property"
-"required": true
-"default": "default value"
-"example": "example value"
-"enumValues":
-  - "value1"
-  - "value2"
-  - "value3"
+name: my-input
+kind: string
+description: A description of the input property
+required: true
+default: default value
+example: example value
+enumValues:
+  - value1
+  - value2
+  - value3
 
 """;
 

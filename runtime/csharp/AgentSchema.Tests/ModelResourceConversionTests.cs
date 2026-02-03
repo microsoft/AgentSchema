@@ -11,8 +11,8 @@ public class ModelResourceConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "model"
-"id": "gpt-4o"
+kind: model
+id: gpt-4o
 
 """;
 

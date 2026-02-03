@@ -11,7 +11,7 @@ public class McpServerToolAlwaysRequireApprovalModeConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-"kind": "always"
+kind: always
 
 """;
 
