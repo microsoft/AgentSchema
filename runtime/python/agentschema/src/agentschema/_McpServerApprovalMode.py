@@ -11,11 +11,10 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
-
 @dataclass
 class McpServerApprovalMode(ABC):
     """The approval mode for MCP server tools.
-    
+
     Attributes
     ----------
     kind : str
@@ -27,7 +26,9 @@ class McpServerApprovalMode(ABC):
     kind: str = field(default="")
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "McpServerApprovalMode":
+    def load(
+        data: Any, context: Optional[LoadContext] = None
+    ) -> "McpServerApprovalMode":
         """Load a McpServerApprovalMode instance.
         Args:
             data (Any): The data to load the instance from.
@@ -36,20 +37,19 @@ class McpServerApprovalMode(ABC):
             McpServerApprovalMode: The loaded McpServerApprovalMode instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         # handle alternate representations
         if isinstance(data, str):
             data = {"kind": data}
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for McpServerApprovalMode: {data}")
 
         # load polymorphic McpServerApprovalMode instance
         instance = McpServerApprovalMode.load_kind(data, context)
-
 
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
@@ -57,10 +57,10 @@ class McpServerApprovalMode(ABC):
             instance = context.process_output(instance)
         return instance
 
-
-
     @staticmethod
-    def load_kind(data: dict, context: Optional[LoadContext]) -> "McpServerApprovalMode":
+    def load_kind(
+        data: dict, context: Optional[LoadContext]
+    ) -> "McpServerApprovalMode":
         # load polymorphic McpServerApprovalMode instance
         if data is not None and "kind" in data:
             discriminator_value = str(data["kind"]).lower()
@@ -72,11 +72,14 @@ class McpServerApprovalMode(ABC):
                 return McpServerToolSpecifyApprovalMode.load(data, context)
 
             else:
-                raise ValueError(f"Unknown McpServerApprovalMode discriminator value: {discriminator_value}")
+                raise ValueError(
+                    f"Unknown McpServerApprovalMode discriminator value: {discriminator_value}"
+                )
         else:
 
-            raise ValueError("Missing McpServerApprovalMode discriminator property: 'kind'")
-
+            raise ValueError(
+                "Missing McpServerApprovalMode discriminator property: 'kind'"
+            )
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the McpServerApprovalMode instance to a dictionary.
@@ -89,7 +92,6 @@ class McpServerApprovalMode(ABC):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -129,7 +131,7 @@ class McpServerApprovalMode(ABC):
 @dataclass
 class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
     """
-    
+
     Attributes
     ----------
     kind : str
@@ -141,7 +143,9 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
     kind: str = field(default="always")
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "McpServerToolAlwaysRequireApprovalMode":
+    def load(
+        data: Any, context: Optional[LoadContext] = None
+    ) -> "McpServerToolAlwaysRequireApprovalMode":
         """Load a McpServerToolAlwaysRequireApprovalMode instance.
         Args:
             data (Any): The data to load the instance from.
@@ -150,12 +154,14 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
             McpServerToolAlwaysRequireApprovalMode: The loaded McpServerToolAlwaysRequireApprovalMode instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
-            raise ValueError(f"Invalid data for McpServerToolAlwaysRequireApprovalMode: {data}")
+            raise ValueError(
+                f"Invalid data for McpServerToolAlwaysRequireApprovalMode: {data}"
+            )
 
         # create new instance
         instance = McpServerToolAlwaysRequireApprovalMode()
@@ -165,8 +171,6 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
         if context is not None:
             instance = context.process_output(instance)
         return instance
-
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the McpServerToolAlwaysRequireApprovalMode instance to a dictionary.
@@ -179,11 +183,9 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -219,7 +221,7 @@ class McpServerToolAlwaysRequireApprovalMode(McpServerApprovalMode):
 @dataclass
 class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
     """
-    
+
     Attributes
     ----------
     kind : str
@@ -231,7 +233,9 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
     kind: str = field(default="never")
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "McpServerToolNeverRequireApprovalMode":
+    def load(
+        data: Any, context: Optional[LoadContext] = None
+    ) -> "McpServerToolNeverRequireApprovalMode":
         """Load a McpServerToolNeverRequireApprovalMode instance.
         Args:
             data (Any): The data to load the instance from.
@@ -240,12 +244,14 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
             McpServerToolNeverRequireApprovalMode: The loaded McpServerToolNeverRequireApprovalMode instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
-            raise ValueError(f"Invalid data for McpServerToolNeverRequireApprovalMode: {data}")
+            raise ValueError(
+                f"Invalid data for McpServerToolNeverRequireApprovalMode: {data}"
+            )
 
         # create new instance
         instance = McpServerToolNeverRequireApprovalMode()
@@ -255,8 +261,6 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
         if context is not None:
             instance = context.process_output(instance)
         return instance
-
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the McpServerToolNeverRequireApprovalMode instance to a dictionary.
@@ -269,11 +273,9 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -309,7 +311,7 @@ class McpServerToolNeverRequireApprovalMode(McpServerApprovalMode):
 @dataclass
 class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
     """
-    
+
     Attributes
     ----------
     kind : str
@@ -327,7 +329,9 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
     neverRequireApprovalTools: list[str] = field(default_factory=list)
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "McpServerToolSpecifyApprovalMode":
+    def load(
+        data: Any, context: Optional[LoadContext] = None
+    ) -> "McpServerToolSpecifyApprovalMode":
         """Load a McpServerToolSpecifyApprovalMode instance.
         Args:
             data (Any): The data to load the instance from.
@@ -336,12 +340,14 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
             McpServerToolSpecifyApprovalMode: The loaded McpServerToolSpecifyApprovalMode instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
-            raise ValueError(f"Invalid data for McpServerToolSpecifyApprovalMode: {data}")
+            raise ValueError(
+                f"Invalid data for McpServerToolSpecifyApprovalMode: {data}"
+            )
 
         # create new instance
         instance = McpServerToolSpecifyApprovalMode()
@@ -356,8 +362,6 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
             instance = context.process_output(instance)
         return instance
 
-
-
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the McpServerToolSpecifyApprovalMode instance to a dictionary.
         Args:
@@ -369,11 +373,9 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -408,4 +410,3 @@ class McpServerToolSpecifyApprovalMode(McpServerApprovalMode):
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-

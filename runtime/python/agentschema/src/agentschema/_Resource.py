@@ -11,13 +11,12 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
-
 @dataclass
 class Resource(ABC):
     """Represents a resource required by the agent
     Resources can include databases, APIs, or other external systems
     that the agent needs to interact with to perform its tasks
-    
+
     Attributes
     ----------
     name : str
@@ -41,16 +40,15 @@ class Resource(ABC):
             Resource: The loaded Resource instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Resource: {data}")
 
         # load polymorphic Resource instance
         instance = Resource.load_kind(data, context)
-
 
         if data is not None and "name" in data:
             instance.name = data["name"]
@@ -59,8 +57,6 @@ class Resource(ABC):
         if context is not None:
             instance = context.process_output(instance)
         return instance
-
-
 
     @staticmethod
     def load_kind(data: dict, context: Optional[LoadContext]) -> "Resource":
@@ -73,11 +69,12 @@ class Resource(ABC):
                 return ToolResource.load(data, context)
 
             else:
-                raise ValueError(f"Unknown Resource discriminator value: {discriminator_value}")
+                raise ValueError(
+                    f"Unknown Resource discriminator value: {discriminator_value}"
+                )
         else:
 
             raise ValueError("Missing Resource discriminator property: 'kind'")
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Resource instance to a dictionary.
@@ -90,7 +87,6 @@ class Resource(ABC):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -132,7 +128,7 @@ class Resource(ABC):
 @dataclass
 class ModelResource(Resource):
     """Represents a model resource required by the agent
-    
+
     Attributes
     ----------
     kind : str
@@ -156,10 +152,10 @@ class ModelResource(Resource):
             ModelResource: The loaded ModelResource instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ModelResource: {data}")
 
@@ -174,8 +170,6 @@ class ModelResource(Resource):
             instance = context.process_output(instance)
         return instance
 
-
-
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ModelResource instance to a dictionary.
         Args:
@@ -187,11 +181,9 @@ class ModelResource(Resource):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -229,7 +221,7 @@ class ModelResource(Resource):
 @dataclass
 class ToolResource(Resource):
     """Represents a tool resource required by the agent
-    
+
     Attributes
     ----------
     kind : str
@@ -256,10 +248,10 @@ class ToolResource(Resource):
             ToolResource: The loaded ToolResource instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ToolResource: {data}")
 
@@ -276,8 +268,6 @@ class ToolResource(Resource):
             instance = context.process_output(instance)
         return instance
 
-
-
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ToolResource instance to a dictionary.
         Args:
@@ -289,11 +279,9 @@ class ToolResource(Resource):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -328,4 +316,3 @@ class ToolResource(Resource):
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-

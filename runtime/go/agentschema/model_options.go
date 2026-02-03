@@ -30,32 +30,110 @@ func LoadModelOptions(data interface{}, ctx *LoadContext) (ModelOptions, error) 
 
 	// Load from map
 	if m, ok := data.(map[string]interface{}); ok {
-		if val, ok := m["frequencyPenalty"]; ok && val != nil {
-			v := val.(float32)
+		if val, ok := m["frequencyPenalty"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
 			result.FrequencyPenalty = &v
 		}
-		if val, ok := m["maxOutputTokens"]; ok && val != nil {
-			v := val.(int32)
+		if val, ok := m["maxOutputTokens"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v int32
+			switch n := val.(type) {
+			case int:
+				v = int32(n)
+			case int32:
+				v = int32(n)
+			case int64:
+				v = int32(n)
+			case float64:
+				v = int32(n)
+			}
 			result.MaxOutputTokens = &v
 		}
-		if val, ok := m["presencePenalty"]; ok && val != nil {
-			v := val.(float32)
+		if val, ok := m["presencePenalty"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
 			result.PresencePenalty = &v
 		}
-		if val, ok := m["seed"]; ok && val != nil {
-			v := val.(int32)
+		if val, ok := m["seed"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v int32
+			switch n := val.(type) {
+			case int:
+				v = int32(n)
+			case int32:
+				v = int32(n)
+			case int64:
+				v = int32(n)
+			case float64:
+				v = int32(n)
+			}
 			result.Seed = &v
 		}
-		if val, ok := m["temperature"]; ok && val != nil {
-			v := val.(float32)
+		if val, ok := m["temperature"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
 			result.Temperature = &v
 		}
-		if val, ok := m["topK"]; ok && val != nil {
-			v := val.(int32)
+		if val, ok := m["topK"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v int32
+			switch n := val.(type) {
+			case int:
+				v = int32(n)
+			case int32:
+				v = int32(n)
+			case int64:
+				v = int32(n)
+			case float64:
+				v = int32(n)
+			}
 			result.TopK = &v
 		}
-		if val, ok := m["topP"]; ok && val != nil {
-			v := val.(float32)
+		if val, ok := m["topP"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
 			result.TopP = &v
 		}
 		if val, ok := m["stopSequences"]; ok && val != nil {

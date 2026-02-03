@@ -38,8 +38,6 @@ func LoadProperty(data interface{}, ctx *LoadContext) (interface{}, error) {
 				return LoadArrayProperty(data, ctx)
 			case "object":
 				return LoadObjectProperty(data, ctx)
-			default:
-				return LoadProperty(data, ctx)
 			}
 		}
 	}
@@ -253,8 +251,8 @@ func ArrayPropertyFromYAML(yamlStr string) (ArrayProperty, error) {
 // This extends the base Property model to represent a structured object.
 
 type ObjectProperty struct {
-	Kind       string     `json:"kind" yaml:"kind"`
-	Properties []Property `json:"properties" yaml:"properties"`
+	Kind       string        `json:"kind" yaml:"kind"`
+	Properties []interface{} `json:"properties" yaml:"properties"`
 }
 
 // LoadObjectProperty creates a ObjectProperty from a map[string]interface{}
@@ -268,12 +266,12 @@ func LoadObjectProperty(data interface{}, ctx *LoadContext) (ObjectProperty, err
 		}
 		if val, ok := m["properties"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Properties = make([]Property, len(arr))
+				result.Properties = make([]interface{}, len(arr))
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadProperty(item, ctx)
-						// Type assert from interface{} in case Load returns interface{} for polymorphic types
-						result.Properties[i] = loaded.(Property)
+						// Polymorphic type - store as interface{}
+						result.Properties[i] = loaded
 					}
 				}
 			}
@@ -290,7 +288,15 @@ func (obj *ObjectProperty) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Properties != nil {
 		arr := make([]interface{}, len(obj.Properties))
 		for i, item := range obj.Properties {
-			arr[i] = item.Save(ctx)
+			// Handle polymorphic type via type switch
+			switch v := item.(type) {
+			case interface {
+				Save(*SaveContext) map[string]interface{}
+			}:
+				arr[i] = v.Save(ctx)
+			default:
+				arr[i] = item
+			}
 		}
 		result["properties"] = arr
 	}

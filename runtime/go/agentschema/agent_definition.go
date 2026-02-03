@@ -152,12 +152,12 @@ func AgentDefinitionFromYAML(yamlStr string) (interface{}, error) {
 // They are designed to be straightforward and easy to use for various applications.
 
 type PromptAgent struct {
-	Kind                   string    `json:"kind" yaml:"kind"`
-	Model                  Model     `json:"model" yaml:"model"`
-	Tools                  []Tool    `json:"tools,omitempty" yaml:"tools,omitempty"`
-	Template               *Template `json:"template,omitempty" yaml:"template,omitempty"`
-	Instructions           *string   `json:"instructions,omitempty" yaml:"instructions,omitempty"`
-	AdditionalInstructions *string   `json:"additionalInstructions,omitempty" yaml:"additionalInstructions,omitempty"`
+	Kind                   string        `json:"kind" yaml:"kind"`
+	Model                  Model         `json:"model" yaml:"model"`
+	Tools                  []interface{} `json:"tools,omitempty" yaml:"tools,omitempty"`
+	Template               *Template     `json:"template,omitempty" yaml:"template,omitempty"`
+	Instructions           *string       `json:"instructions,omitempty" yaml:"instructions,omitempty"`
+	AdditionalInstructions *string       `json:"additionalInstructions,omitempty" yaml:"additionalInstructions,omitempty"`
 }
 
 // LoadPromptAgent creates a PromptAgent from a map[string]interface{}
@@ -177,12 +177,12 @@ func LoadPromptAgent(data interface{}, ctx *LoadContext) (PromptAgent, error) {
 		}
 		if val, ok := m["tools"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Tools = make([]Tool, len(arr))
+				result.Tools = make([]interface{}, len(arr))
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadTool(item, ctx)
-						// Type assert from interface{} in case Load returns interface{} for polymorphic types
-						result.Tools[i] = loaded.(Tool)
+						// Polymorphic type - store as interface{}
+						result.Tools[i] = loaded
 					}
 				}
 			}
@@ -215,7 +215,15 @@ func (obj *PromptAgent) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Tools != nil {
 		arr := make([]interface{}, len(obj.Tools))
 		for i, item := range obj.Tools {
-			arr[i] = item.Save(ctx)
+			// Handle polymorphic type via type switch
+			switch v := item.(type) {
+			case interface {
+				Save(*SaveContext) map[string]interface{}
+			}:
+				arr[i] = v.Save(ctx)
+			default:
+				arr[i] = item
+			}
 		}
 		result["tools"] = arr
 	}

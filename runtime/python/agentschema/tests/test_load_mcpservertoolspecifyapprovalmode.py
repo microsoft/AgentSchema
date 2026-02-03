@@ -1,4 +1,3 @@
-
 import json
 import yaml
 
@@ -6,7 +5,7 @@ from agentschema import McpServerToolSpecifyApprovalMode
 
 
 def test_load_json_mcpservertoolspecifyapprovalmode():
-    json_data = '''
+    json_data = """
     {
       "kind": "specify",
       "alwaysRequireApprovalTools": [
@@ -16,30 +15,31 @@ def test_load_json_mcpservertoolspecifyapprovalmode():
         "operation2"
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = McpServerToolSpecifyApprovalMode.load(data)
     assert instance is not None
     assert instance.kind == "specify"
-    
+
 
 def test_load_yaml_mcpservertoolspecifyapprovalmode():
-    yaml_data = '''
+    yaml_data = """
     kind: specify
     alwaysRequireApprovalTools:
       - operation1
     neverRequireApprovalTools:
       - operation2
     
-    '''
+    """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = McpServerToolSpecifyApprovalMode.load(data)
     assert instance is not None
     assert instance.kind == "specify"
 
+
 def test_roundtrip_json_mcpservertoolspecifyapprovalmode():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = '''
+    json_data = """
     {
       "kind": "specify",
       "alwaysRequireApprovalTools": [
@@ -49,7 +49,7 @@ def test_roundtrip_json_mcpservertoolspecifyapprovalmode():
         "operation2"
       ]
     }
-    '''
+    """
     original_data = json.loads(json_data, strict=False)
     instance = McpServerToolSpecifyApprovalMode.load(original_data)
     saved_data = instance.save()
@@ -57,9 +57,10 @@ def test_roundtrip_json_mcpservertoolspecifyapprovalmode():
     assert reloaded is not None
     assert reloaded.kind == "specify"
 
+
 def test_to_json_mcpservertoolspecifyapprovalmode():
     """Test that to_json produces valid JSON."""
-    json_data = '''
+    json_data = """
     {
       "kind": "specify",
       "alwaysRequireApprovalTools": [
@@ -69,7 +70,7 @@ def test_to_json_mcpservertoolspecifyapprovalmode():
         "operation2"
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = McpServerToolSpecifyApprovalMode.load(data)
     json_output = instance.to_json()
@@ -77,9 +78,10 @@ def test_to_json_mcpservertoolspecifyapprovalmode():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
+
 def test_to_yaml_mcpservertoolspecifyapprovalmode():
     """Test that to_yaml produces valid YAML."""
-    json_data = '''
+    json_data = """
     {
       "kind": "specify",
       "alwaysRequireApprovalTools": [
@@ -89,12 +91,10 @@ def test_to_yaml_mcpservertoolspecifyapprovalmode():
         "operation2"
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = McpServerToolSpecifyApprovalMode.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
-
-

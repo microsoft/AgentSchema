@@ -14,7 +14,7 @@ import (
 type PropertySchema struct {
 	Examples   map[string]interface{} `json:"examples,omitempty" yaml:"examples,omitempty"`
 	Strict     *bool                  `json:"strict,omitempty" yaml:"strict,omitempty"`
-	Properties []Property             `json:"properties" yaml:"properties"`
+	Properties []interface{}          `json:"properties" yaml:"properties"`
 }
 
 // LoadPropertySchema creates a PropertySchema from a map[string]interface{}
@@ -34,12 +34,12 @@ func LoadPropertySchema(data interface{}, ctx *LoadContext) (PropertySchema, err
 		}
 		if val, ok := m["properties"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Properties = make([]Property, len(arr))
+				result.Properties = make([]interface{}, len(arr))
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := LoadProperty(item, ctx)
-						// Type assert from interface{} in case Load returns interface{} for polymorphic types
-						result.Properties[i] = loaded.(Property)
+						// Polymorphic type - store as interface{}
+						result.Properties[i] = loaded
 					}
 				}
 			}
@@ -61,7 +61,15 @@ func (obj *PropertySchema) Save(ctx *SaveContext) map[string]interface{} {
 	if obj.Properties != nil {
 		arr := make([]interface{}, len(obj.Properties))
 		for i, item := range obj.Properties {
-			arr[i] = item.Save(ctx)
+			// Handle polymorphic type via type switch
+			switch v := item.(type) {
+			case interface {
+				Save(*SaveContext) map[string]interface{}
+			}:
+				arr[i] = v.Save(ctx)
+			default:
+				arr[i] = item
+			}
 		}
 		result["properties"] = arr
 	}

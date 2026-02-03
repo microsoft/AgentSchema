@@ -1,4 +1,3 @@
-
 import json
 import yaml
 
@@ -6,7 +5,7 @@ from agentschema import ModelOptions
 
 
 def test_load_json_modeloptions():
-    json_data = '''
+    json_data = """
     {
       "frequencyPenalty": 0.5,
       "maxOutputTokens": 2048,
@@ -25,7 +24,7 @@ def test_load_json_modeloptions():
         "anotherProperty": "anotherValue"
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = ModelOptions.load(data)
     assert instance is not None
@@ -36,12 +35,12 @@ def test_load_json_modeloptions():
     assert instance.temperature == 0.7
     assert instance.topK == 40
     assert instance.topP == 0.9
-    
+
     assert instance.allowMultipleToolCalls
-    
+
 
 def test_load_yaml_modeloptions():
-    yaml_data = '''
+    yaml_data = """
     frequencyPenalty: 0.5
     maxOutputTokens: 2048
     presencePenalty: 0.3
@@ -58,7 +57,7 @@ def test_load_yaml_modeloptions():
       customProperty: value
       anotherProperty: anotherValue
     
-    '''
+    """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = ModelOptions.load(data)
     assert instance is not None
@@ -71,9 +70,10 @@ def test_load_yaml_modeloptions():
     assert instance.topP == 0.9
     assert instance.allowMultipleToolCalls
 
+
 def test_roundtrip_json_modeloptions():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = '''
+    json_data = """
     {
       "frequencyPenalty": 0.5,
       "maxOutputTokens": 2048,
@@ -92,7 +92,7 @@ def test_roundtrip_json_modeloptions():
         "anotherProperty": "anotherValue"
       }
     }
-    '''
+    """
     original_data = json.loads(json_data, strict=False)
     instance = ModelOptions.load(original_data)
     saved_data = instance.save()
@@ -107,9 +107,10 @@ def test_roundtrip_json_modeloptions():
     assert reloaded.topP == 0.9
     assert reloaded.allowMultipleToolCalls
 
+
 def test_to_json_modeloptions():
     """Test that to_json produces valid JSON."""
-    json_data = '''
+    json_data = """
     {
       "frequencyPenalty": 0.5,
       "maxOutputTokens": 2048,
@@ -128,7 +129,7 @@ def test_to_json_modeloptions():
         "anotherProperty": "anotherValue"
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = ModelOptions.load(data)
     json_output = instance.to_json()
@@ -136,9 +137,10 @@ def test_to_json_modeloptions():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
+
 def test_to_yaml_modeloptions():
     """Test that to_yaml produces valid YAML."""
-    json_data = '''
+    json_data = """
     {
       "frequencyPenalty": 0.5,
       "maxOutputTokens": 2048,
@@ -157,12 +159,10 @@ def test_to_yaml_modeloptions():
         "anotherProperty": "anotherValue"
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = ModelOptions.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
-
-

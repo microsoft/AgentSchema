@@ -1,4 +1,3 @@
-
 import json
 import yaml
 
@@ -6,7 +5,7 @@ from agentschema import AgentManifest
 
 
 def test_load_json_agentmanifest():
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -55,17 +54,20 @@ def test_load_json_agentmanifest():
         }
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    
+    assert (
+        instance.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_load_yaml_agentmanifest():
-    yaml_data = '''
+    yaml_data = """
     name: basic-prompt
     displayName: My Basic Prompt
     description: A basic prompt that uses the GPT-3 chat API to answer questions
@@ -99,17 +101,21 @@ def test_load_yaml_agentmanifest():
         options:
           apiKey: my-api-key
     
-    '''
+    """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    assert (
+        instance.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_roundtrip_json_agentmanifest():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -158,7 +164,7 @@ def test_roundtrip_json_agentmanifest():
         }
       }
     }
-    '''
+    """
     original_data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(original_data)
     saved_data = instance.save()
@@ -166,11 +172,15 @@ def test_roundtrip_json_agentmanifest():
     assert reloaded is not None
     assert reloaded.name == "basic-prompt"
     assert reloaded.displayName == "My Basic Prompt"
-    assert reloaded.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    assert (
+        reloaded.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_to_json_agentmanifest():
     """Test that to_json produces valid JSON."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -219,7 +229,7 @@ def test_to_json_agentmanifest():
         }
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     json_output = instance.to_json()
@@ -227,9 +237,10 @@ def test_to_json_agentmanifest():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
+
 def test_to_yaml_agentmanifest():
     """Test that to_yaml produces valid YAML."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -278,7 +289,7 @@ def test_to_yaml_agentmanifest():
         }
       }
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     yaml_output = instance.to_yaml()
@@ -286,8 +297,9 @@ def test_to_yaml_agentmanifest():
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
 
+
 def test_load_json_agentmanifest_1():
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -338,17 +350,20 @@ def test_load_json_agentmanifest_1():
         }
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
-    
+    assert (
+        instance.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_load_yaml_agentmanifest_1():
-    yaml_data = '''
+    yaml_data = """
     name: basic-prompt
     displayName: My Basic Prompt
     description: A basic prompt that uses the GPT-3 chat API to answer questions
@@ -382,17 +397,21 @@ def test_load_yaml_agentmanifest_1():
         options:
           apiKey: my-api-key
     
-    '''
+    """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = AgentManifest.load(data)
     assert instance is not None
     assert instance.name == "basic-prompt"
     assert instance.displayName == "My Basic Prompt"
-    assert instance.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    assert (
+        instance.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_roundtrip_json_agentmanifest_1():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -443,7 +462,7 @@ def test_roundtrip_json_agentmanifest_1():
         }
       ]
     }
-    '''
+    """
     original_data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(original_data)
     saved_data = instance.save()
@@ -451,11 +470,15 @@ def test_roundtrip_json_agentmanifest_1():
     assert reloaded is not None
     assert reloaded.name == "basic-prompt"
     assert reloaded.displayName == "My Basic Prompt"
-    assert reloaded.description == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    assert (
+        reloaded.description
+        == "A basic prompt that uses the GPT-3 chat API to answer questions"
+    )
+
 
 def test_to_json_agentmanifest_1():
     """Test that to_json produces valid JSON."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -506,7 +529,7 @@ def test_to_json_agentmanifest_1():
         }
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     json_output = instance.to_json()
@@ -514,9 +537,10 @@ def test_to_json_agentmanifest_1():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
+
 def test_to_yaml_agentmanifest_1():
     """Test that to_yaml produces valid YAML."""
-    json_data = '''
+    json_data = """
     {
       "name": "basic-prompt",
       "displayName": "My Basic Prompt",
@@ -567,12 +591,10 @@ def test_to_yaml_agentmanifest_1():
         }
       ]
     }
-    '''
+    """
     data = json.loads(json_data, strict=False)
     instance = AgentManifest.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
-
-

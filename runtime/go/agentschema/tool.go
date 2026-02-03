@@ -454,16 +454,38 @@ func LoadFileSearchTool(data interface{}, ctx *LoadContext) (FileSearchTool, err
 				}
 			}
 		}
-		if val, ok := m["maximumResultCount"]; ok && val != nil {
-			v := val.(int32)
+		if val, ok := m["maximumResultCount"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v int32
+			switch n := val.(type) {
+			case int:
+				v = int32(n)
+			case int32:
+				v = int32(n)
+			case int64:
+				v = int32(n)
+			case float64:
+				v = int32(n)
+			}
 			result.MaximumResultCount = &v
 		}
 		if val, ok := m["ranker"]; ok && val != nil {
 			v := val.(string)
 			result.Ranker = &v
 		}
-		if val, ok := m["scoreThreshold"]; ok && val != nil {
-			v := val.(float32)
+		if val, ok := m["scoreThreshold"]; ok && val != nil { // Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
 			result.ScoreThreshold = &v
 		}
 		if val, ok := m["filters"]; ok && val != nil {

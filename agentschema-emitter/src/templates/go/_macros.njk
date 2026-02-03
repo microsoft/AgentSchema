@@ -76,6 +76,8 @@
 {%- if not baseType %}{% set baseType = "interface{}" %}{% endif -%}
 {%- if prop.isDict -%}
 map[string]interface{}
+{%- elif prop.isCollection and prop.typeName.name in polymorphicTypeNames -%}
+[]interface{}
 {%- elif prop.isCollection -%}
 []{{ baseType }}
 {%- elif not prop.isScalar and prop.typeName.name in polymorphicTypeNames -%}
@@ -191,13 +193,17 @@ nil
 {%- else -%}
 		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
+				{%- if prop.typeName.name in polymorphicTypeNames %}
+				result.{{ propNameGo }} = make([]interface{}, len(arr))
+				{%- else %}
 				result.{{ propNameGo }} = make([]{{ prop.typeName.name }}, len(arr))
+				{%- endif %}
 				for i, v := range arr {
 					if item, ok := v.(map[string]interface{}); ok {
 						loaded, _ := Load{{ prop.typeName.name }}(item, ctx)
 						{%- if prop.typeName.name in polymorphicTypeNames %}
-						// Type assert from interface{} in case Load returns interface{} for polymorphic types
-						result.{{ propNameGo }}[i] = loaded.({{ prop.typeName.name }})
+						// Polymorphic type - store as interface{}
+						result.{{ propNameGo }}[i] = loaded
 						{%- else %}
 						result.{{ propNameGo }}[i] = loaded
 						{%- endif %}
@@ -219,6 +225,98 @@ nil
 			result.{{ propNameGo }} = &val
 {%- else -%}
 			result.{{ propNameGo }} = val
+{%- endif -%}
+{%- elif prop.typeName.name == "int32" or prop.typeName.name == "int64" or prop.typeName.name == "integer" -%}
+{%- if prop.isOptional -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			var v {{ typeMapper[prop.typeName.name] or "int" }}
+			switch n := val.(type) {
+			case int:
+				v = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case int32:
+				v = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case int64:
+				v = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case float64:
+				v = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			}
+			result.{{ propNameGo }} = &v
+{%- else -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			switch n := val.(type) {
+			case int:
+				result.{{ propNameGo }} = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case int32:
+				result.{{ propNameGo }} = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case int64:
+				result.{{ propNameGo }} = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			case float64:
+				result.{{ propNameGo }} = {{ typeMapper[prop.typeName.name] or "int" }}(n)
+			}
+{%- endif -%}
+{%- elif prop.typeName.name == "float32" -%}
+{%- if prop.isOptional -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			var v float32
+			switch n := val.(type) {
+			case int:
+				v = float32(n)
+			case int32:
+				v = float32(n)
+			case int64:
+				v = float32(n)
+			case float32:
+				v = n
+			case float64:
+				v = float32(n)
+			}
+			result.{{ propNameGo }} = &v
+{%- else -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			switch n := val.(type) {
+			case int:
+				result.{{ propNameGo }} = float32(n)
+			case int32:
+				result.{{ propNameGo }} = float32(n)
+			case int64:
+				result.{{ propNameGo }} = float32(n)
+			case float32:
+				result.{{ propNameGo }} = n
+			case float64:
+				result.{{ propNameGo }} = float32(n)
+			}
+{%- endif -%}
+{%- elif prop.typeName.name == "float64" or prop.typeName.name == "number" or prop.typeName.name == "float" or prop.typeName.name == "numeric" -%}
+{%- if prop.isOptional -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			var v float64
+			switch n := val.(type) {
+			case int:
+				v = float64(n)
+			case int32:
+				v = float64(n)
+			case int64:
+				v = float64(n)
+			case float32:
+				v = float64(n)
+			case float64:
+				v = n
+			}
+			result.{{ propNameGo }} = &v
+{%- else -%}
+			// Handle various numeric types from JSON/YAML/roundtrip
+			switch n := val.(type) {
+			case int:
+				result.{{ propNameGo }} = float64(n)
+			case int32:
+				result.{{ propNameGo }} = float64(n)
+			case int64:
+				result.{{ propNameGo }} = float64(n)
+			case float32:
+				result.{{ propNameGo }} = float64(n)
+			case float64:
+				result.{{ propNameGo }} = n
+			}
 {%- endif -%}
 {%- else -%}
 {%- if prop.isOptional -%}
@@ -270,6 +368,20 @@ nil
 {%- if prop.isCollection and not prop.isDict -%}
 {%- if prop.isScalar -%}
 	result["{{ prop.name }}"] = obj.{{ propNameGo }}
+{%- elif prop.typeName.name in polymorphicTypeNames -%}
+	if obj.{{ propNameGo }} != nil {
+		arr := make([]interface{}, len(obj.{{ propNameGo }}))
+		for i, item := range obj.{{ propNameGo }} {
+			// Handle polymorphic type via type switch
+			switch v := item.(type) {
+			case interface{ Save(*SaveContext) map[string]interface{} }:
+				arr[i] = v.Save(ctx)
+			default:
+				arr[i] = item
+			}
+		}
+		result["{{ prop.name }}"] = arr
+	}
 {%- else -%}
 	if obj.{{ propNameGo }} != nil {
 		arr := make([]interface{}, len(obj.{{ propNameGo }}))
