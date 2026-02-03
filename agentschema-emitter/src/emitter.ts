@@ -11,6 +11,7 @@ import { generateMarkdown } from "./markdown.js";
 import { generatePython } from "./python.js";
 import { generateCsharp } from "./csharp.js";
 import { generateTypeScript } from "./typescript.js";
+import { generateGo } from "./go.js";
 import { generateBotDefinition } from './bot.js';
 
 
@@ -71,6 +72,13 @@ export async function $onEmit(context: EmitContext<AgentSchemaEmitterOptions>) {
     const target = targets[idx];
     // emit typescript
     await generateTypeScript(context, options.templateDir, model, target);
+  }
+
+  if (targetNames.includes("go")) {
+    const idx = targetNames.indexOf("go");
+    const target = targets[idx];
+    // emit go
+    await generateGo(context, options.templateDir, model, target);
   }
 
   if (targetNames.includes("botdefinition")) {

@@ -54,12 +54,23 @@ export class TemplateEngine {
         .replace(/^(.)/, (_, char) => char.toLowerCase());
     });
 
-    // PascalCase: "hello_world" -> "HelloWorld"
+    // PascalCase: "hello_world" -> "HelloWorld", "helloWorld" -> "HelloWorld"
     this.env.addFilter('pascalCase', (str: string): string => {
       if (!str) return str;
-      return str
-        .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
-        .replace(/^(.)/, (_, char) => char.toUpperCase());
+      
+      // First handle snake_case and kebab-case
+      if (str.includes('_') || str.includes('-')) {
+        return str
+          .replace(/[-_](.)/g, (_, char) => char.toUpperCase())
+          .replace(/^(.)/, (_, char) => char.toUpperCase());
+      }
+      
+      // Handle camelCase by inserting boundaries at uppercase letters
+      const withBoundaries = str.replace(/([a-z])([A-Z])/g, '$1_$2');
+      return withBoundaries
+        .split('_')
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
     });
 
     // snake_case: "helloWorld" -> "hello_world"

@@ -1,0 +1,115 @@
+name: Publish Go Module
+
+on:
+  push:
+    tags:
+      - "go-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Module version (e.g., 1.0.0-beta.1)"
+        required: false
+        type: string
+
+env:
+  GO_VERSION: "1.22"
+  MODULE_PATH: "runtime/go"
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-latest
+    # Only run on microsoft/AgentSchema repo AND only for go-v* tags
+    if: |
+      github.repository == 'microsoft/AgentSchema' && 
+      (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/go-v'))
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Get dependencies
+        working-directory: ${{ env.MODULE_PATH }}
+        run: go mod download
+
+      - name: Build
+        working-directory: ${{ env.MODULE_PATH }}/agentschema
+        run: go build ./...
+
+      - name: Run tests
+        working-directory: ${{ env.MODULE_PATH }}/agentschema
+        run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Run go vet
+        working-directory: ${{ env.MODULE_PATH }}/agentschema
+        run: go vet ./...
+
+  tag-and-publish:
+    name: Tag and Publish Module
+    needs: test
+    runs-on: ubuntu-latest
+    # Publish on tag push or manual workflow_dispatch
+    if: startsWith(github.ref, 'refs/tags/go-v') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract version from tag or input
+        id: version
+        run: |
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/go-v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#go-v}"
+          else
+            echo "No version specified and not a version tag"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: Update go.mod version
+        working-directory: ${{ env.MODULE_PATH }}
+        run: |
+          # Go modules use git tags for versioning
+          # The module path should include the version in the tag
+          echo "Module will be published with tag: go-v${{ steps.version.outputs.version }}"
+          
+      - name: Verify module
+        working-directory: ${{ env.MODULE_PATH }}
+        run: |
+          go mod verify
+          go list -m all
+
+      - name: Create release notes
+        run: |
+          echo "## Go Runtime v${{ steps.version.outputs.version }}" > release-notes.md
+          echo "" >> release-notes.md
+          echo "Go runtime package for AgentSchema." >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Installation" >> release-notes.md
+          echo '```bash' >> release-notes.md
+          echo "go get github.com/microsoft/AgentSchema/runtime/go@go-v${{ steps.version.outputs.version }}" >> release-notes.md
+          echo '```' >> release-notes.md
+
+      - name: Publish to pkg.go.dev
+        run: |
+          # Go modules are automatically published to pkg.go.dev when tags are pushed
+          # The tag format should be: go-v{version}
+          # pkg.go.dev will automatically index the module
+          echo "Module will be available at: https://pkg.go.dev/github.com/microsoft/AgentSchema/runtime/go@go-v${{ steps.version.outputs.version }}"
+          echo ""
+          echo "Note: It may take a few minutes for pkg.go.dev to index the new version."
+          echo "You can request indexing at: https://pkg.go.dev/github.com/microsoft/AgentSchema/runtime/go"
