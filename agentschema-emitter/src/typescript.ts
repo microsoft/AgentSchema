@@ -147,14 +147,9 @@ export const generateTypeScript = async (
     await emitTypeScriptFile(context, `${toKebabCase(n.typeName.name)}.ts`, code, emitTarget["output-dir"]);
   }
 
-  // Emit test files for base types only (children are tested via parent)
+  // Emit test files for all types
   if (emitTarget["test-dir"]) {
     for (const n of nodes) {
-      // Skip child types - they're tested with their parent
-      if (n.base) {
-        continue;
-      }
-
       const testContext = buildTestContext(n);
       const testCode = testTemplate.render({
         ...testContext,
@@ -303,14 +298,23 @@ function buildTestContext(node: TypeNode): TypeScriptTestContext {
       yaml: YAML.stringify(sample, { indent: 2 }).split("\n"),
       validation: Object.keys(sample)
         .filter((key) => typeof sample[key] !== "object")
-        .map((key) => ({
-          key,
-          value:
-            typeof sample[key] === "boolean"
-              ? sample[key]
-              : sample[key],
-          delimeter: typeof sample[key] === "string" ? '"' : "",
-        })),
+        .map((key) => {
+          let value = sample[key];
+          // Escape special characters in string values for use in test assertions
+          if (typeof value === "string") {
+            value = value
+              .replace(/\\/g, "\\\\")
+              .replace(/\n/g, "\\n")
+              .replace(/\r/g, "\\r")
+              .replace(/\t/g, "\\t")
+              .replace(/"/g, '\\"');
+          }
+          return {
+            key,
+            value: typeof value === "boolean" ? value : value,
+            delimeter: typeof sample[key] === "string" ? '"' : "",
+          };
+        }),
     };
   });
 
@@ -396,12 +400,13 @@ function getShorthandProperty(node: TypeNode): string | null {
 /**
  * Get collection properties with their nested type info.
  */
-function getCollectionTypes(node: TypeNode): Array<{ prop: PropertyNode; type: string[] }> {
+function getCollectionTypes(node: TypeNode): Array<{ prop: PropertyNode; type: string[]; hasNameProperty: boolean }> {
   return node.properties
     .filter((p) => p.isCollection && !p.isScalar && !p.isDict)
     .map((p) => ({
       prop: p,
       type: p.type?.properties.filter((t) => t.name !== "name").map((t) => t.name) || [],
+      hasNameProperty: p.type?.properties.some((t) => t.name === "name") || false,
     }));
 }
 

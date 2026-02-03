@@ -892,33 +892,8 @@ export class ContainerAgent extends AgentDefinition {
   ): Record<string, unknown> | Record<string, unknown>[] {
     context = context ?? new SaveContext();
 
-    if (context.collectionFormat === "array") {
-      return items.map((item) => item.save(context));
-    }
-
-    // Object format: use name as key
-    const result: Record<string, unknown> = {};
-    for (const item of items) {
-      const itemData = item.save(context);
-      const name = itemData["name"] as string | undefined;
-      if (name) {
-        delete itemData["name"];
-
-        // Check if we can use shorthand
-        if (context.useShorthand && ProtocolVersionRecord.shorthandProperty) {
-          const shorthandProp = ProtocolVersionRecord.shorthandProperty;
-          const keys = Object.keys(itemData);
-          if (keys.length === 1 && keys[0] === shorthandProp) {
-            result[name] = itemData[shorthandProp];
-            continue;
-          }
-        }
-        result[name] = itemData;
-      } else {
-        throw new Error("Cannot save item in object format: missing 'name' property");
-      }
-    }
-    return result;
+    // This type doesn't have a 'name' property, so always use array format
+    return items.map((item) => item.save(context));
   }
 
   /**

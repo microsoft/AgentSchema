@@ -229,7 +229,7 @@ export {% if node.isAbstract %}abstract {% endif %}class {{ node.typeName.name }
    */
   static save{{ ts.pascalCase(collection.prop.name) }}(items: {{ collection.prop.typeName.name }}[], context?: SaveContext): Record<string, unknown> | Record<string, unknown>[] {
     context = context ?? new SaveContext();
-
+{% if collection.hasNameProperty %}
     if (context.collectionFormat === "array") {
       return items.map((item) => item.save(context));
     }
@@ -257,6 +257,10 @@ export {% if node.isAbstract %}abstract {% endif %}class {{ node.typeName.name }
       }
     }
     return result;
+{% else %}
+    // This type doesn't have a 'name' property, so always use array format
+    return items.map((item) => item.save(context));
+{% endif %}
   }
   {% endfor %}
 

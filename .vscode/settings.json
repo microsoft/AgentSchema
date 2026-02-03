@@ -5,5 +5,10 @@
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   "chat.instructionsFilesLocations": {
     ".github/instructions": true
-  }
+  },
+  "python.testing.pytestArgs": ["runtime/python/agentschema/tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.defaultInterpreterPath": "${workspaceFolder}/runtime/python/agentschema/.venv/Scripts/python.exe",
+  "jest.rootPath": "${workspaceFolder}/runtime/typescript/agentschema"
 }
