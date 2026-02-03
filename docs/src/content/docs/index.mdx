@@ -18,7 +18,95 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid, Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Install the SDK
+
+Get started with AgentSchema in your preferred language:
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```bash
+    pip install agentschema
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```bash
+    npm install agentschema
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```bash
+    dotnet add package AgentSchema
+    ```
+  </TabItem>
+</Tabs>
+
+## Quick Example
+
+<Tabs syncKey="language">
+  <TabItem label="Python" icon="seti:python">
+    ```python
+    from agentschema import AgentDefinition
+
+    # Load from YAML file
+    agent = AgentDefinition.from_yaml_file("agent.yaml")
+
+    # Or create programmatically
+    agent = AgentDefinition(
+        name="my-assistant",
+        description="A helpful AI assistant",
+        model="gpt-4o",
+        instructions="You are a helpful assistant."
+    )
+
+    # Save to YAML
+    agent.to_yaml_file("agent.yaml")
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```typescript
+    import { AgentDefinition } from 'agentschema';
+    import { readFileSync, writeFileSync } from 'fs';
+
+    // Load from YAML file
+    const yaml = readFileSync('agent.yaml', 'utf-8');
+    const agent = AgentDefinition.fromYaml(yaml);
+
+    // Or create programmatically
+    const agent = new AgentDefinition({
+      name: 'my-assistant',
+      description: 'A helpful AI assistant',
+      model: 'gpt-4o',
+      instructions: 'You are a helpful assistant.'
+    });
+
+    // Save to YAML
+    writeFileSync('agent.yaml', agent.toYaml());
+    ```
+  </TabItem>
+  <TabItem label="C#" icon="seti:csharp">
+    ```csharp
+    using AgentSchema;
+
+    // Load from YAML file
+    var yaml = File.ReadAllText("agent.yaml");
+    var agent = AgentDefinition.FromYaml(yaml);
+
+    // Or create programmatically
+    var agent = new AgentDefinition
+    {
+        Name = "my-assistant",
+        Description = "A helpful AI assistant",
+        Model = "gpt-4o",
+        Instructions = "You are a helpful assistant."
+    };
+
+    // Save to YAML
+    File.WriteAllText("agent.yaml", agent.ToYaml());
+    ```
+  </TabItem>
+</Tabs>
 
 ## Why AgentSchema?
 
@@ -51,12 +139,12 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 		
 		[View Documentation →](reference/)
 	</Card>
-	<Card title="� SDKs" icon="seti:python">
+	<Card title="📦 SDKs" icon="puzzle">
 		Use our official SDKs to work with AgentSchema in TypeScript, Python, or C#.
 		
 		[View SDKs →](sdks/)
 	</Card>
-	<Card title="�🚀 Examples" icon="rocket">
+	<Card title="🚀 Examples" icon="rocket">
 		See AgentSchema in action with real-world examples including analyst, QnA, and travel agents.
 		
 		[Getting Started Guide →](guides/example/)

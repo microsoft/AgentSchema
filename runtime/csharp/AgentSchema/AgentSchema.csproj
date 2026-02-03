@@ -12,7 +12,7 @@
     <Company>Microsoft</Company>
     <Description>A declarative specification for defining AI agents in a code-first YAML format. Provides strongly-typed C# classes for loading, manipulating, and saving agent definitions.</Description>
     <PackageTags>ai;agents;schema;yaml;declarative;microsoft</PackageTags>
-    <PackageProjectUrl>https://github.com/microsoft/AgentSchema</PackageProjectUrl>
+    <PackageProjectUrl>https://microsoft.github.io/AgentSchema/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/microsoft/AgentSchema</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
