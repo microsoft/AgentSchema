@@ -84,9 +84,13 @@ jobs:
     runs-on: ubuntu-latest
     # Publish on tag push or manual workflow_dispatch
     if: startsWith(github.ref, 'refs/tags/python-v') || github.event_name == 'workflow_dispatch'
-    environment: pypi
+    environment:
+      name: pypi
+      url: https://pypi.org/project/agentschema/
     permissions:
-      id-token: write # Required for Trusted Publishing
+      id-token: write # Required for OIDC Trusted Publishing
+      attestations: write # Required for artifact attestations
+      contents: read
 
     steps:
       - name: Download distribution packages
@@ -97,6 +101,9 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: dist/
-          # No password needed - using Trusted Publishing with OIDC
+        # Uses OIDC Trusted Publishing - no password/token needed
+        # Trusted Publisher must be configured on PyPI:
+        #   Owner: microsoft
+        #   Repository: AgentSchema
+        #   Workflow: publish-pypi.yml
+        #   Environment: pypi
