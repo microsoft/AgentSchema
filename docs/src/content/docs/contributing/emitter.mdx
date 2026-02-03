@@ -5,29 +5,46 @@ sidebar:
   order: 4
 ---
 
+import { FileTree } from '@astrojs/starlight/components';
+
 The emitter transforms TypeSpec definitions into runtime code for C#, Python, and TypeScript. This guide covers how to modify code generation.
 
 ## Architecture Overview
 
-```text
-agentschema-emitter/
-├── src/
-│   ├── emitter.ts          # Entry point - dispatches to generators
-│   ├── ast.ts              # TypeSpec AST parsing (TypeNode, PropertyNode)
-│   ├── decorators.ts       # Custom decorator handling
-│   ├── utilities.ts        # Helper functions
-│   │
-│   ├── csharp.ts           # C# code generator
-│   ├── python.ts           # Python code generator
-│   ├── typescript.ts       # TypeScript code generator
-│   ├── markdown.ts         # Documentation generator
-│   │
-│   └── templates/          # Nunjucks templates
-│       ├── csharp/
-│       ├── python/
-│       └── typescript/
-│
-└── dist/                   # Compiled output (git-ignored)
+<FileTree>
+
+- agentschema-emitter/
+  - src/
+    - **emitter.ts** entry point - dispatches to generators
+    - **ast.ts** TypeSpec AST parsing (TypeNode, PropertyNode)
+    - **decorators.ts** custom decorator handling
+    - **utilities.ts** helper functions
+    - csharp.ts C# code generator
+    - python.ts Python code generator
+    - typescript.ts TypeScript code generator
+    - markdown.ts documentation generator
+    - templates/ Nunjucks templates
+      - csharp/
+      - python/
+      - typescript/
+  - dist/ compiled output (git-ignored)
+
+</FileTree>
+
+```mermaid
+flowchart LR
+    A[TypeSpec AST] --> B[emitter.ts]
+    B --> C[ast.ts<br/>resolveModel]
+    C --> D[TypeNode Tree]
+    D --> E[csharp.ts]
+    D --> F[python.ts]
+    D --> G[typescript.ts]
+    E --> H[templates/csharp/*.njk]
+    F --> I[templates/python/*.njk]
+    G --> J[templates/typescript/*.njk]
+    H --> K[runtime/csharp/]
+    I --> L[runtime/python/]
+    J --> M[runtime/typescript/]
 ```
 
 ## Key Concepts

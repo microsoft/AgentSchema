@@ -5,6 +5,8 @@ sidebar:
   order: 5
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Tests are auto-generated for runtime libraries based on `@sample` decorators in TypeSpec. This guide covers running tests and understanding the test architecture.
 
 ## Running Tests
@@ -14,46 +16,48 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
 ```bash
 # Quick test script (from repo root)
 ./tests.ps1
-
-# Or manually:
-cd runtime/csharp && dotnet test
-cd runtime/python/agentschema && uv run pytest tests/
-cd runtime/typescript/agentschema && npm test
 ```
 
 ### Individual Runtimes
 
-**C#:**
-
-```bash
-cd runtime/csharp
-dotnet test                           # All tests
-dotnet test --filter "ClassName"      # Specific class
-```
-
-**Python:**
-
-```bash
-cd runtime/python/agentschema
-uv run pytest tests/                  # All tests
-uv run pytest tests/test_load_model.py  # Specific file
-uv run pytest -v                      # Verbose output
-```
-
-**TypeScript:**
-
-```bash
-cd runtime/typescript/agentschema
-npm test                              # All tests
-npm test -- --grep "Model"           # Filter by name
-```
+<Tabs syncKey="language">
+  <TabItem label="C#" icon="seti:csharp">
+    ```bash
+    cd runtime/csharp
+    dotnet test                           # All tests
+    dotnet test --filter "ClassName"      # Specific class
+    ```
+  </TabItem>
+  <TabItem label="Python" icon="seti:python">
+    ```bash
+    cd runtime/python/agentschema
+    uv run pytest tests/                  # All tests
+    uv run pytest tests/test_load_model.py  # Specific file
+    uv run pytest -v                      # Verbose output
+    ```
+  </TabItem>
+  <TabItem label="TypeScript" icon="seti:typescript">
+    ```bash
+    cd runtime/typescript/agentschema
+    npm test                              # All tests
+    npm test -- --grep "Model"           # Filter by name
+    ```
+  </TabItem>
+</Tabs>
 
 ## Test Architecture
 
 Tests are generated from `@sample` decorators in TypeSpec files. For each model:
 
-```text
-TypeSpec @sample → Emitter → Test Files
+```mermaid
+flowchart LR
+    A[@sample decorator] --> B[Emitter]
+    B --> C[test_load_*.py]
+    B --> D[*ConversionTests.cs]
+    B --> E[*.test.ts]
+    C --> F[pytest]
+    D --> G[dotnet test]
+    E --> H[vitest]
 ```
 
 ### What Gets Tested

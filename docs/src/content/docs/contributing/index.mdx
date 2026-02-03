@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import { FileTree } from '@astrojs/starlight/components';
+
 AgentSchema is a collaborative project between Microsoft Copilot Studio and Microsoft Foundry. We welcome contributions to the specification, runtime libraries, and documentation!
 
 ## Project Architecture
@@ -15,24 +17,41 @@ AgentSchema uses a code generation approach where:
 2. **Custom emitter** generates runtime code for multiple languages
 3. **Runtime libraries** are auto-generated (C#, Python, TypeScript)
 
-```text
-┌─────────────────────┐
-│   TypeSpec Models   │  ← Edit these (.tsp files)
-│  agentschema/model/ │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  TypeSpec Emitter   │  ← Or edit templates here
-│ agentschema-emitter │
-└─────────┬───────────┘
-          │
-          ▼
-┌─────────────────────┐
-│  Generated Output   │  ← DO NOT edit directly
-│  runtime/, schemas/ │
-└─────────────────────┘
+```mermaid
+flowchart TD
+    A[TypeSpec Models<br/>agentschema/model/] --> B[TypeSpec Emitter<br/>agentschema-emitter]
+    B --> C[C# Runtime<br/>runtime/csharp/]
+    B --> D[Python Runtime<br/>runtime/python/]
+    B --> E[TypeScript Runtime<br/>runtime/typescript/]
+    B --> F[JSON Schemas<br/>schemas/]
+    B --> G[Reference Docs<br/>docs/reference/]
+    
+    style A fill:#4CAF50,color:#fff
+    style B fill:#2196F3,color:#fff
+    style C fill:#9E9E9E,color:#fff
+    style D fill:#9E9E9E,color:#fff
+    style E fill:#9E9E9E,color:#fff
+    style F fill:#9E9E9E,color:#fff
+    style G fill:#9E9E9E,color:#fff
 ```
+
+<FileTree>
+
+- agentschema/model/ **Edit these** (source of truth)
+  - main.tsp
+  - agent.tsp
+  - tools.tsp
+  - …
+- agentschema-emitter/ **Or edit templates here**
+  - src/
+    - templates/
+- runtime/ ⚠️ DO NOT edit directly
+  - csharp/
+  - python/
+  - typescript/
+- schemas/ ⚠️ DO NOT edit directly
+
+</FileTree>
 
 ## What Can I Contribute?
 

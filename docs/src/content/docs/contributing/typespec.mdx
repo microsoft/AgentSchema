@@ -5,28 +5,32 @@ sidebar:
   order: 3
 ---
 
+import { FileTree } from '@astrojs/starlight/components';
+
 The AgentSchema specification is defined using [TypeSpec](https://typespec.io/), a language for defining APIs and data models. All schema changes start here.
 
 ## File Structure
 
-```text
-agentschema/model/
-├── main.tsp          # Entry point - imports all other files
-├── core.tsp          # Base templates (Named<>, Id<>)
-├── agent.tsp         # AgentDefinition, PromptAgent, Workflow
-├── manifest.tsp      # AgentManifest
-├── model.tsp         # Model, ModelOptions
-├── connection.tsp    # Connection types
-├── template.tsp      # Template, Format, Parser
-├── properties.tsp    # Property, PropertySchema
-├── tools.tsp         # Tool base and FunctionTool
-└── tools/            # Specialized tools
-    ├── file.tsp
-    ├── mcp.tsp
-    ├── openapi.tsp
-    ├── web.tsp
-    └── interpreter.tsp
-```
+<FileTree>
+
+- agentschema/model/
+  - **main.tsp** entry point - imports all other files
+  - **core.tsp** base templates (Named<>, Id<>)
+  - **agent.tsp** AgentDefinition, PromptAgent, Workflow
+  - **manifest.tsp** AgentManifest
+  - **model.tsp** Model, ModelOptions
+  - **connection.tsp** Connection types
+  - **template.tsp** Template, Format, Parser
+  - **properties.tsp** Property, PropertySchema
+  - **tools.tsp** Tool base and FunctionTool
+  - tools/ specialized tools
+    - file.tsp
+    - mcp.tsp
+    - openapi.tsp
+    - web.tsp
+    - interpreter.tsp
+
+</FileTree>
 
 ## Basic Model Definition
 
