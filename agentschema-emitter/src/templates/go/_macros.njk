@@ -135,6 +135,13 @@ nil
 {%- set propNameGo = propName(prop.name) -%}
 {%- if prop.isCollection and not prop.isDict -%}
 {%- if prop.isScalar -%}
+{%- if prop.typeName.name == "unknown" or prop.typeName.name == "any" -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+			if arr, ok := val.([]interface{}); ok {
+				result.{{ propNameGo }} = arr
+			}
+		}
+{%- else -%}
 		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
 				result.{{ propNameGo }} = make([]{{ typeMapper[prop.typeName.name] }}, len(arr))
@@ -143,6 +150,7 @@ nil
 				}
 			}
 		}
+{%- endif -%}
 {%- else -%}
 		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
@@ -164,11 +172,19 @@ nil
 		}
 {%- elif prop.isScalar -%}
 		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+{%- if prop.typeName.name == "unknown" or prop.typeName.name == "any" -%}
 {%- if prop.isOptional -%}
-			v := val.({{ typeMapper[prop.typeName.name] }})
+			result.{{ propNameGo }} = &val
+{%- else -%}
+			result.{{ propNameGo }} = val
+{%- endif -%}
+{%- else -%}
+{%- if prop.isOptional -%}
+			v := val.({{ typeMapper[prop.typeName.name] or "interface{}" }})
 			result.{{ propNameGo }} = &v
 {%- else -%}
-			result.{{ propNameGo }} = val.({{ typeMapper[prop.typeName.name] }})
+			result.{{ propNameGo }} = val.({{ typeMapper[prop.typeName.name] or "interface{}" }})
+{%- endif -%}
 {%- endif -%}
 		}
 {%- else -%}

@@ -72,16 +72,11 @@ func LoadProperty(data interface{}, ctx *LoadContext) (Property, error) {
 			result.Description = &v}
 		if val, ok := m["required"]; ok && val != nil {v := val.(bool)
 			result.Required = &v}
-		if val, ok := m["default"]; ok && val != nil {v := val.()
-			result.Default = &v}
-		if val, ok := m["example"]; ok && val != nil {v := val.()
-			result.Example = &v}
+		if val, ok := m["default"]; ok && val != nil {result.Default = &val}
+		if val, ok := m["example"]; ok && val != nil {result.Example = &val}
 		if val, ok := m["enumValues"]; ok && val != nil {
 			if arr, ok := val.([]interface{}); ok {
-				result.Enumvalues = make([], len(arr))
-				for i, v := range arr {
-					result.Enumvalues[i] = v.()
-				}
+				result.Enumvalues = arr
 			}
 		}
 	}

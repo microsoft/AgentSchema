@@ -258,8 +258,8 @@ func TestPropertyFromInput(t *testing.T) {
 }
 
 
-// TestPropertyFromInput tests loading Property from float32
-func TestPropertyFromInput(t *testing.T) {
+// TestPropertyFromInput2 tests loading Property from float32
+func TestPropertyFromInput2(t *testing.T) {
 	ctx := agentschema.NewLoadContext()
 	instance, err := agentschema.LoadProperty(3.14, ctx)
 	if err != nil {
@@ -274,8 +274,8 @@ func TestPropertyFromInput(t *testing.T) {
 }
 
 
-// TestPropertyFromInput tests loading Property from integer
-func TestPropertyFromInput(t *testing.T) {
+// TestPropertyFromInput3 tests loading Property from integer
+func TestPropertyFromInput3(t *testing.T) {
 	ctx := agentschema.NewLoadContext()
 	instance, err := agentschema.LoadProperty(4, ctx)
 	if err != nil {
@@ -290,8 +290,8 @@ func TestPropertyFromInput(t *testing.T) {
 }
 
 
-// TestPropertyFromInput tests loading Property from string
-func TestPropertyFromInput(t *testing.T) {
+// TestPropertyFromInput4 tests loading Property from string
+func TestPropertyFromInput4(t *testing.T) {
 	ctx := agentschema.NewLoadContext()
 	instance, err := agentschema.LoadProperty("example", ctx)
 	if err != nil {

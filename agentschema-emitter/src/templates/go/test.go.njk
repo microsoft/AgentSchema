@@ -168,8 +168,8 @@ func Test{{ node.typeName.name }}ToYAML{% if not loop.first %}{{ loop.index - 1 
 {% endfor %}
 {% if alternates.length > 0 %}
 {% for alt in alternates %}
-// Test{{ node.typeName.name }}From{{ alt.title | capitalize }} tests loading {{ node.typeName.name }} from {{ alt.scalar }}
-func Test{{ node.typeName.name }}From{{ alt.title | capitalize }}(t *testing.T) {
+// Test{{ node.typeName.name }}From{{ alt.title | capitalize }}{% if not loop.first %}{{ loop.index }}{% endif %} tests loading {{ node.typeName.name }} from {{ alt.scalar }}
+func Test{{ node.typeName.name }}From{{ alt.title | capitalize }}{% if not loop.first %}{{ loop.index }}{% endif %}(t *testing.T) {
 	ctx := {{ packageName }}.NewLoadContext()
 	instance, err := {{ packageName }}.Load{{ node.typeName.name }}({{ alt.value }}, ctx)
 	if err != nil {
