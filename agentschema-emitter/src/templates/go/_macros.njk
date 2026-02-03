@@ -1,0 +1,235 @@
+{#
+  Go-Specific Macros for AgentSchema Emitter
+  ==========================================
+  
+  These macros handle Go-specific rendering logic.
+  
+  Usage in Go templates:
+    {% import "_macros.njk" as go %}
+    {{ go.goType(prop, typeMapper) }}
+#}
+
+{# Import shared macros #}
+{% from "macros.njk" import separator, firstOrDefault, validationValue %}
+
+
+{# ============================================================================
+   Type Rendering
+   ============================================================================ #}
+
+{#
+  Convert a property to its Go type annotation.
+  
+  Handles:
+  - Scalar types (string, int32, float64, bool, etc.)
+  - Collections ([]T)
+  - Pointers for optionals (*T)
+  - Maps (map[string]interface{})
+  
+  @param prop - PropertyNode with type information
+  @param typeMapper - Record<string, string> mapping TypeSpec types to Go types
+  
+  Usage: {{ goType(prop, typeMapper) }}
+#}
+{% macro goType(prop, typeMapper) %}
+{%- set baseType = typeMapper[prop.typeName.name] if prop.isScalar else (typeMapper[prop.typeName.name] or prop.typeName.name) -%}
+{%- if not baseType %}{% set baseType = "interface{}" %}{% endif -%}
+{%- if prop.isDict -%}
+map[string]interface{}
+{%- elif prop.isCollection -%}
+[]{{ baseType }}
+{%- elif prop.isOptional -%}
+*{{ baseType }}
+{%- else -%}
+{{ baseType }}
+{%- endif -%}
+{% endmacro %}
+
+
+{# ============================================================================
+   Property Name Rendering
+   ============================================================================ #}
+
+{#
+  Render property name in PascalCase for exported fields.
+  
+  @param name - Property name (may be camelCase or snake_case)
+  
+  Usage: {{ propName(prop.name) }}
+#}
+{% macro propName(name) %}
+{%- set parts = name.split('_') -%}
+{%- if parts.length > 1 -%}
+{%- for part in parts %}{{ part | capitalize }}{% endfor -%}
+{%- else -%}
+{{ name | capitalize }}
+{%- endif -%}
+{% endmacro %}
+
+
+{# ============================================================================
+   JSON/YAML Tag Rendering
+   ============================================================================ #}
+
+{#
+  Render struct field tags for JSON and YAML serialization.
+  
+  @param prop - PropertyNode with name and optional flag
+  
+  Usage: {{ structTags(prop) }}
+#}
+{% macro structTags(prop) -%}
+`json:"{{ prop.name }}{% if prop.isOptional %},omitempty{% endif %}" yaml:"{{ prop.name }}{% if prop.isOptional %},omitempty{% endif %}"`
+{%- endmacro %}
+
+
+{# ============================================================================
+   Default Value Rendering
+   ============================================================================ #}
+
+{#
+  Render the default value initialization for a field.
+  
+  @param prop - PropertyNode with type and default value information
+  @param typeMapper - Record<string, string> for type lookups
+  
+  Usage: {{ defaultValue(prop, typeMapper) }}
+#}
+{% macro defaultValue(prop, typeMapper) -%}
+{%- if prop.isCollection -%}
+make([]{{ typeMapper[prop.typeName.name] if prop.isScalar else prop.typeName.name }}, 0)
+{%- elif prop.isDict -%}
+make(map[string]interface{})
+{%- elif prop.isOptional -%}
+nil
+{%- elif prop.isScalar -%}
+{%- if prop.typeName.name == "boolean" -%}
+{{ "true" if prop.defaultValue else "false" }}
+{%- elif prop.typeName.name == "string" -%}
+"{{ prop.defaultValue if prop.defaultValue else "" }}"
+{%- elif prop.typeName.name == "number" or prop.typeName.name == "integer" or prop.typeName.name == "int32" or prop.typeName.name == "int64" or prop.typeName.name == "float32" or prop.typeName.name == "float64" -%}
+{{ prop.defaultValue if prop.defaultValue else "0" }}
+{%- else -%}
+nil
+{%- endif -%}
+{%- else -%}
+nil
+{%- endif -%}
+{% endmacro %}
+
+
+{# ============================================================================
+   Load Property Rendering
+   ============================================================================ #}
+
+{#
+  Render the property loading code from map[string]interface{}.
+  
+  @param prop - PropertyNode
+  @param varName - Variable name containing the data
+  @param typeMapper - Type mapping dictionary
+  
+  Usage: {{ loadProperty(prop, "data", typeMapper) }}
+#}
+{% macro loadProperty(prop, varName, typeMapper) -%}
+{%- set propNameGo = propName(prop.name) -%}
+{%- if prop.isCollection and not prop.isDict -%}
+{%- if prop.isScalar -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+			if arr, ok := val.([]interface{}); ok {
+				result.{{ propNameGo }} = make([]{{ typeMapper[prop.typeName.name] }}, len(arr))
+				for i, v := range arr {
+					result.{{ propNameGo }}[i] = v.({{ typeMapper[prop.typeName.name] }})
+				}
+			}
+		}
+{%- else -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+			if arr, ok := val.([]interface{}); ok {
+				result.{{ propNameGo }} = make([]{{ prop.typeName.name }}, len(arr))
+				for i, v := range arr {
+					if item, ok := v.(map[string]interface{}); ok {
+						loaded, _ := Load{{ prop.typeName.name }}(item, ctx)
+						result.{{ propNameGo }}[i] = loaded
+					}
+				}
+			}
+		}
+{%- endif -%}
+{%- elif prop.isDict -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				result.{{ propNameGo }} = m
+			}
+		}
+{%- elif prop.isScalar -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+{%- if prop.isOptional -%}
+			v := val.({{ typeMapper[prop.typeName.name] }})
+			result.{{ propNameGo }} = &v
+{%- else -%}
+			result.{{ propNameGo }} = val.({{ typeMapper[prop.typeName.name] }})
+{%- endif -%}
+		}
+{%- else -%}
+		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				loaded, _ := Load{{ prop.typeName.name }}(m, ctx)
+{%- if prop.isOptional -%}
+				result.{{ propNameGo }} = &loaded
+{%- else -%}
+				result.{{ propNameGo }} = loaded
+{%- endif -%}
+			}
+		}
+{%- endif -%}
+{%- endmacro %}
+
+
+{# ============================================================================
+   Save Property Rendering
+   ============================================================================ #}
+
+{#
+  Render the property saving code to map[string]interface{}.
+  
+  @param prop - PropertyNode
+  
+  Usage: {{ saveProperty(prop) }}
+#}
+{% macro saveProperty(prop) -%}
+{%- set propNameGo = propName(prop.name) -%}
+{%- if prop.isCollection and not prop.isDict -%}
+{%- if prop.isScalar -%}
+	result["{{ prop.name }}"] = obj.{{ propNameGo }}
+{%- else -%}
+	if obj.{{ propNameGo }} != nil {
+		arr := make([]interface{}, len(obj.{{ propNameGo }}))
+		for i, item := range obj.{{ propNameGo }} {
+			arr[i] = item.Save(ctx)
+		}
+		result["{{ prop.name }}"] = arr
+	}
+{%- endif -%}
+{%- elif prop.isDict -%}
+{%- if prop.isOptional -%}
+	if obj.{{ propNameGo }} != nil {
+		result["{{ prop.name }}"] = obj.{{ propNameGo }}
+	}
+{%- else -%}
+	result["{{ prop.name }}"] = obj.{{ propNameGo }}
+{%- endif -%}
+{%- elif prop.isScalar and not prop.isOptional -%}
+	result["{{ prop.name }}"] = obj.{{ propNameGo }}
+{%- elif prop.isOptional -%}
+	if obj.{{ propNameGo }} != nil {
+{%- if prop.isScalar -%}
+		result["{{ prop.name }}"] = *obj.{{ propNameGo }}
+{%- else -%}
+		result["{{ prop.name }}"] = obj.{{ propNameGo }}.Save(ctx)
+{%- endif -%}
+	}
+{%- else -%}
+	result["{{ prop.name }}"] = obj.{{ propNameGo }}.Save(ctx)
+{%- endif -%}
+{%- endmacro %}

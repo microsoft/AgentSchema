@@ -19,6 +19,9 @@ options:
       - type: Python
         output-dir: "../runtime/python/agentschema/src/agentschema"
         test-dir: "../runtime/python/agentschema/tests"
+      - type: Go
+        output-dir: "../runtime/go/agentschema"
+        test-dir: "../runtime/go/agentschema"
       - type: BotDefinition
         output-dir: "../runtime/definition"
       - type: TypeScript
