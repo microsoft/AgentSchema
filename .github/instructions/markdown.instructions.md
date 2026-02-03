@@ -100,6 +100,13 @@ Common diagram types:
 - `classDiagram` - Object relationships
 - `stateDiagram-v2` - State machines
 
+**Important**: Node labels containing special characters like `@` must be quoted:
+
+```text
+A["@sample decorator"] --> B[Emitter]  ✅ Correct - quoted
+A[@sample decorator] --> B[Emitter]    ❌ Wrong - will error
+```
+
 ## Linting
 
 All markdown files in `docs/` must pass markdownlint. Run the linter with:
