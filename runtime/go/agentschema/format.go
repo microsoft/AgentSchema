@@ -10,6 +10,7 @@ import (
 )
 
 // Format represents Template format definition
+
 type Format struct {
 	Kind    string                 `json:"kind" yaml:"kind"`
 	Strict  *bool                  `json:"strict,omitempty" yaml:"strict,omitempty"`

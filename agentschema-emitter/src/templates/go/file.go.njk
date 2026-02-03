@@ -23,7 +23,11 @@ import (
 )
 
 {% for class in classes %}
-// {{ class.node.typeName.name }} represents {{ class.node.description or "a schema type" }}
+{%- if class.node.description %}
+{{ go.goComment(class.node.typeName.name + " represents " + class.node.description) -}}
+{%- else %}
+// {{ class.node.typeName.name }} represents a schema type
+{%- endif %}
 type {{ class.node.typeName.name }} struct {
 {%- for prop in class.node.properties %}
 	{{ go.propName(prop.name) }} {{ go.goType(prop, typeMapper) }} {{ go.structTags(prop) }}

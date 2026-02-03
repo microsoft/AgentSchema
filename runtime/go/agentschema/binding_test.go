@@ -5,158 +5,158 @@
 package agentschema_test
 
 import (
-	"encoding/json"
-	"testing"
-	
-	"gopkg.in/yaml.v3"
-	
-	"github.com/microsoft/agentschema-go/agentschema"
+"encoding/json"
+"testing"
+
+"gopkg.in/yaml.v3"
+
+"github.com/microsoft/agentschema-go/agentschema"
 )
 
 
 // TestBindingLoadJSON tests loading Binding from JSON
 func TestBindingLoadJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-tool",
   "input": "input-variable"
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding: %v", err)
-	}
-	if instance.Name != "my-tool" {
-		t.Errorf("Expected Name to be "my-tool", got %v", instance.Name)
-	}
-	if instance.Input != "input-variable" {
-		t.Errorf("Expected Input to be "input-variable", got %v", instance.Input)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Binding: %v", err)
+}
+if instance.Name != "my-tool" {
+t.Errorf("Expected Name to be \"my-tool\", got %v", instance.Name)
+}
+if instance.Input != "input-variable" {
+t.Errorf("Expected Input to be \"input-variable\", got %v", instance.Input)
+}
 }
 
 // TestBindingLoadYAML tests loading Binding from YAML
 func TestBindingLoadYAML(t *testing.T) {
-	yamlData := `
+yamlData := `
 name: my-tool
 input: input-variable
 
 `
-	var data map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
-		t.Fatalf("Failed to parse YAML: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding: %v", err)
-	}
-	if instance.Name != "my-tool" {
-		t.Errorf("Expected Name to be "my-tool", got %v", instance.Name)
-	}
-	if instance.Input != "input-variable" {
-		t.Errorf("Expected Input to be "input-variable", got %v", instance.Input)
-	}
+var data map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
+t.Fatalf("Failed to parse YAML: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Binding: %v", err)
+}
+if instance.Name != "my-tool" {
+t.Errorf("Expected Name to be \"my-tool\", got %v", instance.Name)
+}
+if instance.Input != "input-variable" {
+t.Errorf("Expected Input to be \"input-variable\", got %v", instance.Input)
+}
 }
 
 // TestBindingRoundtrip tests load -> save -> load produces equivalent data
 func TestBindingRoundtrip(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-tool",
   "input": "input-variable"
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	loadCtx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding(data, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding: %v", err)
-	}
-	
-	saveCtx := agentschema.NewSaveContext()
-	savedData := instance.Save(saveCtx)
-	
-	reloaded, err := agentschema.LoadBinding(savedData, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to reload Binding: %v", err)
-	}
-	if reloaded.Name != "my-tool" {
-		t.Errorf("Expected Name to be "my-tool", got %v", reloaded.Name)
-	}
-	if reloaded.Input != "input-variable" {
-		t.Errorf("Expected Input to be "input-variable", got %v", reloaded.Input)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+loadCtx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding(data, loadCtx)
+if err != nil {
+t.Fatalf("Failed to load Binding: %v", err)
+}
+
+saveCtx := agentschema.NewSaveContext()
+savedData := instance.Save(saveCtx)
+
+reloaded, err := agentschema.LoadBinding(savedData, loadCtx)
+if err != nil {
+t.Fatalf("Failed to reload Binding: %v", err)
+}
+if reloaded.Name != "my-tool" {
+t.Errorf("Expected Name to be \"my-tool\", got %v", reloaded.Name)
+}
+if reloaded.Input != "input-variable" {
+t.Errorf("Expected Input to be \"input-variable\", got %v", reloaded.Input)
+}
 }
 
 // TestBindingToJSON tests that ToJSON produces valid JSON
 func TestBindingToJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-tool",
   "input": "input-variable"
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding: %v", err)
-	}
-	
-	jsonOutput, err := instance.ToJSON()
-	if err != nil {
-		t.Fatalf("Failed to convert to JSON: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated JSON: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Binding: %v", err)
+}
+
+jsonOutput, err := instance.ToJSON()
+if err != nil {
+t.Fatalf("Failed to convert to JSON: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated JSON: %v", err)
+}
 }
 
 // TestBindingToYAML tests that ToYAML produces valid YAML
 func TestBindingToYAML(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-tool",
   "input": "input-variable"
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding: %v", err)
-	}
-	
-	yamlOutput, err := instance.ToYAML()
-	if err != nil {
-		t.Fatalf("Failed to convert to YAML: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated YAML: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Binding: %v", err)
+}
+
+yamlOutput, err := instance.ToYAML()
+if err != nil {
+t.Fatalf("Failed to convert to YAML: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated YAML: %v", err)
+}
 }
 
 
@@ -164,14 +164,14 @@ func TestBindingToYAML(t *testing.T) {
 
 // TestBindingFromString tests loading Binding from string
 func TestBindingFromString(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadBinding("example", ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Binding from string: %v", err)
-	}
-	if instance.Input != "example" {
-		t.Errorf("Expected Input to be "example", got %v", instance.Input)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadBinding("example", ctx)
+if err != nil {
+t.Fatalf("Failed to load Binding from string: %v", err)
+}
+if instance.Input != "example" {
+t.Errorf("Expected Input to be "example", got %v", instance.Input)
+}
 }
 
 

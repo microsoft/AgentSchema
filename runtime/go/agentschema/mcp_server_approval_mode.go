@@ -10,6 +10,7 @@ import (
 )
 
 // McpServerApprovalMode represents The approval mode for MCP server tools.
+
 type McpServerApprovalMode struct {
 	Kind string `json:"kind" yaml:"kind"`
 }

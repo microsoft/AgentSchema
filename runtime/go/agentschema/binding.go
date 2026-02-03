@@ -10,6 +10,7 @@ import (
 )
 
 // Binding represents Represents a binding between an input property and a tool parameter.
+
 type Binding struct {
 	Name  string `json:"name" yaml:"name"`
 	Input string `json:"input" yaml:"input"`

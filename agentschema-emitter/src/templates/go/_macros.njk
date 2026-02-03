@@ -14,6 +14,46 @@
 
 
 {# ============================================================================
+   Comment Rendering
+   ============================================================================ #}
+
+{#
+  Format a multi-line description as Go comment lines.
+  Each line is prefixed with "// ".
+  
+  @param text - Multi-line description text
+  
+  Usage: {{ goComment("Some description") }}
+#}
+{% macro goComment(text) -%}
+{%- if text -%}
+{%- set lines = text.split('\n') -%}
+{%- for line in lines -%}
+// {{ line }}
+{% endfor -%}
+{%- endif -%}
+{%- endmacro %}
+
+
+{#
+  Escape a string value for use in Go code.
+  Handles quotes, backslashes, newlines, etc.
+  
+  @param value - String value to escape
+  @param delimeter - Quote character (" or empty)
+  
+  Usage: {{ goEscape(value, '"') }}
+#}
+{% macro goEscape(value, delimeter) -%}
+{%- if delimeter == "\"" -%}
+{{ value | replace("\\", "\\\\") | replace("\"", "\\\"") | replace("\n", "\\n") | replace("\r", "\\r") | replace("\t", "\\t") }}
+{%- else -%}
+{{ value }}
+{%- endif -%}
+{%- endmacro %}
+
+
+{# ============================================================================
    Type Rendering
    ============================================================================ #}
 
@@ -191,11 +231,11 @@ nil
 		if val, ok := {{ varName }}["{{ prop.name }}"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
 				loaded, _ := Load{{ prop.typeName.name }}(m, ctx)
-{%- if prop.isOptional -%}
+{%- if prop.isOptional %}
 				result.{{ propNameGo }} = &loaded
-{%- else -%}
+{%- else %}
 				result.{{ propNameGo }} = loaded
-{%- endif -%}
+{%- endif %}
 			}
 		}
 {%- endif -%}

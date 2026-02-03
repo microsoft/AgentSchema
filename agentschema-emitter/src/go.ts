@@ -75,6 +75,18 @@ interface GoContextContext {
 }
 
 /**
+ * Escape a string for use in Go string literals.
+ */
+function escapeGoString(str: string): string {
+  return str
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
+}
+
+/**
  * Main entry point for Go code generation.
  */
 export const generateGo = async (
@@ -213,7 +225,7 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
           key: toPascalCase(key),
           value: typeof sample[key] === 'boolean'
             ? (sample[key] ? "true" : "false")
-            : sample[key],
+            : (typeof sample[key] === 'string' ? escapeGoString(sample[key]) : sample[key]),
           delimeter: typeof sample[key] === 'string' ? '"' : '',
         })),
     };
@@ -233,10 +245,11 @@ function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
         .filter(key => typeof alt.expansion[key] !== 'object')
         .map(key => {
           const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
+          const needsQuotes = typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}";
           return {
             key: toPascalCase(key),
-            value,
-            delimeter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
+            value: needsQuotes ? escapeGoString(value) : value,
+            delimeter: needsQuotes ? '"' : '',
           };
         }),
     };

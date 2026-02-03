@@ -5,18 +5,18 @@
 package agentschema_test
 
 import (
-	"encoding/json"
-	"testing"
-	
-	"gopkg.in/yaml.v3"
-	
-	"github.com/microsoft/agentschema-go/agentschema"
+"encoding/json"
+"testing"
+
+"gopkg.in/yaml.v3"
+
+"github.com/microsoft/agentschema-go/agentschema"
 )
 
 
 // TestModelLoadJSON tests loading Model from JSON
 func TestModelLoadJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "id": "gpt-35-turbo",
   "provider": "azure",
@@ -33,30 +33,30 @@ func TestModelLoadJSON(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Model: %v", err)
-	}
-	if instance.Id != "gpt-35-turbo" {
-		t.Errorf("Expected Id to be "gpt-35-turbo", got %v", instance.Id)
-	}
-	if instance.Provider != "azure" {
-		t.Errorf("Expected Provider to be "azure", got %v", instance.Provider)
-	}
-	if instance.ApiType != "chat" {
-		t.Errorf("Expected ApiType to be "chat", got %v", instance.ApiType)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Model: %v", err)
+}
+if instance.Id != "gpt-35-turbo" {
+t.Errorf("Expected Id to be \"gpt-35-turbo\", got %v", instance.Id)
+}
+if instance.Provider != "azure" {
+t.Errorf("Expected Provider to be \"azure\", got %v", instance.Provider)
+}
+if instance.ApiType != "chat" {
+t.Errorf("Expected ApiType to be \"chat\", got %v", instance.ApiType)
+}
 }
 
 // TestModelLoadYAML tests loading Model from YAML
 func TestModelLoadYAML(t *testing.T) {
-	yamlData := `
+yamlData := `
 id: gpt-35-turbo
 provider: azure
 apiType: chat
@@ -70,30 +70,30 @@ options:
   maxTokens: 1000
 
 `
-	var data map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
-		t.Fatalf("Failed to parse YAML: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Model: %v", err)
-	}
-	if instance.Id != "gpt-35-turbo" {
-		t.Errorf("Expected Id to be "gpt-35-turbo", got %v", instance.Id)
-	}
-	if instance.Provider != "azure" {
-		t.Errorf("Expected Provider to be "azure", got %v", instance.Provider)
-	}
-	if instance.ApiType != "chat" {
-		t.Errorf("Expected ApiType to be "chat", got %v", instance.ApiType)
-	}
+var data map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
+t.Fatalf("Failed to parse YAML: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Model: %v", err)
+}
+if instance.Id != "gpt-35-turbo" {
+t.Errorf("Expected Id to be \"gpt-35-turbo\", got %v", instance.Id)
+}
+if instance.Provider != "azure" {
+t.Errorf("Expected Provider to be \"azure\", got %v", instance.Provider)
+}
+if instance.ApiType != "chat" {
+t.Errorf("Expected ApiType to be \"chat\", got %v", instance.ApiType)
+}
 }
 
 // TestModelRoundtrip tests load -> save -> load produces equivalent data
 func TestModelRoundtrip(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "id": "gpt-35-turbo",
   "provider": "azure",
@@ -110,38 +110,38 @@ func TestModelRoundtrip(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	loadCtx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel(data, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to load Model: %v", err)
-	}
-	
-	saveCtx := agentschema.NewSaveContext()
-	savedData := instance.Save(saveCtx)
-	
-	reloaded, err := agentschema.LoadModel(savedData, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to reload Model: %v", err)
-	}
-	if reloaded.Id != "gpt-35-turbo" {
-		t.Errorf("Expected Id to be "gpt-35-turbo", got %v", reloaded.Id)
-	}
-	if reloaded.Provider != "azure" {
-		t.Errorf("Expected Provider to be "azure", got %v", reloaded.Provider)
-	}
-	if reloaded.ApiType != "chat" {
-		t.Errorf("Expected ApiType to be "chat", got %v", reloaded.ApiType)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+loadCtx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel(data, loadCtx)
+if err != nil {
+t.Fatalf("Failed to load Model: %v", err)
+}
+
+saveCtx := agentschema.NewSaveContext()
+savedData := instance.Save(saveCtx)
+
+reloaded, err := agentschema.LoadModel(savedData, loadCtx)
+if err != nil {
+t.Fatalf("Failed to reload Model: %v", err)
+}
+if reloaded.Id != "gpt-35-turbo" {
+t.Errorf("Expected Id to be \"gpt-35-turbo\", got %v", reloaded.Id)
+}
+if reloaded.Provider != "azure" {
+t.Errorf("Expected Provider to be \"azure\", got %v", reloaded.Provider)
+}
+if reloaded.ApiType != "chat" {
+t.Errorf("Expected ApiType to be \"chat\", got %v", reloaded.ApiType)
+}
 }
 
 // TestModelToJSON tests that ToJSON produces valid JSON
 func TestModelToJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "id": "gpt-35-turbo",
   "provider": "azure",
@@ -158,31 +158,31 @@ func TestModelToJSON(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Model: %v", err)
-	}
-	
-	jsonOutput, err := instance.ToJSON()
-	if err != nil {
-		t.Fatalf("Failed to convert to JSON: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated JSON: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Model: %v", err)
+}
+
+jsonOutput, err := instance.ToJSON()
+if err != nil {
+t.Fatalf("Failed to convert to JSON: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated JSON: %v", err)
+}
 }
 
 // TestModelToYAML tests that ToYAML produces valid YAML
 func TestModelToYAML(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "id": "gpt-35-turbo",
   "provider": "azure",
@@ -199,26 +199,26 @@ func TestModelToYAML(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Model: %v", err)
-	}
-	
-	yamlOutput, err := instance.ToYAML()
-	if err != nil {
-		t.Fatalf("Failed to convert to YAML: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated YAML: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Model: %v", err)
+}
+
+yamlOutput, err := instance.ToYAML()
+if err != nil {
+t.Fatalf("Failed to convert to YAML: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated YAML: %v", err)
+}
 }
 
 
@@ -226,14 +226,14 @@ func TestModelToYAML(t *testing.T) {
 
 // TestModelFromModel tests loading Model from string
 func TestModelFromModel(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadModel("example", ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Model from string: %v", err)
-	}
-	if instance.Id != "example" {
-		t.Errorf("Expected Id to be "example", got %v", instance.Id)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadModel("example", ctx)
+if err != nil {
+t.Fatalf("Failed to load Model from string: %v", err)
+}
+if instance.Id != "example" {
+t.Errorf("Expected Id to be "example", got %v", instance.Id)
+}
 }
 
 

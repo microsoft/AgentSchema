@@ -5,18 +5,18 @@
 package agentschema_test
 
 import (
-	"encoding/json"
-	"testing"
-	
-	"gopkg.in/yaml.v3"
-	
-	"github.com/microsoft/agentschema-go/agentschema"
+"encoding/json"
+"testing"
+
+"gopkg.in/yaml.v3"
+
+"github.com/microsoft/agentschema-go/agentschema"
 )
 
 
 // TestPropertyLoadJSON tests loading Property from JSON
 func TestPropertyLoadJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-input",
   "kind": "string",
@@ -31,39 +31,39 @@ func TestPropertyLoadJSON(t *testing.T) {
   ]
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property: %v", err)
-	}
-	if instance.Name != "my-input" {
-		t.Errorf("Expected Name to be "my-input", got %v", instance.Name)
-	}
-	if instance.Kind != "string" {
-		t.Errorf("Expected Kind to be "string", got %v", instance.Kind)
-	}
-	if instance.Description != "A description of the input property" {
-		t.Errorf("Expected Description to be "A description of the input property", got %v", instance.Description)
-	}
-	if instance.Required != true {
-		t.Errorf("Expected Required to be true, got %v", instance.Required)
-	}
-	if instance.Default != "default value" {
-		t.Errorf("Expected Default to be "default value", got %v", instance.Default)
-	}
-	if instance.Example != "example value" {
-		t.Errorf("Expected Example to be "example value", got %v", instance.Example)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property: %v", err)
+}
+if instance.Name != "my-input" {
+t.Errorf("Expected Name to be \"my-input\", got %v", instance.Name)
+}
+if instance.Kind != "string" {
+t.Errorf("Expected Kind to be \"string\", got %v", instance.Kind)
+}
+if instance.Description != "A description of the input property" {
+t.Errorf("Expected Description to be \"A description of the input property\", got %v", instance.Description)
+}
+if instance.Required != true {
+t.Errorf("Expected Required to be true, got %v", instance.Required)
+}
+if instance.Default != "default value" {
+t.Errorf("Expected Default to be \"default value\", got %v", instance.Default)
+}
+if instance.Example != "example value" {
+t.Errorf("Expected Example to be \"example value\", got %v", instance.Example)
+}
 }
 
 // TestPropertyLoadYAML tests loading Property from YAML
 func TestPropertyLoadYAML(t *testing.T) {
-	yamlData := `
+yamlData := `
 name: my-input
 kind: string
 description: A description of the input property
@@ -76,39 +76,39 @@ enumValues:
   - value3
 
 `
-	var data map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
-		t.Fatalf("Failed to parse YAML: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property: %v", err)
-	}
-	if instance.Name != "my-input" {
-		t.Errorf("Expected Name to be "my-input", got %v", instance.Name)
-	}
-	if instance.Kind != "string" {
-		t.Errorf("Expected Kind to be "string", got %v", instance.Kind)
-	}
-	if instance.Description != "A description of the input property" {
-		t.Errorf("Expected Description to be "A description of the input property", got %v", instance.Description)
-	}
-	if instance.Required != true {
-		t.Errorf("Expected Required to be true, got %v", instance.Required)
-	}
-	if instance.Default != "default value" {
-		t.Errorf("Expected Default to be "default value", got %v", instance.Default)
-	}
-	if instance.Example != "example value" {
-		t.Errorf("Expected Example to be "example value", got %v", instance.Example)
-	}
+var data map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
+t.Fatalf("Failed to parse YAML: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property: %v", err)
+}
+if instance.Name != "my-input" {
+t.Errorf("Expected Name to be \"my-input\", got %v", instance.Name)
+}
+if instance.Kind != "string" {
+t.Errorf("Expected Kind to be \"string\", got %v", instance.Kind)
+}
+if instance.Description != "A description of the input property" {
+t.Errorf("Expected Description to be \"A description of the input property\", got %v", instance.Description)
+}
+if instance.Required != true {
+t.Errorf("Expected Required to be true, got %v", instance.Required)
+}
+if instance.Default != "default value" {
+t.Errorf("Expected Default to be \"default value\", got %v", instance.Default)
+}
+if instance.Example != "example value" {
+t.Errorf("Expected Example to be \"example value\", got %v", instance.Example)
+}
 }
 
 // TestPropertyRoundtrip tests load -> save -> load produces equivalent data
 func TestPropertyRoundtrip(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-input",
   "kind": "string",
@@ -123,47 +123,47 @@ func TestPropertyRoundtrip(t *testing.T) {
   ]
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	loadCtx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(data, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to load Property: %v", err)
-	}
-	
-	saveCtx := agentschema.NewSaveContext()
-	savedData := instance.Save(saveCtx)
-	
-	reloaded, err := agentschema.LoadProperty(savedData, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to reload Property: %v", err)
-	}
-	if reloaded.Name != "my-input" {
-		t.Errorf("Expected Name to be "my-input", got %v", reloaded.Name)
-	}
-	if reloaded.Kind != "string" {
-		t.Errorf("Expected Kind to be "string", got %v", reloaded.Kind)
-	}
-	if reloaded.Description != "A description of the input property" {
-		t.Errorf("Expected Description to be "A description of the input property", got %v", reloaded.Description)
-	}
-	if reloaded.Required != true {
-		t.Errorf("Expected Required to be true, got %v", reloaded.Required)
-	}
-	if reloaded.Default != "default value" {
-		t.Errorf("Expected Default to be "default value", got %v", reloaded.Default)
-	}
-	if reloaded.Example != "example value" {
-		t.Errorf("Expected Example to be "example value", got %v", reloaded.Example)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+loadCtx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(data, loadCtx)
+if err != nil {
+t.Fatalf("Failed to load Property: %v", err)
+}
+
+saveCtx := agentschema.NewSaveContext()
+savedData := instance.Save(saveCtx)
+
+reloaded, err := agentschema.LoadProperty(savedData, loadCtx)
+if err != nil {
+t.Fatalf("Failed to reload Property: %v", err)
+}
+if reloaded.Name != "my-input" {
+t.Errorf("Expected Name to be \"my-input\", got %v", reloaded.Name)
+}
+if reloaded.Kind != "string" {
+t.Errorf("Expected Kind to be \"string\", got %v", reloaded.Kind)
+}
+if reloaded.Description != "A description of the input property" {
+t.Errorf("Expected Description to be \"A description of the input property\", got %v", reloaded.Description)
+}
+if reloaded.Required != true {
+t.Errorf("Expected Required to be true, got %v", reloaded.Required)
+}
+if reloaded.Default != "default value" {
+t.Errorf("Expected Default to be \"default value\", got %v", reloaded.Default)
+}
+if reloaded.Example != "example value" {
+t.Errorf("Expected Example to be \"example value\", got %v", reloaded.Example)
+}
 }
 
 // TestPropertyToJSON tests that ToJSON produces valid JSON
 func TestPropertyToJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-input",
   "kind": "string",
@@ -178,31 +178,31 @@ func TestPropertyToJSON(t *testing.T) {
   ]
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property: %v", err)
-	}
-	
-	jsonOutput, err := instance.ToJSON()
-	if err != nil {
-		t.Fatalf("Failed to convert to JSON: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated JSON: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property: %v", err)
+}
+
+jsonOutput, err := instance.ToJSON()
+if err != nil {
+t.Fatalf("Failed to convert to JSON: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated JSON: %v", err)
+}
 }
 
 // TestPropertyToYAML tests that ToYAML produces valid YAML
 func TestPropertyToYAML(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "name": "my-input",
   "kind": "string",
@@ -217,26 +217,26 @@ func TestPropertyToYAML(t *testing.T) {
   ]
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property: %v", err)
-	}
-	
-	yamlOutput, err := instance.ToYAML()
-	if err != nil {
-		t.Fatalf("Failed to convert to YAML: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated YAML: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property: %v", err)
+}
+
+yamlOutput, err := instance.ToYAML()
+if err != nil {
+t.Fatalf("Failed to convert to YAML: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated YAML: %v", err)
+}
 }
 
 
@@ -244,65 +244,65 @@ func TestPropertyToYAML(t *testing.T) {
 
 // TestPropertyFromInput tests loading Property from boolean
 func TestPropertyFromInput(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(False, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property from boolean: %v", err)
-	}
-	if instance.Kind != "boolean" {
-		t.Errorf("Expected Kind to be "boolean", got %v", instance.Kind)
-	}
-	if instance.Example != False {
-		t.Errorf("Expected Example to be False, got %v", instance.Example)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(False, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property from boolean: %v", err)
+}
+if instance.Kind != "boolean" {
+t.Errorf("Expected Kind to be \"boolean\", got %v", instance.Kind)
+}
+if instance.Example != False {
+t.Errorf("Expected Example to be False, got %v", instance.Example)
+}
 }
 
 
 // TestPropertyFromInput2 tests loading Property from float32
 func TestPropertyFromInput2(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(3.14, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property from float32: %v", err)
-	}
-	if instance.Kind != "float" {
-		t.Errorf("Expected Kind to be "float", got %v", instance.Kind)
-	}
-	if instance.Example != 3.14 {
-		t.Errorf("Expected Example to be 3.14, got %v", instance.Example)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(3.14, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property from float32: %v", err)
+}
+if instance.Kind != "float" {
+t.Errorf("Expected Kind to be \"float\", got %v", instance.Kind)
+}
+if instance.Example != 3.14 {
+t.Errorf("Expected Example to be 3.14, got %v", instance.Example)
+}
 }
 
 
 // TestPropertyFromInput3 tests loading Property from integer
 func TestPropertyFromInput3(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty(4, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property from integer: %v", err)
-	}
-	if instance.Kind != "integer" {
-		t.Errorf("Expected Kind to be "integer", got %v", instance.Kind)
-	}
-	if instance.Example != 4 {
-		t.Errorf("Expected Example to be 4, got %v", instance.Example)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty(4, ctx)
+if err != nil {
+t.Fatalf("Failed to load Property from integer: %v", err)
+}
+if instance.Kind != "integer" {
+t.Errorf("Expected Kind to be \"integer\", got %v", instance.Kind)
+}
+if instance.Example != 4 {
+t.Errorf("Expected Example to be 4, got %v", instance.Example)
+}
 }
 
 
 // TestPropertyFromInput4 tests loading Property from string
 func TestPropertyFromInput4(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadProperty("example", ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Property from string: %v", err)
-	}
-	if instance.Kind != "string" {
-		t.Errorf("Expected Kind to be "string", got %v", instance.Kind)
-	}
-	if instance.Example != "example" {
-		t.Errorf("Expected Example to be "example", got %v", instance.Example)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadProperty("example", ctx)
+if err != nil {
+t.Fatalf("Failed to load Property from string: %v", err)
+}
+if instance.Kind != "string" {
+t.Errorf("Expected Kind to be \"string\", got %v", instance.Kind)
+}
+if instance.Example != "example" {
+t.Errorf("Expected Example to be "example", got %v", instance.Example)
+}
 }
 
 

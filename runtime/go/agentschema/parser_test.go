@@ -5,18 +5,18 @@
 package agentschema_test
 
 import (
-	"encoding/json"
-	"testing"
-	
-	"gopkg.in/yaml.v3"
-	
-	"github.com/microsoft/agentschema-go/agentschema"
+"encoding/json"
+"testing"
+
+"gopkg.in/yaml.v3"
+
+"github.com/microsoft/agentschema-go/agentschema"
 )
 
 
 // TestParserLoadJSON tests loading Parser from JSON
 func TestParserLoadJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "kind": "prompty",
   "options": {
@@ -24,47 +24,47 @@ func TestParserLoadJSON(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser: %v", err)
-	}
-	if instance.Kind != "prompty" {
-		t.Errorf("Expected Kind to be "prompty", got %v", instance.Kind)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Parser: %v", err)
+}
+if instance.Kind != "prompty" {
+t.Errorf("Expected Kind to be \"prompty\", got %v", instance.Kind)
+}
 }
 
 // TestParserLoadYAML tests loading Parser from YAML
 func TestParserLoadYAML(t *testing.T) {
-	yamlData := `
+yamlData := `
 kind: prompty
 options:
   key: value
 
 `
-	var data map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
-		t.Fatalf("Failed to parse YAML: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser: %v", err)
-	}
-	if instance.Kind != "prompty" {
-		t.Errorf("Expected Kind to be "prompty", got %v", instance.Kind)
-	}
+var data map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlData), &data); err != nil {
+t.Fatalf("Failed to parse YAML: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Parser: %v", err)
+}
+if instance.Kind != "prompty" {
+t.Errorf("Expected Kind to be \"prompty\", got %v", instance.Kind)
+}
 }
 
 // TestParserRoundtrip tests load -> save -> load produces equivalent data
 func TestParserRoundtrip(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "kind": "prompty",
   "options": {
@@ -72,32 +72,32 @@ func TestParserRoundtrip(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	loadCtx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser(data, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser: %v", err)
-	}
-	
-	saveCtx := agentschema.NewSaveContext()
-	savedData := instance.Save(saveCtx)
-	
-	reloaded, err := agentschema.LoadParser(savedData, loadCtx)
-	if err != nil {
-		t.Fatalf("Failed to reload Parser: %v", err)
-	}
-	if reloaded.Kind != "prompty" {
-		t.Errorf("Expected Kind to be "prompty", got %v", reloaded.Kind)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+loadCtx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser(data, loadCtx)
+if err != nil {
+t.Fatalf("Failed to load Parser: %v", err)
+}
+
+saveCtx := agentschema.NewSaveContext()
+savedData := instance.Save(saveCtx)
+
+reloaded, err := agentschema.LoadParser(savedData, loadCtx)
+if err != nil {
+t.Fatalf("Failed to reload Parser: %v", err)
+}
+if reloaded.Kind != "prompty" {
+t.Errorf("Expected Kind to be \"prompty\", got %v", reloaded.Kind)
+}
 }
 
 // TestParserToJSON tests that ToJSON produces valid JSON
 func TestParserToJSON(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "kind": "prompty",
   "options": {
@@ -105,31 +105,31 @@ func TestParserToJSON(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser: %v", err)
-	}
-	
-	jsonOutput, err := instance.ToJSON()
-	if err != nil {
-		t.Fatalf("Failed to convert to JSON: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated JSON: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Parser: %v", err)
+}
+
+jsonOutput, err := instance.ToJSON()
+if err != nil {
+t.Fatalf("Failed to convert to JSON: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := json.Unmarshal([]byte(jsonOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated JSON: %v", err)
+}
 }
 
 // TestParserToYAML tests that ToYAML produces valid YAML
 func TestParserToYAML(t *testing.T) {
-	jsonData := `
+jsonData := `
 {
   "kind": "prompty",
   "options": {
@@ -137,26 +137,26 @@ func TestParserToYAML(t *testing.T) {
   }
 }
 `
-	var data map[string]interface{}
-	if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
-		t.Fatalf("Failed to parse JSON: %v", err)
-	}
-	
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser(data, ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser: %v", err)
-	}
-	
-	yamlOutput, err := instance.ToYAML()
-	if err != nil {
-		t.Fatalf("Failed to convert to YAML: %v", err)
-	}
-	
-	var parsed map[string]interface{}
-	if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
-		t.Fatalf("Failed to parse generated YAML: %v", err)
-	}
+var data map[string]interface{}
+if err := json.Unmarshal([]byte(jsonData), &data); err != nil {
+t.Fatalf("Failed to parse JSON: %v", err)
+}
+
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser(data, ctx)
+if err != nil {
+t.Fatalf("Failed to load Parser: %v", err)
+}
+
+yamlOutput, err := instance.ToYAML()
+if err != nil {
+t.Fatalf("Failed to convert to YAML: %v", err)
+}
+
+var parsed map[string]interface{}
+if err := yaml.Unmarshal([]byte(yamlOutput), &parsed); err != nil {
+t.Fatalf("Failed to parse generated YAML: %v", err)
+}
 }
 
 
@@ -164,14 +164,14 @@ func TestParserToYAML(t *testing.T) {
 
 // TestParserFromParser tests loading Parser from string
 func TestParserFromParser(t *testing.T) {
-	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadParser("example", ctx)
-	if err != nil {
-		t.Fatalf("Failed to load Parser from string: %v", err)
-	}
-	if instance.Kind != "example" {
-		t.Errorf("Expected Kind to be "example", got %v", instance.Kind)
-	}
+ctx := agentschema.NewLoadContext()
+instance, err := agentschema.LoadParser("example", ctx)
+if err != nil {
+t.Fatalf("Failed to load Parser from string: %v", err)
+}
+if instance.Kind != "example" {
+t.Errorf("Expected Kind to be "example", got %v", instance.Kind)
+}
 }
 
 

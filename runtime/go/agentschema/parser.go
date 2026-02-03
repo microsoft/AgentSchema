@@ -10,6 +10,7 @@ import (
 )
 
 // Parser represents Template parser definition
+
 type Parser struct {
 	Kind    string                 `json:"kind" yaml:"kind"`
 	Options map[string]interface{} `json:"options,omitempty" yaml:"options,omitempty"`

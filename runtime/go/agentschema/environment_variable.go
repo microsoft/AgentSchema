@@ -10,6 +10,7 @@ import (
 )
 
 // EnvironmentVariable represents Definition for an environment variable used in containerized agents.
+
 type EnvironmentVariable struct {
 	Name  string `json:"name" yaml:"name"`
 	Value string `json:"value" yaml:"value"`
