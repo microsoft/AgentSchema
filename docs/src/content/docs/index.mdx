@@ -35,9 +35,14 @@ Get started with AgentSchema in your preferred language:
     npm install agentschema
     ```
   </TabItem>
-  <TabItem label="C#" icon="seti:csharp">
+  <TabItem label="C#" icon="seti:c-sharp">
     ```bash
     dotnet add package AgentSchema
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```bash
+    go get github.com/microsoft/agentschema-go/agentschema
     ```
   </TabItem>
 </Tabs>
@@ -85,7 +90,7 @@ Get started with AgentSchema in your preferred language:
     writeFileSync('agent.yaml', agent.toYaml());
     ```
   </TabItem>
-  <TabItem label="C#" icon="seti:csharp">
+  <TabItem label="C#" icon="seti:c-sharp">
     ```csharp
     using AgentSchema;
 
@@ -104,6 +109,33 @@ Get started with AgentSchema in your preferred language:
 
     // Save to YAML
     File.WriteAllText("agent.yaml", agent.ToYaml());
+    ```
+  </TabItem>
+  <TabItem label="Go" icon="seti:go">
+    ```go
+    package main
+
+    import (
+        "os"
+        "github.com/microsoft/agentschema-go/agentschema"
+    )
+
+    func main() {
+        // Load from YAML file
+        agent, _ := agentschema.LoadAgentDefinitionFromFile("agent.yaml")
+
+        // Or create programmatically
+        agent := &agentschema.AgentDefinition{
+            Name:         agentschema.String("my-assistant"),
+            Description:  agentschema.String("A helpful AI assistant"),
+            Model:        "gpt-4o",
+            Instructions: agentschema.String("You are a helpful assistant."),
+        }
+
+        // Save to YAML
+        yaml, _ := agent.ToYAML()
+        os.WriteFile("agent.yaml", []byte(yaml), 0644)
+    }
     ```
   </TabItem>
 </Tabs>
