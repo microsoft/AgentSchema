@@ -103,5 +103,5 @@ jobs:
 
       - name: Publish to npm
         working-directory: ${{ env.PACKAGE_PATH }}
-        run: npm publish --access public
+        run: npm publish --access public --tag beta
         # No token needed - using Trusted Publishing with OIDC
