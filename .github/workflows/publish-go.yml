@@ -23,6 +23,8 @@ jobs:
     if: |
       github.repository == 'microsoft/AgentSchema' && 
       (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/go-v'))
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
