@@ -1,6 +1,15 @@
 name: Test Reusable Callee
 
 on:
+  push:
+    tags:
+      - "test-v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version"
+        required: false
+        type: string
   workflow_call:
     inputs:
       message:
