@@ -1,0 +1,16 @@
+name: Test Reusable Callee
+
+on:
+  workflow_call:
+    inputs:
+      message:
+        type: string
+        required: false
+        default: "Hello"
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo message
+        run: echo "${{ inputs.message }}"

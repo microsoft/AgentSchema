@@ -12,9 +12,8 @@ on:
         type: string
 
 jobs:
-  # Test with reusable workflow call - using literal version
-  publish-python:
-    uses: ./.github/workflows/publish-pypi.yml
+  # Test with minimal reusable workflow
+  test-call:
+    uses: ./.github/workflows/test-reusable-callee.yml
     with:
-      version: "1.0.0-test"
-    secrets: inherit
+      message: "Testing"
