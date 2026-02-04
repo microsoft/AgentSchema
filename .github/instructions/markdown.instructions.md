@@ -192,4 +192,7 @@ Tag naming conventions:
 - **C#**: `csharp-v1.0.0-beta.X`
 - **Python**: `python-v1.0.0bX` (PEP 440 format)
 - **TypeScript**: `typescript-v1.0.0-beta.X`
+- **Go**: `go-v1.0.0-beta.X`
 - **Docs**: `docs-v1.0.0-beta.X`
+
+See [PUBLISHING.md](/PUBLISHING.md) for complete publishing instructions.
