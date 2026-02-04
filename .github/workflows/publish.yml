@@ -32,10 +32,10 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Publishing version: $VERSION"
 
-  # Test with single reusable workflow
-  publish-emitter:
+  # Test job
+  test:
     needs: prepare
-    uses: ./.github/workflows/publish-emitter.yml
-    with:
-      version: ${{ needs.prepare.outputs.version }}
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo version
+        run: echo "Version is ${{ needs.prepare.outputs.version }}"
