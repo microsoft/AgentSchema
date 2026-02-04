@@ -12,30 +12,9 @@ on:
         type: string
 
 jobs:
-  # Extract version from tag
-  prepare:
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.version.outputs.version }}
-    steps:
-      - name: Extract version
-        id: version
-        run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
-          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            VERSION="${{ github.ref_name }}"
-            VERSION="${VERSION#v}"
-          else
-            VERSION="0.0.0-dev"
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "Publishing version: $VERSION"
-
-  # Test with reusable workflow call - using pypi which doesn't have environment
+  # Test with reusable workflow call - using literal version
   publish-python:
-    needs: prepare
     uses: ./.github/workflows/publish-pypi.yml
     with:
-      version: ${{ needs.prepare.outputs.version }}
+      version: "1.0.0-test"
     secrets: inherit
