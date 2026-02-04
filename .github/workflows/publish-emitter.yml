@@ -17,6 +17,11 @@ on:
         required: false
         type: string
 
+# Permissions needed for OIDC token and content access
+permissions:
+  contents: read
+  id-token: write
+
 env:
   NODE_VERSION: "24"
   PACKAGE_PATH: "agentschema-emitter"
@@ -65,9 +70,6 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     environment: npm
-    permissions:
-      contents: read
-      id-token: write
 
     steps:
       - name: Checkout repository

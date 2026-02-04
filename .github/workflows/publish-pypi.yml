@@ -17,6 +17,12 @@ on:
         required: false
         type: string
 
+# Permissions needed for OIDC token, attestations, and content access
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
+
 # Only allow one publish at a time
 concurrency:
   group: publish-pypi
@@ -107,10 +113,6 @@ jobs:
     environment:
       name: pypi
       url: https://pypi.org/project/agentschema/
-    permissions:
-      id-token: write # Required for OIDC Trusted Publishing
-      attestations: write # Required for artifact attestations
-      contents: read
 
     steps:
       - name: Download distribution packages

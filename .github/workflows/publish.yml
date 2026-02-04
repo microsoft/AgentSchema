@@ -12,9 +12,73 @@ on:
         type: string
 
 jobs:
-  # Test with complex reusable workflow
-  test-call:
-    uses: ./.github/workflows/test-reusable-callee.yml
+  # Extract version from tag
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Extract version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+          elif [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            VERSION="${{ github.ref_name }}"
+            VERSION="${VERSION#v}"
+          else
+            VERSION="0.0.0-dev"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+  # Publish TypeSpec Emitter to npm
+  publish-emitter:
+    needs: prepare
+    uses: ./.github/workflows/publish-emitter.yml
     with:
-      version: "1.0.0-test"
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
+
+  # Publish TypeScript runtime to npm
+  publish-typescript:
+    needs: prepare
+    uses: ./.github/workflows/publish-npm.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
+
+  # Publish Python runtime to PyPI
+  publish-python:
+    needs: prepare
+    uses: ./.github/workflows/publish-pypi.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
+
+  # Publish C# runtime to NuGet
+  publish-csharp:
+    needs: prepare
+    uses: ./.github/workflows/publish-nuget.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
+
+  # Publish Go module
+  publish-go:
+    needs: prepare
+    uses: ./.github/workflows/publish-go.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
+
+  # Publish documentation (after all runtimes)
+  publish-docs:
+    needs:
+      - publish-emitter
+      - publish-typescript
+      - publish-python
+      - publish-csharp
+      - publish-go
+    uses: ./.github/workflows/publish-web.yml
     secrets: inherit

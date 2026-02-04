@@ -17,6 +17,10 @@ on:
         required: false
         type: string
 
+# Permissions needed for content access
+permissions:
+  contents: read
+
 env:
   DOTNET_VERSION: "9.0.x"
   PROJECT_PATH: "runtime/csharp/AgentSchema/AgentSchema.csproj"
@@ -48,8 +52,7 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
