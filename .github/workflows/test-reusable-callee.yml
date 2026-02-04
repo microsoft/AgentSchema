@@ -8,9 +8,15 @@ on:
         required: false
         default: "Hello"
 
+# Concurrency like in publish-pypi
+concurrency:
+  group: test-reusable
+  cancel-in-progress: false
+
 jobs:
   echo:
     runs-on: ubuntu-latest
+    if: github.repository == 'microsoft/AgentSchema'
     steps:
       - name: Echo message
         run: echo "${{ inputs.message }}"
