@@ -12,10 +12,10 @@ on:
         type: string
   workflow_call:
     inputs:
-      message:
+      version:
+        description: "Version"
         type: string
         required: false
-        default: "Hello"
 
 # Concurrency like in publish-pypi
 concurrency:
@@ -27,5 +27,5 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'microsoft/AgentSchema'
     steps:
-      - name: Echo message
-        run: echo "${{ inputs.message }}"
+      - name: Echo version
+        run: echo "${{ inputs.version }}"

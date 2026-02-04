@@ -16,4 +16,4 @@ jobs:
   test-call:
     uses: ./.github/workflows/test-reusable-callee.yml
     with:
-      message: "Testing"
+      version: "1.0.0-test"
