@@ -11,6 +11,13 @@ on:
         required: false
         type: string
 
+# Permissions needed by all called workflows
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+  pages: write
+
 jobs:
   # Just test one workflow call first
   publish-python:
