@@ -1,0 +1,257 @@
+---
+title: Using the Emitter
+description: Generate AgentSchema runtime libraries with the TypeSpec emitter
+sidebar:
+  order: 4
+---
+
+The `@agentschema/emitter` package generates runtime libraries for multiple languages from the AgentSchema TypeSpec definitions. You can use it via CLI or programmatically.
+
+## Installation
+
+```bash
+npm install @agentschema/emitter
+```
+
+Or use it directly with npx:
+
+```bash
+npx @agentschema/emitter --help
+```
+
+## CLI Usage
+
+The emitter provides a CLI command `agentschema-generate` for generating runtime code:
+
+```bash
+# Generate all default targets (Python, C#, TypeScript, Go)
+npx agentschema-generate -o ./generated
+
+# Generate specific targets only
+npx agentschema-generate -o ./lib -t python,csharp
+
+# Generate with a different root object
+npx agentschema-generate -o ./lib -r AgentSchema.AgentDefinition
+
+# Exclude specific models from generation
+npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
+```
+
+### CLI Options
+
+| Option | Short | Description | Default |
+|--------|-------|-------------|---------|
+| `--output <dir>` | `-o` | Output directory | Required |
+| `--targets <list>` | `-t` | Comma-separated targets | `python,csharp,typescript,go` |
+| `--root-object <name>` | `-r` | Root model to generate | `AgentSchema.AgentManifest` |
+| `--omit <list>` | | Models to exclude | None |
+| `--namespace <name>` | `-n` | Override namespace | From TypeSpec |
+| `--no-tests` | | Skip test generation | false |
+| `--no-format` | | Skip code formatters | false |
+
+## Programmatic API
+
+You can also use the emitter programmatically in your build scripts:
+
+```typescript
+import { generate } from "@agentschema/emitter/generate";
+
+const result = await generate({
+  output: "./generated",
+  targets: ["python", "csharp", "typescript", "go"],
+  rootObject: "AgentSchema.AgentManifest",
+  omit: ["AgentManifest"],
+  noTests: false,
+  noFormat: false,
+});
+
+console.log(`Generated ${result.filesGenerated} files`);
+```
+
+### API Options
+
+```typescript
+interface GenerateOptions {
+  /** Output directory for generated files */
+  output: string;
+  
+  /** Target languages to generate */
+  targets?: ("python" | "csharp" | "typescript" | "go" | "markdown")[];
+  
+  /** Root TypeSpec model (fully qualified name) */
+  rootObject?: string;
+  
+  /** Models to exclude from generation */
+  omit?: string[];
+  
+  /** Override the namespace */
+  namespace?: string;
+  
+  /** Skip generating tests */
+  noTests?: boolean;
+  
+  /** Skip running code formatters */
+  noFormat?: boolean;
+}
+```
+
+## Supported Targets
+
+| Target | Language | Output | Features |
+|--------|----------|--------|----------|
+| `python` | Python 3.10+ | Dataclasses | YAML/JSON serialization, type hints |
+| `csharp` | C# 12 | Classes | System.Text.Json, nullable annotations |
+| `typescript` | TypeScript | Interfaces | js-yaml, camelCase properties |
+| `go` | Go 1.22+ | Structs | encoding/json, gopkg.in/yaml.v3 |
+| `markdown` | Markdown | Docs | Reference documentation |
+
+## TypeSpec Integration
+
+You can also use the emitter as a TypeSpec emitter in your `tspconfig.yaml`:
+
+```yaml
+emit:
+  - "@agentschema/emitter"
+
+options:
+  "@agentschema/emitter":
+    root-object: "AgentSchema.AgentManifest"
+    emit-targets:
+      - type: Python
+        output-dir: "./python"
+      - type: CSharp
+        output-dir: "./csharp"
+      - type: TypeScript  
+        output-dir: "./typescript"
+      - type: Go
+        output-dir: "./go"
+```
+
+Then run:
+
+```bash
+npx tsp compile .
+```
+
+## Generated Code Features
+
+All generated runtimes include:
+
+- **YAML/JSON Loading**: Load agent definitions from files
+- **YAML/JSON Saving**: Save agent definitions to files  
+- **Serialization**: Convert to/from JSON and YAML strings
+- **Validation**: Type-safe models with proper typing
+- **Round-trip**: Load, modify, and save without data loss
+
+### Example: Loading an Agent Definition
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs>
+  <TabItem label="Python">
+```python
+from agentschema import AgentDefinition
+
+# Load from file
+agent = AgentDefinition.load("agent.yaml")
+
+# Access properties
+print(f"Agent: {agent.name}")
+print(f"Model: {agent.model}")
+
+# Modify and save
+agent.description = "Updated description"
+agent.save("agent-modified.yaml")
+```
+  </TabItem>
+  <TabItem label="C#">
+```csharp
+using AgentSchema;
+
+// Load from file
+var agent = AgentDefinition.FromYamlFile("agent.yaml");
+
+// Access properties
+Console.WriteLine($"Agent: {agent.Name}");
+Console.WriteLine($"Model: {agent.Model}");
+
+// Modify and save
+agent.Description = "Updated description";
+agent.ToYamlFile("agent-modified.yaml");
+```
+  </TabItem>
+  <TabItem label="TypeScript">
+```typescript
+import { AgentDefinition } from 'agentschema';
+
+// Load from file
+const agent = AgentDefinition.fromYamlFile('agent.yaml');
+
+// Access properties
+console.log(`Agent: ${agent.name}`);
+console.log(`Model: ${agent.model}`);
+
+// Modify and save
+agent.description = 'Updated description';
+agent.toYamlFile('agent-modified.yaml');
+```
+  </TabItem>
+  <TabItem label="Go">
+```go
+import "github.com/microsoft/AgentSchema/runtime/go/agentschema"
+
+// Load from file
+agent, err := agentschema.LoadAgentDefinition("agent.yaml")
+if err != nil {
+    log.Fatal(err)
+}
+
+// Access properties
+fmt.Printf("Agent: %s\n", agent.Name)
+fmt.Printf("Model: %s\n", agent.Model)
+
+// Modify and save
+agent.Description = "Updated description"
+agent.Save("agent-modified.yaml")
+```
+  </TabItem>
+</Tabs>
+
+## Customizing Generation
+
+### Excluding Models
+
+If you only need a subset of models, use `--omit`:
+
+```bash
+# Generate only AgentDefinition (exclude manifest and container types)
+npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
+```
+
+### Custom Root Object
+
+By default, the emitter generates the full type graph starting from `AgentManifest`. To start from a different type:
+
+```bash
+# Generate from AgentDefinition as root
+npx agentschema-generate -o ./lib -r AgentSchema.AgentDefinition
+```
+
+### Single Target
+
+For projects using only one language:
+
+```bash
+# Python only
+npx agentschema-generate -o ./python -t python
+
+# C# only  
+npx agentschema-generate -o ./csharp -t csharp
+```
+
+## Next Steps
+
+- [Python Runtime](/runtimes/python) - Python-specific features
+- [C# Runtime](/runtimes/csharp) - C#-specific features
+- [TypeScript Runtime](/runtimes/typescript) - TypeScript-specific features
+- [Go Runtime](/runtimes/go) - Go-specific features
