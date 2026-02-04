@@ -10,16 +10,6 @@ on:
         description: "Package version (e.g., 1.0.0-beta.1)"
         required: false
         type: string
-  workflow_call:
-    inputs:
-      version:
-        description: "Package version"
-        required: false
-        type: string
-
-# Permissions needed for content access
-permissions:
-  contents: read
 
 env:
   DOTNET_VERSION: "9.0.x"
@@ -52,7 +42,8 @@ jobs:
   publish:
     needs: build-and-test
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -67,8 +58,8 @@ jobs:
       - name: Extract version from tag or input
         id: version
         run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
           elif [[ "${{ github.ref }}" == refs/tags/csharp-v* ]]; then
             VERSION="${{ github.ref_name }}"
             VERSION="${VERSION#csharp-v}"

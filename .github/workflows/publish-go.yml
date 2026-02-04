@@ -10,16 +10,6 @@ on:
         description: "Module version (e.g., 1.0.0-beta.1)"
         required: false
         type: string
-  workflow_call:
-    inputs:
-      version:
-        description: "Module version"
-        required: false
-        type: string
-
-# Permissions needed for content access and tag creation
-permissions:
-  contents: write
 
 env:
   GO_VERSION: "1.22"
@@ -29,10 +19,12 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
-    # Only run on microsoft/AgentSchema repo
+    # Only run on microsoft/AgentSchema repo AND only for go-v* tags
     if: |
       github.repository == 'microsoft/AgentSchema' && 
-      (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || startsWith(github.ref, 'refs/tags/go-v'))
+      (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/go-v'))
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -62,8 +54,10 @@ jobs:
     name: Tag and Publish Module
     needs: test
     runs-on: ubuntu-latest
-    # Publish on tag push, manual dispatch, or workflow_call
-    if: startsWith(github.ref, 'refs/tags/go-v') || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
+    # Publish on tag push or manual workflow_dispatch
+    if: startsWith(github.ref, 'refs/tags/go-v') || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -74,8 +68,8 @@ jobs:
       - name: Extract version from tag or input
         id: version
         run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
           elif [[ "${{ github.ref }}" == refs/tags/go-v* ]]; then
             VERSION="${{ github.ref_name }}"
             VERSION="${VERSION#go-v}"
@@ -92,7 +86,7 @@ jobs:
           # Go modules use git tags for versioning
           # The module path should include the version in the tag
           echo "Module will be published with tag: go-v${{ steps.version.outputs.version }}"
-
+          
       - name: Verify module
         working-directory: ${{ env.MODULE_PATH }}
         run: |

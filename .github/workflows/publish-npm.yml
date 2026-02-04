@@ -10,17 +10,6 @@ on:
         description: "Package version (e.g., 1.0.0-beta.1)"
         required: false
         type: string
-  workflow_call:
-    inputs:
-      version:
-        description: "Package version"
-        required: false
-        type: string
-
-# Permissions needed for OIDC token and content access
-permissions:
-  contents: read
-  id-token: write
 
 env:
   NODE_VERSION: "24"
@@ -69,6 +58,9 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     environment: npm
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -85,8 +77,8 @@ jobs:
       - name: Extract version from tag or input
         id: version
         run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
+          if [ -n "${{ github.event.inputs.version }}" ]; then
+            VERSION="${{ github.event.inputs.version }}"
           elif [[ "${{ github.ref }}" == refs/tags/typescript-v* ]]; then
             VERSION="${{ github.ref_name }}"
             VERSION="${VERSION#typescript-v}"
