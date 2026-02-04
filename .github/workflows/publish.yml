@@ -1,4 +1,4 @@
-name: Publish All Runtimes
+name: Publish
 
 on:
   push:
@@ -75,6 +75,13 @@ jobs:
 
   # Publish documentation (after all runtimes)
   publish-docs:
-    needs: [publish-emitter, publish-typescript, publish-python, publish-csharp, publish-go]
+    needs:
+      [
+        publish-emitter,
+        publish-typescript,
+        publish-python,
+        publish-csharp,
+        publish-go,
+      ]
     uses: ./.github/workflows/publish-web.yml
     secrets: inherit

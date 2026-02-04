@@ -92,7 +92,7 @@ jobs:
           # Go modules use git tags for versioning
           # The module path should include the version in the tag
           echo "Module will be published with tag: go-v${{ steps.version.outputs.version }}"
-          
+
       - name: Verify module
         working-directory: ${{ env.MODULE_PATH }}
         run: |
