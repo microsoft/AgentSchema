@@ -1,7 +1,12 @@
 {
   "name": "agentschema-emitter",
   "version": "0.1.10",
+  "description": "TypeSpec emitter for generating AgentSchema runtime libraries",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/microsoft/AgentSchema"
+  },
   "type": "module",
   "main": "dist/src/index.js",
   "tspMain": "src/lib/main.tsp",
