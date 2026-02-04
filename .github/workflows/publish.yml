@@ -32,10 +32,10 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Publishing version: $VERSION"
 
-  # Test job
-  test:
+  # Test with reusable workflow call - using pypi which doesn't have environment
+  publish-python:
     needs: prepare
-    runs-on: ubuntu-latest
-    steps:
-      - name: Echo version
-        run: echo "Version is ${{ needs.prepare.outputs.version }}"
+    uses: ./.github/workflows/publish-pypi.yml
+    with:
+      version: ${{ needs.prepare.outputs.version }}
+    secrets: inherit
