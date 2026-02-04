@@ -1,9 +1,9 @@
-name: Publish TypeScript to npm
+name: Publish Emitter to npm
 
 on:
   push:
     tags:
-      - "typescript-v*"
+      - "emitter-v*"
   workflow_dispatch:
     inputs:
       version:
@@ -19,7 +19,7 @@ on:
 
 env:
   NODE_VERSION: "24"
-  PACKAGE_PATH: "runtime/typescript/agentschema"
+  PACKAGE_PATH: "agentschema-emitter"
 
 jobs:
   build-and-test:
@@ -47,16 +47,17 @@ jobs:
         working-directory: ${{ env.PACKAGE_PATH }}
         run: npm run build
 
-      - name: Run tests
+      - name: Run lint
         working-directory: ${{ env.PACKAGE_PATH }}
-        run: npm test
+        run: npm run lint
 
       - name: Store build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: npm-package-build
+          name: emitter-package-build
           path: |
             ${{ env.PACKAGE_PATH }}/dist/
+            ${{ env.PACKAGE_PATH }}/lib/
             ${{ env.PACKAGE_PATH }}/package.json
             ${{ env.PACKAGE_PATH }}/README.md
 
@@ -85,9 +86,9 @@ jobs:
         run: |
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
-          elif [[ "${{ github.ref }}" == refs/tags/typescript-v* ]]; then
+          elif [[ "${{ github.ref }}" == refs/tags/emitter-v* ]]; then
             VERSION="${{ github.ref_name }}"
-            VERSION="${VERSION#typescript-v}"
+            VERSION="${VERSION#emitter-v}"
           else
             echo "No version specified and not a version tag"
             exit 1
@@ -110,4 +111,5 @@ jobs:
       - name: Publish to npm
         working-directory: ${{ env.PACKAGE_PATH }}
         run: npm publish --access public --tag beta
-        # No token needed - using Trusted Publishing with OIDC
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

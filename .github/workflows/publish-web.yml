@@ -7,6 +7,8 @@ on:
       - "docs-v*"
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
+  # Allow calling from publish-all workflow
+  workflow_call:
 
 # Allow this job to clone the repo and create a page deployment
 permissions:

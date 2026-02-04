@@ -5,6 +5,17 @@ on:
     tags:
       - "python-v*"
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version (e.g., 1.0.0)"
+        required: false
+        type: string
+  workflow_call:
+    inputs:
+      version:
+        description: "Package version"
+        required: false
+        type: string
 
 # Only allow one publish at a time
 concurrency:
@@ -15,10 +26,10 @@ jobs:
   test:
     name: Run tests
     runs-on: ubuntu-latest
-    # Only run on microsoft/AgentSchema repo AND only for python-v* tags
+    # Only run on microsoft/AgentSchema repo
     if: |
       github.repository == 'microsoft/AgentSchema' && 
-      (github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/python-v'))
+      (github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call' || startsWith(github.ref, 'refs/tags/python-v'))
 
     steps:
       - uses: actions/checkout@v4
@@ -59,8 +70,17 @@ jobs:
       - name: Set up Python
         run: uv python install 3.12
 
+      - name: Set version from input
+        if: inputs.version != ''
+        working-directory: runtime/python/agentschema
+        run: |
+          VERSION="${{ inputs.version }}"
+          echo "Setting version to: $VERSION"
+          sed -i "s/^version = .*/version = \"$VERSION\"/" pyproject.toml
+          cat pyproject.toml | grep "^version"
+
       - name: Set version from tag
-        if: startsWith(github.ref, 'refs/tags/python-v')
+        if: inputs.version == '' && startsWith(github.ref, 'refs/tags/python-v')
         working-directory: runtime/python/agentschema
         run: |
           TAG_VERSION="${GITHUB_REF#refs/tags/python-v}"
@@ -82,8 +102,8 @@ jobs:
     name: Publish to PyPI
     needs: build
     runs-on: ubuntu-latest
-    # Publish on tag push or manual workflow_dispatch
-    if: startsWith(github.ref, 'refs/tags/python-v') || github.event_name == 'workflow_dispatch'
+    # Publish on tag push, manual dispatch, or workflow_call
+    if: startsWith(github.ref, 'refs/tags/python-v') || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
     environment:
       name: pypi
       url: https://pypi.org/project/agentschema/

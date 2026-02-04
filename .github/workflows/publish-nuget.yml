@@ -10,6 +10,12 @@ on:
         description: "Package version (e.g., 1.0.0-beta.1)"
         required: false
         type: string
+  workflow_call:
+    inputs:
+      version:
+        description: "Package version"
+        required: false
+        type: string
 
 env:
   DOTNET_VERSION: "9.0.x"
@@ -58,8 +64,8 @@ jobs:
       - name: Extract version from tag or input
         id: version
         run: |
-          if [ -n "${{ github.event.inputs.version }}" ]; then
-            VERSION="${{ github.event.inputs.version }}"
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
           elif [[ "${{ github.ref }}" == refs/tags/csharp-v* ]]; then
             VERSION="${{ github.ref_name }}"
             VERSION="${VERSION#csharp-v}"
