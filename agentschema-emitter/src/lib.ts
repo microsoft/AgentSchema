@@ -13,6 +13,8 @@ export interface AgentSchemaEmitterOptions {
   "emit-targets"?: EmitTarget[];
   "root-namespace"?: string;
   "root-alias"?: string;
+  "omit-models"?: string[];
+  "schema-output-dir"?: string;
 }
 
 const AgentSchemaEmitterOptionsSchema: JSONSchemaType<AgentSchemaEmitterOptions> = {
@@ -71,6 +73,17 @@ const AgentSchemaEmitterOptionsSchema: JSONSchemaType<AgentSchemaEmitterOptions>
       type: "string",
       nullable: true,
       description: "Alias for the root object"
+    },
+    "omit-models": {
+      type: "array",
+      items: { type: "string" },
+      nullable: true,
+      description: "List of model names to omit from generation"
+    },
+    "schema-output-dir": {
+      type: "string",
+      nullable: true,
+      description: "Directory containing JSON schema files. If set, omitted models will be deleted from this directory after generation."
     }
   },
   required: ["root-object"],

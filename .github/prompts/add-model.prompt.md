@@ -6,7 +6,7 @@ description: "Add a new model type to the schema"
 
 ## 1. Create or Edit TypeSpec File
 
-In `agentschema/model/`, create a new file or add to existing:
+In `agentschema-emitter/lib/model/`, create a new file or add to existing:
 
 ```typespec
 import "@agentschema/emitter";
@@ -30,7 +30,7 @@ model MyNewModel {
 
 ## 2. Import in main.tsp (if new file)
 
-Edit `agentschema/model/main.tsp`:
+Edit `agentschema-emitter/lib/model/main.tsp`:
 
 ```typespec
 import "./manifest.tsp";

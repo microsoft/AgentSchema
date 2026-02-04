@@ -5,10 +5,17 @@
   "type": "module",
   "main": "dist/src/index.js",
   "tspMain": "src/lib/main.tsp",
+  "bin": {
+    "agentschema-generate": "./dist/src/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
       "default": "./dist/src/index.js"
+    },
+    "./generate": {
+      "types": "./dist/src/generate.d.ts",
+      "default": "./dist/src/generate.js"
     },
     "./testing": {
       "types": "./dist/src/testing/index.d.ts",

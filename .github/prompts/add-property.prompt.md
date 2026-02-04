@@ -8,7 +8,7 @@ When adding a new property to a model:
 
 ## 1. Edit the TypeSpec File
 
-Find the model in `agentschema/model/*.tsp` and add:
+Find the model in `agentschema-emitter/lib/model/*.tsp` and add:
 
 ```typespec
 @doc("Description of the new property")
@@ -26,7 +26,7 @@ newProperty?: string;  // Use ? for optional
 ## 3. Regenerate and Test
 
 ```bash
-cd agentschema && npm run generate
+cd agentschema-emitter && npm run generate
 cd ../runtime/csharp && dotnet test
 cd ../runtime/python/agentschema && uv run pytest tests/
 cd ../runtime/typescript/agentschema && npm test

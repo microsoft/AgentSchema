@@ -28,7 +28,7 @@ Files in `runtime/` are **automatically generated** by the TypeSpec emitter.
 
 ## Common Template Files
 
-- `dataclass.njk` / `file.py.njk` / `file.ts.njk` - Main class definitions
+- `file.cs.njk` / `file.py.njk` / `file.ts.njk` / `file.go.njk` - Main class definitions
 - `test.njk` / `test.py.njk` / `test.ts.njk` - Test file generation
 - `_macros.njk` - Shared template macros
 

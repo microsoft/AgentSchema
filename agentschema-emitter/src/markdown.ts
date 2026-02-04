@@ -1,6 +1,7 @@
 import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
 import { enumerateTypes, PropertyNode, TypeName, TypeNode } from "./ast.js";
+import { GeneratorOptions, filterNodes } from "./emitter.js";
 import * as nunjucks from "nunjucks";
 import * as YAML from 'yaml';
 import path from "path";
@@ -21,16 +22,16 @@ function deepMerge<T extends Record<string, any>>(...objects: T[]): T {
   }, {} as T);
 }
 
-export const generateMarkdown = async (context: EmitContext<AgentSchemaEmitterOptions>, templateDir: string, node: TypeNode, emitTarget: EmitTarget) => {
+export const generateMarkdown = async (context: EmitContext<AgentSchemaEmitterOptions>, templateDir: string, node: TypeNode, emitTarget: EmitTarget, options?: GeneratorOptions) => {
 
   const rootObject = context.options["root-alias"] || "AgentDefinition";
   // set up template environment
   const templatePath = path.resolve(templateDir, 'markdown');
   const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatePath));
-  const template = env.getTemplate('markdown.njk', true);
-  const readme = env.getTemplate('readme.njk', true);
+  const template = env.getTemplate('file.md.njk', true);
+  const readme = env.getTemplate('index.md.njk', true);
 
-  const nodes = Array.from(enumerateTypes(node));
+  const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
   const childTypes: { source: string, target: string }[] = nodes.map(n => {
     return n.childTypes.map(c => {

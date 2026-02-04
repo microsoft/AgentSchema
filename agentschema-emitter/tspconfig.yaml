@@ -10,6 +10,7 @@ options:
   "@agentschema/emitter":
     emitter-output-dir: "{cwd}/tsp-output"
     root-object: "AgentSchema.AgentManifest"
+    schema-output-dir: "../../schemas/v1.0"
     emit-targets:
       - type: markdown
         output-dir: "../docs/src/content/docs/reference"
@@ -22,9 +23,6 @@ options:
       - type: Go
         output-dir: "../runtime/go/agentschema"
         test-dir: "../runtime/go/agentschema"
-      - type: BotDefinition
-        output-dir: "../runtime/definition"
       - type: TypeScript
         output-dir: "../runtime/typescript/agentschema/src"
         test-dir: "../runtime/typescript/agentschema/tests"
-

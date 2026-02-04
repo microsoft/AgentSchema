@@ -1,18 +1,56 @@
 import { fileURLToPath } from 'url';
 import path, { dirname } from 'path';
+import { existsSync, unlinkSync, readdirSync } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
-import { resolveModel } from "./ast.js";
-import { AgentSchemaEmitterOptions } from "./lib.js";
+import { resolveModel, TypeNode } from "./ast.js";
+import { AgentSchemaEmitterOptions, EmitTarget } from "./lib.js";
 import { generateMarkdown } from "./markdown.js";
 import { generatePython } from "./python.js";
 import { generateCsharp } from "./csharp.js";
 import { generateTypeScript } from "./typescript.js";
 import { generateGo } from "./go.js";
-import { generateBotDefinition } from './bot.js';
+
+// Generator options passed to each generator
+export interface GeneratorOptions {
+  omitModels?: string[];
+}
+
+/**
+ * Filter nodes based on omit-models option.
+ * Matches against model name (e.g., "AgentManifest") or fully qualified name (e.g., "AgentSchema.AgentManifest")
+ */
+export function filterNodes(nodes: TypeNode[], options?: GeneratorOptions): TypeNode[] {
+  const omitModels = options?.omitModels || [];
+  if (omitModels.length === 0) return nodes;
+
+  return nodes.filter(node => {
+    const name = node.typeName.name;
+    const fullName = `${node.typeName.namespace}.${name}`;
+    return !omitModels.includes(name) && !omitModels.includes(fullName);
+  });
+}
+
+// Generator function type for code emitters
+type GeneratorFn = (
+  context: EmitContext<AgentSchemaEmitterOptions>,
+  templateDir: string,
+  model: TypeNode,
+  target: EmitTarget,
+  options?: GeneratorOptions
+) => Promise<void>;
+
+// Registry of available code generators
+const generators: Record<string, GeneratorFn> = {
+  markdown: generateMarkdown,
+  python: generatePython,
+  csharp: generateCsharp,
+  typescript: generateTypeScript,
+  go: generateGo,
+};
 
 
 export async function $onEmit(context: EmitContext<AgentSchemaEmitterOptions>) {
@@ -43,53 +81,39 @@ export async function $onEmit(context: EmitContext<AgentSchemaEmitterOptions>) {
   }
 
   const targets = options["emit-targets"] || [];
-  const targetNames = targets.map(t => t.type.toLowerCase().trim());
+  const generatorOptions: GeneratorOptions = {
+    omitModels: options["omit-models"] || [],
+  };
 
-
-  if (targetNames.includes("markdown")) {
-    const idx = targetNames.indexOf("markdown");
-    const target = targets[idx];
-    // emit markdown
-    await generateMarkdown(context, options.templateDir, model, target);
-  }
-
-  if (targetNames.includes("python")) {
-    const idx = targetNames.indexOf("python");
-    const target = targets[idx];
-    // emit python
-    await generatePython(context, options.templateDir, model, target);
-  }
-
-  if (targetNames.includes("csharp")) {
-    const idx = targetNames.indexOf("csharp");
-    const target = targets[idx];
-    // emit csharp
-    await generateCsharp(context, options.templateDir, model, target);
-  }
-
-  if (targetNames.includes("typescript")) {
-    const idx = targetNames.indexOf("typescript");
-    const target = targets[idx];
-    // emit typescript
-    await generateTypeScript(context, options.templateDir, model, target);
-  }
-
-  if (targetNames.includes("go")) {
-    const idx = targetNames.indexOf("go");
-    const target = targets[idx];
-    // emit go
-    await generateGo(context, options.templateDir, model, target);
-  }
-
-  if (targetNames.includes("botdefinition")) {
-    const idx = targetNames.indexOf("botdefinition");
-    const target = targets[idx];
-    // emit bot definition
-    await generateBotDefinition(context, options.templateDir, model, target);
+  // Dispatch to registered generators
+  for (const target of targets) {
+    const generatorName = target.type.toLowerCase().trim();
+    const generator = generators[generatorName];
+    if (generator) {
+      await generator(context, options.templateDir, model, target, generatorOptions);
+    }
   }
 
   await emitFile(context.program, {
     path: resolvePath(context.emitterOutputDir, "json-ast", "model.json"),
     content: JSON.stringify(model.getSanitizedObject(), null, 2),
   });
+
+  // Clean up omitted models from schema directory if specified
+  const schemaDir = options["schema-output-dir"];
+  const omitModels = options["omit-models"] || [];
+  if (schemaDir && omitModels.length > 0) {
+    const resolvedSchemaDir = resolvePath(context.emitterOutputDir, schemaDir);
+    if (existsSync(resolvedSchemaDir)) {
+      for (const model of omitModels) {
+        // Try both .yaml and .json extensions
+        for (const ext of [".yaml", ".json"]) {
+          const schemaFile = path.join(resolvedSchemaDir, `${model}${ext}`);
+          if (existsSync(schemaFile)) {
+            unlinkSync(schemaFile);
+          }
+        }
+      }
+    }
+  }
 }

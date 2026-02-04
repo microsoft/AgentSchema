@@ -192,6 +192,7 @@ public{% if node.isAbstract %} abstract{% endif %} class {{ node.typeName.name }
     public static object Save{{ renderPropertyName(collection.prop) }}(IList<{{ collection.prop.typeName.name }}> items, SaveContext? context)
     {
         context ??= new SaveContext();
+        {% if collection.hasNameProperty %}
 
         if (context.CollectionFormat == "array")
         {
@@ -225,6 +226,10 @@ public{% if node.isAbstract %} abstract{% endif %} class {{ node.typeName.name }
             }
         }
         return result;
+        {% else %}
+        // This collection type does not have a 'name' property, only array format is supported
+        return items.Select(item => item.Save(context)).ToList();
+        {% endif %}
     }
     {% endfor %}
 

@@ -254,6 +254,7 @@ public class AgentManifest
     {
         context ??= new SaveContext();
 
+
         if (context.CollectionFormat == "array")
         {
             return items.Select(item => item.Save(context)).ToList();
@@ -286,6 +287,7 @@ public class AgentManifest
             }
         }
         return result;
+
     }
 
 

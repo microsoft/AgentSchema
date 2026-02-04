@@ -223,6 +223,7 @@ public abstract class Tool
     {
         context ??= new SaveContext();
 
+
         if (context.CollectionFormat == "array")
         {
             return items.Select(item => item.Save(context)).ToList();
@@ -255,6 +256,7 @@ public abstract class Tool
             }
         }
         return result;
+
     }
 
 

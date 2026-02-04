@@ -184,6 +184,7 @@ public class PropertySchema
     {
         context ??= new SaveContext();
 
+
         if (context.CollectionFormat == "array")
         {
             return items.Select(item => item.Save(context)).ToList();
@@ -216,6 +217,7 @@ public class PropertySchema
             }
         }
         return result;
+
     }
 
 

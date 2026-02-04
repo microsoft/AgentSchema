@@ -1,0 +1,237 @@
+---
+title: Code Generation
+description: Generate runtime libraries from AgentSchema definitions
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The `@agentschema/emitter` package provides both a CLI and programmatic API for generating runtime libraries from AgentSchema TypeSpec definitions.
+
+## Installation
+
+```bash
+npm install @agentschema/emitter
+```
+
+## CLI Usage
+
+The `agentschema-generate` command generates runtime code for multiple languages.
+
+### Basic Usage
+
+```bash
+# Generate all default targets (Python, C#, TypeScript, Go)
+npx agentschema-generate -o ./generated
+
+# Generate specific targets only
+npx agentschema-generate -o ./lib -t python,csharp
+
+# Generate with a different root object
+npx agentschema-generate -o ./lib -r AgentSchema.AgentDefinition
+
+# Omit specific models from generation
+npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
+```
+
+### CLI Options
+
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--output <dir>` | `-o` | Output directory for generated code (required) |
+| `--targets <list>` | `-t` | Comma-separated list of targets (default: `python,csharp,typescript,go`) |
+| `--root-object <name>` | `-r` | Root TypeSpec model to generate from (default: `AgentSchema.AgentManifest`) |
+| `--omit <list>` | | Comma-separated list of models to exclude |
+| `--namespace <name>` | `-n` | Override the namespace for generated code |
+| `--no-tests` | | Skip test file generation |
+| `--no-format` | | Skip running formatters on output |
+| `--help` | `-h` | Show help message |
+
+### Supported Targets
+
+| Target | Description |
+|--------|-------------|
+| `python` | Python dataclasses with YAML/JSON serialization |
+| `csharp` | C# classes with System.Text.Json serialization |
+| `typescript` | TypeScript interfaces with js-yaml serialization |
+| `go` | Go structs with encoding/json and gopkg.in/yaml.v3 |
+| `markdown` | Markdown documentation |
+
+## Programmatic API
+
+For integration into build scripts or custom tooling, use the programmatic API:
+
+<Tabs>
+<TabItem label="TypeScript/JavaScript">
+
+```typescript
+import { generate } from "@agentschema/emitter/generate";
+
+const result = await generate({
+  // Output directory (each target creates a subdirectory)
+  output: "./generated",
+  
+  // Target languages to generate
+  targets: ["python", "csharp", "typescript", "go"],
+  
+  // Root object to start generation from
+  rootObject: "AgentSchema.AgentManifest",
+  
+  // Models to exclude from generation
+  omit: ["AgentManifest"],
+  
+  // Skip test generation
+  skipTests: false,
+  
+  // Skip running formatters
+  skipFormat: false,
+});
+
+console.log(`Generated ${result.filesGenerated} files`);
+console.log(`Output: ${result.outputDir}`);
+```
+
+</TabItem>
+</Tabs>
+
+### GenerateOptions
+
+```typescript
+interface GenerateOptions {
+  /** Output directory for generated code */
+  output: string;
+  
+  /** Target languages (default: ["python", "csharp", "typescript", "go"]) */
+  targets?: TargetLanguage[];
+  
+  /** Root object to start generation from (default: "AgentSchema.AgentManifest") */
+  rootObject?: string;
+  
+  /** Models to exclude from generation */
+  omit?: string[];
+  
+  /** Skip test file generation (default: false) */
+  skipTests?: boolean;
+  
+  /** Skip running formatters (default: false) */
+  skipFormat?: boolean;
+  
+  /** Override namespace for generated code */
+  namespace?: string;
+}
+```
+
+### Advanced: Per-Target Configuration
+
+You can configure each target individually:
+
+```typescript
+import { generate } from "@agentschema/emitter/generate";
+
+await generate({
+  output: "./generated",
+  targets: {
+    python: {
+      outputDir: "./python-sdk/src",
+      testDir: "./python-sdk/tests",
+      namespace: "my_agent_sdk",
+    },
+    csharp: {
+      outputDir: "./dotnet-sdk/src",
+      testDir: "./dotnet-sdk/tests", 
+      namespace: "MyAgent.Sdk",
+    },
+  },
+});
+```
+
+## Output Structure
+
+When generating code, each target creates files in its subdirectory:
+
+```text
+generated/
+├── python/
+│   ├── __init__.py
+│   ├── agent_definition.py
+│   ├── prompt_agent.py
+│   └── tests/
+│       └── test_*.py
+├── csharp/
+│   ├── AgentDefinition.cs
+│   ├── PromptAgent.cs
+│   └── Tests/
+│       └── *Tests.cs
+├── typescript/
+│   ├── index.ts
+│   ├── agentDefinition.ts
+│   └── tests/
+│       └── *.test.ts
+└── go/
+    ├── agent_definition.go
+    └── *_test.go
+```
+
+## Customizing the Root Object
+
+By default, generation starts from `AgentSchema.AgentManifest`. You can change this to generate a subset of the schema:
+
+```bash
+# Generate only AgentDefinition and its dependencies
+npx agentschema-generate -o ./lib -r AgentSchema.AgentDefinition
+```
+
+This is useful when you only need specific types from the schema.
+
+## Excluding Models
+
+Use `--omit` to exclude specific models from generation:
+
+```bash
+# Generate without manifest types (just agent definitions)
+npx agentschema-generate -o ./lib --omit AgentManifest
+
+# Exclude multiple models
+npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
+```
+
+Models can be specified by name (`AgentManifest`) or fully qualified (`AgentSchema.AgentManifest`).
+
+## Integration Examples
+
+### npm build script
+
+```json
+{
+  "scripts": {
+    "generate": "agentschema-generate -o ./src/generated -t typescript"
+  }
+}
+```
+
+### GitHub Actions
+
+```yaml
+- name: Generate SDK
+  run: |
+    npm install @agentschema/emitter
+    npx agentschema-generate -o ./sdk -t python,csharp,typescript,go
+```
+
+### Custom Build Script
+
+```typescript
+// scripts/generate.ts
+import { generate } from "@agentschema/emitter/generate";
+
+async function main() {
+  const result = await generate({
+    output: "./sdk",
+    targets: ["python", "typescript"],
+    omit: ["AgentManifest"],
+  });
+  
+  console.log(`✅ Generated ${result.filesGenerated} files to ${result.outputDir}`);
+}
+
+main().catch(console.error);
+```

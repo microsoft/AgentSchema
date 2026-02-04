@@ -19,7 +19,7 @@ AgentSchema uses a code generation approach where:
 
 ```mermaid
 flowchart TD
-    A[TypeSpec Models<br/>agentschema/model/] --> B[TypeSpec Emitter<br/>agentschema-emitter]
+    A[TypeSpec Models<br/>agentschema-emitter/lib/model/] --> B[TypeSpec Emitter<br/>agentschema-emitter]
     B --> C[C# Runtime<br/>runtime/csharp/]
     B --> D[Python Runtime<br/>runtime/python/]
     B --> E[TypeScript Runtime<br/>runtime/typescript/]
@@ -39,12 +39,13 @@ flowchart TD
 
 <FileTree>
 
-- agentschema/model/ **Edit these** (source of truth)
-  - main.tsp
-  - agent.tsp
-  - tools.tsp
-  - …
-- agentschema-emitter/ **Or edit templates here**
+- agentschema-emitter/ **Self-contained emitter package**
+  - lib/model/ **Edit these** (source of truth)
+    - main.tsp
+    - agent.tsp
+    - tools.tsp
+    - …
+  - src/ **Or edit templates here**
   - src/
     - templates/
 - runtime/ ⚠️ DO NOT edit directly
@@ -60,7 +61,7 @@ flowchart TD
 
 | Area | Location | Description |
 |------|----------|-------------|
-| Schema changes | `agentschema/model/*.tsp` | Add/modify agent schema definitions |
+| Schema changes | `agentschema-emitter/lib/model/*.tsp` | Add/modify agent schema definitions |
 | Code generation | `agentschema-emitter/src/` | Improve generated code quality |
 | Documentation | `docs/src/content/` | Improve guides and examples |
 | Examples | `examples/` | Add new agent examples |

@@ -63,6 +63,129 @@ enumValues:
         Assert.Equal("default value", instance.Default);
         Assert.Equal("example value", instance.Example);
     }
+
+    [Fact]
+    public void RoundtripJson()
+    {
+        // Test that FromJson -> ToJson -> FromJson produces equivalent data
+        string jsonData = """
+{
+  "name": "my-input",
+  "kind": "string",
+  "description": "A description of the input property",
+  "required": true,
+  "default": "default value",
+  "example": "example value",
+  "enumValues": [
+    "value1",
+    "value2",
+    "value3"
+  ]
+}
+""";
+
+        var original = Property.FromJson(jsonData);
+        Assert.NotNull(original);
+        
+        var json = original.ToJson();
+        Assert.False(string.IsNullOrEmpty(json));
+        
+        var reloaded = Property.FromJson(json);
+        Assert.NotNull(reloaded);
+        Assert.Equal("my-input", reloaded.Name);
+        Assert.Equal("string", reloaded.Kind);
+        Assert.Equal("A description of the input property", reloaded.Description);
+        Assert.True(reloaded.Required);
+        Assert.Equal("default value", reloaded.Default);
+        Assert.Equal("example value", reloaded.Example);
+    }
+
+    [Fact]
+    public void RoundtripYaml()
+    {
+        // Test that FromYaml -> ToYaml -> FromYaml produces equivalent data
+        string yamlData = """
+name: my-input
+kind: string
+description: A description of the input property
+required: true
+default: default value
+example: example value
+enumValues:
+  - value1
+  - value2
+  - value3
+
+""";
+
+        var original = Property.FromYaml(yamlData);
+        Assert.NotNull(original);
+        
+        var yaml = original.ToYaml();
+        Assert.False(string.IsNullOrEmpty(yaml));
+        
+        var reloaded = Property.FromYaml(yaml);
+        Assert.NotNull(reloaded);
+        Assert.Equal("my-input", reloaded.Name);
+        Assert.Equal("string", reloaded.Kind);
+        Assert.Equal("A description of the input property", reloaded.Description);
+        Assert.True(reloaded.Required);
+        Assert.Equal("default value", reloaded.Default);
+        Assert.Equal("example value", reloaded.Example);
+    }
+
+    [Fact]
+    public void ToJsonProducesValidJson()
+    {
+        string jsonData = """
+{
+  "name": "my-input",
+  "kind": "string",
+  "description": "A description of the input property",
+  "required": true,
+  "default": "default value",
+  "example": "example value",
+  "enumValues": [
+    "value1",
+    "value2",
+    "value3"
+  ]
+}
+""";
+
+        var instance = Property.FromJson(jsonData);
+        var json = instance.ToJson();
+        
+        // Verify it's valid JSON by parsing it
+        var parsed = System.Text.Json.JsonDocument.Parse(json);
+        Assert.NotNull(parsed);
+    }
+
+    [Fact]
+    public void ToYamlProducesValidYaml()
+    {
+        string yamlData = """
+name: my-input
+kind: string
+description: A description of the input property
+required: true
+default: default value
+example: example value
+enumValues:
+  - value1
+  - value2
+  - value3
+
+""";
+
+        var instance = Property.FromYaml(yamlData);
+        var yaml = instance.ToYaml();
+        
+        // Verify it's valid YAML by parsing it
+        var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
+        var parsed = deserializer.Deserialize<object>(yaml);
+        Assert.NotNull(parsed);
+    }
     [Fact]
     public void LoadJsonFromBoolean()
     {

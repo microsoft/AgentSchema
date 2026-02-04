@@ -8,6 +8,7 @@ import {
   PropertyNode,
   TypeNode,
 } from "./ast.js";
+import { GeneratorOptions, filterNodes } from "./emitter.js";
 import { getCombinations, scalarValue } from "./utilities.js";
 import { createTemplateEngine } from "./template-engine.js";
 import * as YAML from "yaml";
@@ -95,12 +96,13 @@ export const generateGo = async (
   context: EmitContext<AgentSchemaEmitterOptions>,
   templateDir: string,
   node: TypeNode,
-  emitTarget: EmitTarget
+  emitTarget: EmitTarget,
+  options?: GeneratorOptions
 ): Promise<void> => {
   // Create template engine with Go templates + shared macros
   const engine = createTemplateEngine(templateDir, 'go');
 
-  const nodes = Array.from(enumerateTypes(node));
+  const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
   // Determine package name from root node namespace (e.g., "AgentSchema" -> "agentschema")
   const packageName = node.typeName.namespace.toLowerCase().replace(/\./g, '');
@@ -406,7 +408,7 @@ function toPascalCase(str: string): string {
       .map(part => part.charAt(0).toUpperCase() + part.slice(1))
       .join('');
   }
-  
+
   // Handle camelCase by inserting boundaries at uppercase letters
   // Then capitalize each part
   const withBoundaries = str.replace(/([a-z])([A-Z])/g, '$1_$2');

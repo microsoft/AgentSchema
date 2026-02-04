@@ -165,6 +165,7 @@ public class ObjectProperty : Property
     {
         context ??= new SaveContext();
 
+
         if (context.CollectionFormat == "array")
         {
             return items.Select(item => item.Save(context)).ToList();
@@ -197,6 +198,7 @@ public class ObjectProperty : Property
             }
         }
         return result;
+
     }
 
 

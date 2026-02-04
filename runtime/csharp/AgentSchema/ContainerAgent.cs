@@ -226,38 +226,9 @@ public class ContainerAgent : AgentDefinition
     {
         context ??= new SaveContext();
 
-        if (context.CollectionFormat == "array")
-        {
-            return items.Select(item => item.Save(context)).ToList();
-        }
+        // This collection type does not have a 'name' property, only array format is supported
+        return items.Select(item => item.Save(context)).ToList();
 
-        // Object format: use name as key
-        var result = new Dictionary<string, object?>();
-        foreach (var item in items)
-        {
-            var itemData = item.Save(context);
-            if (itemData.TryGetValue("name", out var nameValue) && nameValue is string name)
-            {
-                itemData.Remove("name");
-
-                // Check if we can use shorthand
-                if (context.UseShorthand && ProtocolVersionRecord.ShorthandProperty is string shorthandProp)
-                {
-                    if (itemData.Count == 1 && itemData.ContainsKey(shorthandProp))
-                    {
-                        result[name] = itemData[shorthandProp];
-                        continue;
-                    }
-                }
-                result[name] = itemData;
-            }
-            else
-            {
-                // No name, can't use object format for this item
-                throw new InvalidOperationException("Cannot save item in object format: missing 'name' property");
-            }
-        }
-        return result;
     }
 
 
@@ -267,6 +238,7 @@ public class ContainerAgent : AgentDefinition
     public static object SaveEnvironmentVariables(IList<EnvironmentVariable> items, SaveContext? context)
     {
         context ??= new SaveContext();
+
 
         if (context.CollectionFormat == "array")
         {
@@ -300,6 +272,7 @@ public class ContainerAgent : AgentDefinition
             }
         }
         return result;
+
     }
 
 

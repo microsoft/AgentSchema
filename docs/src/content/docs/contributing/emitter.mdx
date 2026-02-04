@@ -90,7 +90,7 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 | File | Purpose |
 |------|---------|
-| `dataclass.njk` / `file.*.njk` | Main class definitions |
+| `file.{ext}.njk` | Main class definitions |
 | `test.njk` / `test.*.njk` | Test file generation |
 | `_macros.njk` | Shared template macros |
 | `context.*.njk` | LoadContext/SaveContext classes |
@@ -159,7 +159,7 @@ const context = {
 };
 ```
 
-1. **Update the template** (e.g., `templates/csharp/dataclass.njk`):
+1. **Update the template** (e.g., `templates/csharp/file.cs.njk`):
 
 ```twig
 {% if newFeature %}

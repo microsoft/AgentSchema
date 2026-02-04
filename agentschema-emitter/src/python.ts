@@ -13,6 +13,7 @@ import {
   PythonTestContext,
   PythonLoadContextContext
 } from "./ast.js";
+import { GeneratorOptions, filterNodes } from "./emitter.js";
 import { getCombinations, scalarValue } from "./utilities.js";
 import { createTemplateEngine } from "./template-engine.js";
 import * as YAML from "yaml";
@@ -46,12 +47,13 @@ export const generatePython = async (
   context: EmitContext<AgentSchemaEmitterOptions>,
   templateDir: string,
   node: TypeNode,
-  emitTarget: EmitTarget
+  emitTarget: EmitTarget,
+  options?: GeneratorOptions
 ): Promise<void> => {
   // Create template engine with Python templates + shared macros
   const engine = createTemplateEngine(templateDir, 'python');
 
-  const nodes = Array.from(enumerateTypes(node));
+  const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
   // Determine package name from root node namespace (e.g., "AgentSchema" -> "agentschema")
   const packageName = node.typeName.namespace.toLowerCase();

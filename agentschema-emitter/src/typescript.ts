@@ -1,6 +1,7 @@
 import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
 import { enumerateTypes, PropertyNode, TypeNode } from "./ast.js";
+import { GeneratorOptions, filterNodes } from "./emitter.js";
 import * as nunjucks from "nunjucks";
 import { getCombinations, scalarValue } from "./utilities.js";
 import * as YAML from "yaml";
@@ -95,7 +96,8 @@ export const generateTypeScript = async (
   context: EmitContext<AgentSchemaEmitterOptions>,
   templateDir: string,
   node: TypeNode,
-  emitTarget: EmitTarget
+  emitTarget: EmitTarget,
+  options?: GeneratorOptions
 ) => {
   // Set up template environment
   const templatePath = path.resolve(templateDir, "typescript");
@@ -114,7 +116,7 @@ export const generateTypeScript = async (
   const indexTemplate = env.getTemplate("index.ts.njk", true);
   const testTemplate = env.getTemplate("test.ts.njk", true);
 
-  const nodes = Array.from(enumerateTypes(node));
+  const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
   // Determine namespace: use override or default
   const originalNamespace = node.typeName.namespace;

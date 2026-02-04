@@ -1,6 +1,7 @@
 import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
 import { enumerateTypes, PropertyNode, TypeNode } from "./ast.js";
+import { GeneratorOptions, filterNodes } from "./emitter.js";
 import * as nunjucks from "nunjucks";
 import { getCombinations, scalarValue } from "./utilities.js";
 import * as YAML from "yaml";
@@ -56,7 +57,7 @@ const numberTypes = [
   "float",
 ]
 
-export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOptions>, templateDir: string, node: TypeNode, emitTarget: EmitTarget) => {
+export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOptions>, templateDir: string, node: TypeNode, emitTarget: EmitTarget, options?: GeneratorOptions) => {
   // set up template environment
   const templatePath = path.resolve(templateDir, 'csharp');
   const env = new nunjucks.Environment(new nunjucks.FileSystemLoader(templatePath));
@@ -64,12 +65,12 @@ export const generateCsharp = async (context: EmitContext<AgentSchemaEmitterOpti
     const isFloat = value.toString().includes('.');
     return isFloat;
   });
-  const classTemplate = env.getTemplate('dataclass.njk', true);
-  const utilsTemplate = env.getTemplate('utils.njk', true);
-  const testTemplate = env.getTemplate('test.njk', true);
+  const classTemplate = env.getTemplate('file.cs.njk', true);
+  const utilsTemplate = env.getTemplate('utils.cs.njk', true);
+  const testTemplate = env.getTemplate('test.cs.njk', true);
   const contextTemplate = env.getTemplate('context.cs.njk', true);
 
-  const nodes = Array.from(enumerateTypes(node));
+  const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
   // Determine namespace: use override, or default to removing '.Core' suffix
   const originalNamespace = node.typeName.namespace;
@@ -141,13 +142,20 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
   const collectionTypes = node.properties.filter(p => p.isCollection && !p.isScalar && !p.isDict).map(p => {
     const itemType = findType(p.typeName.name);
     let primaryProp: string | null = null;
-    if (itemType && itemType.alternates && itemType.alternates.length > 0) {
-      const firstAlt = itemType.alternates[0];
-      if (firstAlt.expansion) {
-        for (const key of Object.keys(firstAlt.expansion)) {
-          if (firstAlt.expansion[key] === "{value}") {
-            primaryProp = key;
-            break;
+    let hasNameProperty = false;
+
+    if (itemType) {
+      // Check if item type has a 'name' property (supports object format)
+      hasNameProperty = itemType.properties.some(prop => prop.name === "name");
+
+      if (itemType.alternates && itemType.alternates.length > 0) {
+        const firstAlt = itemType.alternates[0];
+        if (firstAlt.expansion) {
+          for (const key of Object.keys(firstAlt.expansion)) {
+            if (firstAlt.expansion[key] === "{value}") {
+              primaryProp = key;
+              break;
+            }
           }
         }
       }
@@ -155,6 +163,7 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
     return {
       prop: p,
       type: primaryProp ? [primaryProp] : [],
+      hasNameProperty: hasNameProperty,
     };
   });
 

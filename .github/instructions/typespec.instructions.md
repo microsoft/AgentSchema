@@ -1,5 +1,5 @@
 ---
-applyTo: "agentschema/model/**/*.tsp"
+applyTo: "agentschema-emitter/lib/model/**/*.tsp"
 description: "Instructions for editing TypeSpec schema definitions"
 ---
 

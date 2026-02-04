@@ -41,4 +41,93 @@ fileIds:
         Assert.NotNull(instance);
         Assert.Equal("code_interpreter", instance.Kind);
     }
+
+    [Fact]
+    public void RoundtripJson()
+    {
+        // Test that FromJson -> ToJson -> FromJson produces equivalent data
+        string jsonData = """
+{
+  "kind": "code_interpreter",
+  "fileIds": [
+    "file1",
+    "file2"
+  ]
+}
+""";
+
+        var original = CodeInterpreterTool.FromJson(jsonData);
+        Assert.NotNull(original);
+        
+        var json = original.ToJson();
+        Assert.False(string.IsNullOrEmpty(json));
+        
+        var reloaded = CodeInterpreterTool.FromJson(json);
+        Assert.NotNull(reloaded);
+        Assert.Equal("code_interpreter", reloaded.Kind);
+    }
+
+    [Fact]
+    public void RoundtripYaml()
+    {
+        // Test that FromYaml -> ToYaml -> FromYaml produces equivalent data
+        string yamlData = """
+kind: code_interpreter
+fileIds:
+  - file1
+  - file2
+
+""";
+
+        var original = CodeInterpreterTool.FromYaml(yamlData);
+        Assert.NotNull(original);
+        
+        var yaml = original.ToYaml();
+        Assert.False(string.IsNullOrEmpty(yaml));
+        
+        var reloaded = CodeInterpreterTool.FromYaml(yaml);
+        Assert.NotNull(reloaded);
+        Assert.Equal("code_interpreter", reloaded.Kind);
+    }
+
+    [Fact]
+    public void ToJsonProducesValidJson()
+    {
+        string jsonData = """
+{
+  "kind": "code_interpreter",
+  "fileIds": [
+    "file1",
+    "file2"
+  ]
+}
+""";
+
+        var instance = CodeInterpreterTool.FromJson(jsonData);
+        var json = instance.ToJson();
+        
+        // Verify it's valid JSON by parsing it
+        var parsed = System.Text.Json.JsonDocument.Parse(json);
+        Assert.NotNull(parsed);
+    }
+
+    [Fact]
+    public void ToYamlProducesValidYaml()
+    {
+        string yamlData = """
+kind: code_interpreter
+fileIds:
+  - file1
+  - file2
+
+""";
+
+        var instance = CodeInterpreterTool.FromYaml(yamlData);
+        var yaml = instance.ToYaml();
+        
+        // Verify it's valid YAML by parsing it
+        var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
+        var parsed = deserializer.Deserialize<object>(yaml);
+        Assert.NotNull(parsed);
+    }
 }
