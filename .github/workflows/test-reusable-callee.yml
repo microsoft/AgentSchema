@@ -46,13 +46,6 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/test-v') || github.event_name == 'workflow_dispatch' || github.event_name == 'workflow_call'
-    environment:
-      name: pypi
-      url: https://pypi.org/project/agentschema/
-    permissions:
-      id-token: write
-      attestations: write
-      contents: read
     steps:
       - name: Echo publish
         run: echo "Publishing ${{ inputs.version }}"
