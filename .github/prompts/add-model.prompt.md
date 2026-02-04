@@ -9,7 +9,7 @@ description: "Add a new model type to the schema"
 In `agentschema-emitter/lib/model/`, create a new file or add to existing:
 
 ```typespec
-import "@agentschema/emitter";
+import "agentschema-emitter";
 import "./core.tsp";  // if using Named<> or Id<> templates
 
 namespace AgentSchema;

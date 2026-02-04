@@ -1,5 +1,5 @@
 {
-  "name": "@agentschema/emitter",
+  "name": "agentschema-emitter",
   "version": "0.1.10",
   "license": "MIT",
   "type": "module",

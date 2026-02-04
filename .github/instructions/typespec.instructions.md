@@ -57,7 +57,7 @@ optionalProp?: string;
 
 ## Imports
 
-- Always import `@agentschema/emitter` for decorators
+- Always import `agentschema-emitter` for decorators
 - Import related `.tsp` files using relative paths: `import "./core.tsp";`
 
 ## After Editing

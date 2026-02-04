@@ -5,12 +5,12 @@ description: Generate runtime libraries from AgentSchema definitions
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-The `@agentschema/emitter` package provides both a CLI and programmatic API for generating runtime libraries from AgentSchema TypeSpec definitions.
+The `agentschema-emitter` package provides both a CLI and programmatic API for generating runtime libraries from AgentSchema TypeSpec definitions.
 
 ## Installation
 
 ```bash
-npm install @agentschema/emitter
+npm install agentschema-emitter
 ```
 
 ## CLI Usage
@@ -64,7 +64,7 @@ For integration into build scripts or custom tooling, use the programmatic API:
 <TabItem label="TypeScript/JavaScript">
 
 ```typescript
-import { generate } from "@agentschema/emitter/generate";
+import { generate } from "agentschema-emitter/generate";
 
 const result = await generate({
   // Output directory (each target creates a subdirectory)
@@ -125,7 +125,7 @@ interface GenerateOptions {
 You can configure each target individually:
 
 ```typescript
-import { generate } from "@agentschema/emitter/generate";
+import { generate } from "agentschema-emitter/generate";
 
 await generate({
   output: "./generated",
@@ -213,7 +213,7 @@ Models can be specified by name (`AgentManifest`) or fully qualified (`AgentSche
 ```yaml
 - name: Generate SDK
   run: |
-    npm install @agentschema/emitter
+    npm install agentschema-emitter
     npx agentschema-generate -o ./sdk -t python,csharp,typescript,go
 ```
 
@@ -221,7 +221,7 @@ Models can be specified by name (`AgentManifest`) or fully qualified (`AgentSche
 
 ```typescript
 // scripts/generate.ts
-import { generate } from "@agentschema/emitter/generate";
+import { generate } from "agentschema-emitter/generate";
 
 async function main() {
   const result = await generate({

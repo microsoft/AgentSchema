@@ -90,7 +90,7 @@ const AgentSchemaEmitterOptionsSchema: JSONSchemaType<AgentSchemaEmitterOptions>
 };
 
 export const $lib = createTypeSpecLibrary({
-  name: "@agentschema/emitter",
+  name: "agentschema-emitter",
   diagnostics: {},
   emitter: { options: AgentSchemaEmitterOptionsSchema },
   state: {

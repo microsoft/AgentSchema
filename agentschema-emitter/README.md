@@ -1,11 +1,11 @@
-# @agentschema/emitter
+# agentschema-emitter
 
 TypeSpec emitter for generating AgentSchema runtime libraries in multiple programming languages.
 
 ## Installation
 
 ```bash
-npm install @agentschema/emitter
+npm install agentschema-emitter
 ```
 
 ## CLI Usage
@@ -41,7 +41,7 @@ npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
 ## Programmatic API
 
 ```typescript
-import { generate } from "@agentschema/emitter/generate";
+import { generate } from "agentschema-emitter/generate";
 
 const result = await generate({
   output: "./generated",
@@ -69,9 +69,9 @@ As a TypeSpec emitter in `tspconfig.yaml`:
 
 ```yaml
 emit:
-  - "@agentschema/emitter"
+  - "agentschema-emitter"
 options:
-  "@agentschema/emitter":
+  "agentschema-emitter":
     root-object: "AgentSchema.AgentManifest"
     emit-targets:
       - type: Python

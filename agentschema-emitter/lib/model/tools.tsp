@@ -1,4 +1,4 @@
-import "@agentschema/emitter";
+import "agentschema-emitter";
 import "./core.tsp";
 import "./tools";
 import "./properties.tsp";

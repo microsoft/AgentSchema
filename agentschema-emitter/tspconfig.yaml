@@ -1,13 +1,13 @@
 emit:
   - "@typespec/json-schema"
-  - "@agentschema/emitter"
+  - "agentschema-emitter"
 options:
   "@typespec/json-schema":
     emitter-output-dir: "{cwd}/../schemas/v1.0"
     emitAllModels: true
     emitAllRefs: true
     file-type: yaml
-  "@agentschema/emitter":
+  "agentschema-emitter":
     emitter-output-dir: "{cwd}/tsp-output"
     root-object: "AgentSchema.AgentManifest"
     schema-output-dir: "../../schemas/v1.0"

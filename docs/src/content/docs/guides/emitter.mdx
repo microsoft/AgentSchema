@@ -5,18 +5,18 @@ sidebar:
   order: 4
 ---
 
-The `@agentschema/emitter` package generates runtime libraries for multiple languages from the AgentSchema TypeSpec definitions. You can use it via CLI or programmatically.
+The `agentschema-emitter` package generates runtime libraries for multiple languages from the AgentSchema TypeSpec definitions. You can use it via CLI or programmatically.
 
 ## Installation
 
 ```bash
-npm install @agentschema/emitter
+npm install agentschema-emitter
 ```
 
 Or use it directly with npx:
 
 ```bash
-npx @agentschema/emitter --help
+npx agentschema-emitter --help
 ```
 
 ## CLI Usage
@@ -54,7 +54,7 @@ npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
 You can also use the emitter programmatically in your build scripts:
 
 ```typescript
-import { generate } from "@agentschema/emitter/generate";
+import { generate } from "agentschema-emitter/generate";
 
 const result = await generate({
   output: "./generated",
@@ -111,10 +111,10 @@ You can also use the emitter as a TypeSpec emitter in your `tspconfig.yaml`:
 
 ```yaml
 emit:
-  - "@agentschema/emitter"
+  - "agentschema-emitter"
 
 options:
-  "@agentschema/emitter":
+  "agentschema-emitter":
     root-object: "AgentSchema.AgentManifest"
     emit-targets:
       - type: Python

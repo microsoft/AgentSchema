@@ -41,7 +41,7 @@ cd runtime/go/agentschema && go test ./...
 Always use **annotated tags** with a descriptive message:
 
 ```bash
-# TypeSpec Emitter / npm (@agentschema/emitter)
+# TypeSpec Emitter / npm (agentschema-emitter)
 git tag -a "emitter-v0.1.11" -m "Emitter v0.1.11: description of changes"
 
 # C# / NuGet
