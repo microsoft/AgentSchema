@@ -10,6 +10,7 @@ Each runtime package is published independently using GitHub Actions workflows t
 
 | Runtime    | Tag Format                | Example                   |
 |------------|---------------------------|---------------------------|
+| Emitter/npm| `emitter-v{version}`      | `emitter-v0.2.0-beta.6`   |
 | C#/NuGet   | `csharp-v{version}`       | `csharp-v1.0.0-beta.6`    |
 | Python/PyPI| `python-v{version}`       | `python-v1.0.0b6`         |
 | TypeScript/npm | `typescript-v{version}` | `typescript-v1.0.0-beta.6`|
@@ -40,6 +41,9 @@ cd runtime/go/agentschema && go test ./...
 Always use **annotated tags** with a descriptive message:
 
 ```bash
+# TypeSpec Emitter / npm (@agentschema/emitter)
+git tag -a "emitter-v0.1.11" -m "Emitter v0.1.11: description of changes"
+
 # C# / NuGet
 git tag -a "csharp-v1.0.0-beta.6" -m "C# SDK v1.0.0-beta.6: description of changes"
 

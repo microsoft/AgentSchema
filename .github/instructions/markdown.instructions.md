@@ -189,6 +189,7 @@ git tag "csharp-v1.0.0-beta.4"
 
 Tag naming conventions:
 
+- **Emitter**: `emitter-v0.1.X`
 - **C#**: `csharp-v1.0.0-beta.X`
 - **Python**: `python-v1.0.0bX` (PEP 440 format)
 - **TypeScript**: `typescript-v1.0.0-beta.X`
