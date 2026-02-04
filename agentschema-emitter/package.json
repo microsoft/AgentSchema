@@ -4,6 +4,7 @@
   "license": "MIT",
   "type": "module",
   "main": "dist/src/index.js",
+  "tspMain": "src/lib/main.tsp",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
@@ -14,8 +15,18 @@
       "default": "./dist/src/testing/index.js"
     }
   },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "dist/**/*.njk",
+    "dist/**/*.json",
+    "lib/**/*.tsp",
+    "src/lib/*.tsp",
+    "tspconfig.yaml"
+  ],
   "peerDependencies": {
-    "@typespec/compiler": "latest"
+    "@typespec/compiler": "latest",
+    "@typespec/json-schema": "latest"
   },
   "devDependencies": {
     "@types/node": "^24.7.0",
@@ -23,6 +34,7 @@
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
     "@typespec/compiler": "latest",
+    "@typespec/json-schema": "^1.8.0",
     "eslint": "^9.15.0",
     "markdownlint-cli": "^0.46.0",
     "prettier": "^3.3.3",
@@ -31,7 +43,7 @@
   "scripts": {
     "build": "tsc && cp -r ./src/templates ./dist/src",
     "watch": "tsc --watch",
-    "generate": "tsp compile ../agentschema/model/manifest.tsp --config ../agentschema/tspconfig.yaml && markdownlint \"../docs/src/**/*.md\" -f -c ./markdown.json",
+    "generate": "tsp compile ./lib/model/main.tsp --config ./tspconfig.yaml && markdownlint \"../docs/src/**/*.md\" -f -c ./markdown.json",
     "test": "node --test",
     "lint": "eslint src/ test/ --report-unused-disable-directives --max-warnings=0",
     "lint:fix": "eslint . --report-unused-disable-directives --fix",

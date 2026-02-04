@@ -8,8 +8,8 @@
     "generate-objects": "tsp compile ./model/main.tsp --config ./tspconfig.yaml"
   },
   "dependencies": {
-    "@typespec/compiler": "latest",
-    "@typespec/json-schema": "^1.1.0",
-    "@agentschema/emitter": "file:../agentschema-emitter"
+    "@agentschema/emitter": "file:../agentschema-emitter",
+    "@typespec/compiler": "^1.8.0",
+    "@typespec/json-schema": "^1.8.0"
   }
 }

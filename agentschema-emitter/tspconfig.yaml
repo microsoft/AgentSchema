@@ -1,0 +1,30 @@
+emit:
+  - "@typespec/json-schema"
+  - "@agentschema/emitter"
+options:
+  "@typespec/json-schema":
+    emitter-output-dir: "{cwd}/../schemas/v1.0"
+    emitAllModels: true
+    emitAllRefs: true
+    file-type: yaml
+  "@agentschema/emitter":
+    emitter-output-dir: "{cwd}/tsp-output"
+    root-object: "AgentSchema.AgentManifest"
+    emit-targets:
+      - type: markdown
+        output-dir: "../docs/src/content/docs/reference"
+      - type: CSharp
+        output-dir: "../runtime/csharp/AgentSchema"
+        test-dir: "../runtime/csharp/AgentSchema.Tests"
+      - type: Python
+        output-dir: "../runtime/python/agentschema/src/agentschema"
+        test-dir: "../runtime/python/agentschema/tests"
+      - type: Go
+        output-dir: "../runtime/go/agentschema"
+        test-dir: "../runtime/go/agentschema"
+      - type: BotDefinition
+        output-dir: "../runtime/definition"
+      - type: TypeScript
+        output-dir: "../runtime/typescript/agentschema/src"
+        test-dir: "../runtime/typescript/agentschema/tests"
+

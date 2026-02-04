@@ -38,23 +38,36 @@ export interface SampleEntry {
   description?: string;
 }
 
-export function $sample(context: DecoratorContext, target: ModelProperty, sample: ObjectValue, options?: SampleOptions) {
-  const s = serializeValueAsJson(context.program, sample, sample.type);
-  if (!s) {
-    context.program.reportDiagnostic({
-      code: "agentschema-emitter-sample-serialization",
-      message: `Failed to serialize sample value.`,
-      severity: "error",
-      target: sample,
-    });
-    return;
+export function $sample(context: DecoratorContext, target: ModelProperty, sample: ObjectValue | object, options?: SampleOptions) {
+  // With valueof unknown, TypeSpec passes a plain JavaScript object
+  // With unknown (no valueof), TypeSpec passes an ObjectValue with a type property
+  let s: object;
+
+  if (sample && typeof sample === 'object' && 'type' in sample && (sample as ObjectValue).type) {
+    // Old-style ObjectValue with type property
+    const sampleValue = sample as ObjectValue;
+    const serialized = serializeValueAsJson(context.program, sampleValue, sampleValue.type);
+    if (!serialized) {
+      context.program.reportDiagnostic({
+        code: "agentschema-emitter-sample-serialization",
+        message: `Failed to serialize sample value.`,
+        severity: "error",
+        target: sampleValue,
+      });
+      return;
+    }
+    s = serialized;
+  } else {
+    // New-style: plain JavaScript object from valueof unknown
+    s = sample as object;
   }
+
   if (!s.hasOwnProperty(target.name)) {
     context.program.reportDiagnostic({
       code: "agentschema-emitter-sample-name-mismatch",
       message: `Sample object must have a property named '${target.name}' to match the target property.`,
       severity: "error",
-      target: sample,
+      target: target,
     });
     return;
   }
@@ -82,8 +95,24 @@ export function $abstract(context: DecoratorContext, target: Model) {
   setStateScalar(context, StateKeys.abstracts, target, true);
 }
 
+export function $alternate(context: DecoratorContext, target: ModelProperty, scalar: Type, sample: ObjectValue | object, expansion: ObjectValue | object) {
+  // The alternate decorator provides an alternative sample value with its expansion
+  // Currently a stub - can be extended later if needed
+  if (scalar.kind !== "Scalar") {
+    context.program.reportDiagnostic({
+      code: "agentschema-emitter-alternate-scalar-type",
+      message: `Alternate decorator requires a scalar type.`,
+      severity: "error",
+      target: scalar,
+    });
+    return;
+  }
+  // For now, this is a no-op placeholder
+  // The functionality can be implemented when @alternate is actually used
+}
 
-export function $shorthand(context: DecoratorContext, target: Model, scalar: Type, expansion: ObjectValue, title?: StringValue, description?: StringValue, example?: StringValue) {
+
+export function $shorthand(context: DecoratorContext, target: Model, scalar: Type, expansion: ObjectValue | object, title?: string, description?: string, example?: string) {
   if (scalar.kind !== "Scalar") {
     context.program.reportDiagnostic({
       code: "agentschema-emitter-shorthand-scalar-type",
@@ -94,23 +123,35 @@ export function $shorthand(context: DecoratorContext, target: Model, scalar: Typ
     return;
   }
 
-  const exp = serializeValueAsJson(context.program, expansion, expansion.type);
-  if (!exp) {
-    context.program.reportDiagnostic({
-      code: "agentschema-emitter-shorthand-serialization",
-      message: `Failed to serialize expansion value.`,
-      severity: "error",
-      target: target,
-    });
-    return;
+  // Handle both ObjectValue (old style) and plain object (valueof unknown)
+  let exp: object;
+  if (expansion && typeof expansion === 'object' && 'type' in expansion && (expansion as ObjectValue).type) {
+    const serialized = serializeValueAsJson(context.program, expansion as ObjectValue, (expansion as ObjectValue).type);
+    if (!serialized) {
+      context.program.reportDiagnostic({
+        code: "agentschema-emitter-shorthand-serialization",
+        message: `Failed to serialize expansion value.`,
+        severity: "error",
+        target: target,
+      });
+      return;
+    }
+    exp = serialized;
+  } else {
+    exp = expansion as object;
   }
+
+  // Handle string parameters that come as plain strings from valueof
+  const titleValue = typeof title === 'object' && title !== null && 'value' in title ? (title as StringValue).value : title as string | undefined;
+  const descValue = typeof description === 'object' && description !== null && 'value' in description ? (description as StringValue).value : description as string | undefined;
+  const exampleValue = typeof example === 'object' && example !== null && 'value' in example ? (example as StringValue).value : example as string | undefined;
 
   const entry: Alternative = {
     scalar: scalar.name,
     expansion: exp,
-    example: example ? example.value : undefined,
-    title: title?.value ?? "",
-    description: description?.value ?? "",
+    example: exampleValue,
+    title: titleValue ?? "",
+    description: descValue ?? "",
   }
   appendStateValue<Alternative>(context, StateKeys.shorthands, target, entry);
 }
