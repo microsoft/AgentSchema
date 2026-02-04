@@ -78,4 +78,3 @@ model MyModel {
 cd agentschema && npm run generate
 # Run all tests...
 ```
-

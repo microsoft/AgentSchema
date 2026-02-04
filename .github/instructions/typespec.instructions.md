@@ -64,4 +64,3 @@ optionalProp?: string;
 
 1. Run `cd agentschema && npm run generate` to regenerate all code
 2. Run tests in all three runtimes to verify changes
-

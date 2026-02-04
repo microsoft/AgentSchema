@@ -129,7 +129,7 @@ git push origin csharp-v1.0.0-beta.6
 
 ## Package Registries
 
-- **NuGet**: https://www.nuget.org/packages/AgentSchema
-- **PyPI**: https://pypi.org/project/agentschema/
-- **npm**: https://www.npmjs.com/package/agentschema
+- **NuGet**: <https://www.nuget.org/packages/AgentSchema>
+- **PyPI**: <https://pypi.org/project/agentschema/>
+- **npm**: <https://www.npmjs.com/package/agentschema>
 - **Go**: `go get github.com/microsoft/AgentSchema/runtime/go/agentschema`
