@@ -46,17 +46,7 @@ npm run build
 npm run generate
 ```
 
-This will generate documentation, schemas, and code in the `runtime` folder. Afterwards, you can autoformat everything using:
-
-```bash
-./format.ps1 -Verbose
-```
-
-Afterwards you can unit test the emitted code using:
-
-```bash
-./tests.ps1 -Verbose
-```
+This will generate documentation, schemas, and code in the `runtime` folder.
 
 ## Questions
 

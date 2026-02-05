@@ -26,10 +26,6 @@ Each runtime package is published independently using GitHub Actions workflows t
 Before publishing, verify all runtime tests pass:
 
 ```bash
-# Run all tests
-./tests.ps1
-
-# Or run individually:
 cd runtime/csharp && dotnet test
 cd runtime/python/agentschema && uv run pytest tests/
 cd runtime/typescript/agentschema && npm test
