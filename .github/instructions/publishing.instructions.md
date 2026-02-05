@@ -28,3 +28,29 @@ Push annotated tags to trigger publish workflows:
 3. Push tag: `git push origin csharp-v1.0.0-beta.6`
 4. Monitor [Actions](https://github.com/microsoft/AgentSchema/actions)
 
+## Known Issue: Multiple Tags Don't Trigger Workflows
+
+**IMPORTANT**: GitHub Actions does not reliably trigger workflows when multiple tags are pushed at once.
+
+❌ **Don't do this:**
+```bash
+git push origin csharp-v1.0.0-beta.7 python-v1.0.0b7 typescript-v1.0.0-beta.7 go-v1.0.0-beta.7
+```
+
+✅ **Do this instead** - trigger workflows manually with `gh`:
+```bash
+# C# (takes version parameter)
+gh workflow run "Publish C# to NuGet" -f version="1.0.0-beta.7"
+
+# Python (no version parameter - reads from pyproject.toml)
+gh workflow run "Publish Python to PyPI"
+
+# TypeScript (optional version parameter)
+gh workflow run "Publish TypeScript to npm" -f version="1.0.0-beta.7"
+
+# Go (optional version parameter)
+gh workflow run "Publish Go Module" -f version="1.0.0-beta.7"
+```
+
+Or push tags one at a time, waiting for each workflow to start before pushing the next.
+
