@@ -196,4 +196,4 @@ Tag naming conventions:
 - **Go**: `go-v1.0.0-beta.X`
 - **Docs**: `docs-v1.0.0-beta.X`
 
-See [PUBLISHING.md](/PUBLISHING.md) for complete publishing instructions.
+See the [publishing instructions](publishing.instructions.md) for complete publishing workflow.

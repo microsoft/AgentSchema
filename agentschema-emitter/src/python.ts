@@ -10,12 +10,13 @@ import {
   PythonClassContext,
   PythonFileContext,
   PythonInitContext,
-  PythonTestContext,
-  PythonLoadContextContext
+  PythonLoadContextContext,
+  BaseTestContext
 } from "./ast.js";
 import { GeneratorOptions, filterNodes } from "./emitter.js";
-import { getCombinations, scalarValue } from "./utilities.js";
+import { getCombinations, scalarValue, toSnakeCase } from "./utilities.js";
 import { createTemplateEngine } from "./template-engine.js";
+import { buildBaseTestContext, pythonTestOptions } from "./test-context.js";
 import * as YAML from "yaml";
 
 /**
@@ -70,7 +71,7 @@ export const generatePython = async (
   if (emitTarget["test-dir"]) {
     const testContextContext = buildLoadContextContext(packageName);
     const testContextContent = engine.render('test_context.py.njk', testContextContext);
-    await emitPythonFile(context, 'test_load_context.py', testContextContent, emitTarget["test-dir"]);
+    await emitPythonFile(context, 'test_context.py', testContextContent, emitTarget["test-dir"]);
   }
 
   // Render init file
@@ -89,9 +90,9 @@ export const generatePython = async (
 
     // Render test file for each type
     if (emitTarget["test-dir"]) {
-      const testContext = buildTestContext(n);
+      const testContext = buildTestContext(n, packageName);
       const testContent = engine.render('test.py.njk', testContext);
-      await emitPythonFile(context, `test_load_${n.typeName.name.toLowerCase()}.py`, testContent, emitTarget["test-dir"]);
+      await emitPythonFile(context, `test_${toSnakeCase(n.typeName.name)}.py`, testContent, emitTarget["test-dir"]);
     }
   }
 
@@ -213,64 +214,10 @@ function buildInitContext(nodes: TypeNode[]): PythonInitContext {
 }
 
 /**
- * Build context for rendering a test file.
+ * Build context for rendering a test file using the standardized shared helper.
  */
-function buildTestContext(node: TypeNode): PythonTestContext {
-  // Get sample properties and generate combinations
-  const samples = node.properties
-    .filter(p => p.samples && p.samples.length > 0)
-    .map(p => p.samples?.map(s => ({ ...s.sample })));
-
-  const combinations = samples.length > 0 ? getCombinations(samples) : [];
-
-  // Flatten combinations into test examples
-  const examples = combinations.map(c => {
-    const sample = Object.assign({}, ...c);
-    return {
-      json: JSON.stringify(sample, null, 2).split('\n'),
-      yaml: YAML.stringify(sample, { indent: 2 }).split('\n'),
-      validation: Object.keys(sample)
-        .filter(key => typeof sample[key] !== 'object')
-        .map(key => ({
-          key,
-          value: typeof sample[key] === 'boolean'
-            ? (sample[key] ? "True" : "False")
-            : sample[key],
-          delimeter: typeof sample[key] === 'string'
-            ? (sample[key].includes('\n') ? '"""' : '"')
-            : '',
-        })),
-    };
-  });
-
-  // Prepare alternate test cases
-  const alternates = node.alternates.map(alt => {
-    const example = alt.example
-      ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString())
-      : scalarValue[alt.scalar] || "None";
-
-    return {
-      title: alt.title || alt.scalar,
-      scalar: alt.scalar,
-      value: example,
-      validation: Object.keys(alt.expansion)
-        .filter(key => typeof alt.expansion[key] !== 'object')
-        .map(key => {
-          const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
-          return {
-            key,
-            value,
-            delimeter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
-          };
-        }),
-    };
-  });
-
-  return {
-    node,
-    examples,
-    alternates,
-  };
+function buildTestContext(node: TypeNode, packageName: string): BaseTestContext {
+  return buildBaseTestContext(node, packageName, pythonTestOptions);
 }
 
 /**

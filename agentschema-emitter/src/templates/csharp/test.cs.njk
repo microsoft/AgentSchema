@@ -1,3 +1,14 @@
+{#
+  C# Test Template
+  ================
+  Renders C# xUnit test file for a type.
+  
+  Expected context:
+    - node: TypeNode
+    - namespace: string
+    - examples: Array<{ json: string[], yaml: string[], validations: Array<{ key, value, startDelim, endDelim }> }>
+    - alternates: Array<{ title, scalar, value, validations: Array<{ key, value, delimiter }> }>
+#}
 using Xunit;
 
 #pragma warning disable IDE0130
@@ -20,7 +31,7 @@ public class {{ node.typeName.name }}ConversionTests
 
         Assert.NotNull(instance);
         
-        {%- for validation in sample.validation %}
+        {%- for validation in sample.validations %}
         {%- if validation.value == "True" or validation.value == "False" %}
         Assert.{% if validation.value == "False" %}False{% else %}True{% endif %}(instance.{{ validation.key  }});
         {%- elif validation.startDelim == '@"' %}
@@ -42,7 +53,7 @@ public class {{ node.typeName.name }}ConversionTests
 
         var instance = {{ node.typeName.name }}.FromJson(jsonData);
         Assert.NotNull(instance);
-        {%- for validation in sample.validation %}
+        {%- for validation in sample.validations %}
         {%- if validation.value == "True" or validation.value == "False" %}
         Assert.{% if validation.value == "False" %}False{% else %}True{% endif %}(instance.{{ validation.key  }});
         {%- elif validation.startDelim == '@"' %}
@@ -71,7 +82,7 @@ public class {{ node.typeName.name }}ConversionTests
         
         var reloaded = {{ node.typeName.name }}.FromJson(json);
         Assert.NotNull(reloaded);
-        {%- for validation in sample.validation %}
+        {%- for validation in sample.validations %}
         {%- if validation.value == "True" or validation.value == "False" %}
         Assert.{% if validation.value == "False" %}False{% else %}True{% endif %}(reloaded.{{ validation.key  }});
         {%- elif validation.startDelim == '@"' %}
@@ -100,7 +111,7 @@ public class {{ node.typeName.name }}ConversionTests
         
         var reloaded = {{ node.typeName.name }}.FromYaml(yaml);
         Assert.NotNull(reloaded);
-        {%- for validation in sample.validation %}
+        {%- for validation in sample.validations %}
         {%- if validation.value == "True" or validation.value == "False" %}
         Assert.{% if validation.value == "False" %}False{% else %}True{% endif %}(reloaded.{{ validation.key  }});
         {%- elif validation.startDelim == '@"' %}
@@ -160,7 +171,7 @@ public class {{ node.typeName.name }}ConversionTests
         {%- endif %}
         var instance = {{ node.typeName.name }}.FromJson(data);
         Assert.NotNull(instance);
-        {%- for item in alt.validation %}
+        {%- for item in alt.validations %}
         {%- if item.value == "True" or item.value == "False" %}
         Assert.NotNull(instance.{{ item.key }});
         Assert.IsType<bool>(instance.{{ item.key }});
@@ -170,7 +181,7 @@ public class {{ node.typeName.name }}ConversionTests
         Assert.True(instance.{{ item.key }} is float || instance.{{ item.key }} is double || instance.{{ item.key }} is int || instance.{{ item.key }} is long);
         Assert.Equal({{ item.value | safe }}, Convert.ToDouble(instance.{{ item.key }}), 5);
         {%- else %}
-        Assert.Equal({{ item.delimeter | safe }}{{ item.value | safe }}{{ item.delimeter | safe }}, instance.{{ item.key }});   
+        Assert.Equal({{ item.delimiter | safe }}{{ item.value | safe }}{{ item.delimiter | safe }}, instance.{{ item.key }});   
         {%- endif %}
         {%- endfor %}
     }
@@ -188,7 +199,7 @@ public class {{ node.typeName.name }}ConversionTests
         var instance = {{ node.typeName.name }}.FromYaml(data);
         Assert.NotNull(instance);
         
-        {%- for item in alt.validation %}
+        {%- for item in alt.validations %}
         {%- if item.value == "True" or item.value == "False" %}
         Assert.NotNull(instance.{{ item.key }});
         Assert.IsType<bool>(instance.{{ item.key }});
@@ -198,7 +209,7 @@ public class {{ node.typeName.name }}ConversionTests
         Assert.True(instance.{{ item.key }} is float || instance.{{ item.key }} is double || instance.{{ item.key }} is int || instance.{{ item.key }} is long);
         Assert.Equal({{ item.value | safe }}, Convert.ToDouble(instance.{{ item.key }}), 5);
         {%- else %}
-        Assert.Equal({{ item.delimeter | safe }}{{ item.value | safe }}{{ item.delimeter | safe }}, instance.{{ item.key }});   
+        Assert.Equal({{ item.delimiter | safe }}{{ item.value | safe }}{{ item.delimiter | safe }}, instance.{{ item.key }});   
         {%- endif %}
         {%- endfor %}
     }

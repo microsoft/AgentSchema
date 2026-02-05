@@ -678,3 +678,64 @@ export interface BaseRenderContext {
   /** Type mapping from TypeSpec types to target language types */
   typeMapper: Record<string, string>;
 }
+
+// =============================================================================
+// Standardized Test Context Interfaces
+// =============================================================================
+
+/**
+ * Validation assertion for a single property in a test.
+ */
+export interface PropertyValidation {
+  /** Property name in target language casing (PascalCase, snake_case, camelCase) */
+  key: string;
+  /** Expected value after loading */
+  value: any;
+  /** String delimiter for assertions (", """, etc.) */
+  delimiter: string;
+  /** Whether property is optional/pointer (for Go, C# nullable) */
+  isOptional: boolean;
+}
+
+/**
+ * A single test example generated from @sample decorators.
+ */
+export interface TestExample {
+  /** JSON representation as lines */
+  json: string[];
+  /** YAML representation as lines */
+  yaml: string[];
+  /** Property assertions to validate after loading */
+  validations: PropertyValidation[];
+}
+
+/**
+ * A shorthand/alternate representation test case.
+ */
+export interface AlternateTest {
+  /** Human-readable test name/title */
+  title: string;
+  /** Scalar type name in target language */
+  scalarType: string;
+  /** Example scalar value as string literal */
+  value: string;
+  /** Validations after expansion to full object */
+  validations: PropertyValidation[];
+}
+
+/**
+ * Base test context interface - all language test contexts should use this structure.
+ * This ensures consistency in test generation across all emitters.
+ */
+export interface BaseTestContext {
+  /** The TypeNode being tested */
+  node: TypeNode;
+  /** Whether this is an abstract/polymorphic base type (skip direct instantiation tests) */
+  isAbstract: boolean;
+  /** Package/namespace name for imports (optional - not used by all languages) */
+  package?: string;
+  /** Test examples from @sample decorators */
+  examples: TestExample[];
+  /** Shorthand alternate representation tests */
+  alternates: AlternateTest[];
+}

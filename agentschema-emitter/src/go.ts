@@ -4,14 +4,17 @@ import { existsSync } from "fs";
 import { dirname, resolve } from "path";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
 import {
+  BaseTestContext,
   enumerateTypes,
   PropertyNode,
   TypeNode,
 } from "./ast.js";
 import { GeneratorOptions, filterNodes } from "./emitter.js";
-import { getCombinations, scalarValue } from "./utilities.js";
+
 import { createTemplateEngine } from "./template-engine.js";
-import * as YAML from "yaml";
+import { buildBaseTestContext, goTestOptions } from "./test-context.js";
+import { toSnakeCase } from "./utilities.js";
+
 
 /**
  * Type mapping from TypeSpec scalar types to Go types.
@@ -55,38 +58,9 @@ interface GoFileContext {
   polymorphicTypeNames: string[];
 }
 
-interface GoTestContext {
-  node: TypeNode;
-  examples: Array<{
-    json: string[];
-    yaml: string[];
-    validation: Array<{ key: string; value: any; delimeter: string; isPointer: boolean }>;
-  }>;
-  alternates: Array<{
-    title: string;
-    scalar: string;
-    value: string;
-    validation: Array<{ key: string; value: any; delimeter: string; isPointer: boolean }>;
-  }>;
-  packageName: string;
-  isPolymorphic: boolean;
-}
-
 interface GoContextContext {
   header: string;
   packageName: string;
-}
-
-/**
- * Escape a string for use in Go string literals.
- */
-function escapeGoString(str: string): string {
-  return str
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/\n/g, '\\n')
-    .replace(/\r/g, '\\r')
-    .replace(/\t/g, '\\t');
 }
 
 /**
@@ -219,84 +193,8 @@ function buildFileContext(node: TypeNode, packageName: string, polymorphicTypeNa
 /**
  * Build context for rendering a test file.
  */
-function buildTestContext(node: TypeNode, packageName: string): GoTestContext {
-  // Get sample properties and generate combinations
-  const samples = node.properties
-    .filter(p => p.samples && p.samples.length > 0)
-    .map(p => p.samples?.map(s => ({ ...s.sample })));
-
-  const combinations = samples.length > 0 ? getCombinations(samples) : [];
-
-  // Flatten combinations into test examples
-  const examples = combinations.map(c => {
-    const sample = Object.assign({}, ...c);
-    return {
-      json: JSON.stringify(sample, null, 2).split('\n'),
-      yaml: YAML.stringify(sample, { indent: 2 }).split('\n'),
-      validation: Object.keys(sample)
-        .filter(key => typeof sample[key] !== 'object')
-        .map(key => {
-          const prop = node.properties.find(p => p.name === key);
-          return {
-            key: toPascalCase(key),
-            value: typeof sample[key] === 'boolean'
-              ? (sample[key] ? "true" : "false")
-              : (typeof sample[key] === 'string' ? escapeGoString(sample[key]) : sample[key]),
-            delimeter: typeof sample[key] === 'string' ? '"' : '',
-            isPointer: prop?.isOptional || false,
-          };
-        }),
-    };
-  });
-
-  // Prepare alternate test cases
-  const goScalarValue: Record<string, string> = {
-    "boolean": "false",
-    "float": "3.14",
-    "float32": "3.14",
-    "float64": "3.14",
-    "number": "3.14",
-    "int32": "3",
-    "int64": "3",
-    "integer": "3",
-    "string": '"example"',
-  };
-
-  const alternates = node.alternates.map(alt => {
-    const example = alt.example
-      ? (typeof alt.example === "string" ? '"' + alt.example + '"' : alt.example.toString().toLowerCase())
-      : goScalarValue[alt.scalar] || "nil";
-
-    return {
-      title: alt.title || alt.scalar,
-      scalar: alt.scalar,
-      value: example,
-      validation: Object.keys(alt.expansion)
-        .filter(key => typeof alt.expansion[key] !== 'object')
-        .map(key => {
-          const prop = node.properties.find(p => p.name === key);
-          const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
-          const needsQuotes = typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}";
-          return {
-            key: toPascalCase(key),
-            value: needsQuotes ? escapeGoString(value) : value,
-            delimeter: needsQuotes ? '"' : '',
-            isPointer: prop?.isOptional || false,
-          };
-        }),
-    };
-  });
-
-  const polyTypes = node.retrievePolymorphicTypes();
-  const isPolymorphic = polyTypes != null;  // Use != to check both null and undefined
-
-  return {
-    node,
-    examples,
-    alternates,
-    packageName,
-    isPolymorphic,
-  };
+function buildTestContext(node: TypeNode, packageName: string): BaseTestContext {
+  return buildBaseTestContext(node, packageName, goTestOptions);
 }
 
 /**
@@ -385,35 +283,4 @@ async function emitGoFile(
     path: filePath,
     content,
   });
-}
-
-/**
- * Convert PascalCase to snake_case.
- */
-function toSnakeCase(str: string): string {
-  return str
-    .replace(/([a-z])([A-Z])/g, "$1_$2")
-    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1_$2")
-    .toLowerCase();
-}
-
-/**
- * Convert snake_case or camelCase to PascalCase.
- */
-function toPascalCase(str: string): string {
-  // First handle snake_case and kebab-case
-  if (str.includes('_') || str.includes('-')) {
-    return str
-      .split(/[_\-]/)
-      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-      .join('');
-  }
-
-  // Handle camelCase by inserting boundaries at uppercase letters
-  // Then capitalize each part
-  const withBoundaries = str.replace(/([a-z])([A-Z])/g, '$1_$2');
-  return withBoundaries
-    .split('_')
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join('');
 }

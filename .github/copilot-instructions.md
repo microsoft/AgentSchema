@@ -125,15 +125,15 @@ cd runtime/go/agentschema && go test ./...
 
 For detailed guidance on specific areas:
 
-- [TypeSpec editing](instructions/typespec.instructions.md)
-- [Emitter development](instructions/emitter.instructions.md)
-- [Template editing](instructions/templates.instructions.md)
+- [TypeSpec editing](./instructions/typespec.instructions.md)
+- [Emitter development](./instructions/emitter.instructions.md)
+- [Template editing](./instructions/templates.instructions.md)
+- [Publishing packages](./instructions/publishing.instructions.md)
 
 ## Prompt Files
 
 Use these for common tasks:
 
-- `prompts/regenerate.prompt.md` - Full rebuild workflow
-- `prompts/add-property.prompt.md` - Adding properties to models
-- `prompts/add-model.prompt.md` - Creating new model types
-
+- [regenerate.prompt.md](./prompts/regenerate.prompt.md) - Full rebuild workflow
+- [add-property.prompt.md](./prompts/add-property.prompt.md) - Adding properties to models
+- [add-model.prompt.md](./prompts/add-model.prompt.md) - Creating new model types

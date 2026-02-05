@@ -36,4 +36,3 @@ cd runtime/typescript/agentschema && npm test
 # Go
 cd runtime/go/agentschema && go test ./...
 ```
-

@@ -41,7 +41,7 @@ describe("AnonymousConnection", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: anonymous\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const yaml = `kind: anonymous\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\n`;
       const instance = AnonymousConnection.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -51,7 +51,7 @@ describe("AnonymousConnection", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: anonymous\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const yaml = `kind: anonymous\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\n`;
       const instance = AnonymousConnection.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = AnonymousConnection.fromYaml(output);

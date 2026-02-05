@@ -16,7 +16,8 @@ The emitter transforms TypeSpec definitions into runtime code for C#, Python, Ty
 - agentschema-emitter/
   - src/
     - **emitter.ts** entry point - dispatches to generators
-    - **ast.ts** TypeSpec AST parsing (TypeNode, PropertyNode)
+    - **ast.ts** TypeSpec AST parsing (TypeNode, PropertyNode, BaseTestContext)
+    - **test-context.ts** shared test context builder for all languages
     - **decorators.ts** custom decorator handling
     - **utilities.ts** helper functions
     - csharp.ts C# code generator
@@ -50,6 +51,13 @@ flowchart LR
     I --> L[runtime/python/]
     J --> M[runtime/typescript/]
     O --> P[runtime/go/]
+    
+    subgraph "Test Generation"
+        TC[test-context.ts<br/>buildBaseTestContext] --> E
+        TC --> F
+        TC --> G
+        TC --> N
+    end
 ```
 
 ## Key Concepts
@@ -96,9 +104,32 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 | File | Purpose |
 |------|---------|
 | `file.{ext}.njk` | Main class definitions |
-| `test.njk` / `test.*.njk` | Test file generation |
+| `test.{ext}.njk` | Test file generation (uses standardized context) |
 | `_macros.njk` | Shared template macros |
 | `context.*.njk` | LoadContext/SaveContext classes |
+
+### Test Context Standardization
+
+All test templates use the shared `buildBaseTestContext()` function from `test-context.ts`. This ensures consistent field names across all languages:
+
+```typescript
+// In your language generator
+import { buildBaseTestContext, yourLanguageTestOptions } from "./test-context.js";
+
+function buildTestContext(node: TypeNode, packageName: string): BaseTestContext {
+  return buildBaseTestContext(node, packageName, yourLanguageTestOptions);
+}
+```
+
+**Standardized field names in test templates:**
+
+| Field | Description |
+|-------|-------------|
+| `validations` | Array of property assertions (not `validation`) |
+| `delimiter` | Quote character for strings (not `delimeter`) |
+| `scalarType` | The scalar type name (not `scalar`) |
+| `isOptional` | Whether property is optional (not `isPointer`) |
+| `package` | Package/namespace (not `packageName`) |
 
 ### Template Syntax
 

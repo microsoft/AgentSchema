@@ -137,14 +137,14 @@ def test_to_yaml_property():
     assert isinstance(parsed, dict)
 
 
-def test_load_property_from_boolean():
+def test_load_property_from_bool():
     instance = Property.load(False)
     assert instance is not None
     assert instance.kind == "boolean"
     assert not instance.example
 
 
-def test_load_property_from_float32():
+def test_load_property_from_float():
     instance = Property.load(3.14)
     assert instance is not None
     assert instance.kind == "float"
@@ -158,7 +158,7 @@ def test_load_property_from_integer():
     assert instance.example == 4
 
 
-def test_load_property_from_string():
+def test_load_property_from_str():
     instance = Property.load("example")
     assert instance is not None
     assert instance.kind == "string"

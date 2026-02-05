@@ -10,10 +10,47 @@ description: "Instructions for editing Nunjucks code generation templates"
 Templates receive context objects from the language-specific generators. Common context includes:
 
 - `node` - TypeNode with model information
-- `examples` - Array of test examples with `json`, `yaml`, `validation` arrays
-- `alternates` - Shorthand representation test cases
-- `namespace` - Target namespace/package name
+- `isAbstract` - Whether this is a polymorphic base type (skip direct instantiation)
+- `package` - Target namespace/package name
 - `typeMapper` - Scalar type conversions
+
+### Test Template Context (Standardized)
+
+All test templates receive a `BaseTestContext` with standardized field names:
+
+```typescript
+interface BaseTestContext {
+  node: TypeNode;
+  isAbstract: boolean;
+  package?: string;
+  examples: TestExample[]; // From @sample decorators
+  alternates: AlternateTest[]; // From @shorthand decorators
+}
+
+interface TestExample {
+  json: string[]; // JSON lines
+  yaml: string[]; // YAML lines
+  validations: PropertyValidation[];
+}
+
+interface PropertyValidation {
+  key: string; // Property name (in target casing)
+  value: any; // Expected value
+  delimiter: string; // Quote character(s) for strings
+  isOptional: boolean; // Whether property is optional
+}
+
+interface AlternateTest {
+  title: string; // Test name suffix
+  scalarType: string; // The scalar type name
+  value: string; // Scalar value literal
+  validations: PropertyValidation[];
+}
+```
+
+:::caution[Standardized Field Names]
+Always use `validations` (plural), `delimiter` (correct spelling), and `scalarType`. These are consistent across all language templates.
+:::
 
 ## Nunjucks Syntax
 
@@ -104,4 +141,3 @@ npx tsc
 cp -r src/templates dist/src/
 cd ../agentschema && npm run generate
 ```
-

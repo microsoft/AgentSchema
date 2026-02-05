@@ -3,10 +3,12 @@
   ====================
   Renders pytest test file for a type.
   
-  Expected context (PythonTestContext):
+  Expected context (BaseTestContext):
     - node: TypeNode
-    - examples: Array<{ json: string[], yaml: string[], validation: Array<{ key, value, delimeter }> }>
-    - alternates: Array<{ title, scalar, value, validation: Array<{ key, value, delimeter }> }>
+    - isAbstract: boolean
+    - package: string
+    - examples: Array<{ json: string[], yaml: string[], validations: Array<{ key, value, delimiter, isOptional }> }>
+    - alternates: Array<{ title, scalarType, value, validations: Array<{ key, value, delimiter, isOptional }> }>
 #}
 {%- if examples.length > 0 %}
 import json
@@ -24,11 +26,11 @@ def test_load_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
     data = json.loads(json_data, strict=False)
     instance = {{node.typeName.name}}.load(data)
     assert instance is not None
-    {% for validation in sample.validation -%}
+    {% for validation in sample.validations -%}
     {%- if validation.value == "True" or validation.value == "False" %}
     assert {% if validation.value == "False" %}not {% endif %}instance.{{ validation.key }}
     {% else -%}
-    assert instance.{{ validation.key }} == {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }}
+    assert instance.{{ validation.key }} == {{ validation.delimiter }}{{ validation.value }}{{ validation.delimiter }}
     {% endif -%}
     {% endfor %}
 
@@ -41,11 +43,11 @@ def test_load_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = {{node.typeName.name}}.load(data)
     assert instance is not None
-    {%- for validation in sample.validation %}
+    {%- for validation in sample.validations %}
     {%- if validation.value == "True" or validation.value == "False" %}
     assert {% if validation.value == "False" %}not {% endif %}instance.{{ validation.key }}
     {%- else %}
-    assert instance.{{ validation.key }} == {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }}
+    assert instance.{{ validation.key }} == {{ validation.delimiter }}{{ validation.value }}{{ validation.delimiter }}
     {%- endif %}
     {%- endfor %}
 
@@ -61,11 +63,11 @@ def test_roundtrip_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{
     saved_data = instance.save()
     reloaded = {{node.typeName.name}}.load(saved_data)
     assert reloaded is not None
-    {%- for validation in sample.validation %}
+    {%- for validation in sample.validations %}
     {%- if validation.value == "True" or validation.value == "False" %}
     assert {% if validation.value == "False" %}not {% endif %}reloaded.{{ validation.key }}
     {%- else %}
-    assert reloaded.{{ validation.key }} == {{ validation.delimeter }}{{ validation.value }}{{ validation.delimeter }}
+    assert reloaded.{{ validation.key }} == {{ validation.delimiter }}{{ validation.value }}{{ validation.delimiter }}
     {%- endif %}
     {%- endfor %}
 
@@ -99,14 +101,14 @@ def test_to_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.in
 {% endfor %}
 {% if alternates.length > 0 %}
 {% for alt in alternates -%}
-def test_load_{{node.typeName.name | lower}}_from_{{ alt.scalar }}():
+def test_load_{{node.typeName.name | lower}}_from_{{ alt.scalarType }}():
     instance = {{node.typeName.name}}.load({{ alt.value }})
     assert instance is not None
-    {%- for item in alt.validation %}
+    {%- for item in alt.validations %}
     {%- if item.value == "True" or item.value == "False" %}
     assert {% if item.value == "False" %}not {% endif %}instance.{{ item.key }}
     {%- else %}
-    assert instance.{{ item.key }} == {{ item.delimeter }}{{ item.value }}{{ item.delimeter }}
+    assert instance.{{ item.key }} == {{ item.delimiter }}{{ item.value }}{{ item.delimiter }}
     {%- endif %}
     {%- endfor %}
 {% endfor %}

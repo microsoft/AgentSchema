@@ -3,10 +3,11 @@
   ========================
   Renders test files for TypeScript classes.
   
-  Expected context (TypeScriptTestContext):
+  Expected context (BaseTestContext):
     - node: TypeNode
-    - examples: Array<{ json: string[], yaml: string[], validation: Array<...> }>
-    - alternates: Array<{ title: string, scalar: string, value: string, validation: Array<...> }>
+    - isAbstract: boolean
+    - examples: Array<{ json: string[], yaml: string[], validations: Array<{ key, value, delimiter, isOptional }> }>
+    - alternates: Array<{ title: string, scalarType: string, value: string, validations: Array<...> }>
     - renderName: function
     - namespace: string
 #}
@@ -35,8 +36,8 @@ describe("{{ node.typeName.name }}", () => {
       const json = `{{ example.json | join("\\n") | safe }}`;
       const instance = {{ node.typeName.name }}.fromJson(json);
       expect(instance).toBeDefined();
-      {% for val in example.validation %}
-      expect(instance.{{ val.key }}).toEqual({{ val.delimeter }}{{ val.value }}{{ val.delimeter }});
+      {% for val in example.validations %}
+      expect(instance.{{ val.key }}).toEqual({{ val.delimiter }}{{ val.value }}{{ val.delimiter }});
       {% endfor %}
     });
 
@@ -45,7 +46,7 @@ describe("{{ node.typeName.name }}", () => {
       const instance = {{ node.typeName.name }}.fromJson(json);
       const output = instance.toJson();
       const reloaded = {{ node.typeName.name }}.fromJson(output);
-      {% for val in example.validation %}
+      {% for val in example.validations %}
       expect(reloaded.{{ val.key }}).toEqual(instance.{{ val.key }});
       {% endfor %}
     });
@@ -58,8 +59,8 @@ describe("{{ node.typeName.name }}", () => {
       const yaml = `{{ example.yaml | join("\\n") | safe }}`;
       const instance = {{ node.typeName.name }}.fromYaml(yaml);
       expect(instance).toBeDefined();
-      {% for val in example.validation %}
-      expect(instance.{{ val.key }}).toEqual({{ val.delimeter }}{{ val.value }}{{ val.delimeter }});
+      {% for val in example.validations %}
+      expect(instance.{{ val.key }}).toEqual({{ val.delimiter }}{{ val.value }}{{ val.delimiter }});
       {% endfor %}
     });
 
@@ -68,7 +69,7 @@ describe("{{ node.typeName.name }}", () => {
       const instance = {{ node.typeName.name }}.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = {{ node.typeName.name }}.fromYaml(output);
-      {% for val in example.validation %}
+      {% for val in example.validations %}
       expect(reloaded.{{ val.key }}).toEqual(instance.{{ val.key }});
       {% endfor %}
     });
@@ -84,8 +85,8 @@ describe("{{ node.typeName.name }}", () => {
       const json = JSON.stringify(value);
       const instance = {{ node.typeName.name }}.fromJson(json);
       expect(instance).toBeDefined();
-      {% for val in alt.validation %}
-      expect(instance.{{ renderName(val.key) | lower | replace(".", "") }}).toEqual({{ val.delimeter }}{{ val.value }}{{ val.delimeter }});
+      {% for val in alt.validations %}
+      expect(instance.{{ renderName(val.key) | lower | replace(".", "") }}).toEqual({{ val.delimiter }}{{ val.value }}{{ val.delimiter }});
       {% endfor %}
     });
     {% endfor %}

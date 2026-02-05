@@ -65,7 +65,7 @@ describe("ModelOptions", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `frequencyPenalty: 0.5\nmaxOutputTokens: 2048\npresencePenalty: 0.3\nseed: 42\ntemperature: 0.7\ntopK: 40\ntopP: 0.9\nstopSequences:\n  - |+\n    \n  - "###"\nallowMultipleToolCalls: true\nadditionalProperties:\n  customProperty: value\n  anotherProperty: anotherValue\n`;
+      const yaml = `frequencyPenalty: 0.5\nmaxOutputTokens: 2048\npresencePenalty: 0.3\nseed: 42\ntemperature: 0.7\ntopK: 40\ntopP: 0.9\nstopSequences:\n  - "\\n"\n  - "###"\nallowMultipleToolCalls: true\nadditionalProperties:\n  customProperty: value\n  anotherProperty: anotherValue\n`;
       const instance = ModelOptions.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -87,7 +87,7 @@ describe("ModelOptions", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `frequencyPenalty: 0.5\nmaxOutputTokens: 2048\npresencePenalty: 0.3\nseed: 42\ntemperature: 0.7\ntopK: 40\ntopP: 0.9\nstopSequences:\n  - |+\n    \n  - "###"\nallowMultipleToolCalls: true\nadditionalProperties:\n  customProperty: value\n  anotherProperty: anotherValue\n`;
+      const yaml = `frequencyPenalty: 0.5\nmaxOutputTokens: 2048\npresencePenalty: 0.3\nseed: 42\ntemperature: 0.7\ntopK: 40\ntopP: 0.9\nstopSequences:\n  - "\\n"\n  - "###"\nallowMultipleToolCalls: true\nadditionalProperties:\n  customProperty: value\n  anotherProperty: anotherValue\n`;
       const instance = ModelOptions.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ModelOptions.fromYaml(output);

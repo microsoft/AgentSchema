@@ -45,7 +45,7 @@ describe("RemoteConnection", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: remote\nname: my-reference-connection\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const yaml = `kind: remote\nname: my-reference-connection\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\n`;
       const instance = RemoteConnection.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -57,7 +57,7 @@ describe("RemoteConnection", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: remote\nname: my-reference-connection\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\n`;
+      const yaml = `kind: remote\nname: my-reference-connection\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\n`;
       const instance = RemoteConnection.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = RemoteConnection.fromYaml(output);

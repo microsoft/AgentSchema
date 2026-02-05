@@ -49,8 +49,7 @@ def test_load_yaml_modeloptions():
     topK: 40
     topP: 0.9
     stopSequences:
-      - |+
-        
+      - "\n"
       - "###"
     allowMultipleToolCalls: true
     additionalProperties:

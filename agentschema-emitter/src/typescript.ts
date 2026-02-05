@@ -1,10 +1,10 @@
 import { EmitContext, emitFile, resolvePath } from "@typespec/compiler";
 import { EmitTarget, AgentSchemaEmitterOptions } from "./lib.js";
-import { enumerateTypes, PropertyNode, TypeNode } from "./ast.js";
+import { enumerateTypes, PropertyNode, TypeNode, BaseTestContext } from "./ast.js";
 import { GeneratorOptions, filterNodes } from "./emitter.js";
 import * as nunjucks from "nunjucks";
-import { getCombinations, scalarValue } from "./utilities.js";
-import * as YAML from "yaml";
+import { buildBaseTestContext, typescriptTestOptions } from "./test-context.js";
+import { toKebabCase } from "./utilities.js";
 import path from "path";
 import { resolve, dirname } from "path";
 import { execSync } from "child_process";
@@ -26,21 +26,6 @@ const typescriptTypeMapper: Record<string, string> = {
   "integer": "number",
   "dictionary": "Record<string, unknown>",
   "unknown": "unknown",
-};
-
-/**
- * Scalar value examples for testing.
- */
-const typescriptScalarValue: Record<string, string> = {
-  "boolean": "false",
-  "float": "3.14",
-  "float32": "3.14",
-  "float64": "3.14",
-  "number": "3.14",
-  "int32": "3",
-  "int64": "3",
-  "integer": "3",
-  "string": '"example"',
 };
 
 /**
@@ -66,22 +51,6 @@ interface TypeScriptFileContext {
 interface TypeScriptIndexContext {
   baseTypes: TypeNode[];
   types: TypeNode[];
-}
-
-interface TypeScriptTestContext {
-  node: TypeNode;
-  isAbstract: boolean;
-  examples: Array<{
-    json: string[];
-    yaml: string[];
-    validation: Array<{ key: string; value: any; delimeter: string }>;
-  }>;
-  alternates: Array<{
-    title: string;
-    scalar: string;
-    value: string;
-    validation: Array<{ key: string; value: any; delimeter: string }>;
-  }>;
 }
 
 interface TypeScriptContextContext {
@@ -284,75 +253,8 @@ function buildIndexContext(nodes: TypeNode[]): TypeScriptIndexContext {
 /**
  * Build context for rendering a test file.
  */
-function buildTestContext(node: TypeNode): TypeScriptTestContext {
-  const samples = node.properties
-    .filter((p) => p.samples && p.samples.length > 0)
-    .map((p) => p.samples?.map((s) => ({ ...s.sample })));
-
-  const combinations = samples.length > 0 ? getCombinations(samples) : [];
-
-  const examples = combinations.map((c) => {
-    const sample = Object.assign({}, ...c);
-    // Escape backslashes in JSON so that escape sequences like \n remain as literals in template strings
-    const jsonStr = JSON.stringify(sample, null, 2).replace(/\\/g, "\\\\");
-    return {
-      json: jsonStr.split("\n"),
-      yaml: YAML.stringify(sample, { indent: 2 }).split("\n"),
-      validation: Object.keys(sample)
-        .filter((key) => typeof sample[key] !== "object")
-        .map((key) => {
-          let value = sample[key];
-          // Escape special characters in string values for use in test assertions
-          if (typeof value === "string") {
-            value = value
-              .replace(/\\/g, "\\\\")
-              .replace(/\n/g, "\\n")
-              .replace(/\r/g, "\\r")
-              .replace(/\t/g, "\\t")
-              .replace(/"/g, '\\"');
-          }
-          return {
-            key,
-            value: typeof value === "boolean" ? value : value,
-            delimeter: typeof sample[key] === "string" ? '"' : "",
-          };
-        }),
-    };
-  });
-
-  const alternates = node.alternates.map((alt) => {
-    const example = alt.example
-      ? typeof alt.example === "string"
-        ? '"' + alt.example + '"'
-        : alt.example.toString()
-      : typescriptScalarValue[alt.scalar] || "undefined";
-
-    return {
-      title: alt.title || alt.scalar,
-      scalar: alt.scalar,
-      value: example,
-      validation: Object.keys(alt.expansion)
-        .filter((key) => typeof alt.expansion[key] !== "object")
-        .map((key) => {
-          const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
-          return {
-            key,
-            value,
-            delimeter:
-              typeof value === "string" && !value.includes('"') && alt.expansion[key] !== "{value}"
-                ? '"'
-                : "",
-          };
-        }),
-    };
-  });
-
-  return {
-    node,
-    isAbstract: node.isAbstract || (node.discriminator !== undefined && node.discriminator.length > 0),
-    examples,
-    alternates,
-  };
+function buildTestContext(node: TypeNode): BaseTestContext {
+  return buildBaseTestContext(node, undefined, typescriptTestOptions);
 }
 
 /**
@@ -444,16 +346,6 @@ async function emitTypeScriptFile(
     path: filePath,
     content,
   });
-}
-
-/**
- * Convert PascalCase to kebab-case.
- */
-function toKebabCase(str: string): string {
-  return str
-    .replace(/([a-z])([A-Z])/g, "$1-$2")
-    .replace(/([A-Z]+)([A-Z][a-z])/g, "$1-$2")
-    .toLowerCase();
 }
 
 /**

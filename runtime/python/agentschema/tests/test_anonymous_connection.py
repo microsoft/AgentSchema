@@ -21,7 +21,7 @@ def test_load_json_anonymousconnection():
 def test_load_yaml_anonymousconnection():
     yaml_data = """
     kind: anonymous
-    endpoint: https://{your-custom-endpoint}.openai.azure.com/
+    endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)

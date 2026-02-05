@@ -224,8 +224,8 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace:
     return {
       json: JSON.stringify(sample, null, 2).split('\n'),
       yaml: doc.toString({ indent: 2, lineWidth: 0 }).split('\n'),
-      // get all scalars in the sample
-      validation: Object.keys(sample).filter(key => typeof sample[key] !== 'object').map(key => ({
+      // get all scalars in the sample - using 'validations' (plural) for consistency across languages
+      validations: Object.keys(sample).filter(key => typeof sample[key] !== 'object').map(key => ({
         key: renderName(key),
         value: typeof sample[key] === 'boolean' ? (sample[key] ? "True" : "False") : sample[key],
         startDelim: typeof sample[key] === 'string' ? (sample[key].includes('\n') ? '@"' : '"') : '',
@@ -241,12 +241,13 @@ const renderTests = (node: TypeNode, testTemplate: nunjucks.Template, namespace:
       title: alt.title || alt.scalar,
       scalar: alt.scalar,
       value: example,
-      validation: Object.keys(alt.expansion).filter(key => typeof alt.expansion[key] !== 'object').map(key => {
+      // using 'validations' (plural) for consistency across languages
+      validations: Object.keys(alt.expansion).filter(key => typeof alt.expansion[key] !== 'object').map(key => {
         const value = alt.expansion[key] === "{value}" ? example : alt.expansion[key];
         return {
           key: renderName(key),
           value: value,
-          delimeter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
+          delimiter: typeof value === 'string' && !value.includes('"') && alt.expansion[key] !== "{value}" ? '"' : '',
         };
       }),
     };

@@ -1,5 +1,4 @@
 ---
-applyTo: ""
 description: "Checklist for adding a new language runtime"
 ---
 
@@ -12,10 +11,71 @@ When adding support for a new language (e.g., Java, Rust), update all these loca
 - [ ] Create `{language}.ts` code generator
 - [ ] Create `templates/{language}/` directory with templates:
   - `file.{ext}.njk` - Main class template
-  - `test.njk` - Test template
+  - `test.{ext}.njk` - Test template (use standardized field names - see below)
   - `_macros.njk` - Shared macros (if needed)
+- [ ] Add language options to `test-context.ts`:
+  - Define `{language}TestOptions: TestContextOptions` preset
+  - Export the preset for use by the generator
 - [ ] Update `emitter.ts` to import and call the new generator
 - [ ] Update `generate.ts` to include the new target in defaults
+
+### Test Context Standardization
+
+All test templates must use the standardized `BaseTestContext` interface. Create language options in `test-context.ts`:
+
+```typescript
+export const {language}TestOptions: TestContextOptions = {
+  renderKey: (key: string) => key,                    // Transform to language casing
+  renderBoolean: (val: boolean) => val ? "true" : "false",
+  escapeString: (str: string) => str.replace(/\\/g, "\\\\"),
+  getDelimiter: (str: string) => '"',
+  escapeJsonForTemplate: undefined,                   // Optional: escape for template strings
+  escapeYamlForTemplate: undefined,                   // Optional: escape for template strings
+  scalarValues: {
+    "boolean": "false",
+    "string": '"example"',
+    // ... other scalar defaults
+  },
+  typeMapper: {
+    "string": "string",
+    "boolean": "bool",
+    // ... type mappings
+  },
+};
+```
+
+Then in your generator, use the shared helper:
+
+```typescript
+import { buildBaseTestContext, {language}TestOptions } from "./test-context.js";
+
+function buildTestContext(node: TypeNode, packageName: string): BaseTestContext {
+  return buildBaseTestContext(node, packageName, {language}TestOptions);
+}
+```
+
+### Standardized Template Field Names
+
+All test templates must use these field names for consistency:
+
+| Field                      | Type                 | Description                       |
+| -------------------------- | -------------------- | --------------------------------- |
+| `node`                     | TypeNode             | The model being tested            |
+| `isAbstract`               | boolean              | Skip direct instantiation tests   |
+| `package`                  | string               | Package/namespace for imports     |
+| `examples`                 | TestExample[]        | Test data from @sample decorators |
+| `examples[].json`          | string[]             | JSON lines for the test           |
+| `examples[].yaml`          | string[]             | YAML lines for the test           |
+| `examples[].validations`   | PropertyValidation[] | Assertions to make                |
+| `validations[].key`        | string               | Property name (in target casing)  |
+| `validations[].value`      | any                  | Expected value                    |
+| `validations[].delimiter`  | string               | Quote character(s) for strings    |
+| `validations[].isOptional` | boolean              | Whether property is optional      |
+| `alternates`               | AlternateTest[]      | Shorthand representation tests    |
+| `alternates[].title`       | string               | Test name suffix                  |
+| `alternates[].scalarType`  | string               | The scalar type name              |
+| `alternates[].value`       | string               | The scalar value literal          |
+| `alternates[].validations` | PropertyValidation[] | Assertions for expanded form      |
 
 ## Documentation (`docs/src/content/docs/`)
 
@@ -84,3 +144,4 @@ After all updates:
 cd agentschema-emitter && npm run build && npm run generate
 # Test all runtimes including the new one
 ```
+

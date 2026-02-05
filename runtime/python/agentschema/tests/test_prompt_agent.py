@@ -67,7 +67,7 @@ def test_load_yaml_promptagent():
       id: gpt-35-turbo
       connection:
         kind: key
-        endpoint: https://{your-custom-endpoint}.openai.azure.com/
+        endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
         key: "{your-api-key}"
     tools:
       - name: getCurrentWeather
@@ -83,18 +83,26 @@ def test_load_yaml_promptagent():
     template:
       format: mustache
       parser: prompty
-    instructions: |-
-      system:
+    instructions: "system:
+    
       You are an AI assistant who helps people find information.
+    
       As the assistant, you answer questions briefly, succinctly,
-      and in a personable manner using markdown and even add some 
+    
+      and in a personable manner using markdown and even add some\ 
+    
       personal flair with appropriate emojis.
     
+    
       # Customer
-      You are helping {{firstName}} {{lastName}} to find answers to 
+    
+      You are helping {{firstName}} {{lastName}} to find answers to\ 
+    
       their questions. Use their name to address them in your responses.
+    
       user:
-      {{question}}
+    
+      {{question}}"
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -328,7 +336,7 @@ def test_load_yaml_promptagent_1():
       id: gpt-35-turbo
       connection:
         kind: key
-        endpoint: https://{your-custom-endpoint}.openai.azure.com/
+        endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
         key: "{your-api-key}"
     tools:
       getCurrentWeather:
@@ -344,18 +352,26 @@ def test_load_yaml_promptagent_1():
     template:
       format: mustache
       parser: prompty
-    instructions: |-
-      system:
+    instructions: "system:
+    
       You are an AI assistant who helps people find information.
+    
       As the assistant, you answer questions briefly, succinctly,
-      and in a personable manner using markdown and even add some 
+    
+      and in a personable manner using markdown and even add some\ 
+    
       personal flair with appropriate emojis.
     
+    
       # Customer
-      You are helping {{firstName}} {{lastName}} to find answers to 
+    
+      You are helping {{firstName}} {{lastName}} to find answers to\ 
+    
       their questions. Use their name to address them in your responses.
+    
       user:
-      {{question}}
+    
+      {{question}}"
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)

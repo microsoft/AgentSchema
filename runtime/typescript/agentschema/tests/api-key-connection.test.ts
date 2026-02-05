@@ -45,7 +45,7 @@ describe("ApiKeyConnection", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: key\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\napiKey: your-api-key\n`;
+      const yaml = `kind: key\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\napiKey: your-api-key\n`;
       const instance = ApiKeyConnection.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -57,7 +57,7 @@ describe("ApiKeyConnection", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: key\nendpoint: https://{your-custom-endpoint}.openai.azure.com/\napiKey: your-api-key\n`;
+      const yaml = `kind: key\nendpoint: "https://{your-custom-endpoint}.openai.azure.com/"\napiKey: your-api-key\n`;
       const instance = ApiKeyConnection.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ApiKeyConnection.fromYaml(output);

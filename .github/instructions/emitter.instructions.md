@@ -13,13 +13,49 @@ The emitter transforms TypeSpec AST into runtime code for C#, Python, TypeScript
 - `{language}.ts` - Language-specific code generators
 - `templates/{language}/*.njk` - Nunjucks templates for code output
 - `template-engine.ts` - Template rendering utilities
+- `test-context.ts` - **Shared test context builder for standardized test generation**
 
 ## Key Files
 
 - `emitter.ts` - Entry point, dispatches to language generators
-- `ast.ts` - `TypeNode`, `PropertyNode`, `enumerateTypes()`, `resolveModel()`
+- `ast.ts` - `TypeNode`, `PropertyNode`, `enumerateTypes()`, `resolveModel()`, `BaseTestContext`
+- `test-context.ts` - `buildBaseTestContext()`, language-specific options (`pythonTestOptions`, etc.)
 - `decorators.ts` - Custom decorator handling (`@sample`, `@shorthand`, `@abstract`)
 - `utilities.ts` - Helper functions like `getCombinations()`, `scalarValue`
+
+## Test Generation
+
+All language generators use the shared `buildBaseTestContext()` function from `test-context.ts` to ensure consistent test generation:
+
+```typescript
+import { buildBaseTestContext, pythonTestOptions } from "./test-context.js";
+
+function buildTestContext(
+  node: TypeNode,
+  packageName: string,
+): BaseTestContext {
+  return buildBaseTestContext(node, packageName, pythonTestOptions);
+}
+```
+
+### Standardized Test Context Interface
+
+All test templates receive a `BaseTestContext` with these fields:
+
+- `node` - The TypeNode being tested
+- `isAbstract` - Whether to skip direct instantiation tests
+- `package` - Package/namespace name for imports
+- `examples` - Array of `TestExample` from `@sample` decorators
+- `alternates` - Array of `AlternateTest` for shorthand representations
+
+### Language-Specific Options
+
+Each language defines a `TestContextOptions` preset:
+
+- `pythonTestOptions` - snake_case keys, `True`/`False` booleans, triple-quote delimiters
+- `goTestOptions` - PascalCase keys, Go string escaping
+- `typescriptTestOptions` - camelCase keys, template string escaping
+- C# uses inline context but follows the same `validations`/`delimiter` naming
 
 ## Template System
 
@@ -63,6 +99,22 @@ YAML.visit(doc, {
 doc.toString({ indent: 2, lineWidth: 0 });
 ```
 
+## Test File Naming Conventions
+
+Generated test files follow idiomatic naming for each language:
+
+| Language   | Pattern                            | Example                              |
+|------------|-------------------------------------|--------------------------------------|
+| C#         | `{TypeName}ConversionTests.cs`      | `AgentDefinitionConversionTests.cs`  |
+| Python     | `test_{type_name}.py`               | `test_agent_definition.py`           |
+| TypeScript | `{type-name}.test.ts`               | `agent-definition.test.ts`           |
+| Go         | `{type_name}_test.go`               | `agent_definition_test.go`           |
+
+These conventions are implemented using shared utilities:
+
+- `toSnakeCase()` - PascalCase → snake_case (Python, Go)
+- `toKebabCase()` - PascalCase → kebab-case (TypeScript)
+
 ## Build Process
 
 After editing ANY file in `agentschema-emitter/src/`:
@@ -77,11 +129,11 @@ npm run generate
 
 ## Testing Changes
 
-Always test all three runtimes after emitter changes:
+Always test all four runtimes after emitter changes:
 
 ```bash
 cd runtime/csharp && dotnet test
 cd runtime/python/agentschema && uv run pytest tests/
 cd runtime/typescript/agentschema && npm test
+cd runtime/go/agentschema && go test ./...
 ```
-

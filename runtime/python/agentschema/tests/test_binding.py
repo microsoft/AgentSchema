@@ -80,7 +80,7 @@ def test_to_yaml_binding():
     assert isinstance(parsed, dict)
 
 
-def test_load_binding_from_string():
+def test_load_binding_from_str():
     instance = Binding.load("example")
     assert instance is not None
     assert instance.input == "example"

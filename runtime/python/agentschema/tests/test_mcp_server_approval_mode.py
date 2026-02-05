@@ -72,7 +72,7 @@ def test_to_yaml_mcpserverapprovalmode():
     assert isinstance(parsed, dict)
 
 
-def test_load_mcpserverapprovalmode_from_string():
+def test_load_mcpserverapprovalmode_from_str():
     instance = McpServerApprovalMode.load("never")
     assert instance is not None
     assert instance.kind == "never"

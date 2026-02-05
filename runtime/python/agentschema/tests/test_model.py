@@ -37,7 +37,7 @@ def test_load_yaml_model():
     apiType: chat
     connection:
       kind: key
-      endpoint: https://{your-custom-endpoint}.openai.azure.com/
+      endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
       key: "{your-api-key}"
     options:
       type: chat
@@ -136,7 +136,7 @@ def test_to_yaml_model():
     assert isinstance(parsed, dict)
 
 
-def test_load_model_from_string():
+def test_load_model_from_str():
     instance = Model.load("example")
     assert instance is not None
     assert instance.id == "example"

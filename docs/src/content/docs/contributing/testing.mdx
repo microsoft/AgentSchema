@@ -69,6 +69,42 @@ flowchart LR
 4. **YAML Roundtrip** - Load → Save → Load produces same data
 5. **Shorthand Loading** - Scalar → Full model (if `@shorthand` defined)
 
+## Test Context Standardization
+
+All language emitters use a shared `buildBaseTestContext()` function from `test-context.ts` to ensure consistent test generation. This provides:
+
+### Standardized Interface
+
+```typescript
+interface BaseTestContext {
+  node: TypeNode;           // The model being tested
+  isAbstract: boolean;      // Skip direct instantiation for polymorphic bases  
+  package?: string;         // Package/namespace for imports
+  examples: TestExample[];  // From @sample decorators
+  alternates: AlternateTest[]; // From @shorthand decorators
+}
+```
+
+### Language-Specific Options
+
+Each language defines options for casing, escaping, and delimiters:
+
+| Language | Key Casing | Boolean Literals | String Delimiters |
+|----------|-----------|-----------------|-------------------|
+| Python | snake_case | `True`/`False` | `"` or `"""` |
+| Go | PascalCase | `true`/`false` | `"` |
+| TypeScript | camelCase | `true`/`false` | `"` |
+| C# | PascalCase | `True`/`False` | `"` or `@"` |
+
+### Consistent Field Names
+
+All test templates use standardized field names:
+
+- `validations` (not `validation`) - Array of property assertions
+- `delimiter` (not `delimeter`) - Quote character for strings
+- `scalarType` (not `scalar`) - The scalar type name
+- `isOptional` (not `isPointer`) - Whether property is optional
+
 ### Example Generated Test (Python)
 
 ```python

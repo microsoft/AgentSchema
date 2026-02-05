@@ -23,7 +23,7 @@ def test_load_json_apikeyconnection():
 def test_load_yaml_apikeyconnection():
     yaml_data = """
     kind: key
-    endpoint: https://{your-custom-endpoint}.openai.azure.com/
+    endpoint: "https://{your-custom-endpoint}.openai.azure.com/"
     apiKey: your-api-key
     
     """
