@@ -1,6 +1,6 @@
 [project]
 name = "agentschema"
-version = "1.0.0b3"
+version = "1.0.0b7"
 description = "Declarative Agent Schema"
 readme = "README.md"
 requires-python = ">=3.11"
