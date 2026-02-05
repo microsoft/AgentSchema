@@ -30,16 +30,17 @@ cd agentschema-emitter && npm run generate
 cd ../runtime/csharp && dotnet test
 cd ../runtime/python/agentschema && uv run pytest tests/
 cd ../runtime/typescript/agentschema && npm test
+cd ../runtime/go/agentschema && go test ./...
 ```
 
 ## Property Type Patterns
 
-| TypeSpec          | C#                            | Python           | TypeScript                |
-| ----------------- | ----------------------------- | ---------------- | ------------------------- |
-| `string`          | `string`                      | `str`            | `string`                  |
-| `int32`           | `int`                         | `int`            | `number`                  |
-| `float32`         | `float`                       | `float`          | `number`                  |
-| `boolean`         | `bool`                        | `bool`           | `boolean`                 |
-| `string[]`        | `IList<string>`               | `list[str]`      | `string[]`                |
-| `Record<unknown>` | `IDictionary<string, object>` | `dict[str, Any]` | `Record<string, unknown>` |
+| TypeSpec          | C#                            | Python           | TypeScript                | Go                    |
+| ----------------- | ----------------------------- | ---------------- | ------------------------- | --------------------- |
+| `string`          | `string`                      | `str`            | `string`                  | `string`              |
+| `int32`           | `int`                         | `int`            | `number`                  | `int32`               |
+| `float32`         | `float`                       | `float`          | `number`                  | `float32`             |
+| `boolean`         | `bool`                        | `bool`           | `boolean`                 | `bool`                |
+| `string[]`        | `IList<string>`               | `list[str]`      | `string[]`                | `[]string`            |
+| `Record<unknown>` | `IDictionary<string, object>` | `dict[str, Any]` | `Record<string, unknown>` | `map[string]any`      |
 

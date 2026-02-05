@@ -77,7 +77,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 ````
 
 - Use `syncKey="language"` to sync tabs across the page
-- Available icons: `seti:python`, `seti:typescript`, `seti:csharp`
+- Available icons: `seti:python`, `seti:typescript`, `seti:c-sharp`, `seti:go`
 
 ### Mermaid Diagrams
 

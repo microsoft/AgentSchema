@@ -32,5 +32,8 @@ cd runtime/python/agentschema && uv run pytest tests/
 
 # TypeScript
 cd runtime/typescript/agentschema && npm test
+
+# Go
+cd runtime/go/agentschema && go test ./...
 ```
 

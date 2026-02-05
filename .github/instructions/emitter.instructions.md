@@ -7,7 +7,7 @@ description: "Instructions for editing the TypeSpec emitter code"
 
 ## Architecture
 
-The emitter transforms TypeSpec AST into runtime code for C#, Python, and TypeScript using:
+The emitter transforms TypeSpec AST into runtime code for C#, Python, TypeScript, and Go using:
 
 - `ast.ts` - TypeSpec model traversal and TypeNode/PropertyNode structures
 - `{language}.ts` - Language-specific code generators

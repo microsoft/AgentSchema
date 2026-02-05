@@ -74,6 +74,12 @@ Templates receive context objects from the language-specific generators. Common 
 - Use backticks for template literals
 - Optional properties: `{{ prop.name }}?: {{ type }}`
 
+### Go Templates (`go/`)
+
+- PascalCase for exported names: `{{ renderName(prop.name) }}`
+- Struct tags for JSON/YAML: `` `json:"name" yaml:"name"` ``
+- Pointer types for optional: `*{{ type }}`
+
 ## File Header Pattern
 
 ```nunjucks

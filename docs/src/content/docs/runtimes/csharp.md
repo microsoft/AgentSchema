@@ -352,4 +352,5 @@ public class AgentService
 
 - [TypeScript SDK](../typescript/) - Node.js/browser version
 - [Python SDK](../python/) - Python version
+- [Go SDK](../go/) - Go version
 - [AgentDefinition Reference](../../reference/AgentDefinition/) - Full API reference

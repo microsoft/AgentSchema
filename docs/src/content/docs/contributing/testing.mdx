@@ -54,9 +54,11 @@ flowchart LR
     B --> C[test_load_*.py]
     B --> D[*ConversionTests.cs]
     B --> E[*.test.ts]
+    B --> I[*_test.go]
     C --> F[pytest]
     D --> G[dotnet test]
     E --> H[vitest]
+    I --> J[go test]
 ```
 
 ### What Gets Tested

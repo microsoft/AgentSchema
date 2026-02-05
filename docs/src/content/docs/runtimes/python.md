@@ -289,4 +289,5 @@ response = client.chat.completions.create(
 
 - [TypeScript SDK](../typescript/) - Node.js/browser version
 - [C# SDK](../csharp/) - .NET version
+- [Go SDK](../go/) - Go version
 - [AgentDefinition Reference](../../reference/AgentDefinition/) - Full API reference
