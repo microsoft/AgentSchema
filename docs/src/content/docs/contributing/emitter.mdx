@@ -7,7 +7,7 @@ sidebar:
 
 import { FileTree } from '@astrojs/starlight/components';
 
-The emitter transforms TypeSpec definitions into runtime code for C#, Python, and TypeScript. This guide covers how to modify code generation.
+The emitter transforms TypeSpec definitions into runtime code for C#, Python, TypeScript, and Go. This guide covers how to modify code generation.
 
 ## Architecture Overview
 
@@ -22,11 +22,13 @@ The emitter transforms TypeSpec definitions into runtime code for C#, Python, an
     - csharp.ts C# code generator
     - python.ts Python code generator
     - typescript.ts TypeScript code generator
+    - go.ts Go code generator
     - markdown.ts documentation generator
     - templates/ Nunjucks templates
       - csharp/
       - python/
       - typescript/
+      - go/
   - dist/ compiled output (git-ignored)
 
 </FileTree>
@@ -39,12 +41,15 @@ flowchart LR
     D --> E[csharp.ts]
     D --> F[python.ts]
     D --> G[typescript.ts]
+    D --> N[go.ts]
     E --> H[templates/csharp/*.njk]
     F --> I[templates/python/*.njk]
     G --> J[templates/typescript/*.njk]
+    N --> O[templates/go/*.njk]
     H --> K[runtime/csharp/]
     I --> L[runtime/python/]
     J --> M[runtime/typescript/]
+    O --> P[runtime/go/]
 ```
 
 ## Key Concepts
@@ -119,6 +124,9 @@ Templates use [Nunjucks](https://mozilla.github.io/nunjucks/) syntax. Each langu
 
 {# TypeScript - camelCase #}
 {{ prop.name }}
+
+{# Go - PascalCase (exported) #}
+{{ renderName(prop.name) }}
 ```
 
 **Type mapping:**
@@ -142,6 +150,9 @@ Optional[{{ type }}]
 
 {# TypeScript #}
 {{ prop.name }}{% if prop.isOptional %}?{% endif %}: {{ type }}
+
+{# Go - uses pointer for optional #}
+{% if prop.isOptional %}*{% endif %}{{ type }}
 ```
 
 ## Adding a New Feature
@@ -224,7 +235,7 @@ Copy-Item -Recurse -Force src/templates dist/src/
 
 ## Testing Changes
 
-After any emitter change, test all three runtimes:
+After any emitter change, test all four runtimes:
 
 ```bash
 # C#
@@ -235,6 +246,9 @@ cd runtime/python/agentschema && uv run pytest tests/
 
 # TypeScript
 cd runtime/typescript/agentschema && npm test
+
+# Go
+cd runtime/go/agentschema && go test ./...
 ```
 
 ## Debugging Tips

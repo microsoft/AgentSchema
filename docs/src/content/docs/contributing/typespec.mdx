@@ -82,16 +82,16 @@ The `@sample` decorator is **required** for test generation. It provides example
 
 ## Type Mappings
 
-| TypeSpec | C# | Python | TypeScript |
-|----------|-----|--------|------------|
-| `string` | `string` | `str` | `string` |
-| `int32` | `int` | `int` | `number` |
-| `int64` | `long` | `int` | `number` |
-| `float32` | `float` | `float` | `number` |
-| `float64` | `double` | `float` | `number` |
-| `boolean` | `bool` | `bool` | `boolean` |
-| `string[]` | `IList<string>` | `list[str]` | `string[]` |
-| `Record<unknown>` | `IDictionary<string, object>` | `dict[str, Any]` | `Record<string, unknown>` |
+| TypeSpec | C# | Python | TypeScript | Go |
+|----------|-----|--------|------------|----|
+| `string` | `string` | `str` | `string` | `string` |
+| `int32` | `int` | `int` | `number` | `int32` |
+| `int64` | `long` | `int` | `number` | `int64` |
+| `float32` | `float` | `float` | `number` | `float32` |
+| `float64` | `double` | `float` | `number` | `float64` |
+| `boolean` | `bool` | `bool` | `boolean` | `bool` |
+| `string[]` | `IList<string>` | `list[str]` | `string[]` | `[]string` |
+| `Record<unknown>` | `IDictionary<string, object>` | `dict[str, Any]` | `Record<string, unknown>` | `map[string]any` |
 
 ## Polymorphic Types
 
