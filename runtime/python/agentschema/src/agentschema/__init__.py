@@ -64,6 +64,12 @@ from ._Template import Template
 from ._ProtocolVersionRecord import ProtocolVersionRecord
 
 
+from ._ContainerResources import ContainerResources
+
+
+from ._ContainerScale import ContainerScale
+
+
 from ._EnvironmentVariable import EnvironmentVariable
 
 
@@ -107,6 +113,8 @@ __all__ = [
     "PromptAgent",
     "Workflow",
     "ProtocolVersionRecord",
+    "ContainerResources",
+    "ContainerScale",
     "EnvironmentVariable",
     "ContainerAgent",
     "Resource",

@@ -378,6 +378,8 @@ func WorkflowFromYAML(yamlStr string) (Workflow, error) {
 type ContainerAgent struct {
 	Kind                 string                  `json:"kind" yaml:"kind"`
 	Protocols            []ProtocolVersionRecord `json:"protocols" yaml:"protocols"`
+	Resources            ContainerResources      `json:"resources" yaml:"resources"`
+	Scale                ContainerScale          `json:"scale" yaml:"scale"`
 	EnvironmentVariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
 }
 
@@ -399,6 +401,18 @@ func LoadContainerAgent(data interface{}, ctx *LoadContext) (ContainerAgent, err
 						result.Protocols[i] = loaded
 					}
 				}
+			}
+		}
+		if val, ok := m["resources"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				loaded, _ := LoadContainerResources(m, ctx)
+				result.Resources = loaded
+			}
+		}
+		if val, ok := m["scale"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				loaded, _ := LoadContainerScale(m, ctx)
+				result.Scale = loaded
 			}
 		}
 		if val, ok := m["environmentVariables"]; ok && val != nil {
@@ -428,6 +442,10 @@ func (obj *ContainerAgent) Save(ctx *SaveContext) map[string]interface{} {
 		}
 		result["protocols"] = arr
 	}
+
+	result["resources"] = obj.Resources.Save(ctx)
+
+	result["scale"] = obj.Scale.Save(ctx)
 	if obj.EnvironmentVariables != nil {
 		arr := make([]interface{}, len(obj.EnvironmentVariables))
 		for i, item := range obj.EnvironmentVariables {

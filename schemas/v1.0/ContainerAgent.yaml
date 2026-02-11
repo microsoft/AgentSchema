@@ -11,6 +11,12 @@ properties:
     items:
       $ref: ProtocolVersionRecord.yaml
     description: Protocol used by the containerized agent
+  resources:
+    $ref: ContainerResources.yaml
+    description: Resource allocation for the container
+  scale:
+    $ref: ContainerScale.yaml
+    description: Scaling configuration for the container
   environmentVariables:
     anyOf:
       - $ref: RecordEnvironmentVariable.yaml
@@ -32,6 +38,8 @@ properties:
 required:
   - kind
   - protocols
+  - resources
+  - scale
 allOf:
   - $ref: AgentDefinition.yaml
 description: |-

@@ -38,6 +38,16 @@ public class ContainerAgent : AgentDefinition
     public IList<ProtocolVersionRecord> Protocols { get; set; } = [];
 
     /// <summary>
+    /// Resource allocation for the container
+    /// </summary>
+    public ContainerResources Resources { get; set; }
+
+    /// <summary>
+    /// Scaling configuration for the container
+    /// </summary>
+    public ContainerScale Scale { get; set; }
+
+    /// <summary>
     /// Environment variables to set in the container
     /// </summary>
     public IList<EnvironmentVariable>? EnvironmentVariables { get; set; }
@@ -71,6 +81,16 @@ public class ContainerAgent : AgentDefinition
         if (data.TryGetValue("protocols", out var protocolsValue) && protocolsValue is not null)
         {
             instance.Protocols = LoadProtocols(protocolsValue, context);
+        }
+
+        if (data.TryGetValue("resources", out var resourcesValue) && resourcesValue is not null)
+        {
+            instance.Resources = ContainerResources.Load(resourcesValue.GetDictionary(), context);
+        }
+
+        if (data.TryGetValue("scale", out var scaleValue) && scaleValue is not null)
+        {
+            instance.Scale = ContainerScale.Load(scaleValue.GetDictionary(), context);
         }
 
         if (data.TryGetValue("environmentVariables", out var environmentVariablesValue) && environmentVariablesValue is not null)
@@ -207,6 +227,16 @@ public class ContainerAgent : AgentDefinition
         if (obj.Protocols is not null)
         {
             result["protocols"] = SaveProtocols(obj.Protocols, context);
+        }
+
+        if (obj.Resources is not null)
+        {
+            result["resources"] = obj.Resources?.Save(context);
+        }
+
+        if (obj.Scale is not null)
+        {
+            result["scale"] = obj.Scale?.Save(context);
         }
 
         if (obj.EnvironmentVariables is not null)

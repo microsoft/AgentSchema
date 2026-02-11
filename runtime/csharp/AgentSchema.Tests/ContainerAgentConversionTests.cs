@@ -16,6 +16,12 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+resources:
+  cpu: "1"
+  memory: 2Gi
+scale:
+  minReplicas: 1
+  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -40,6 +46,14 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
+  "scale": {
+    "minReplicas": 1,
+    "maxReplicas": 3
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -67,6 +81,14 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
+  "scale": {
+    "minReplicas": 1,
+    "maxReplicas": 3
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -96,6 +118,12 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+resources:
+  cpu: "1"
+  memory: 2Gi
+scale:
+  minReplicas: 1
+  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -125,6 +153,14 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
+  "scale": {
+    "minReplicas": 1,
+    "maxReplicas": 3
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -150,6 +186,12 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+resources:
+  cpu: "1"
+  memory: 2Gi
+scale:
+  minReplicas: 1
+  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value

@@ -18,7 +18,7 @@ describe("ContainerAgent", () => {
 
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
-      const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
+      const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "resources": {\n    "cpu": "1",\n    "memory": "2Gi"\n  },\n  "scale": {\n    "minReplicas": 1,\n    "maxReplicas": 3\n  },\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
       const instance = ContainerAgent.fromJson(json);
       expect(instance).toBeDefined();
 
@@ -26,7 +26,7 @@ describe("ContainerAgent", () => {
     });
 
     it("should round-trip JSON - example 1", () => {
-      const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
+      const json = `{\n  "kind": "hosted",\n  "protocols": [\n    {\n      "protocol": "responses",\n      "version": "v0.1.1"\n    }\n  ],\n  "resources": {\n    "cpu": "1",\n    "memory": "2Gi"\n  },\n  "scale": {\n    "minReplicas": 1,\n    "maxReplicas": 3\n  },\n  "environmentVariables": [\n    {\n      "name": "MY_ENV_VAR",\n      "value": "my-value"\n    }\n  ]\n}`;
       const instance = ContainerAgent.fromJson(json);
       const output = instance.toJson();
       const reloaded = ContainerAgent.fromJson(output);
@@ -37,7 +37,7 @@ describe("ContainerAgent", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: hosted\nprotocols:\n  - protocol: responses\n    version: v0.1.1\nenvironmentVariables:\n  - name: MY_ENV_VAR\n    value: my-value\n`;
+      const yaml = `kind: hosted\nprotocols:\n  - protocol: responses\n    version: v0.1.1\nresources:\n  cpu: "1"\n  memory: 2Gi\nscale:\n  minReplicas: 1\n  maxReplicas: 3\nenvironmentVariables:\n  - name: MY_ENV_VAR\n    value: my-value\n`;
       const instance = ContainerAgent.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -45,7 +45,7 @@ describe("ContainerAgent", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: hosted\nprotocols:\n  - protocol: responses\n    version: v0.1.1\nenvironmentVariables:\n  - name: MY_ENV_VAR\n    value: my-value\n`;
+      const yaml = `kind: hosted\nprotocols:\n  - protocol: responses\n    version: v0.1.1\nresources:\n  cpu: "1"\n  memory: 2Gi\nscale:\n  minReplicas: 1\n  maxReplicas: 3\nenvironmentVariables:\n  - name: MY_ENV_VAR\n    value: my-value\n`;
       const instance = ContainerAgent.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ContainerAgent.fromYaml(output);

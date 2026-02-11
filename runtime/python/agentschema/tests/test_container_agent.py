@@ -14,6 +14,14 @@ def test_load_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "scale": {
+        "minReplicas": 1,
+        "maxReplicas": 3
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -34,6 +42,12 @@ def test_load_yaml_containeragent():
     protocols:
       - protocol: responses
         version: v0.1.1
+    resources:
+      cpu: "1"
+      memory: 2Gi
+    scale:
+      minReplicas: 1
+      maxReplicas: 3
     environmentVariables:
       - name: MY_ENV_VAR
         value: my-value
@@ -56,6 +70,14 @@ def test_roundtrip_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "scale": {
+        "minReplicas": 1,
+        "maxReplicas": 3
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -83,6 +105,14 @@ def test_to_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "scale": {
+        "minReplicas": 1,
+        "maxReplicas": 3
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -110,6 +140,14 @@ def test_to_yaml_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
+      "scale": {
+        "minReplicas": 1,
+        "maxReplicas": 3
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",

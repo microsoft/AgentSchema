@@ -49,6 +49,10 @@ export { Template } from "./template";
 
 export { ProtocolVersionRecord } from "./protocol-version-record";
 
+export { ContainerResources } from "./container-resources";
+
+export { ContainerScale } from "./container-scale";
+
 export { EnvironmentVariable } from "./environment-variable";
 
 export { Resource, ModelResource, ToolResource } from "./resource";
