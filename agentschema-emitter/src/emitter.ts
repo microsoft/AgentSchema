@@ -13,6 +13,7 @@ import { generatePython } from "./python.js";
 import { generateCsharp } from "./csharp.js";
 import { generateTypeScript } from "./typescript.js";
 import { generateGo } from "./go.js";
+import { generateRust } from "./rust.js";
 
 // Generator options passed to each generator
 export interface GeneratorOptions {
@@ -50,6 +51,7 @@ const generators: Record<string, GeneratorFn> = {
   csharp: generateCsharp,
   typescript: generateTypeScript,
   go: generateGo,
+  rust: generateRust,
 };
 
 

@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 /**
  * Target language for code generation.
  */
-export type TargetLanguage = "python" | "csharp" | "typescript" | "go" | "markdown";
+export type TargetLanguage = "python" | "csharp" | "typescript" | "go" | "rust" | "markdown";
 
 /**
  * Options for a specific target language.
@@ -106,7 +106,7 @@ export interface GenerateResult {
 export async function generate(options: GenerateOptions): Promise<GenerateResult> {
   const {
     output,
-    targets = ["python", "csharp", "typescript", "go"],
+    targets = ["python", "csharp", "typescript", "go", "rust"],
     rootObject = "AgentSchema.AgentManifest",
     omit = [],
     namespace = "AgentSchema",

@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema import OpenApiTool
 
 
 def test_load_json_openapitool():
-    json_data = """
+    json_data = '''
     {
       "kind": "openapi",
       "connection": {
@@ -13,32 +14,31 @@ def test_load_json_openapitool():
       },
       "specification": "full_sepcification_here"
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = OpenApiTool.load(data)
     assert instance is not None
     assert instance.kind == "openapi"
     assert instance.specification == "full_sepcification_here"
-
+    
 
 def test_load_yaml_openapitool():
-    yaml_data = """
+    yaml_data = '''
     kind: openapi
     connection:
       kind: reference
     specification: full_sepcification_here
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = OpenApiTool.load(data)
     assert instance is not None
     assert instance.kind == "openapi"
     assert instance.specification == "full_sepcification_here"
 
-
 def test_roundtrip_json_openapitool():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = '''
     {
       "kind": "openapi",
       "connection": {
@@ -46,7 +46,7 @@ def test_roundtrip_json_openapitool():
       },
       "specification": "full_sepcification_here"
     }
-    """
+    '''
     original_data = json.loads(json_data, strict=False)
     instance = OpenApiTool.load(original_data)
     saved_data = instance.save()
@@ -55,10 +55,9 @@ def test_roundtrip_json_openapitool():
     assert reloaded.kind == "openapi"
     assert reloaded.specification == "full_sepcification_here"
 
-
 def test_to_json_openapitool():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = '''
     {
       "kind": "openapi",
       "connection": {
@@ -66,7 +65,7 @@ def test_to_json_openapitool():
       },
       "specification": "full_sepcification_here"
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = OpenApiTool.load(data)
     json_output = instance.to_json()
@@ -74,10 +73,9 @@ def test_to_json_openapitool():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
-
 def test_to_yaml_openapitool():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = '''
     {
       "kind": "openapi",
       "connection": {
@@ -85,10 +83,12 @@ def test_to_yaml_openapitool():
       },
       "specification": "full_sepcification_here"
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = OpenApiTool.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
+
+
