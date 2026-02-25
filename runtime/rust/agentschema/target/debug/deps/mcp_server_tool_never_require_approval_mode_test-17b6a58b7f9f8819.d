@@ -1,5 +1,0 @@
-/home/runner/work/AgentSchema/AgentSchema/runtime/rust/agentschema/target/debug/deps/mcp_server_tool_never_require_approval_mode_test-17b6a58b7f9f8819.d: tests/mcp_server_tool_never_require_approval_mode_test.rs
-
-/home/runner/work/AgentSchema/AgentSchema/runtime/rust/agentschema/target/debug/deps/mcp_server_tool_never_require_approval_mode_test-17b6a58b7f9f8819: tests/mcp_server_tool_never_require_approval_mode_test.rs
-
-tests/mcp_server_tool_never_require_approval_mode_test.rs:
