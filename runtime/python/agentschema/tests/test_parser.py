@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,43 +6,42 @@ from agentschema import Parser
 
 
 def test_load_json_parser():
-    json_data = """
+    json_data = '''
     {
       "kind": "prompty",
       "options": {
         "key": "value"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = Parser.load(data)
     assert instance is not None
     assert instance.kind == "prompty"
-
+    
 
 def test_load_yaml_parser():
-    yaml_data = """
+    yaml_data = '''
     kind: prompty
     options:
       key: value
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = Parser.load(data)
     assert instance is not None
     assert instance.kind == "prompty"
 
-
 def test_roundtrip_json_parser():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = '''
     {
       "kind": "prompty",
       "options": {
         "key": "value"
       }
     }
-    """
+    '''
     original_data = json.loads(json_data, strict=False)
     instance = Parser.load(original_data)
     saved_data = instance.save()
@@ -49,17 +49,16 @@ def test_roundtrip_json_parser():
     assert reloaded is not None
     assert reloaded.kind == "prompty"
 
-
 def test_to_json_parser():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = '''
     {
       "kind": "prompty",
       "options": {
         "key": "value"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = Parser.load(data)
     json_output = instance.to_json()
@@ -67,17 +66,16 @@ def test_to_json_parser():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
-
 def test_to_yaml_parser():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = '''
     {
       "kind": "prompty",
       "options": {
         "key": "value"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = Parser.load(data)
     yaml_output = instance.to_yaml()
@@ -90,3 +88,5 @@ def test_load_parser_from_str():
     instance = Parser.load("example")
     assert instance is not None
     assert instance.kind == "example"
+
+

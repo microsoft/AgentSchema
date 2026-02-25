@@ -26,3 +26,6 @@ options:
       - type: TypeScript
         output-dir: "../runtime/typescript/agentschema/src"
         test-dir: "../runtime/typescript/agentschema/tests"
+      - type: Rust
+        output-dir: "../runtime/rust/agentschema/src"
+        test-dir: "../runtime/rust/agentschema/tests"

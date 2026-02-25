@@ -10,15 +10,16 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
+
 @dataclass
 class Property:
     """Represents a single property.
-
+    
     - This model defines the structure of properties that can be used in prompts,
     including their type, description, whether they are required, and other attributes.
     - It allows for the definition of dynamic inputs that can be filled with data
     and processed to generate prompts for AI models.
-
+    
     Attributes
     ----------
     name : str
@@ -57,25 +58,26 @@ class Property:
             Property: The loaded Property instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         # handle alternate representations
         if isinstance(data, bool):
-            data = {"kind": "boolean", "example": data}
+            data = {"kind":"boolean","example": data}
         if isinstance(data, float):
-            data = {"kind": "float", "example": data}
+            data = {"kind":"float","example": data}
         if isinstance(data, int):
-            data = {"kind": "integer", "example": data}
+            data = {"kind":"integer","example": data}
         if isinstance(data, str):
-            data = {"kind": "string", "example": data}
-
+            data = {"kind":"string","example": data}
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Property: {data}")
 
         # load polymorphic Property instance
         instance = Property.load_kind(data, context)
+
 
         if data is not None and "name" in data:
             instance.name = data["name"]
@@ -95,6 +97,8 @@ class Property:
             instance = context.process_output(instance)
         return instance
 
+
+
     @staticmethod
     def load_kind(data: dict, context: Optional[LoadContext]) -> "Property":
         # load polymorphic Property instance
@@ -109,6 +113,7 @@ class Property:
 
                 # create new instance (stop recursion)
                 return Property()
+
 
         else:
 
@@ -126,6 +131,7 @@ class Property:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -178,11 +184,11 @@ class Property:
 class ArrayProperty(Property):
     """Represents an array property.
     This extends the base Property model to represent an array of items.
-
+    
     Attributes
     ----------
     kind : str
-
+        
     items : Property
         The type of items contained in the array
     """
@@ -202,10 +208,10 @@ class ArrayProperty(Property):
             ArrayProperty: The loaded ArrayProperty instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ArrayProperty: {data}")
 
@@ -220,6 +226,8 @@ class ArrayProperty(Property):
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ArrayProperty instance to a dictionary.
         Args:
@@ -231,9 +239,11 @@ class ArrayProperty(Property):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         # Start with parent class properties
         result = super().save(context)
+
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -272,11 +282,11 @@ class ArrayProperty(Property):
 class ObjectProperty(Property):
     """Represents an object property.
     This extends the base Property model to represent a structured object.
-
+    
     Attributes
     ----------
     kind : str
-
+        
     properties : list[Property]
         The properties contained in the object
     """
@@ -296,10 +306,10 @@ class ObjectProperty(Property):
             ObjectProperty: The loaded ObjectProperty instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ObjectProperty: {data}")
 
@@ -309,17 +319,14 @@ class ObjectProperty(Property):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "properties" in data:
-            instance.properties = ObjectProperty.load_properties(
-                data["properties"], context
-            )
+            instance.properties = ObjectProperty.load_properties(data["properties"], context)
         if context is not None:
             instance = context.process_output(instance)
         return instance
 
+
     @staticmethod
-    def load_properties(
-        data: dict | list, context: Optional[LoadContext]
-    ) -> list[Property]:
+    def load_properties(data: dict | list, context: Optional[LoadContext]) -> list[Property]:
         if isinstance(data, dict):
             # convert simple named properties to list of Property
             result = []
@@ -334,15 +341,13 @@ class ObjectProperty(Property):
         return [Property.load(item, context) for item in data]
 
     @staticmethod
-    def save_properties(
-        items: list[Property], context: Optional[SaveContext]
-    ) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_properties(items: list[Property], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-
+        
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-
+        
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -350,13 +355,9 @@ class ObjectProperty(Property):
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, "_shorthand_property"):
+                if context.use_shorthand and hasattr(item, '_shorthand_property'):
                     shorthand_prop = item._shorthand_property
-                    if (
-                        shorthand_prop
-                        and len(item_data) == 1
-                        and shorthand_prop in item_data
-                    ):
+                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -366,6 +367,7 @@ class ObjectProperty(Property):
                     result["_unnamed"] = []
                 result["_unnamed"].append(item_data)
         return result
+
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ObjectProperty instance to a dictionary.
@@ -378,16 +380,16 @@ class ObjectProperty(Property):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         # Start with parent class properties
         result = super().save(context)
 
+
         if obj.kind is not None:
             result["kind"] = obj.kind
         if obj.properties is not None:
-            result["properties"] = ObjectProperty.save_properties(
-                obj.properties, context
-            )
+            result["properties"] = ObjectProperty.save_properties(obj.properties, context)
 
         return result
 
@@ -415,3 +417,4 @@ class ObjectProperty(Property):
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

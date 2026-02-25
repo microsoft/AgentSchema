@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema import ContainerAgent
 
 
 def test_load_json_containeragent():
-    json_data = """
+    json_data = '''
     {
       "kind": "hosted",
       "protocols": [
@@ -21,15 +22,15 @@ def test_load_json_containeragent():
         }
       ]
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = ContainerAgent.load(data)
     assert instance is not None
     assert instance.kind == "hosted"
-
+    
 
 def test_load_yaml_containeragent():
-    yaml_data = """
+    yaml_data = '''
     kind: hosted
     protocols:
       - protocol: responses
@@ -38,16 +39,15 @@ def test_load_yaml_containeragent():
       - name: MY_ENV_VAR
         value: my-value
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = ContainerAgent.load(data)
     assert instance is not None
     assert instance.kind == "hosted"
 
-
 def test_roundtrip_json_containeragent():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = '''
     {
       "kind": "hosted",
       "protocols": [
@@ -63,7 +63,7 @@ def test_roundtrip_json_containeragent():
         }
       ]
     }
-    """
+    '''
     original_data = json.loads(json_data, strict=False)
     instance = ContainerAgent.load(original_data)
     saved_data = instance.save()
@@ -71,10 +71,9 @@ def test_roundtrip_json_containeragent():
     assert reloaded is not None
     assert reloaded.kind == "hosted"
 
-
 def test_to_json_containeragent():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = '''
     {
       "kind": "hosted",
       "protocols": [
@@ -90,7 +89,7 @@ def test_to_json_containeragent():
         }
       ]
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = ContainerAgent.load(data)
     json_output = instance.to_json()
@@ -98,10 +97,9 @@ def test_to_json_containeragent():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
-
 def test_to_yaml_containeragent():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = '''
     {
       "kind": "hosted",
       "protocols": [
@@ -117,10 +115,12 @@ def test_to_yaml_containeragent():
         }
       ]
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = ContainerAgent.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
+
+

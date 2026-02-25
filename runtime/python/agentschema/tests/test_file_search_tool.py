@@ -1,3 +1,4 @@
+
 import json
 import yaml
 
@@ -5,7 +6,7 @@ from agentschema import FileSearchTool
 
 
 def test_load_json_filesearchtool():
-    json_data = """
+    json_data = '''
     {
       "kind": "file_search",
       "connection": {
@@ -23,7 +24,7 @@ def test_load_json_filesearchtool():
         "createdAfter": "2023-01-01"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FileSearchTool.load(data)
     assert instance is not None
@@ -31,10 +32,10 @@ def test_load_json_filesearchtool():
     assert instance.maximumResultCount == 10
     assert instance.ranker == "auto"
     assert instance.scoreThreshold == 0.5
-
+    
 
 def test_load_yaml_filesearchtool():
-    yaml_data = """
+    yaml_data = '''
     kind: file_search
     connection:
       kind: reference
@@ -48,7 +49,7 @@ def test_load_yaml_filesearchtool():
       fileType: pdf
       createdAfter: 2023-01-01
     
-    """
+    '''
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
     instance = FileSearchTool.load(data)
     assert instance is not None
@@ -57,10 +58,9 @@ def test_load_yaml_filesearchtool():
     assert instance.ranker == "auto"
     assert instance.scoreThreshold == 0.5
 
-
 def test_roundtrip_json_filesearchtool():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = '''
     {
       "kind": "file_search",
       "connection": {
@@ -78,7 +78,7 @@ def test_roundtrip_json_filesearchtool():
         "createdAfter": "2023-01-01"
       }
     }
-    """
+    '''
     original_data = json.loads(json_data, strict=False)
     instance = FileSearchTool.load(original_data)
     saved_data = instance.save()
@@ -89,10 +89,9 @@ def test_roundtrip_json_filesearchtool():
     assert reloaded.ranker == "auto"
     assert reloaded.scoreThreshold == 0.5
 
-
 def test_to_json_filesearchtool():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = '''
     {
       "kind": "file_search",
       "connection": {
@@ -110,7 +109,7 @@ def test_to_json_filesearchtool():
         "createdAfter": "2023-01-01"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FileSearchTool.load(data)
     json_output = instance.to_json()
@@ -118,10 +117,9 @@ def test_to_json_filesearchtool():
     parsed = json.loads(json_output)
     assert isinstance(parsed, dict)
 
-
 def test_to_yaml_filesearchtool():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = '''
     {
       "kind": "file_search",
       "connection": {
@@ -139,10 +137,12 @@ def test_to_yaml_filesearchtool():
         "createdAfter": "2023-01-01"
       }
     }
-    """
+    '''
     data = json.loads(json_data, strict=False)
     instance = FileSearchTool.load(data)
     yaml_output = instance.to_yaml()
     assert yaml_output is not None
     parsed = yaml.safe_load(yaml_output)
     assert isinstance(parsed, dict)
+
+

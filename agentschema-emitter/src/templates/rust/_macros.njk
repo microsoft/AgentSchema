@@ -1,0 +1,132 @@
+{#
+  Rust-Specific Macros for AgentSchema Emitter
+  =============================================
+
+  These macros handle Rust-specific rendering logic.
+
+  Usage in Rust templates:
+    {% import "_macros.njk" as rust %}
+    {{ rust.rustType(prop, typeMapper, polymorphicTypeNames) }}
+#}
+
+{# Import shared macros #}
+{% from "macros.njk" import separator, firstOrDefault, validationValue %}
+
+
+{# ============================================================================
+   Comment Rendering
+   ============================================================================ #}
+
+{#
+  Format a multi-line description as Rust doc-comment lines.
+  Each line is prefixed with "/// ".
+
+  @param text - Multi-line description text
+
+  Usage: {{ rustComment("Some description") }}
+#}
+{% macro rustComment(text) -%}
+{%- if text -%}
+{%- set lines = text.split('\n') -%}
+{%- for line in lines -%}
+/// {{ line }}
+{% endfor -%}
+{%- endif -%}
+{%- endmacro %}
+
+
+{# ============================================================================
+   Type Rendering
+   ============================================================================ #}
+
+{#
+  Convert a property to its Rust type annotation.
+
+  Handles:
+  - Scalar types (String, i64, f64, bool, etc.)
+  - Collections (Vec<T>)
+  - Optional (Option<T>)
+  - Maps (std::collections::HashMap<String, serde_json::Value>)
+  - Polymorphic types (serde_json::Value)
+
+  @param prop - PropertyNode with type information
+  @param typeMapper - Record<string, string> mapping TypeSpec types to Rust types
+  @param polymorphicTypeNames - Array of type names that are polymorphic
+
+  Usage: {{ rustType(prop, typeMapper, polymorphicTypeNames) }}
+#}
+{% macro rustType(prop, typeMapper, polymorphicTypeNames) -%}
+{%- set baseType = typeMapper[prop.typeName.name] if prop.isScalar else (typeMapper[prop.typeName.name] or prop.typeName.name) -%}
+{%- if not baseType %}{% set baseType = "serde_json::Value" %}{% endif -%}
+{%- if prop.isDict -%}
+serde_json::Value
+{%- elif prop.isCollection and prop.isScalar -%}
+Vec<{{ baseType }}>
+{%- elif prop.isCollection -%}
+serde_json::Value
+{%- elif not prop.isScalar and prop.typeName.name in polymorphicTypeNames and prop.isOptional -%}
+Option<serde_json::Value>
+{%- elif not prop.isScalar and prop.typeName.name in polymorphicTypeNames -%}
+serde_json::Value
+{%- elif prop.isOptional -%}
+Option<{{ baseType }}>
+{%- else -%}
+{{ baseType }}
+{%- endif -%}
+{%- endmacro %}
+
+
+{# ============================================================================
+   Field Name Rendering
+   ============================================================================ #}
+
+{#
+  Render property name in snake_case for Rust fields.
+  Handles both camelCase and snake_case input.
+
+  @param name - Property name (may be camelCase or snake_case)
+
+  Usage: {{ fieldName(prop.name) }}
+#}
+{% macro fieldName(name) %}{{ name | snakeCase }}{% endmacro %}
+
+
+{# ============================================================================
+   Serde Attribute Rendering
+   ============================================================================ #}
+
+{#
+  Render serde rename+option attributes for a property.
+
+  @param prop - PropertyNode with name and optional flag
+
+  Usage: {{ serdeAttr(prop) }}
+#}
+{% macro serdeAttr(prop) -%}
+{%- set snakeName = prop.name | snakeCase -%}
+{%- if prop.isDict -%}
+#[serde(rename = "{{ prop.name }}", default)]
+{%- elif prop.isCollection and prop.isScalar -%}
+#[serde(rename = "{{ prop.name }}", skip_serializing_if = "Vec::is_empty", default)]
+{%- elif prop.isCollection -%}
+#[serde(rename = "{{ prop.name }}", default)]
+{%- elif prop.isOptional -%}
+#[serde(rename = "{{ prop.name }}", skip_serializing_if = "Option::is_none", default)]
+{%- else -%}
+#[serde(rename = "{{ prop.name }}", default)]
+{%- endif -%}
+{%- endmacro %}
+
+
+{# ============================================================================
+   Default Value for Helper Struct Fields
+   ============================================================================ #}
+
+{#
+  Render serde attributes for helper struct fields (all have default).
+
+  @param prop - PropertyNode
+#}
+{% macro helperSerdeAttr(prop) -%}
+#[serde(rename = "{{ prop.name }}", default)]
+{%- endmacro %}
