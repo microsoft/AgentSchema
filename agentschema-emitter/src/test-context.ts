@@ -293,6 +293,46 @@ export const typescriptTestOptions: TestContextOptions = {
 };
 
 /**
+ * Rust test context options.
+ */
+export const rustTestOptions: TestContextOptions = {
+  renderKey: (key: string) => {
+    // Convert camelCase to snake_case for Rust
+    return key.replace(/([A-Z])/g, '_$1').toLowerCase().replace(/^_/, '');
+  },
+  renderBoolean: (val: boolean) => val ? "true" : "false",
+  escapeString: (str: string) => str
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t'),
+  getDelimiter: (str: string) => '"',
+  escapeJsonForTemplate: undefined,
+  escapeYamlForTemplate: undefined,
+  scalarValues: {
+    "boolean": "false",
+    "float": "3.14",
+    "float32": "3.14",
+    "float64": "3.14",
+    "number": "3.14",
+    "int32": "3",
+    "int64": "3",
+    "integer": "3",
+    "string": '"example"',
+  },
+  typeMapper: {
+    "string": "String",
+    "boolean": "bool",
+    "int32": "i32",
+    "int64": "i64",
+    "float32": "f32",
+    "float64": "f64",
+    "number": "f64",
+  },
+};
+
+/**
  * Go test context options.
  */
 export const goTestOptions: TestContextOptions = {
