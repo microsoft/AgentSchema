@@ -67,9 +67,6 @@ from ._ProtocolVersionRecord import ProtocolVersionRecord
 from ._ContainerResources import ContainerResources
 
 
-from ._ContainerScale import ContainerScale
-
-
 from ._EnvironmentVariable import EnvironmentVariable
 
 
@@ -114,7 +111,6 @@ __all__ = [
     "Workflow",
     "ProtocolVersionRecord",
     "ContainerResources",
-    "ContainerScale",
     "EnvironmentVariable",
     "ContainerAgent",
     "Resource",

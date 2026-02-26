@@ -48,8 +48,8 @@ classDiagram
     class ContainerAgent {
         +string kind
         +ProtocolVersionRecord[] protocols
+        +string image
         +ContainerResources resources
-        +ContainerScale scale
         +EnvironmentVariable[] environmentVariables
     }
     AgentDefinition <|-- ContainerAgent

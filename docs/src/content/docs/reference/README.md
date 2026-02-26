@@ -223,11 +223,6 @@ classDiagram
         +string cpu
         +string memory
     }
-    class ContainerScale {
-      
-        +int32 minReplicas
-        +int32 maxReplicas
-    }
     class EnvironmentVariable {
       
         +string name
@@ -237,8 +232,8 @@ classDiagram
       
         +string kind
         +ProtocolVersionRecord[] protocols
+        +string image
         +ContainerResources resources
-        +ContainerScale scale
         +EnvironmentVariable[] environmentVariables
     }
     class Resource {
@@ -311,7 +306,6 @@ classDiagram
     PromptAgent *-- Template
     ContainerAgent *-- ProtocolVersionRecord
     ContainerAgent *-- ContainerResources
-    ContainerAgent *-- ContainerScale
     ContainerAgent *-- EnvironmentVariable
     AgentManifest *-- AgentDefinition
     AgentManifest *-- PropertySchema

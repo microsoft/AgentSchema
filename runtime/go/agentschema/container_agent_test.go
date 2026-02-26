@@ -22,13 +22,10 @@ func TestContainerAgentLoadJSON(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -51,6 +48,9 @@ func TestContainerAgentLoadJSON(t *testing.T) {
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
+	if instance.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
+	}
 }
 
 // TestContainerAgentLoadYAML tests loading ContainerAgent from YAML
@@ -60,12 +60,10 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
 resources:
   cpu: "1"
   memory: 2Gi
-scale:
-  minReplicas: 1
-  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -84,6 +82,9 @@ environmentVariables:
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
+	if instance.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
+	}
 }
 
 // TestContainerAgentRoundtrip tests load -> save -> load produces equivalent data
@@ -97,13 +98,10 @@ func TestContainerAgentRoundtrip(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -133,6 +131,9 @@ func TestContainerAgentRoundtrip(t *testing.T) {
 	if reloaded.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, reloaded.Kind)
 	}
+	if reloaded.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, reloaded.Image)
+	}
 }
 
 // TestContainerAgentToJSON tests that ToJSON produces valid JSON
@@ -146,13 +147,10 @@ func TestContainerAgentToJSON(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -194,13 +192,10 @@ func TestContainerAgentToYAML(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {

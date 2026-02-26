@@ -10,7 +10,6 @@ from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
 from ._ContainerResources import ContainerResources
-from ._ContainerScale import ContainerScale
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
 from ._PropertySchema import PropertySchema
@@ -458,10 +457,10 @@ class ContainerAgent(AgentDefinition):
         Type of agent, e.g., 'hosted'
     protocols : list[ProtocolVersionRecord]
         Protocol used by the containerized agent
+    image : str
+        Container image path (e.g., '<acr-endpoint>/<container-image-name>')
     resources : ContainerResources
         Resource allocation for the container
-    scale : ContainerScale
-        Scaling configuration for the container
     environmentVariables : list[EnvironmentVariable]
         Environment variables to set in the container
     """
@@ -470,8 +469,8 @@ class ContainerAgent(AgentDefinition):
 
     kind: str = field(default="hosted")
     protocols: list[ProtocolVersionRecord] = field(default_factory=list)
+    image: str = field(default="")
     resources: ContainerResources = field(default_factory=ContainerResources)
-    scale: ContainerScale = field(default_factory=ContainerScale)
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)
 
     @staticmethod
@@ -500,10 +499,10 @@ class ContainerAgent(AgentDefinition):
             instance.protocols = ContainerAgent.load_protocols(
                 data["protocols"], context
             )
+        if data is not None and "image" in data:
+            instance.image = data["image"]
         if data is not None and "resources" in data:
             instance.resources = ContainerResources.load(data["resources"], context)
-        if data is not None and "scale" in data:
-            instance.scale = ContainerScale.load(data["scale"], context)
         if data is not None and "environmentVariables" in data:
             instance.environmentVariables = ContainerAgent.load_environmentVariables(
                 data["environmentVariables"], context
@@ -633,10 +632,10 @@ class ContainerAgent(AgentDefinition):
             result["kind"] = obj.kind
         if obj.protocols is not None:
             result["protocols"] = ContainerAgent.save_protocols(obj.protocols, context)
+        if obj.image is not None:
+            result["image"] = obj.image
         if obj.resources is not None:
             result["resources"] = obj.resources.save(context)
-        if obj.scale is not None:
-            result["scale"] = obj.scale.save(context)
         if obj.environmentVariables is not None:
             result["environmentVariables"] = ContainerAgent.save_environmentVariables(
                 obj.environmentVariables, context

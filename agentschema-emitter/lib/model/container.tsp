@@ -51,23 +51,6 @@ model ContainerResources {
 }
 
 /**
- * Scaling configuration for a containerized agent.
- */
-model ContainerScale {
-  @doc("Minimum number of replicas")
-  @sample(#{ minReplicas: 1 })
-  @minValue(0)
-  @maxValue(10)
-  minReplicas: int32;
-
-  @doc("Maximum number of replicas")
-  @sample(#{ maxReplicas: 3 })
-  @minValue(0)
-  @maxValue(10)
-  maxReplicas: int32;
-}
-
-/**
  * This represents a container based agent hosted by the provider/publisher.
  * The intent is to represent a container application that the user wants to run
  * in a hosted environment that the provider manages.
@@ -81,13 +64,13 @@ model ContainerAgent extends AgentDefinition {
   @sample(#{ protocols: #[#{ protocol: "responses", version: "v0.1.1" }] })
   protocols: ProtocolVersionRecord[];
 
+  @doc("Container image path (e.g., '<acr-endpoint>/<container-image-name>')")
+  @sample(#{ image: "myregistry.azurecr.io/my-agent" })
+  image: string;
+
   @doc("Resource allocation for the container")
   @sample(#{ resources: #{ cpu: "1", memory: "2Gi" } })
   resources: ContainerResources;
-
-  @doc("Scaling configuration for the container")
-  @sample(#{ scale: #{ minReplicas: 1, maxReplicas: 3 } })
-  scale: ContainerScale;
 
   @doc("Environment variables to set in the container")
   @sample(#{

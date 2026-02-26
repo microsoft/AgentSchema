@@ -38,14 +38,14 @@ public class ContainerAgent : AgentDefinition
     public IList<ProtocolVersionRecord> Protocols { get; set; } = [];
 
     /// <summary>
+    /// Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+    /// </summary>
+    public string Image { get; set; } = string.Empty;
+
+    /// <summary>
     /// Resource allocation for the container
     /// </summary>
     public ContainerResources Resources { get; set; }
-
-    /// <summary>
-    /// Scaling configuration for the container
-    /// </summary>
-    public ContainerScale Scale { get; set; }
 
     /// <summary>
     /// Environment variables to set in the container
@@ -83,14 +83,14 @@ public class ContainerAgent : AgentDefinition
             instance.Protocols = LoadProtocols(protocolsValue, context);
         }
 
+        if (data.TryGetValue("image", out var imageValue) && imageValue is not null)
+        {
+            instance.Image = imageValue?.ToString()!;
+        }
+
         if (data.TryGetValue("resources", out var resourcesValue) && resourcesValue is not null)
         {
             instance.Resources = ContainerResources.Load(resourcesValue.GetDictionary(), context);
-        }
-
-        if (data.TryGetValue("scale", out var scaleValue) && scaleValue is not null)
-        {
-            instance.Scale = ContainerScale.Load(scaleValue.GetDictionary(), context);
         }
 
         if (data.TryGetValue("environmentVariables", out var environmentVariablesValue) && environmentVariablesValue is not null)
@@ -229,14 +229,14 @@ public class ContainerAgent : AgentDefinition
             result["protocols"] = SaveProtocols(obj.Protocols, context);
         }
 
+        if (obj.Image is not null)
+        {
+            result["image"] = obj.Image;
+        }
+
         if (obj.Resources is not null)
         {
             result["resources"] = obj.Resources?.Save(context);
-        }
-
-        if (obj.Scale is not null)
-        {
-            result["scale"] = obj.Scale?.Save(context);
         }
 
         if (obj.EnvironmentVariables is not null)

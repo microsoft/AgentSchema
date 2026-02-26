@@ -3,7 +3,6 @@
 
 import { LoadContext, SaveContext } from "./context";
 import { ContainerResources } from "./container-resources";
-import { ContainerScale } from "./container-scale";
 import { EnvironmentVariable } from "./environment-variable";
 import { Model } from "./model";
 import { PropertySchema } from "./property-schema";
@@ -721,14 +720,14 @@ export class ContainerAgent extends AgentDefinition {
   protocols: ProtocolVersionRecord[] = [];
 
   /**
+   * Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+   */
+  image: string = "";
+
+  /**
    * Resource allocation for the container
    */
   resources: ContainerResources;
-
-  /**
-   * Scaling configuration for the container
-   */
-  scale: ContainerScale;
 
   /**
    * Environment variables to set in the container
@@ -745,9 +744,9 @@ export class ContainerAgent extends AgentDefinition {
 
     this.protocols = init?.protocols ?? [];
 
-    this.resources = init?.resources ?? undefined!;
+    this.image = init?.image ?? "";
 
-    this.scale = init?.scale ?? undefined!;
+    this.resources = init?.resources ?? undefined!;
 
     if (init?.environmentVariables !== undefined) {
       this.environmentVariables = init.environmentVariables;
@@ -778,15 +777,15 @@ export class ContainerAgent extends AgentDefinition {
       instance.protocols = ContainerAgent.loadProtocols(data["protocols"], context);
     }
 
+    if (data["image"] !== undefined && data["image"] !== null) {
+      instance.image = String(data["image"]);
+    }
+
     if (data["resources"] !== undefined && data["resources"] !== null) {
       instance.resources = ContainerResources.load(
         data["resources"] as Record<string, unknown>,
         context
       );
-    }
-
-    if (data["scale"] !== undefined && data["scale"] !== null) {
-      instance.scale = ContainerScale.load(data["scale"] as Record<string, unknown>, context);
     }
 
     if (data["environmentVariables"] !== undefined && data["environmentVariables"] !== null) {
@@ -897,12 +896,12 @@ export class ContainerAgent extends AgentDefinition {
       result["protocols"] = ContainerAgent.saveProtocols(obj.protocols, context);
     }
 
-    if (obj.resources !== undefined && obj.resources !== null) {
-      result["resources"] = obj.resources?.save(context);
+    if (obj.image !== undefined && obj.image !== null) {
+      result["image"] = obj.image;
     }
 
-    if (obj.scale !== undefined && obj.scale !== null) {
-      result["scale"] = obj.scale?.save(context);
+    if (obj.resources !== undefined && obj.resources !== null) {
+      result["resources"] = obj.resources?.save(context);
     }
 
     if (obj.environmentVariables !== undefined && obj.environmentVariables !== null) {

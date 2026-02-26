@@ -16,12 +16,10 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
 resources:
   cpu: "1"
   memory: 2Gi
-scale:
-  minReplicas: 1
-  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -32,6 +30,7 @@ environmentVariables:
 
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
     }
 
     [Fact]
@@ -46,13 +45,10 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -66,6 +62,7 @@ environmentVariables:
         var instance = ContainerAgent.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
     }
 
     [Fact]
@@ -81,13 +78,10 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -107,6 +101,7 @@ environmentVariables:
         var reloaded = ContainerAgent.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
     }
 
     [Fact]
@@ -118,12 +113,10 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
 resources:
   cpu: "1"
   memory: 2Gi
-scale:
-  minReplicas: 1
-  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -139,6 +132,7 @@ environmentVariables:
         var reloaded = ContainerAgent.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
     }
 
     [Fact]
@@ -153,13 +147,10 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
-  },
-  "scale": {
-    "minReplicas": 1,
-    "maxReplicas": 3
   },
   "environmentVariables": [
     {
@@ -186,12 +177,10 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
 resources:
   cpu: "1"
   memory: 2Gi
-scale:
-  minReplicas: 1
-  maxReplicas: 3
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
