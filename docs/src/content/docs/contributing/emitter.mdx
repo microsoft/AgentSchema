@@ -7,7 +7,7 @@ sidebar:
 
 import { FileTree } from '@astrojs/starlight/components';
 
-The emitter transforms TypeSpec definitions into runtime code for C#, Python, TypeScript, and Go. This guide covers how to modify code generation.
+The emitter transforms TypeSpec definitions into runtime code for C#, Python, TypeScript, Go, and Rust. This guide covers how to modify code generation.
 
 ## Architecture Overview
 
@@ -24,6 +24,7 @@ The emitter transforms TypeSpec definitions into runtime code for C#, Python, Ty
     - python.ts Python code generator
     - typescript.ts TypeScript code generator
     - go.ts Go code generator
+    - rust.ts Rust code generator
     - markdown.ts documentation generator
     - templates/ Nunjucks templates
       - csharp/
@@ -43,20 +44,24 @@ flowchart LR
     D --> F[python.ts]
     D --> G[typescript.ts]
     D --> N[go.ts]
+    D --> Q[rust.ts]
     E --> H[templates/csharp/*.njk]
     F --> I[templates/python/*.njk]
     G --> J[templates/typescript/*.njk]
     N --> O[templates/go/*.njk]
+    Q --> R[templates/rust/*.njk]
     H --> K[runtime/csharp/]
     I --> L[runtime/python/]
     J --> M[runtime/typescript/]
     O --> P[runtime/go/]
+    R --> S[runtime/rust/]
     
     subgraph "Test Generation"
         TC[test-context.ts<br/>buildBaseTestContext] --> E
         TC --> F
         TC --> G
         TC --> N
+        TC --> Q
     end
 ```
 
@@ -266,7 +271,7 @@ Copy-Item -Recurse -Force src/templates dist/src/
 
 ## Testing Changes
 
-After any emitter change, test all four runtimes:
+After any emitter change, test all runtimes:
 
 ```bash
 # C#
@@ -280,6 +285,9 @@ cd runtime/typescript/agentschema && npm test
 
 # Go
 cd runtime/go/agentschema && go test ./...
+
+# Rust
+cd runtime/rust/agentschema && cargo test
 ```
 
 ## Debugging Tips

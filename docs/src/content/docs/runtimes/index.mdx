@@ -46,6 +46,12 @@ AgentSchema provides official runtime libraries for multiple programming languag
     go get github.com/microsoft/agentschema-go/agentschema
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```toml
+    [dependencies]
+    agentschema = "1.0.0-beta.7"
+    ```
+  </TabItem>
 </Tabs>
 
 ## Loading from YAML
@@ -116,6 +122,24 @@ Parse a YAML string into an agent definition:
     }
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::AgentDefinition;
+
+    fn main() -> Result<(), Box<dyn std::error::Error>> {
+        let yaml_content = r#"
+    name: my-agent
+    kind: prompt
+    model: gpt-4o
+    instructions: You are a helpful assistant.
+    "#;
+
+        let agent = AgentDefinition::from_yaml(yaml_content)?;
+        println!("{}", agent.name);  // "my-agent"
+        Ok(())
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 ## Loading from Files
@@ -178,6 +202,24 @@ Load agent definitions directly from files:
         // Load from JSON file
         jsonBytes, _ := os.ReadFile("agent.json")
         agentFromJson, _ := agentschema.PromptAgentFromJSON(string(jsonBytes))
+    }
+    ```
+  </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::AgentDefinition;
+    use std::fs;
+
+    fn main() -> Result<(), Box<dyn std::error::Error>> {
+        // Load from YAML file
+        let yaml = fs::read_to_string("agent.yaml")?;
+        let agent = AgentDefinition::from_yaml(&yaml)?;
+
+        // Load from JSON file
+        let json = fs::read_to_string("agent.json")?;
+        let agent_from_json = AgentDefinition::from_json(&json)?;
+
+        Ok(())
     }
     ```
   </TabItem>
@@ -302,6 +344,45 @@ Create agent definitions using strongly-typed classes:
     }
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::{AgentDefinition, FunctionTool, Property};
+    use std::collections::HashMap;
+
+    fn main() -> Result<(), Box<dyn std::error::Error>> {
+        let mut parameters = HashMap::new();
+        parameters.insert(
+            "location".to_string(),
+            Property {
+                kind: "string".to_string(),
+                description: Some("City name".to_string()),
+                required: Some(true),
+                ..Default::default()
+            },
+        );
+
+        let agent = AgentDefinition {
+            name: "weather-agent".to_string(),
+            description: Some("Helps users check the weather".to_string()),
+            model: "gpt-4o".to_string(),
+            instructions: Some("You help users check the weather.".to_string()),
+            tools: Some(vec![
+                FunctionTool {
+                    kind: "function".to_string(),
+                    name: "get_weather".to_string(),
+                    description: Some("Get current weather for a location".to_string()),
+                    parameters: Some(parameters),
+                    ..Default::default()
+                }
+                .into(),
+            ]),
+            ..Default::default()
+        };
+
+        Ok(())
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 ## Saving Agent Definitions
@@ -376,6 +457,26 @@ Export agent definitions to YAML or JSON:
     // Convert to map
     ctx := agentschema.NewSaveContext()
     data := agent.Save(ctx)
+    ```
+  </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::AgentDefinition;
+    use std::fs;
+
+    fn main() -> Result<(), Box<dyn std::error::Error>> {
+        // Convert to YAML string
+        let yaml_str = agent.to_yaml()?;
+
+        // Convert to JSON string
+        let json_str = agent.to_json()?;
+
+        // Save to files
+        fs::write("output.yaml", &yaml_str)?;
+        fs::write("output.json", &json_str)?;
+
+        Ok(())
+    }
     ```
   </TabItem>
 </Tabs>
@@ -468,6 +569,27 @@ Customize loading and saving behavior with context objects:
     data := agent.Save(saveCtx)
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::{AgentDefinition, LoadContext, SaveContext, CollectionFormat};
+
+    fn main() -> Result<(), Box<dyn std::error::Error>> {
+        // Custom load processing
+        let ctx = LoadContext::new();
+        let agent = AgentDefinition::from_yaml_with_context(yaml_content, &ctx)?;
+
+        // Custom save formatting
+        let save_ctx = SaveContext {
+            collection_format: CollectionFormat::Object,
+            use_shorthand: true,
+            ..Default::default()
+        };
+        let yaml_str = agent.to_yaml_with_context(&save_ctx)?;
+
+        Ok(())
+    }
+    ```
+  </TabItem>
 </Tabs>
 
 ## Choosing a Runtime
@@ -478,6 +600,7 @@ Choose the runtime that matches your development environment:
 - **TypeScript/JavaScript** - For Node.js applications, serverless functions, or web applications
 - **C# / .NET** - For enterprise applications, Azure Functions, or .NET-based services
 - **Go** - For high-performance services, CLI tools, or cloud-native applications
+- **Rust** - For systems programming, WebAssembly, or performance-critical applications
 
 For detailed API documentation, select your language:
 
@@ -499,7 +622,12 @@ For detailed API documentation, select your language:
   </Card>
   <Card title="Go Runtime" icon="seti:go">
     Full API reference with type-safe structs.
-    
+
     [View Details →](go/)
+  </Card>
+  <Card title="Rust Runtime" icon="seti:rust">
+    Full API reference with serde-based serialization.
+
+    [View Details →](rust/)
   </Card>
 </CardGrid>

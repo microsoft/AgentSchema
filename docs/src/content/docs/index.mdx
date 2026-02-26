@@ -45,6 +45,12 @@ Get started with AgentSchema in your preferred language:
     go get github.com/microsoft/agentschema-go/agentschema
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```toml
+    [dependencies]
+    agentschema = "1.0.0-beta.7"
+    ```
+  </TabItem>
 </Tabs>
 
 ## Quick Example
@@ -138,6 +144,28 @@ Get started with AgentSchema in your preferred language:
     }
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```rust
+    use agentschema::AgentDefinition;
+    use std::fs;
+
+    // Load from YAML file
+    let yaml = fs::read_to_string("agent.yaml")?;
+    let agent = AgentDefinition::from_yaml(&yaml)?;
+
+    // Or create programmatically
+    let agent = AgentDefinition {
+        name: "my-assistant".to_string(),
+        description: Some("A helpful AI assistant".to_string()),
+        model: "gpt-4o".to_string(),
+        instructions: Some("You are a helpful assistant.".to_string()),
+        ..Default::default()
+    };
+
+    // Save to YAML
+    fs::write("agent.yaml", agent.to_yaml()?)?;
+    ```
+  </TabItem>
 </Tabs>
 
 ## Why AgentSchema?
@@ -172,7 +200,7 @@ Get started with AgentSchema in your preferred language:
 		[View Documentation →](reference/)
 	</Card>
 	<Card title="📦 Runtimes" icon="puzzle">
-		Use our official runtime libraries to work with AgentSchema in TypeScript, Python, C#, or Go.
+		Use our official runtime libraries to work with AgentSchema in TypeScript, Python, C#, Go, or Rust.
 		
 		[View Runtimes →](runtimes/)
 	</Card>

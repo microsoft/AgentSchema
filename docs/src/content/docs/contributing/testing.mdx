@@ -42,6 +42,14 @@ Tests are auto-generated for runtime libraries based on `@sample` decorators in 
     go test -v ./...                      # Verbose output
     ```
   </TabItem>
+  <TabItem label="Rust" icon="seti:rust">
+    ```bash
+    cd runtime/rust/agentschema
+    cargo test                            # All tests
+    cargo test model                      # Filter by name
+    cargo test -- --nocapture             # Show output
+    ```
+  </TabItem>
 </Tabs>
 
 ## Test Architecture
@@ -55,10 +63,12 @@ flowchart LR
     B --> D[*ConversionTests.cs]
     B --> E[*.test.ts]
     B --> I[*_test.go]
+    B --> K[*_test.rs]
     C --> F[pytest]
     D --> G[dotnet test]
     E --> H[vitest]
     I --> J[go test]
+    K --> L[cargo test]
 ```
 
 ### What Gets Tested
@@ -95,6 +105,7 @@ Each language defines options for casing, escaping, and delimiters:
 | Go | PascalCase | `true`/`false` | `"` |
 | TypeScript | camelCase | `true`/`false` | `"` |
 | C# | PascalCase | `True`/`False` | `"` or `@"` |
+| Rust | snake_case | `true`/`false` | `"` |
 
 ### Consistent Field Names
 
@@ -172,9 +183,10 @@ Some tests are not auto-generated and can be edited:
 | Python | `runtime/python/agentschema/tests/` | `conftest.py` is preserved |
 | TypeScript | `runtime/typescript/agentschema/tests/` | Config files are preserved |
 | Go | `runtime/go/agentschema/` | `go.mod` is preserved |
+| Rust | `runtime/rust/agentschema/` | `Cargo.toml` is preserved |
 
 :::caution
-Test files matching `test_load_*.py`, `*ConversionTests.cs`, `*.test.ts`, or `*_test.go` patterns ARE regenerated. Add custom tests with different naming patterns.
+Test files matching `test_load_*.py`, `*ConversionTests.cs`, `*.test.ts`, `*_test.go`, or `*_test.rs` patterns ARE regenerated. Add custom tests with different naming patterns.
 :::
 
 ## Test Validation Patterns

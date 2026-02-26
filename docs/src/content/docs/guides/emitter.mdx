@@ -24,7 +24,7 @@ npx agentschema-emitter --help
 The emitter provides a CLI command `agentschema-generate` for generating runtime code:
 
 ```bash
-# Generate all default targets (Python, C#, TypeScript, Go)
+# Generate all default targets (Python, C#, TypeScript, Go, Rust)
 npx agentschema-generate -o ./generated
 
 # Generate specific targets only
@@ -42,7 +42,7 @@ npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
 | Option | Short | Description | Default |
 |--------|-------|-------------|---------|
 | `--output <dir>` | `-o` | Output directory | Required |
-| `--targets <list>` | `-t` | Comma-separated targets | `python,csharp,typescript,go` |
+| `--targets <list>` | `-t` | Comma-separated targets | `python,csharp,typescript,go,rust` |
 | `--root-object <name>` | `-r` | Root model to generate | `AgentSchema.AgentManifest` |
 | `--omit <list>` | | Models to exclude | None |
 | `--namespace <name>` | `-n` | Override namespace | From TypeSpec |
@@ -58,10 +58,9 @@ import { generate } from "agentschema-emitter/generate";
 
 const result = await generate({
   output: "./generated",
-  targets: ["python", "csharp", "typescript", "go"],
+  targets: ["python", "csharp", "typescript", "go", "rust"],
   rootObject: "AgentSchema.AgentManifest",
   omit: ["AgentManifest"],
-  noTests: false,
   noFormat: false,
 });
 
@@ -76,7 +75,7 @@ interface GenerateOptions {
   output: string;
   
   /** Target languages to generate */
-  targets?: ("python" | "csharp" | "typescript" | "go" | "markdown")[];
+  targets?: ("python" | "csharp" | "typescript" | "go" | "rust" | "markdown")[];
   
   /** Root TypeSpec model (fully qualified name) */
   rootObject?: string;
@@ -103,6 +102,7 @@ interface GenerateOptions {
 | `csharp` | C# 12 | Classes | System.Text.Json, nullable annotations |
 | `typescript` | TypeScript | Interfaces | js-yaml, camelCase properties |
 | `go` | Go 1.22+ | Structs | encoding/json, gopkg.in/yaml.v3 |
+| `rust` | Rust 1.75+ | Structs | serde, serde_json, serde_yaml |
 | `markdown` | Markdown | Docs | Reference documentation |
 
 ## TypeSpec Integration
