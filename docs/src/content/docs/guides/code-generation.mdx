@@ -20,7 +20,7 @@ The `agentschema-generate` command generates runtime code for multiple languages
 ### Basic Usage
 
 ```bash
-# Generate all default targets (Python, C#, TypeScript, Go)
+# Generate all default targets (Python, C#, TypeScript, Go, Rust)
 npx agentschema-generate -o ./generated
 
 # Generate specific targets only
@@ -38,7 +38,7 @@ npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
 | Option | Short | Description |
 |--------|-------|-------------|
 | `--output <dir>` | `-o` | Output directory for generated code (required) |
-| `--targets <list>` | `-t` | Comma-separated list of targets (default: `python,csharp,typescript,go`) |
+| `--targets <list>` | `-t` | Comma-separated list of targets (default: `python,csharp,typescript,go,rust`) |
 | `--root-object <name>` | `-r` | Root TypeSpec model to generate from (default: `AgentSchema.AgentManifest`) |
 | `--omit <list>` | | Comma-separated list of models to exclude |
 | `--namespace <name>` | `-n` | Override the namespace for generated code |
@@ -54,6 +54,7 @@ npx agentschema-generate -o ./lib --omit AgentManifest,ContainerAgent
 | `csharp` | C# classes with System.Text.Json serialization |
 | `typescript` | TypeScript interfaces with js-yaml serialization |
 | `go` | Go structs with encoding/json and gopkg.in/yaml.v3 |
+| `rust` | Rust structs with serde serialization |
 | `markdown` | Markdown documentation |
 
 ## Programmatic API
@@ -71,7 +72,7 @@ const result = await generate({
   output: "./generated",
   
   // Target languages to generate
-  targets: ["python", "csharp", "typescript", "go"],
+  targets: ["python", "csharp", "typescript", "go", "rust"],
   
   // Root object to start generation from
   rootObject: "AgentSchema.AgentManifest",
@@ -166,9 +167,13 @@ generated/
 │   ├── agentDefinition.ts
 │   └── tests/
 │       └── *.test.ts
-└── go/
-    ├── agent_definition.go
-    └── *_test.go
+├── go/
+│   ├── agent_definition.go
+│   └── *_test.go
+└── rust/
+    ├── src/
+    │   └── lib.rs
+    └── *_test.rs
 ```
 
 ## Customizing the Root Object
