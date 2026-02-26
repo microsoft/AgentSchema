@@ -54,4 +54,5 @@ fn test_parser_roundtrip() {
 fn test_parser_from_parser() {
     let value = serde_json::json!("example");
     let instance = Parser::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }

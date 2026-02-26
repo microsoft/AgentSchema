@@ -75,22 +75,26 @@ fn test_property_roundtrip() {
 fn test_property_from_input() {
     let value = serde_json::json!(false);
     let instance = Property::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }
 
 #[test]
 fn test_property_from_input_2() {
     let value = serde_json::json!(3.14);
     let instance = Property::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }
 
 #[test]
 fn test_property_from_input_3() {
     let value = serde_json::json!(4);
     let instance = Property::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }
 
 #[test]
 fn test_property_from_input_4() {
     let value = serde_json::json!("example");
     let instance = Property::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }

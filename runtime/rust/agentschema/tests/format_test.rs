@@ -57,4 +57,5 @@ fn test_format_roundtrip() {
 fn test_format_from_format() {
     let value = serde_json::json!("example");
     let instance = Format::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }

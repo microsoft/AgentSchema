@@ -22,6 +22,7 @@ fn test_custom_tool_load_json() {
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]
@@ -41,6 +42,7 @@ options:
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]

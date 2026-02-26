@@ -145,13 +145,13 @@ function formatRustFiles(outputDir: string): void {
 /**
  * Build context for rendering a single Rust struct.
  */
-function buildClassContext(node: TypeNode): RustClassContext {
+function buildClassContext(node: TypeNode, polymorphicTypeNames: Set<string>): RustClassContext {
   return {
     node,
     typeMapper: rustTypeMapper,
     alternates: prepareAlternates(node),
     polymorphicTypes: node.retrievePolymorphicTypes(),
-    imports: getUniqueImportTypes(node),
+    imports: getUniqueImportTypes(node, polymorphicTypeNames),
     collectionTypes: getCollectionTypes(node),
     shorthandProperty: getShorthandProperty(node),
   };
@@ -162,8 +162,8 @@ function buildClassContext(node: TypeNode): RustClassContext {
  */
 function buildFileContext(node: TypeNode, polymorphicTypeNames: Set<string>): RustFileContext {
   const classes: RustClassContext[] = [
-    buildClassContext(node),
-    ...node.childTypes.map(ct => buildClassContext(ct))
+    buildClassContext(node, polymorphicTypeNames),
+    ...node.childTypes.map(ct => buildClassContext(ct, polymorphicTypeNames))
   ];
 
   // Collect unique imports from all classes, excluding types defined in this file
@@ -247,12 +247,21 @@ function getCollectionTypes(node: TypeNode): Array<{ prop: PropertyNode; type: s
 
 /**
  * Get unique import types needed from other modules.
+ * Excludes polymorphic types that are not collection fields (stored as serde_json::Value
+ * with no typed accessor method).
  */
-function getUniqueImportTypes(node: TypeNode): string[] {
+function getUniqueImportTypes(node: TypeNode, polymorphicTypeNames: Set<string>): string[] {
   const imports = [
-    node.properties.filter(p => !p.isScalar && !p.isDict).map(p => p.typeName.name),
+    node.properties
+      .filter(p => !p.isScalar && !p.isDict)
+      // For polymorphic types: only import if it's a collection (needed for typed accessor)
+      .filter(p => !polymorphicTypeNames.has(p.typeName.name) || p.isCollection)
+      .map(p => p.typeName.name),
     ...node.childTypes.flatMap(c =>
-      c.properties.filter(p => !p.isScalar && !p.isDict).map(p => p.typeName.name)
+      c.properties
+        .filter(p => !p.isScalar && !p.isDict)
+        .filter(p => !polymorphicTypeNames.has(p.typeName.name) || p.isCollection)
+        .map(p => p.typeName.name)
     )
   ].flat().filter(n => n !== node.typeName.name && node.base?.name !== n);
 

@@ -46,4 +46,5 @@ fn test_mcp_server_approval_mode_roundtrip() {
 fn test_mcp_server_approval_mode_from_kind() {
     let value = serde_json::json!("never");
     let instance = McpServerApprovalMode::load_from_value(&value);
+    let _ = instance; // abstract type, load succeeded
 }

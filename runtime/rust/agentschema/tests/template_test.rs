@@ -21,6 +21,7 @@ fn test_template_load_json() {
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]
@@ -39,6 +40,7 @@ parser:
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]

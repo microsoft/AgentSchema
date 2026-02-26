@@ -23,6 +23,7 @@ fn test_object_property_load_json() {
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]
@@ -42,6 +43,7 @@ properties:
         result.err()
     );
     let instance = result.unwrap();
+    let _ = instance; // load succeeded, no scalar properties to validate
 }
 
 #[test]
