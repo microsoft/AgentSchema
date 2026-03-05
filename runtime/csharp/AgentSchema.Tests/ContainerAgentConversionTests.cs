@@ -17,6 +17,7 @@ protocols:
   - protocol: responses
     version: v0.1.1
 image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
 resources:
   cpu: "1"
   memory: 2Gi
@@ -31,6 +32,7 @@ environmentVariables:
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
         Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
+        Assert.Equal("./Dockerfile", instance.DockerfilePath);
     }
 
     [Fact]
@@ -46,6 +48,7 @@ environmentVariables:
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -63,6 +66,7 @@ environmentVariables:
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
         Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
+        Assert.Equal("./Dockerfile", instance.DockerfilePath);
     }
 
     [Fact]
@@ -79,6 +83,7 @@ environmentVariables:
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -102,6 +107,7 @@ environmentVariables:
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
         Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
+        Assert.Equal("./Dockerfile", reloaded.DockerfilePath);
     }
 
     [Fact]
@@ -114,6 +120,7 @@ protocols:
   - protocol: responses
     version: v0.1.1
 image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
 resources:
   cpu: "1"
   memory: 2Gi
@@ -133,6 +140,7 @@ environmentVariables:
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
         Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
+        Assert.Equal("./Dockerfile", reloaded.DockerfilePath);
     }
 
     [Fact]
@@ -148,6 +156,7 @@ environmentVariables:
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -178,6 +187,7 @@ protocols:
   - protocol: responses
     version: v0.1.1
 image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
 resources:
   cpu: "1"
   memory: 2Gi

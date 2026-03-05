@@ -68,6 +68,10 @@ model ContainerAgent extends AgentDefinition {
   @sample(#{ image: "myregistry.azurecr.io/my-agent" })
   image: string;
 
+  @doc("Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.")
+  @sample(#{ dockerfilePath: "./Dockerfile" })
+  dockerfilePath?: string;
+
   @doc("Resource allocation for the container")
   @sample(#{ resources: #{ cpu: "1", memory: "2Gi" } })
   resources: ContainerResources;

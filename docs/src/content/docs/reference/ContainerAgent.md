@@ -35,6 +35,7 @@ classDiagram
         +string kind
         +ProtocolVersionRecord[] protocols
         +string image
+        +string dockerfilePath
         +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
     }
@@ -63,6 +64,7 @@ protocols:
   - protocol: responses
     version: v0.1.1
 image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
 resources:
   cpu: "1"
   memory: 2Gi
@@ -78,6 +80,7 @@ environmentVariables:
 | kind | string | Type of agent, e.g., &#39;hosted&#39; |
 | protocols | [ProtocolVersionRecord[]](../protocolversionrecord/) | Protocol used by the containerized agent |
 | image | string | Container image path (e.g., &#39;&lt;acr-endpoint&gt;/&lt;container-image-name&gt;&#39;) |
+| dockerfilePath | string | Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path. |
 | resources | [ContainerResources](../containerresources/) | Resource allocation for the container |
 | environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container |
 

@@ -23,6 +23,7 @@ func TestContainerAgentLoadJSON(t *testing.T) {
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -51,6 +52,9 @@ func TestContainerAgentLoadJSON(t *testing.T) {
 	if instance.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
 	}
+	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, instance.DockerfilePath)
+	}
 }
 
 // TestContainerAgentLoadYAML tests loading ContainerAgent from YAML
@@ -61,6 +65,7 @@ protocols:
   - protocol: responses
     version: v0.1.1
 image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
 resources:
   cpu: "1"
   memory: 2Gi
@@ -85,6 +90,9 @@ environmentVariables:
 	if instance.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
 	}
+	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, instance.DockerfilePath)
+	}
 }
 
 // TestContainerAgentRoundtrip tests load -> save -> load produces equivalent data
@@ -99,6 +107,7 @@ func TestContainerAgentRoundtrip(t *testing.T) {
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -134,6 +143,9 @@ func TestContainerAgentRoundtrip(t *testing.T) {
 	if reloaded.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, reloaded.Image)
 	}
+	if reloaded.DockerfilePath == nil || *reloaded.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, reloaded.DockerfilePath)
+	}
 }
 
 // TestContainerAgentToJSON tests that ToJSON produces valid JSON
@@ -148,6 +160,7 @@ func TestContainerAgentToJSON(t *testing.T) {
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"
@@ -193,6 +206,7 @@ func TestContainerAgentToYAML(t *testing.T) {
     }
   ],
   "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
   "resources": {
     "cpu": "1",
     "memory": "2Gi"

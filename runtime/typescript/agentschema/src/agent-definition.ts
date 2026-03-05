@@ -725,6 +725,11 @@ export class ContainerAgent extends AgentDefinition {
   image: string = "";
 
   /**
+   * Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
+   */
+  dockerfilePath?: string | undefined;
+
+  /**
    * Resource allocation for the container
    */
   resources: ContainerResources;
@@ -745,6 +750,10 @@ export class ContainerAgent extends AgentDefinition {
     this.protocols = init?.protocols ?? [];
 
     this.image = init?.image ?? "";
+
+    if (init?.dockerfilePath !== undefined) {
+      this.dockerfilePath = init.dockerfilePath;
+    }
 
     this.resources = init?.resources ?? undefined!;
 
@@ -779,6 +788,10 @@ export class ContainerAgent extends AgentDefinition {
 
     if (data["image"] !== undefined && data["image"] !== null) {
       instance.image = String(data["image"]);
+    }
+
+    if (data["dockerfilePath"] !== undefined && data["dockerfilePath"] !== null) {
+      instance.dockerfilePath = String(data["dockerfilePath"]);
     }
 
     if (data["resources"] !== undefined && data["resources"] !== null) {
@@ -898,6 +911,10 @@ export class ContainerAgent extends AgentDefinition {
 
     if (obj.image !== undefined && obj.image !== null) {
       result["image"] = obj.image;
+    }
+
+    if (obj.dockerfilePath !== undefined && obj.dockerfilePath !== null) {
+      result["dockerfilePath"] = obj.dockerfilePath;
     }
 
     if (obj.resources !== undefined && obj.resources !== null) {

@@ -379,6 +379,7 @@ type ContainerAgent struct {
 	Kind                 string                  `json:"kind" yaml:"kind"`
 	Protocols            []ProtocolVersionRecord `json:"protocols" yaml:"protocols"`
 	Image                string                  `json:"image" yaml:"image"`
+	DockerfilePath       *string                 `json:"dockerfilePath,omitempty" yaml:"dockerfilePath,omitempty"`
 	Resources            ContainerResources      `json:"resources" yaml:"resources"`
 	EnvironmentVariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
 }
@@ -405,6 +406,10 @@ func LoadContainerAgent(data interface{}, ctx *LoadContext) (ContainerAgent, err
 		}
 		if val, ok := m["image"]; ok && val != nil {
 			result.Image = val.(string)
+		}
+		if val, ok := m["dockerfilePath"]; ok && val != nil {
+			v := val.(string)
+			result.DockerfilePath = &v
 		}
 		if val, ok := m["resources"]; ok && val != nil {
 			if m, ok := val.(map[string]interface{}); ok {
@@ -440,6 +445,9 @@ func (obj *ContainerAgent) Save(ctx *SaveContext) map[string]interface{} {
 		result["protocols"] = arr
 	}
 	result["image"] = obj.Image
+	if obj.DockerfilePath != nil {
+		result["dockerfilePath"] = *obj.DockerfilePath
+	}
 
 	result["resources"] = obj.Resources.Save(ctx)
 	if obj.EnvironmentVariables != nil {

@@ -233,6 +233,7 @@ classDiagram
         +string kind
         +ProtocolVersionRecord[] protocols
         +string image
+        +string dockerfilePath
         +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
     }

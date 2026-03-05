@@ -15,6 +15,7 @@ def test_load_json_containeragent():
         }
       ],
       "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
       "resources": {
         "cpu": "1",
         "memory": "2Gi"
@@ -32,6 +33,7 @@ def test_load_json_containeragent():
     assert instance is not None
     assert instance.kind == "hosted"
     assert instance.image == "myregistry.azurecr.io/my-agent"
+    assert instance.dockerfilePath == "./Dockerfile"
 
 
 def test_load_yaml_containeragent():
@@ -41,6 +43,7 @@ def test_load_yaml_containeragent():
       - protocol: responses
         version: v0.1.1
     image: myregistry.azurecr.io/my-agent
+    dockerfilePath: ./Dockerfile
     resources:
       cpu: "1"
       memory: 2Gi
@@ -54,6 +57,7 @@ def test_load_yaml_containeragent():
     assert instance is not None
     assert instance.kind == "hosted"
     assert instance.image == "myregistry.azurecr.io/my-agent"
+    assert instance.dockerfilePath == "./Dockerfile"
 
 
 def test_roundtrip_json_containeragent():
@@ -68,6 +72,7 @@ def test_roundtrip_json_containeragent():
         }
       ],
       "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
       "resources": {
         "cpu": "1",
         "memory": "2Gi"
@@ -87,6 +92,7 @@ def test_roundtrip_json_containeragent():
     assert reloaded is not None
     assert reloaded.kind == "hosted"
     assert reloaded.image == "myregistry.azurecr.io/my-agent"
+    assert reloaded.dockerfilePath == "./Dockerfile"
 
 
 def test_to_json_containeragent():
@@ -101,6 +107,7 @@ def test_to_json_containeragent():
         }
       ],
       "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
       "resources": {
         "cpu": "1",
         "memory": "2Gi"
@@ -133,6 +140,7 @@ def test_to_yaml_containeragent():
         }
       ],
       "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
       "resources": {
         "cpu": "1",
         "memory": "2Gi"

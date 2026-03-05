@@ -459,6 +459,8 @@ class ContainerAgent(AgentDefinition):
         Protocol used by the containerized agent
     image : str
         Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+    dockerfilePath : Optional[str]
+        Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
     resources : ContainerResources
         Resource allocation for the container
     environmentVariables : list[EnvironmentVariable]
@@ -470,6 +472,7 @@ class ContainerAgent(AgentDefinition):
     kind: str = field(default="hosted")
     protocols: list[ProtocolVersionRecord] = field(default_factory=list)
     image: str = field(default="")
+    dockerfilePath: Optional[str] = None
     resources: ContainerResources = field(default_factory=ContainerResources)
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)
 
@@ -501,6 +504,8 @@ class ContainerAgent(AgentDefinition):
             )
         if data is not None and "image" in data:
             instance.image = data["image"]
+        if data is not None and "dockerfilePath" in data:
+            instance.dockerfilePath = data["dockerfilePath"]
         if data is not None and "resources" in data:
             instance.resources = ContainerResources.load(data["resources"], context)
         if data is not None and "environmentVariables" in data:
@@ -634,6 +639,8 @@ class ContainerAgent(AgentDefinition):
             result["protocols"] = ContainerAgent.save_protocols(obj.protocols, context)
         if obj.image is not None:
             result["image"] = obj.image
+        if obj.dockerfilePath is not None:
+            result["dockerfilePath"] = obj.dockerfilePath
         if obj.resources is not None:
             result["resources"] = obj.resources.save(context)
         if obj.environmentVariables is not None:
