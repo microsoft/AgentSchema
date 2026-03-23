@@ -8,7 +8,7 @@ Add to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-agentschema = "1.0.0-beta.8"
+agentschema = "1.0.0-beta.10"
 ```
 
 ## Usage

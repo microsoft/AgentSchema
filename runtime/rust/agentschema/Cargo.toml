@@ -1,6 +1,6 @@
 [package]
 name = "agentschema"
-version = "1.0.0-beta.9"
+version = "1.0.0-beta.10"
 edition = "2021"
 description = "AgentSchema Rust Runtime - declarative AI agent definitions"
 license = "MIT"
