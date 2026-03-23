@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class ContainerAgentConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -78,10 +78,10 @@ environmentVariables:
 
         var original = ContainerAgent.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = ContainerAgent.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
@@ -104,10 +104,10 @@ environmentVariables:
 
         var original = ContainerAgent.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = ContainerAgent.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
@@ -136,7 +136,7 @@ environmentVariables:
 
         var instance = ContainerAgent.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -158,7 +158,7 @@ environmentVariables:
 
         var instance = ContainerAgent.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

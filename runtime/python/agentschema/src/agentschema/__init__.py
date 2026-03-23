@@ -14,6 +14,8 @@ from ._Connection import (
     RemoteConnection,
     ApiKeyConnection,
     AnonymousConnection,
+    FoundryConnection,
+    OAuthConnection,
 )
 
 
@@ -82,6 +84,8 @@ __all__ = [
     "RemoteConnection",
     "ApiKeyConnection",
     "AnonymousConnection",
+    "FoundryConnection",
+    "OAuthConnection",
     "ModelOptions",
     "Model",
     "Binding",

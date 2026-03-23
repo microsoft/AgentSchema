@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class FileSearchToolConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -93,10 +93,10 @@ filters:
 
         var original = FileSearchTool.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = FileSearchTool.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("file_search", reloaded.Kind);
@@ -127,10 +127,10 @@ filters:
 
         var original = FileSearchTool.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = FileSearchTool.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("file_search", reloaded.Kind);
@@ -164,7 +164,7 @@ filters:
 
         var instance = FileSearchTool.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -191,7 +191,7 @@ filters:
 
         var instance = FileSearchTool.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

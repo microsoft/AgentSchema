@@ -101,6 +101,8 @@ public abstract class Connection
                 "remote" => RemoteConnection.Load(data, context),
                 "key" => ApiKeyConnection.Load(data, context),
                 "anonymous" => AnonymousConnection.Load(data, context),
+                "foundry" => FoundryConnection.Load(data, context),
+                "oauth" => OAuthConnection.Load(data, context),
                 _ => throw new ArgumentException($"Unknown Connection discriminator value: {discriminator}"),
             };
         }

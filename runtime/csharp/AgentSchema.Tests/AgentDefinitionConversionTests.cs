@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class AgentDefinitionConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -154,10 +154,10 @@ outputSchema:
 
         var original = AgentDefinition.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentDefinition.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -203,10 +203,10 @@ outputSchema:
 
         var original = AgentDefinition.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentDefinition.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -263,7 +263,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -305,7 +305,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
@@ -459,10 +459,10 @@ outputSchema:
 
         var original = AgentDefinition.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentDefinition.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -508,10 +508,10 @@ outputSchema:
 
         var original = AgentDefinition.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentDefinition.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -569,7 +569,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -611,7 +611,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
@@ -769,10 +769,10 @@ outputSchema:
 
         var original = AgentDefinition.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentDefinition.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -818,10 +818,10 @@ outputSchema:
 
         var original = AgentDefinition.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentDefinition.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -881,7 +881,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -923,7 +923,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
@@ -1083,10 +1083,10 @@ outputSchema:
 
         var original = AgentDefinition.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentDefinition.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -1132,10 +1132,10 @@ outputSchema:
 
         var original = AgentDefinition.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentDefinition.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -1196,7 +1196,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -1238,7 +1238,7 @@ outputSchema:
 
         var instance = AgentDefinition.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

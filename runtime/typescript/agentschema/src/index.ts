@@ -11,6 +11,8 @@ export {
   RemoteConnection,
   ApiKeyConnection,
   AnonymousConnection,
+  FoundryConnection,
+  OAuthConnection,
 } from "./connection";
 
 export { ModelOptions } from "./model-options";

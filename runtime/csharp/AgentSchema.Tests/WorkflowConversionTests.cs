@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class WorkflowConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -48,10 +48,10 @@ kind: workflow
 
         var original = Workflow.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = Workflow.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("workflow", reloaded.Kind);
@@ -68,10 +68,10 @@ kind: workflow
 
         var original = Workflow.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = Workflow.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("workflow", reloaded.Kind);
@@ -88,7 +88,7 @@ kind: workflow
 
         var instance = Workflow.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -104,7 +104,7 @@ kind: workflow
 
         var instance = Workflow.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

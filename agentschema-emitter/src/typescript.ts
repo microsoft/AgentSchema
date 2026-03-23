@@ -84,6 +84,7 @@ export const generateTypeScript = async (
   const contextTemplate = env.getTemplate("context.ts.njk", true);
   const indexTemplate = env.getTemplate("index.ts.njk", true);
   const testTemplate = env.getTemplate("test.ts.njk", true);
+  const eslintConfigTemplate = env.getTemplate("eslint.config.js.njk", true);
 
   const nodes = filterNodes(Array.from(enumerateTypes(node)), options);
 
@@ -139,6 +140,13 @@ export const generateTypeScript = async (
     toKebabCase,
   });
   await emitTypeScriptFile(context, "index.ts", indexCode, emitTarget["output-dir"]);
+
+  // Emit eslint.config.js to project root (parent of output-dir)
+  if (emitTarget["output-dir"]) {
+    const projectRoot = resolve(process.cwd(), emitTarget["output-dir"], "..");
+    const eslintConfigCode = eslintConfigTemplate.render({});
+    await emitTypeScriptFile(context, "eslint.config.js", eslintConfigCode, projectRoot);
+  }
 
   // Format emitted files if format option is enabled (default: true)
   if (emitTarget.format !== false) {

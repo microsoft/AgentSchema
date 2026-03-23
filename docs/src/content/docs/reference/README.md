@@ -58,6 +58,22 @@ classDiagram
         +string kind
         +string endpoint
     }
+    class FoundryConnection {
+      
+        +string kind
+        +string endpoint
+        +string name
+        +string connectionType
+    }
+    class OAuthConnection {
+      
+        +string kind
+        +string endpoint
+        +string clientId
+        +string clientSecret
+        +string tokenUrl
+        +string[] scopes
+    }
     class ModelOptions {
       
         +float32 frequencyPenalty
@@ -262,6 +278,8 @@ classDiagram
     Connection <|-- RemoteConnection
     Connection <|-- ApiKeyConnection
     Connection <|-- AnonymousConnection
+    Connection <|-- FoundryConnection
+    Connection <|-- OAuthConnection
     Tool <|-- FunctionTool
     Tool <|-- CustomTool
     Tool <|-- WebSearchTool

@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class PromptAgentConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -170,10 +170,10 @@ user:
 
         var original = PromptAgent.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = PromptAgent.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -241,10 +241,10 @@ instructions: "system:
 
         var original = PromptAgent.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = PromptAgent.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -302,7 +302,7 @@ user:
 
         var instance = PromptAgent.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -358,7 +358,7 @@ instructions: "system:
 
         var instance = PromptAgent.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
@@ -524,10 +524,10 @@ user:
 
         var original = PromptAgent.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = PromptAgent.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -595,10 +595,10 @@ instructions: "system:
 
         var original = PromptAgent.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = PromptAgent.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("prompt", reloaded.Kind);
@@ -655,7 +655,7 @@ user:
 
         var instance = PromptAgent.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -711,7 +711,7 @@ instructions: "system:
 
         var instance = PromptAgent.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

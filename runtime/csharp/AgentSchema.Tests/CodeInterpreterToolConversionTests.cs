@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class CodeInterpreterToolConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -59,10 +59,10 @@ fileIds:
 
         var original = CodeInterpreterTool.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = CodeInterpreterTool.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("code_interpreter", reloaded.Kind);
@@ -82,10 +82,10 @@ fileIds:
 
         var original = CodeInterpreterTool.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = CodeInterpreterTool.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("code_interpreter", reloaded.Kind);
@@ -106,7 +106,7 @@ fileIds:
 
         var instance = CodeInterpreterTool.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -125,7 +125,7 @@ fileIds:
 
         var instance = CodeInterpreterTool.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);

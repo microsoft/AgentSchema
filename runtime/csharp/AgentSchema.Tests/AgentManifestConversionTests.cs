@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class AgentManifestConversionTests
-{   
+{
     [Fact]
     public void LoadYamlInput()
     {
@@ -173,10 +173,10 @@ resources:
 
         var original = AgentManifest.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentManifest.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("basic-prompt", reloaded.Name);
@@ -226,10 +226,10 @@ resources:
 
         var original = AgentManifest.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentManifest.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("basic-prompt", reloaded.Name);
@@ -293,7 +293,7 @@ resources:
 
         var instance = AgentManifest.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -340,7 +340,7 @@ resources:
 
         var instance = AgentManifest.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
@@ -515,10 +515,10 @@ resources:
 
         var original = AgentManifest.FromJson(jsonData);
         Assert.NotNull(original);
-        
+
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-        
+
         var reloaded = AgentManifest.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("basic-prompt", reloaded.Name);
@@ -568,10 +568,10 @@ resources:
 
         var original = AgentManifest.FromYaml(yamlData);
         Assert.NotNull(original);
-        
+
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-        
+
         var reloaded = AgentManifest.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("basic-prompt", reloaded.Name);
@@ -637,7 +637,7 @@ resources:
 
         var instance = AgentManifest.FromJson(jsonData);
         var json = instance.ToJson();
-        
+
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -684,7 +684,7 @@ resources:
 
         var instance = AgentManifest.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-        
+
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
