@@ -7,7 +7,7 @@ namespace AgentSchema;
 
 
 public class ResourceConversionTests
-{
+{   
     [Fact]
     public void LoadYamlInput()
     {
@@ -53,10 +53,10 @@ kind: model
 
         var original = Resource.FromJson(jsonData);
         Assert.NotNull(original);
-
+        
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
-
+        
         var reloaded = Resource.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("my-resource", reloaded.Name);
@@ -75,10 +75,10 @@ kind: model
 
         var original = Resource.FromYaml(yamlData);
         Assert.NotNull(original);
-
+        
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
-
+        
         var reloaded = Resource.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("my-resource", reloaded.Name);
@@ -97,7 +97,7 @@ kind: model
 
         var instance = Resource.FromJson(jsonData);
         var json = instance.ToJson();
-
+        
         // Verify it's valid JSON by parsing it
         var parsed = System.Text.Json.JsonDocument.Parse(json);
         Assert.NotNull(parsed);
@@ -114,7 +114,7 @@ kind: model
 
         var instance = Resource.FromYaml(yamlData);
         var yaml = instance.ToYaml();
-
+        
         // Verify it's valid YAML by parsing it
         var deserializer = new YamlDotNet.Serialization.DeserializerBuilder().Build();
         var parsed = deserializer.Deserialize<object>(yaml);
