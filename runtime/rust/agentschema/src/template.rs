@@ -4,29 +4,13 @@ use crate::format::Format;
 
 use crate::parser::Parser;
 
-/// Template model for defining prompt templates.
-///
-/// This model specifies the rendering engine used for slot filling prompts,
-/// the parser used to process the rendered template into API-compatible format,
-/// and additional options for the template engine.
-///
-/// It allows for the creation of reusable templates that can be filled with dynamic data
-/// and processed to generate prompts for AI models.
-#[derive(Debug, Clone)]
+/// Template model for defining prompt templates.  This model specifies the rendering engine used for slot filling prompts, the parser used to process the rendered template into API-compatible format, and additional options for the template engine.  It allows for the creation of reusable templates that can be filled with dynamic data and processed to generate prompts for AI models.
+#[derive(Debug, Clone, Default)]
 pub struct Template {
     /// Template rendering engine used for slot filling prompts (e.g., mustache, jinja2)
     pub format: Format,
     /// Parser used to process the rendered template into API-compatible format
     pub parser: Parser,
-}
-
-impl Default for Template {
-    fn default() -> Self {
-        Template {
-            format: Default::default(),
-            parser: Default::default(),
-        }
-    }
 }
 
 impl Template {
@@ -49,19 +33,18 @@ impl Template {
 
     /// Load Template from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        if let Some(val) = value.get("format") {
-            if val.is_object() || val.is_array() {
-                result.format = Format::load_from_value(val);
-            }
+        Self {
+            format: value
+                .get("format")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(Format::load_from_value)
+                .unwrap_or_default(),
+            parser: value
+                .get("parser")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(Parser::load_from_value)
+                .unwrap_or_default(),
         }
-        if let Some(val) = value.get("parser") {
-            if val.is_object() || val.is_array() {
-                result.parser = Parser::load_from_value(val);
-            }
-        }
-        result
     }
 
     /// Serialize Template to a `serde_json::Value`.

@@ -2,9 +2,8 @@
 
 use crate::property::Property;
 
-/// Definition for the property schema of a model.
-/// This includes the properties and example records.
-#[derive(Debug, Clone)]
+/// Definition for the property schema of a model. This includes the properties and example records.
+#[derive(Debug, Clone, Default)]
 pub struct PropertySchema {
     /// Example records for the input schema
     pub examples: serde_json::Value,
@@ -12,16 +11,6 @@ pub struct PropertySchema {
     pub strict: Option<bool>,
     /// The input properties for the schema
     pub properties: serde_json::Value,
-}
-
-impl Default for PropertySchema {
-    fn default() -> Self {
-        PropertySchema {
-            examples: serde_json::Value::Null,
-            strict: None,
-            properties: serde_json::Value::Null,
-        }
-    }
 }
 
 impl PropertySchema {
@@ -44,16 +33,17 @@ impl PropertySchema {
 
     /// Load PropertySchema from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        if let Some(val) = value.get("examples") {
-            result.examples = val.clone();
+        Self {
+            examples: value
+                .get("examples")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            strict: value.get("strict").and_then(|v| v.as_bool()),
+            properties: value
+                .get("properties")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        result.strict = value.get("strict").and_then(|v| v.as_bool());
-        if let Some(val) = value.get("properties") {
-            result.properties = val.clone();
-        }
-        result
     }
 
     /// Serialize PropertySchema to a `serde_json::Value`.

@@ -4,19 +4,8 @@ use crate::property_schema::PropertySchema;
 
 use crate::resource::Resource;
 
-/// The following represents a manifest that can be used to create agents dynamically.
-/// It includes parameters that can be used to configure the agent's behavior.
-/// These parameters include values that can be used as publisher parameters that can
-/// be used to describe additional variables that have been tested and are known to work.
-///
-/// Variables described here are then used to project into a prompt agent that can be executed.
-/// Once parameters are provided, these can be referenced in the manifest using the following notation:
-///
-/// `{{myParameter}}`
-///
-/// This allows for dynamic configuration of the agent based on the provided parameters.
-/// (This notation is used elsewhere, but only the `param` scope is supported here)
-#[derive(Debug, Clone)]
+/// The following represents a manifest that can be used to create agents dynamically. It includes parameters that can be used to configure the agent's behavior. These parameters include values that can be used as publisher parameters that can be used to describe additional variables that have been tested and are known to work.  Variables described here are then used to project into a prompt agent that can be executed. Once parameters are provided, these can be referenced in the manifest using the following notation:  `{{myParameter}}`  This allows for dynamic configuration of the agent based on the provided parameters. (This notation is used elsewhere, but only the `param` scope is supported here)
+#[derive(Debug, Clone, Default)]
 pub struct AgentManifest {
     /// Name of the manifest
     pub name: String,
@@ -32,20 +21,6 @@ pub struct AgentManifest {
     pub parameters: PropertySchema,
     /// Resources required by the agent, such as models or tools
     pub resources: serde_json::Value,
-}
-
-impl Default for AgentManifest {
-    fn default() -> Self {
-        AgentManifest {
-            name: String::from(""),
-            display_name: String::from(""),
-            description: None,
-            metadata: serde_json::Value::Null,
-            template: serde_json::Value::Null,
-            parameters: Default::default(),
-            resources: serde_json::Value::Null,
-        }
-    }
 }
 
 impl AgentManifest {
@@ -68,37 +43,39 @@ impl AgentManifest {
 
     /// Load AgentManifest from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.name = value
-            .get("name")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.display_name = value
-            .get("displayName")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.description = value
-            .get("description")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("metadata") {
-            result.metadata = val.clone();
+        Self {
+            name: value
+                .get("name")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            display_name: value
+                .get("displayName")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            description: value
+                .get("description")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            metadata: value
+                .get("metadata")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            template: value
+                .get("template")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            parameters: value
+                .get("parameters")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(PropertySchema::load_from_value)
+                .unwrap_or_default(),
+            resources: value
+                .get("resources")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        if let Some(val) = value.get("template") {
-            result.template = val.clone();
-        }
-        if let Some(val) = value.get("parameters") {
-            if val.is_object() || val.is_array() {
-                result.parameters = PropertySchema::load_from_value(val);
-            }
-        }
-        if let Some(val) = value.get("resources") {
-            result.resources = val.clone();
-        }
-        result
     }
 
     /// Serialize AgentManifest to a `serde_json::Value`.

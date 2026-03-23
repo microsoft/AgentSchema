@@ -5,7 +5,7 @@ use crate::binding::Binding;
 use crate::property_schema::PropertySchema;
 
 /// Represents a tool that can be used in prompts.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Tool {
     /// Name of the tool. If a function tool, this is the function name, otherwise it is the type
     pub name: String,
@@ -15,17 +15,6 @@ pub struct Tool {
     pub description: Option<String>,
     /// Tool argument bindings to input properties
     pub bindings: serde_json::Value,
-}
-
-impl Default for Tool {
-    fn default() -> Self {
-        Tool {
-            name: String::from(""),
-            kind: String::from(""),
-            description: None,
-            bindings: serde_json::Value::Null,
-        }
-    }
 }
 
 impl Tool {
@@ -48,26 +37,26 @@ impl Tool {
 
     /// Load Tool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.name = value
-            .get("name")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.description = value
-            .get("description")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("bindings") {
-            result.bindings = val.clone();
+        Self {
+            name: value
+                .get("name")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            description: value
+                .get("description")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            bindings: value
+                .get("bindings")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        result
     }
 
     /// Serialize Tool to a `serde_json::Value`.
@@ -138,7 +127,7 @@ impl Tool {
 }
 
 /// Represents a local function tool.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct FunctionTool {
     /// The kind identifier for function tools
     pub kind: String,
@@ -146,16 +135,6 @@ pub struct FunctionTool {
     pub parameters: PropertySchema,
     /// Indicates whether the function tool enforces strict validation on its parameters
     pub strict: Option<bool>,
-}
-
-impl Default for FunctionTool {
-    fn default() -> Self {
-        FunctionTool {
-            kind: String::from("function"),
-            parameters: Default::default(),
-            strict: None,
-        }
-    }
 }
 
 impl FunctionTool {
@@ -178,20 +157,19 @@ impl FunctionTool {
 
     /// Load FunctionTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("parameters") {
-            if val.is_object() || val.is_array() {
-                result.parameters = PropertySchema::load_from_value(val);
-            }
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            parameters: value
+                .get("parameters")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(PropertySchema::load_from_value)
+                .unwrap_or_default(),
+            strict: value.get("strict").and_then(|v| v.as_bool()),
         }
-        result.strict = value.get("strict").and_then(|v| v.as_bool());
-        result
     }
 
     /// Serialize FunctionTool to a `serde_json::Value`.
@@ -226,12 +204,8 @@ impl FunctionTool {
     }
 }
 
-/// Represents a generic server tool that runs on a server
-/// This tool kind is designed for operations that require server-side execution
-/// It may include features such as authentication, data storage, and long-running processes
-/// This tool kind is ideal for tasks that involve complex computations or access to secure resources
-/// Server tools can be used to offload heavy processing from client applications
-#[derive(Debug, Clone)]
+/// Represents a generic server tool that runs on a server This tool kind is designed for operations that require server-side execution It may include features such as authentication, data storage, and long-running processes This tool kind is ideal for tasks that involve complex computations or access to secure resources Server tools can be used to offload heavy processing from client applications
+#[derive(Debug, Clone, Default)]
 pub struct CustomTool {
     /// The kind identifier for server tools. This is a wildcard and can represent any server tool type not explicitly defined.
     pub kind: String,
@@ -239,16 +213,6 @@ pub struct CustomTool {
     pub connection: serde_json::Value,
     /// Configuration options for the server tool
     pub options: serde_json::Value,
-}
-
-impl Default for CustomTool {
-    fn default() -> Self {
-        CustomTool {
-            kind: String::from("*"),
-            connection: serde_json::Value::Null,
-            options: serde_json::Value::Null,
-        }
-    }
 }
 
 impl CustomTool {
@@ -271,20 +235,21 @@ impl CustomTool {
 
     /// Load CustomTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            options: value
+                .get("options")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        if let Some(val) = value.get("options") {
-            result.options = val.clone();
-        }
-        result
     }
 
     /// Serialize CustomTool to a `serde_json::Value`.
@@ -322,7 +287,7 @@ impl CustomTool {
 }
 
 /// The Bing search tool.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct WebSearchTool {
     /// The kind identifier for Bing search tools
     pub kind: String,
@@ -330,16 +295,6 @@ pub struct WebSearchTool {
     pub connection: serde_json::Value,
     /// The configuration options for the Bing search tool
     pub options: serde_json::Value,
-}
-
-impl Default for WebSearchTool {
-    fn default() -> Self {
-        WebSearchTool {
-            kind: String::from("bing_search"),
-            connection: serde_json::Value::Null,
-            options: serde_json::Value::Null,
-        }
-    }
 }
 
 impl WebSearchTool {
@@ -362,20 +317,21 @@ impl WebSearchTool {
 
     /// Load WebSearchTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            options: value
+                .get("options")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        if let Some(val) = value.get("options") {
-            result.options = val.clone();
-        }
-        result
     }
 
     /// Serialize WebSearchTool to a `serde_json::Value`.
@@ -412,9 +368,8 @@ impl WebSearchTool {
     }
 }
 
-/// A tool for searching files.
-/// This tool allows an AI agent to search for files based on a query.
-#[derive(Debug, Clone)]
+/// A tool for searching files. This tool allows an AI agent to search for files based on a query.
+#[derive(Debug, Clone, Default)]
 pub struct FileSearchTool {
     /// The kind identifier for file search tools
     pub kind: String,
@@ -430,20 +385,6 @@ pub struct FileSearchTool {
     pub score_threshold: Option<f32>,
     /// Additional filters to apply during the file search.
     pub filters: serde_json::Value,
-}
-
-impl Default for FileSearchTool {
-    fn default() -> Self {
-        FileSearchTool {
-            kind: String::from("file_search"),
-            connection: serde_json::Value::Null,
-            vector_store_ids: Vec::new(),
-            maximum_result_count: None,
-            ranker: None,
-            score_threshold: None,
-            filters: serde_json::Value::Null,
-        }
-    }
 }
 
 impl FileSearchTool {
@@ -466,38 +407,42 @@ impl FileSearchTool {
 
     /// Load FileSearchTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            vector_store_ids: value
+                .get("vectorStoreIds")
+                .and_then(|v| v.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                        .collect()
+                })
+                .unwrap_or_default(),
+            maximum_result_count: value
+                .get("maximumResultCount")
+                .and_then(|v| v.as_i64())
+                .map(|n| n as i32),
+            ranker: value
+                .get("ranker")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            score_threshold: value
+                .get("scoreThreshold")
+                .and_then(|v| v.as_f64())
+                .map(|n| n as f32),
+            filters: value
+                .get("filters")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        if let Some(arr) = value.get("vectorStoreIds").and_then(|v| v.as_array()) {
-            result.vector_store_ids = arr
-                .iter()
-                .filter_map(|v| v.as_str().map(|s| s.to_string()))
-                .collect();
-        }
-        result.maximum_result_count = value
-            .get("maximumResultCount")
-            .and_then(|v| v.as_i64())
-            .map(|n| n as i32);
-        result.ranker = value
-            .get("ranker")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        result.score_threshold = value
-            .get("scoreThreshold")
-            .and_then(|v| v.as_f64())
-            .map(|n| n as f32);
-        if let Some(val) = value.get("filters") {
-            result.filters = val.clone();
-        }
-        result
     }
 
     /// Serialize FileSearchTool to a `serde_json::Value`.
@@ -556,7 +501,7 @@ impl FileSearchTool {
 }
 
 /// The MCP Server tool.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct McpTool {
     /// The kind identifier for MCP tools
     pub kind: String,
@@ -570,19 +515,6 @@ pub struct McpTool {
     pub approval_mode: serde_json::Value,
     /// List of allowed operations or resources for the MCP tool
     pub allowed_tools: Option<Vec<String>>,
-}
-
-impl Default for McpTool {
-    fn default() -> Self {
-        McpTool {
-            kind: String::from("mcp"),
-            connection: serde_json::Value::Null,
-            server_name: String::from(""),
-            server_description: None,
-            approval_mode: serde_json::Value::Null,
-            allowed_tools: None,
-        }
-    }
 }
 
 impl McpTool {
@@ -605,36 +537,38 @@ impl McpTool {
 
     /// Load McpTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            server_name: value
+                .get("serverName")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            server_description: value
+                .get("serverDescription")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            approval_mode: value
+                .get("approvalMode")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            allowed_tools: value
+                .get("allowedTools")
+                .and_then(|v| v.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                        .collect()
+                }),
         }
-        result.server_name = value
-            .get("serverName")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.server_description = value
-            .get("serverDescription")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("approvalMode") {
-            result.approval_mode = val.clone();
-        }
-        if let Some(arr) = value.get("allowedTools").and_then(|v| v.as_array()) {
-            result.allowed_tools = Some(
-                arr.iter()
-                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
-                    .collect(),
-            );
-        }
-        result
     }
 
     /// Serialize McpTool to a `serde_json::Value`.
@@ -685,7 +619,7 @@ impl McpTool {
 }
 
 /// OpenApiTool schema type
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct OpenApiTool {
     /// The kind identifier for OpenAPI tools
     pub kind: String,
@@ -693,16 +627,6 @@ pub struct OpenApiTool {
     pub connection: serde_json::Value,
     /// The full OpenAPI specification
     pub specification: String,
-}
-
-impl Default for OpenApiTool {
-    fn default() -> Self {
-        OpenApiTool {
-            kind: String::from("openapi"),
-            connection: serde_json::Value::Null,
-            specification: String::from(""),
-        }
-    }
 }
 
 impl OpenApiTool {
@@ -725,22 +649,22 @@ impl OpenApiTool {
 
     /// Load OpenApiTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            specification: value
+                .get("specification")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
         }
-        result.specification = value
-            .get("specification")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result
     }
 
     /// Serialize OpenApiTool to a `serde_json::Value`.
@@ -775,23 +699,13 @@ impl OpenApiTool {
     }
 }
 
-/// A tool for interpreting and executing code.
-/// This tool allows an AI agent to run code snippets and analyze data files.
-#[derive(Debug, Clone)]
+/// A tool for interpreting and executing code. This tool allows an AI agent to run code snippets and analyze data files.
+#[derive(Debug, Clone, Default)]
 pub struct CodeInterpreterTool {
     /// The kind identifier for code interpreter tools
     pub kind: String,
     /// The IDs of the files to be used by the code interpreter tool.
     pub file_ids: Vec<String>,
-}
-
-impl Default for CodeInterpreterTool {
-    fn default() -> Self {
-        CodeInterpreterTool {
-            kind: String::from("code_interpreter"),
-            file_ids: Vec::new(),
-        }
-    }
 }
 
 impl CodeInterpreterTool {
@@ -814,20 +728,22 @@ impl CodeInterpreterTool {
 
     /// Load CodeInterpreterTool from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(arr) = value.get("fileIds").and_then(|v| v.as_array()) {
-            result.file_ids = arr
-                .iter()
-                .filter_map(|v| v.as_str().map(|s| s.to_string()))
-                .collect();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            file_ids: value
+                .get("fileIds")
+                .and_then(|v| v.as_array())
+                .map(|arr| {
+                    arr.iter()
+                        .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                        .collect()
+                })
+                .unwrap_or_default(),
         }
-        result
     }
 
     /// Serialize CodeInterpreterTool to a `serde_json::Value`.

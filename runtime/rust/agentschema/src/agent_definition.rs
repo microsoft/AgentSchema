@@ -14,11 +14,8 @@ use crate::template::Template;
 
 use crate::tool::Tool;
 
-/// The following is a specification for defining AI agents with structured metadata, inputs, outputs, tools, and templates.
-/// It provides a way to create reusable and composable AI agents that can be executed with specific configurations.
-/// The specification includes metadata about the agent, model configuration, input parameters, expected outputs,
-/// available tools, and template configurations for prompt rendering.
-#[derive(Debug, Clone)]
+/// The following is a specification for defining AI agents with structured metadata, inputs, outputs, tools, and templates. It provides a way to create reusable and composable AI agents that can be executed with specific configurations. The specification includes metadata about the agent, model configuration, input parameters, expected outputs, available tools, and template configurations for prompt rendering.
+#[derive(Debug, Clone, Default)]
 pub struct AgentDefinition {
     /// Kind represented by the document
     pub kind: String,
@@ -34,20 +31,6 @@ pub struct AgentDefinition {
     pub input_schema: Option<PropertySchema>,
     /// Expected output format and structure from the agent
     pub output_schema: Option<PropertySchema>,
-}
-
-impl Default for AgentDefinition {
-    fn default() -> Self {
-        AgentDefinition {
-            kind: String::from(""),
-            name: String::from(""),
-            display_name: None,
-            description: None,
-            metadata: serde_json::Value::Null,
-            input_schema: None,
-            output_schema: None,
-        }
-    }
 }
 
 impl AgentDefinition {
@@ -70,40 +53,38 @@ impl AgentDefinition {
 
     /// Load AgentDefinition from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.name = value
-            .get("name")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.display_name = value
-            .get("displayName")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        result.description = value
-            .get("description")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("metadata") {
-            result.metadata = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            name: value
+                .get("name")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            display_name: value
+                .get("displayName")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            description: value
+                .get("description")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            metadata: value
+                .get("metadata")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            input_schema: value
+                .get("inputSchema")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(PropertySchema::load_from_value),
+            output_schema: value
+                .get("outputSchema")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(PropertySchema::load_from_value),
         }
-        if let Some(val) = value.get("inputSchema") {
-            if val.is_object() || val.is_array() {
-                result.input_schema = Some(PropertySchema::load_from_value(val));
-            }
-        }
-        if let Some(val) = value.get("outputSchema") {
-            if val.is_object() || val.is_array() {
-                result.output_schema = Some(PropertySchema::load_from_value(val));
-            }
-        }
-        result
     }
 
     /// Serialize AgentDefinition to a `serde_json::Value`.
@@ -167,10 +148,8 @@ impl AgentDefinition {
     }
 }
 
-/// Prompt based agent definition. Used to create agents that can be executed directly.
-/// These agents can leverage tools, input parameters, and templates to generate responses.
-/// They are designed to be straightforward and easy to use for various applications.
-#[derive(Debug, Clone)]
+/// Prompt based agent definition. Used to create agents that can be executed directly. These agents can leverage tools, input parameters, and templates to generate responses. They are designed to be straightforward and easy to use for various applications.
+#[derive(Debug, Clone, Default)]
 pub struct PromptAgent {
     /// Type of agent, e.g., 'prompt'
     pub kind: String,
@@ -184,19 +163,6 @@ pub struct PromptAgent {
     pub instructions: Option<String>,
     /// Additional instructions or context for the agent, can be used to provide extra guidance (can use this for a pure yaml declaration)
     pub additional_instructions: Option<String>,
-}
-
-impl Default for PromptAgent {
-    fn default() -> Self {
-        PromptAgent {
-            kind: String::from("prompt"),
-            model: Default::default(),
-            tools: serde_json::Value::Null,
-            template: None,
-            instructions: None,
-            additional_instructions: None,
-        }
-    }
 }
 
 impl PromptAgent {
@@ -219,35 +185,34 @@ impl PromptAgent {
 
     /// Load PromptAgent from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("model") {
-            if val.is_object() || val.is_array() {
-                result.model = Model::load_from_value(val);
-            }
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            model: value
+                .get("model")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(Model::load_from_value)
+                .unwrap_or_default(),
+            tools: value
+                .get("tools")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            template: value
+                .get("template")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(Template::load_from_value),
+            instructions: value
+                .get("instructions")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            additional_instructions: value
+                .get("additionalInstructions")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
         }
-        if let Some(val) = value.get("tools") {
-            result.tools = val.clone();
-        }
-        if let Some(val) = value.get("template") {
-            if val.is_object() || val.is_array() {
-                result.template = Some(Template::load_from_value(val));
-            }
-        }
-        result.instructions = value
-            .get("instructions")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        result.additional_instructions = value
-            .get("additionalInstructions")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        result
     }
 
     /// Serialize PromptAgent to a `serde_json::Value`.
@@ -327,32 +292,13 @@ impl PromptAgent {
     }
 }
 
-/// A workflow agent that can orchestrate multiple steps and actions.
-/// This agent type is designed to handle complex workflows that may involve
-/// multiple tools, models, and decision points.
-///
-/// The workflow agent can be configured with a series of steps that define
-/// the flow of execution, including conditional logic and parallel processing.
-/// This allows for the creation of sophisticated AI-driven processes that can
-/// adapt to various scenarios and requirements.
-///
-/// Note: The detailed structure of the workflow steps and actions is not defined here
-/// and would need to be implemented based on specific use cases and requirements.
-#[derive(Debug, Clone)]
+/// A workflow agent that can orchestrate multiple steps and actions. This agent type is designed to handle complex workflows that may involve multiple tools, models, and decision points.  The workflow agent can be configured with a series of steps that define the flow of execution, including conditional logic and parallel processing. This allows for the creation of sophisticated AI-driven processes that can adapt to various scenarios and requirements.  Note: The detailed structure of the workflow steps and actions is not defined here and would need to be implemented based on specific use cases and requirements.
+#[derive(Debug, Clone, Default)]
 pub struct Workflow {
     /// Type of agent, e.g., 'workflow'
     pub kind: String,
     /// The steps that make up the workflow
     pub trigger: serde_json::Value,
-}
-
-impl Default for Workflow {
-    fn default() -> Self {
-        Workflow {
-            kind: String::from("workflow"),
-            trigger: serde_json::Value::Null,
-        }
-    }
 }
 
 impl Workflow {
@@ -375,17 +321,17 @@ impl Workflow {
 
     /// Load Workflow from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("trigger") {
-            result.trigger = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            trigger: value
+                .get("trigger")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        result
     }
 
     /// Serialize Workflow to a `serde_json::Value`.
@@ -419,10 +365,8 @@ impl Workflow {
     }
 }
 
-/// This represents a container based agent hosted by the provider/publisher.
-/// The intent is to represent a container application that the user wants to run
-/// in a hosted environment that the provider manages.
-#[derive(Debug, Clone)]
+/// This represents a container based agent hosted by the provider/publisher. The intent is to represent a container application that the user wants to run in a hosted environment that the provider manages.
+#[derive(Debug, Clone, Default)]
 pub struct ContainerAgent {
     /// Type of agent, e.g., 'hosted'
     pub kind: String,
@@ -436,19 +380,6 @@ pub struct ContainerAgent {
     pub resources: ContainerResources,
     /// Environment variables to set in the container
     pub environment_variables: serde_json::Value,
-}
-
-impl Default for ContainerAgent {
-    fn default() -> Self {
-        ContainerAgent {
-            kind: String::from("hosted"),
-            protocols: serde_json::Value::Null,
-            image: String::from(""),
-            dockerfile_path: None,
-            resources: Default::default(),
-            environment_variables: serde_json::Value::Null,
-        }
-    }
 }
 
 impl ContainerAgent {
@@ -471,34 +402,35 @@ impl ContainerAgent {
 
     /// Load ContainerAgent from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
-        // Load fields from JSON object
-        result.kind = value
-            .get("kind")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if let Some(val) = value.get("protocols") {
-            result.protocols = val.clone();
+        Self {
+            kind: value
+                .get("kind")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            protocols: value
+                .get("protocols")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            image: value
+                .get("image")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            dockerfile_path: value
+                .get("dockerfilePath")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            resources: value
+                .get("resources")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(ContainerResources::load_from_value)
+                .unwrap_or_default(),
+            environment_variables: value
+                .get("environmentVariables")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
-        result.image = value
-            .get("image")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.dockerfile_path = value
-            .get("dockerfilePath")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("resources") {
-            if val.is_object() || val.is_array() {
-                result.resources = ContainerResources::load_from_value(val);
-            }
-        }
-        if let Some(val) = value.get("environmentVariables") {
-            result.environment_variables = val.clone();
-        }
-        result
     }
 
     /// Serialize ContainerAgent to a `serde_json::Value`.

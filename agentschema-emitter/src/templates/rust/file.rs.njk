@@ -19,28 +19,18 @@ use crate::{{ import | snakeCase }}::{{ import }};
 
 {% for class in classes %}
 {%- if class.node.description %}
-/// {{ class.node.description | replace("\n", "\n/// ") }}
+/// {{ class.node.description | replace("\r\n", " ") | replace("\n", " ") | trim }}
 {%- else %}
 /// {{ class.node.typeName.name }} schema type
 {%- endif %}
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct {{ class.node.typeName.name }} {
 {%- for prop in class.node.properties %}
 {%- if prop.description %}
-    /// {{ prop.description | replace("\n", "\n    /// ") }}
+    /// {{ prop.description | replace("\r\n", " ") | replace("\n", " ") | trim }}
 {%- endif %}
     pub {{ prop.name | snakeCase }}: {{ rust.rustType(prop, typeMapper, polymorphicTypeNames) | trim }},
 {%- endfor %}
-}
-
-impl Default for {{ class.node.typeName.name }} {
-    fn default() -> Self {
-        {{ class.node.typeName.name }} {
-{%- for prop in class.node.properties %}
-            {{ prop.name | snakeCase }}: {{ rust.defaultValue(prop, typeMapper, polymorphicTypeNames) | trim }},
-{%- endfor %}
-        }
-    }
 }
 
 impl {{ class.node.typeName.name }} {
@@ -63,7 +53,6 @@ impl {{ class.node.typeName.name }} {
 
     /// Load {{ class.node.typeName.name }} from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
         {%- if class.alternates.length > 0 %}
         {%- for alt in class.alternates %}
         {%- if alt.scalar == "String" %}
@@ -90,11 +79,11 @@ impl {{ class.node.typeName.name }} {
         {%- endif %}
         {%- endfor %}
         {%- endif %}
-        // Load fields from JSON object
+        Self {
 {%- for prop in class.node.properties %}
-        {{ rust.loadProperty(prop, "value", typeMapper, polymorphicTypeNames) | trim }}
+            {{ prop.name | snakeCase }}: {{ rust.fieldInitializer(prop, "value", typeMapper, polymorphicTypeNames) | trim }},
 {%- endfor %}
-        result
+        }
     }
 
     /// Serialize {{ class.node.typeName.name }} to a `serde_json::Value`.

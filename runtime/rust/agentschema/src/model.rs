@@ -2,10 +2,8 @@
 
 use crate::model_options::ModelOptions;
 
-/// Model for defining the structure and behavior of AI agents.
-/// This model includes properties for specifying the model's provider, connection details, and various options.
-/// It allows for flexible configuration of AI models to suit different use cases and requirements.
-#[derive(Debug, Clone)]
+/// Model for defining the structure and behavior of AI agents. This model includes properties for specifying the model's provider, connection details, and various options. It allows for flexible configuration of AI models to suit different use cases and requirements.
+#[derive(Debug, Clone, Default)]
 pub struct Model {
     /// The unique identifier of the model - can be used as the single property shorthand
     pub id: String,
@@ -17,18 +15,6 @@ pub struct Model {
     pub connection: serde_json::Value,
     /// Additional options for the model
     pub options: Option<ModelOptions>,
-}
-
-impl Default for Model {
-    fn default() -> Self {
-        Model {
-            id: String::from(""),
-            provider: None,
-            api_type: None,
-            connection: serde_json::Value::Null,
-            options: None,
-        }
-    }
 }
 
 impl Model {
@@ -51,35 +37,34 @@ impl Model {
 
     /// Load Model from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
-        let mut result = Self::default();
         if let Some(s) = value.as_str() {
             let value = s.to_string();
             let expansion = serde_json::json!({"id":value});
             return Self::load_from_value(&expansion);
         }
-        // Load fields from JSON object
-        result.id = value
-            .get("id")
-            .and_then(|v| v.as_str())
-            .unwrap_or_default()
-            .to_string();
-        result.provider = value
-            .get("provider")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        result.api_type = value
-            .get("apiType")
-            .and_then(|v| v.as_str())
-            .map(|s| s.to_string());
-        if let Some(val) = value.get("connection") {
-            result.connection = val.clone();
+        Self {
+            id: value
+                .get("id")
+                .and_then(|v| v.as_str())
+                .unwrap_or_default()
+                .to_string(),
+            provider: value
+                .get("provider")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            api_type: value
+                .get("apiType")
+                .and_then(|v| v.as_str())
+                .map(|s| s.to_string()),
+            connection: value
+                .get("connection")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
+            options: value
+                .get("options")
+                .filter(|v| v.is_object() || v.is_array())
+                .map(ModelOptions::load_from_value),
         }
-        if let Some(val) = value.get("options") {
-            if val.is_object() || val.is_array() {
-                result.options = Some(ModelOptions::load_from_value(val));
-            }
-        }
-        result
     }
 
     /// Serialize Model to a `serde_json::Value`.
