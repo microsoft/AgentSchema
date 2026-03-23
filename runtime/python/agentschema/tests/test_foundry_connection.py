@@ -5,7 +5,7 @@ from agentschema import FoundryConnection
 
 
 def test_load_json_foundryconnection():
-    json_data = """
+    json_data = r"""
     {
       "kind": "foundry",
       "endpoint": "https://myresource.services.ai.azure.com/api/projects/myproject",
@@ -26,7 +26,7 @@ def test_load_json_foundryconnection():
 
 
 def test_load_yaml_foundryconnection():
-    yaml_data = """
+    yaml_data = r"""
     kind: foundry
     endpoint: "https://myresource.services.ai.azure.com/api/projects/myproject"
     name: my-openai-connection
@@ -47,7 +47,7 @@ def test_load_yaml_foundryconnection():
 
 def test_roundtrip_json_foundryconnection():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "foundry",
       "endpoint": "https://myresource.services.ai.azure.com/api/projects/myproject",
@@ -71,7 +71,7 @@ def test_roundtrip_json_foundryconnection():
 
 def test_to_json_foundryconnection():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "foundry",
       "endpoint": "https://myresource.services.ai.azure.com/api/projects/myproject",
@@ -89,7 +89,7 @@ def test_to_json_foundryconnection():
 
 def test_to_yaml_foundryconnection():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "foundry",
       "endpoint": "https://myresource.services.ai.azure.com/api/projects/myproject",

@@ -5,7 +5,7 @@ from agentschema import ContainerResources
 
 
 def test_load_json_containerresources():
-    json_data = """
+    json_data = r"""
     {
       "cpu": "1",
       "memory": "2Gi"
@@ -19,7 +19,7 @@ def test_load_json_containerresources():
 
 
 def test_load_yaml_containerresources():
-    yaml_data = """
+    yaml_data = r"""
     cpu: "1"
     memory: 2Gi
     
@@ -33,7 +33,7 @@ def test_load_yaml_containerresources():
 
 def test_roundtrip_json_containerresources():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = r"""
     {
       "cpu": "1",
       "memory": "2Gi"
@@ -50,7 +50,7 @@ def test_roundtrip_json_containerresources():
 
 def test_to_json_containerresources():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = r"""
     {
       "cpu": "1",
       "memory": "2Gi"
@@ -66,7 +66,7 @@ def test_to_json_containerresources():
 
 def test_to_yaml_containerresources():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = r"""
     {
       "cpu": "1",
       "memory": "2Gi"

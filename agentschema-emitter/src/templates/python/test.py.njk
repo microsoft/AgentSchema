@@ -18,7 +18,7 @@ from {{ node.typeName.namespace | lower }} import {{node.typeName.name}}
 
 {% for sample in examples %}
 def test_load_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
-    json_data = '''
+    json_data = r'''
     {% for line in sample.json -%}
     {{ line }}
     {% endfor -%}
@@ -35,7 +35,7 @@ def test_load_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
     {% endfor %}
 
 def test_load_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
-    yaml_data = '''
+    yaml_data = r'''
     {% for line in sample.yaml -%}
     {{ line }}
     {% endfor -%}
@@ -53,7 +53,7 @@ def test_load_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.
 
 def test_roundtrip_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = '''
+    json_data = r'''
     {% for line in sample.json -%}
     {{ line }}
     {% endfor -%}
@@ -73,7 +73,7 @@ def test_roundtrip_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{
 
 def test_to_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
     """Test that to_json produces valid JSON."""
-    json_data = '''
+    json_data = r'''
     {% for line in sample.json -%}
     {{ line }}
     {% endfor -%}
@@ -87,7 +87,7 @@ def test_to_json_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.in
 
 def test_to_yaml_{{node.typeName.name | lower}}{% if not loop.first %}_{{loop.index - 1}}{% endif %}():
     """Test that to_yaml produces valid YAML."""
-    json_data = '''
+    json_data = r'''
     {% for line in sample.json -%}
     {{ line }}
     {% endfor -%}

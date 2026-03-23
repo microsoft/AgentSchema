@@ -42,6 +42,9 @@ pub use template::*;
 pub mod protocol_version_record;
 pub use protocol_version_record::*;
 
+pub mod container_resources;
+pub use container_resources::*;
+
 pub mod environment_variable;
 pub use environment_variable::*;
 

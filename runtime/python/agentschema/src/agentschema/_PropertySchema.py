@@ -11,12 +11,11 @@ from ._context import LoadContext, SaveContext
 from ._Property import Property
 
 
-
 @dataclass
 class PropertySchema:
     """Definition for the property schema of a model.
     This includes the properties and example records.
-    
+
     Attributes
     ----------
     examples : Optional[dict[str, Any]]
@@ -43,10 +42,10 @@ class PropertySchema:
             PropertySchema: The loaded PropertySchema instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for PropertySchema: {data}")
 
@@ -58,14 +57,17 @@ class PropertySchema:
         if data is not None and "strict" in data:
             instance.strict = data["strict"]
         if data is not None and "properties" in data:
-            instance.properties = PropertySchema.load_properties(data["properties"], context)
+            instance.properties = PropertySchema.load_properties(
+                data["properties"], context
+            )
         if context is not None:
             instance = context.process_output(instance)
         return instance
 
-
     @staticmethod
-    def load_properties(data: dict | list, context: Optional[LoadContext]) -> list[Property]:
+    def load_properties(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[Property]:
         if isinstance(data, dict):
             # convert simple named properties to list of Property
             result = []
@@ -80,13 +82,15 @@ class PropertySchema:
         return [Property.load(item, context) for item in data]
 
     @staticmethod
-    def save_properties(items: list[Property], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_properties(
+        items: list[Property], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-        
+
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-        
+
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -94,9 +98,13 @@ class PropertySchema:
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, '_shorthand_property'):
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
                     shorthand_prop = item._shorthand_property
-                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -106,7 +114,6 @@ class PropertySchema:
                     result["_unnamed"] = []
                 result["_unnamed"].append(item_data)
         return result
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the PropertySchema instance to a dictionary.
@@ -119,7 +126,6 @@ class PropertySchema:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -128,7 +134,9 @@ class PropertySchema:
         if obj.strict is not None:
             result["strict"] = obj.strict
         if obj.properties is not None:
-            result["properties"] = PropertySchema.save_properties(obj.properties, context)
+            result["properties"] = PropertySchema.save_properties(
+                obj.properties, context
+            )
 
         if context is not None:
             result = context.process_dict(result)
@@ -158,4 +166,3 @@ class PropertySchema:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-

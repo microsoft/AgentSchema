@@ -5,7 +5,7 @@ from agentschema import ContainerAgent
 
 
 def test_load_json_containeragent():
-    json_data = """
+    json_data = r"""
     {
       "kind": "hosted",
       "protocols": [
@@ -37,7 +37,7 @@ def test_load_json_containeragent():
 
 
 def test_load_yaml_containeragent():
-    yaml_data = """
+    yaml_data = r"""
     kind: hosted
     protocols:
       - protocol: responses
@@ -62,7 +62,7 @@ def test_load_yaml_containeragent():
 
 def test_roundtrip_json_containeragent():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "hosted",
       "protocols": [
@@ -97,7 +97,7 @@ def test_roundtrip_json_containeragent():
 
 def test_to_json_containeragent():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "hosted",
       "protocols": [
@@ -130,7 +130,7 @@ def test_to_json_containeragent():
 
 def test_to_yaml_containeragent():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "hosted",
       "protocols": [

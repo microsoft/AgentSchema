@@ -462,3 +462,252 @@ impl AnonymousConnection {
         serde_yaml::to_string(&self.to_value())
     }
 }
+
+/// Connection configuration for Microsoft Foundry projects.
+/// Provides project-scoped access to models, tools, and services
+/// via Entra ID (DefaultAzureCredential) authentication.
+#[derive(Debug, Clone)]
+pub struct FoundryConnection {
+    /// The connection kind for Foundry project access
+    pub kind: String,
+    /// The Foundry project endpoint URL
+    pub endpoint: String,
+    /// The named connection within the Foundry project
+    pub name: Option<String>,
+    /// The connection type within the Foundry project (e.g., 'model', 'index', 'storage')
+    pub connection_type: Option<String>,
+}
+
+impl Default for FoundryConnection {
+    fn default() -> Self {
+        FoundryConnection {
+            kind: String::from("foundry"),
+            endpoint: String::from(""),
+            name: None,
+            connection_type: None,
+        }
+    }
+}
+
+impl FoundryConnection {
+    /// Create a new FoundryConnection with default values.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Load FoundryConnection from a JSON string.
+    pub fn from_json(json: &str) -> Result<Self, serde_json::Error> {
+        let value: serde_json::Value = serde_json::from_str(json)?;
+        Ok(Self::load_from_value(&value))
+    }
+
+    /// Load FoundryConnection from a YAML string.
+    pub fn from_yaml(yaml: &str) -> Result<Self, serde_yaml::Error> {
+        let value: serde_json::Value = serde_yaml::from_str(yaml)?;
+        Ok(Self::load_from_value(&value))
+    }
+
+    /// Load FoundryConnection from a `serde_json::Value`.
+    pub fn load_from_value(value: &serde_json::Value) -> Self {
+        let mut result = Self::default();
+        // Load fields from JSON object
+        result.kind = value
+            .get("kind")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.endpoint = value
+            .get("endpoint")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.name = value
+            .get("name")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string());
+        result.connection_type = value
+            .get("connectionType")
+            .and_then(|v| v.as_str())
+            .map(|s| s.to_string());
+        result
+    }
+
+    /// Serialize FoundryConnection to a `serde_json::Value`.
+    pub fn to_value(&self) -> serde_json::Value {
+        let mut result = serde_json::Map::new();
+        if !self.kind.is_empty() {
+            result.insert(
+                "kind".to_string(),
+                serde_json::Value::String(self.kind.clone()),
+            );
+        }
+        if !self.endpoint.is_empty() {
+            result.insert(
+                "endpoint".to_string(),
+                serde_json::Value::String(self.endpoint.clone()),
+            );
+        }
+        if let Some(ref val) = self.name {
+            result.insert("name".to_string(), serde_json::Value::String(val.clone()));
+        }
+        if let Some(ref val) = self.connection_type {
+            result.insert(
+                "connectionType".to_string(),
+                serde_json::Value::String(val.clone()),
+            );
+        }
+        serde_json::Value::Object(result)
+    }
+
+    /// Serialize FoundryConnection to a JSON string.
+    pub fn to_json(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string_pretty(&self.to_value())
+    }
+
+    /// Serialize FoundryConnection to a YAML string.
+    pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
+        serde_yaml::to_string(&self.to_value())
+    }
+}
+
+/// Connection configuration using OAuth 2.0 client credentials.
+/// Useful for tools and services that require OAuth authentication,
+/// such as MCP servers, OpenAPI endpoints, or other REST APIs.
+#[derive(Debug, Clone)]
+pub struct OAuthConnection {
+    /// The connection kind for OAuth authentication
+    pub kind: String,
+    /// The endpoint URL for the service
+    pub endpoint: String,
+    /// The OAuth client ID
+    pub client_id: String,
+    /// The OAuth client secret
+    pub client_secret: String,
+    /// The OAuth token endpoint URL
+    pub token_url: String,
+    /// OAuth scopes to request
+    pub scopes: Option<Vec<String>>,
+}
+
+impl Default for OAuthConnection {
+    fn default() -> Self {
+        OAuthConnection {
+            kind: String::from("oauth"),
+            endpoint: String::from(""),
+            client_id: String::from(""),
+            client_secret: String::from(""),
+            token_url: String::from(""),
+            scopes: None,
+        }
+    }
+}
+
+impl OAuthConnection {
+    /// Create a new OAuthConnection with default values.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Load OAuthConnection from a JSON string.
+    pub fn from_json(json: &str) -> Result<Self, serde_json::Error> {
+        let value: serde_json::Value = serde_json::from_str(json)?;
+        Ok(Self::load_from_value(&value))
+    }
+
+    /// Load OAuthConnection from a YAML string.
+    pub fn from_yaml(yaml: &str) -> Result<Self, serde_yaml::Error> {
+        let value: serde_json::Value = serde_yaml::from_str(yaml)?;
+        Ok(Self::load_from_value(&value))
+    }
+
+    /// Load OAuthConnection from a `serde_json::Value`.
+    pub fn load_from_value(value: &serde_json::Value) -> Self {
+        let mut result = Self::default();
+        // Load fields from JSON object
+        result.kind = value
+            .get("kind")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.endpoint = value
+            .get("endpoint")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.client_id = value
+            .get("clientId")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.client_secret = value
+            .get("clientSecret")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        result.token_url = value
+            .get("tokenUrl")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+        if let Some(arr) = value.get("scopes").and_then(|v| v.as_array()) {
+            result.scopes = Some(
+                arr.iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect(),
+            );
+        }
+        result
+    }
+
+    /// Serialize OAuthConnection to a `serde_json::Value`.
+    pub fn to_value(&self) -> serde_json::Value {
+        let mut result = serde_json::Map::new();
+        if !self.kind.is_empty() {
+            result.insert(
+                "kind".to_string(),
+                serde_json::Value::String(self.kind.clone()),
+            );
+        }
+        if !self.endpoint.is_empty() {
+            result.insert(
+                "endpoint".to_string(),
+                serde_json::Value::String(self.endpoint.clone()),
+            );
+        }
+        if !self.client_id.is_empty() {
+            result.insert(
+                "clientId".to_string(),
+                serde_json::Value::String(self.client_id.clone()),
+            );
+        }
+        if !self.client_secret.is_empty() {
+            result.insert(
+                "clientSecret".to_string(),
+                serde_json::Value::String(self.client_secret.clone()),
+            );
+        }
+        if !self.token_url.is_empty() {
+            result.insert(
+                "tokenUrl".to_string(),
+                serde_json::Value::String(self.token_url.clone()),
+            );
+        }
+        if let Some(ref items) = self.scopes {
+            result.insert(
+                "scopes".to_string(),
+                serde_json::to_value(items).unwrap_or(serde_json::Value::Null),
+            );
+        }
+        serde_json::Value::Object(result)
+    }
+
+    /// Serialize OAuthConnection to a JSON string.
+    pub fn to_json(&self) -> Result<String, serde_json::Error> {
+        serde_json::to_string_pretty(&self.to_value())
+    }
+
+    /// Serialize OAuthConnection to a YAML string.
+    pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
+        serde_yaml::to_string(&self.to_value())
+    }
+}

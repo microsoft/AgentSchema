@@ -13,22 +13,21 @@ from ._PropertySchema import PropertySchema
 from ._Resource import Resource
 
 
-
 @dataclass
 class AgentManifest:
     """The following represents a manifest that can be used to create agents dynamically.
     It includes parameters that can be used to configure the agent's behavior.
     These parameters include values that can be used as publisher parameters that can
     be used to describe additional variables that have been tested and are known to work.
-    
+
     Variables described here are then used to project into a prompt agent that can be executed.
     Once parameters are provided, these can be referenced in the manifest using the following notation:
-    
+
     `{{myParameter}}`
-    
+
     This allows for dynamic configuration of the agent based on the provided parameters.
     (This notation is used elsewhere, but only the `param` scope is supported here)
-    
+
     Attributes
     ----------
     name : str
@@ -67,10 +66,10 @@ class AgentManifest:
             AgentManifest: The loaded AgentManifest instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AgentManifest: {data}")
 
@@ -90,14 +89,17 @@ class AgentManifest:
         if data is not None and "parameters" in data:
             instance.parameters = PropertySchema.load(data["parameters"], context)
         if data is not None and "resources" in data:
-            instance.resources = AgentManifest.load_resources(data["resources"], context)
+            instance.resources = AgentManifest.load_resources(
+                data["resources"], context
+            )
         if context is not None:
             instance = context.process_output(instance)
         return instance
 
-
     @staticmethod
-    def load_resources(data: dict | list, context: Optional[LoadContext]) -> list[Resource]:
+    def load_resources(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[Resource]:
         if isinstance(data, dict):
             # convert simple named resources to list of Resource
             result = []
@@ -112,13 +114,15 @@ class AgentManifest:
         return [Resource.load(item, context) for item in data]
 
     @staticmethod
-    def save_resources(items: list[Resource], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_resources(
+        items: list[Resource], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-        
+
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-        
+
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -126,9 +130,13 @@ class AgentManifest:
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, '_shorthand_property'):
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
                     shorthand_prop = item._shorthand_property
-                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -138,7 +146,6 @@ class AgentManifest:
                     result["_unnamed"] = []
                 result["_unnamed"].append(item_data)
         return result
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the AgentManifest instance to a dictionary.
@@ -151,7 +158,6 @@ class AgentManifest:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -198,4 +204,3 @@ class AgentManifest:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-

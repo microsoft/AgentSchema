@@ -5,7 +5,7 @@ from agentschema import OAuthConnection
 
 
 def test_load_json_oauthconnection():
-    json_data = """
+    json_data = r"""
     {
       "kind": "oauth",
       "endpoint": "https://api.example.com",
@@ -31,7 +31,7 @@ def test_load_json_oauthconnection():
 
 
 def test_load_yaml_oauthconnection():
-    yaml_data = """
+    yaml_data = r"""
     kind: oauth
     endpoint: "https://api.example.com"
     clientId: your-client-id
@@ -56,7 +56,7 @@ def test_load_yaml_oauthconnection():
 
 def test_roundtrip_json_oauthconnection():
     """Test that load -> save -> load produces equivalent data."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "oauth",
       "endpoint": "https://api.example.com",
@@ -85,7 +85,7 @@ def test_roundtrip_json_oauthconnection():
 
 def test_to_json_oauthconnection():
     """Test that to_json produces valid JSON."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "oauth",
       "endpoint": "https://api.example.com",
@@ -107,7 +107,7 @@ def test_to_json_oauthconnection():
 
 def test_to_yaml_oauthconnection():
     """Test that to_yaml produces valid YAML."""
-    json_data = """
+    json_data = r"""
     {
       "kind": "oauth",
       "endpoint": "https://api.example.com",

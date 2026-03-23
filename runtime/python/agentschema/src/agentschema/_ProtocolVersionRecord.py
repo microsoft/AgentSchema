@@ -10,11 +10,10 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
-
 @dataclass
 class ProtocolVersionRecord:
     """
-    
+
     Attributes
     ----------
     protocol : str
@@ -29,7 +28,9 @@ class ProtocolVersionRecord:
     version: str = field(default="")
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "ProtocolVersionRecord":
+    def load(
+        data: Any, context: Optional[LoadContext] = None
+    ) -> "ProtocolVersionRecord":
         """Load a ProtocolVersionRecord instance.
         Args:
             data (Any): The data to load the instance from.
@@ -38,10 +39,10 @@ class ProtocolVersionRecord:
             ProtocolVersionRecord: The loaded ProtocolVersionRecord instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ProtocolVersionRecord: {data}")
 
@@ -56,8 +57,6 @@ class ProtocolVersionRecord:
             instance = context.process_output(instance)
         return instance
 
-
-
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ProtocolVersionRecord instance to a dictionary.
         Args:
@@ -69,7 +68,6 @@ class ProtocolVersionRecord:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -106,4 +104,3 @@ class ProtocolVersionRecord:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-
