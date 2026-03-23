@@ -226,4 +226,5 @@ try {
 - [Python SDK](../python/) - Python version of the SDK
 - [C# SDK](../csharp/) - .NET version of the SDK
 - [Go SDK](../go/) - Go version of the SDK
+- [Rust SDK](../rust/) - Rust version of the SDK
 - [AgentDefinition Reference](../../reference/AgentDefinition/) - Full API reference

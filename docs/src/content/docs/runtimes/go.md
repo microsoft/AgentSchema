@@ -437,4 +437,5 @@ func main() {
 - [Python SDK](../python/) - Python version
 - [TypeScript SDK](../typescript/) - Node.js/browser version
 - [C# SDK](../csharp/) - .NET version
+- [Rust SDK](../rust/) - Rust version
 - [AgentDefinition Reference](../../reference/AgentDefinition/) - Full API reference
