@@ -10,10 +10,11 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
+
 @dataclass
 class Format:
     """Template format definition
-
+    
     Attributes
     ----------
     kind : str
@@ -40,14 +41,14 @@ class Format:
             Format: The loaded Format instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         # handle alternate representations
         if isinstance(data, str):
             data = {"kind": data}
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Format: {data}")
 
@@ -64,6 +65,8 @@ class Format:
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Format instance to a dictionary.
         Args:
@@ -75,6 +78,7 @@ class Format:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -113,3 +117,4 @@ class Format:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

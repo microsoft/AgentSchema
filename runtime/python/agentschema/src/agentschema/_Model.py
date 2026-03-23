@@ -12,12 +12,13 @@ from ._Connection import Connection
 from ._ModelOptions import ModelOptions
 
 
+
 @dataclass
 class Model:
     """Model for defining the structure and behavior of AI agents.
     This model includes properties for specifying the model's provider, connection details, and various options.
     It allows for flexible configuration of AI models to suit different use cases and requirements.
-
+    
     Attributes
     ----------
     id : str
@@ -50,14 +51,14 @@ class Model:
             Model: The loaded Model instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         # handle alternate representations
         if isinstance(data, str):
             data = {"id": data}
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Model: {data}")
 
@@ -78,6 +79,8 @@ class Model:
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Model instance to a dictionary.
         Args:
@@ -89,6 +92,7 @@ class Model:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -131,3 +135,4 @@ class Model:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

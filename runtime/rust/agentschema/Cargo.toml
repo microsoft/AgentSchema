@@ -1,0 +1,12 @@
+[package]
+name = "agentschema"
+version = "1.0.0-beta.1"
+edition = "2021"
+description = "AgentSchema Rust Runtime"
+license = "MIT"
+repository = "https://github.com/microsoft/AgentSchema"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
