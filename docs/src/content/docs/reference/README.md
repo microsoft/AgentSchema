@@ -234,6 +234,11 @@ classDiagram
         +string protocol
         +string version
     }
+    class ContainerResources {
+      
+        +string cpu
+        +string memory
+    }
     class EnvironmentVariable {
       
         +string name
@@ -243,6 +248,9 @@ classDiagram
       
         +string kind
         +ProtocolVersionRecord[] protocols
+        +string image
+        +string dockerfilePath
+        +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
     }
     class Resource {
@@ -316,6 +324,7 @@ classDiagram
     PromptAgent *-- Tool
     PromptAgent *-- Template
     ContainerAgent *-- ProtocolVersionRecord
+    ContainerAgent *-- ContainerResources
     ContainerAgent *-- EnvironmentVariable
     AgentManifest *-- AgentDefinition
     AgentManifest *-- PropertySchema

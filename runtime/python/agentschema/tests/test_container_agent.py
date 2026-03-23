@@ -14,6 +14,12 @@ def test_load_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -26,6 +32,8 @@ def test_load_json_containeragent():
     instance = ContainerAgent.load(data)
     assert instance is not None
     assert instance.kind == "hosted"
+    assert instance.image == "myregistry.azurecr.io/my-agent"
+    assert instance.dockerfilePath == "./Dockerfile"
 
 
 def test_load_yaml_containeragent():
@@ -34,6 +42,11 @@ def test_load_yaml_containeragent():
     protocols:
       - protocol: responses
         version: v0.1.1
+    image: myregistry.azurecr.io/my-agent
+    dockerfilePath: ./Dockerfile
+    resources:
+      cpu: "1"
+      memory: 2Gi
     environmentVariables:
       - name: MY_ENV_VAR
         value: my-value
@@ -43,6 +56,8 @@ def test_load_yaml_containeragent():
     instance = ContainerAgent.load(data)
     assert instance is not None
     assert instance.kind == "hosted"
+    assert instance.image == "myregistry.azurecr.io/my-agent"
+    assert instance.dockerfilePath == "./Dockerfile"
 
 
 def test_roundtrip_json_containeragent():
@@ -56,6 +71,12 @@ def test_roundtrip_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -70,6 +91,8 @@ def test_roundtrip_json_containeragent():
     reloaded = ContainerAgent.load(saved_data)
     assert reloaded is not None
     assert reloaded.kind == "hosted"
+    assert reloaded.image == "myregistry.azurecr.io/my-agent"
+    assert reloaded.dockerfilePath == "./Dockerfile"
 
 
 def test_to_json_containeragent():
@@ -83,6 +106,12 @@ def test_to_json_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",
@@ -110,6 +139,12 @@ def test_to_yaml_containeragent():
           "version": "v0.1.1"
         }
       ],
+      "image": "myregistry.azurecr.io/my-agent",
+      "dockerfilePath": "./Dockerfile",
+      "resources": {
+        "cpu": "1",
+        "memory": "2Gi"
+      },
       "environmentVariables": [
         {
           "name": "MY_ENV_VAR",

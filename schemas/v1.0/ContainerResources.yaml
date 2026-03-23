@@ -1,0 +1,16 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ContainerResources.yaml
+type: object
+properties:
+  cpu:
+    type: string
+    description: CPU allocation for the container (e.g., '0.5', '1', '2')
+  memory:
+    type: string
+    description: Memory allocation for the container (e.g., '0.5Gi', '2Gi')
+required:
+  - cpu
+  - memory
+description: |-
+  Resource allocation for a containerized agent.
+  Valid CPU and memory pairings depend on the target hosting provider.

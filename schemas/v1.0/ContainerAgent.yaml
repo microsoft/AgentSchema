@@ -11,6 +11,15 @@ properties:
     items:
       $ref: ProtocolVersionRecord.yaml
     description: Protocol used by the containerized agent
+  image:
+    type: string
+    description: Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+  dockerfilePath:
+    type: string
+    description: Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
+  resources:
+    $ref: ContainerResources.yaml
+    description: Resource allocation for the container
   environmentVariables:
     anyOf:
       - $ref: RecordEnvironmentVariable.yaml
@@ -32,6 +41,8 @@ properties:
 required:
   - kind
   - protocols
+  - image
+  - resources
 allOf:
   - $ref: AgentDefinition.yaml
 description: |-
