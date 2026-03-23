@@ -13,6 +13,7 @@ Push annotated tags to trigger publish workflows:
 | Python/PyPI    | `python-v{version}`       | `python-v1.0.0b7`          |
 | TypeScript/npm | `typescript-v{version}`   | `typescript-v1.0.0-beta.7` |
 | Go             | `go-v{version}`           | `go-v1.0.0-beta.7`         |
+| Rust/crates.io | `rust-v{version}`         | `rust-v1.0.0-beta.7`       |
 | Docs           | `docs-v{version}`         | `docs-v1.0.0`              |
 
 **Note**: Pushing multiple tags at once may not trigger workflows. Use `gh workflow run` instead:
@@ -32,6 +33,9 @@ gh workflow run "Publish TypeScript to npm" -f version="1.0.0-beta.7"
 
 # Go
 gh workflow run "Publish Go Module" -f version="1.0.0-beta.7"
+
+# Rust
+gh workflow run "Publish Rust to crates.io" -f version="1.0.0-beta.7"
 
 # Docs
 gh workflow run "Publish Docs to GitHub Pages"
