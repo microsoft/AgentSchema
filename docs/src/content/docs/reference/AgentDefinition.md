@@ -48,6 +48,9 @@ classDiagram
     class ContainerAgent {
         +string kind
         +ProtocolVersionRecord[] protocols
+        +string image
+        +string dockerfilePath
+        +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
     }
     AgentDefinition <|-- ContainerAgent

@@ -49,6 +49,22 @@ classDiagram
         +string endpoint
     }
     Connection <|-- AnonymousConnection
+    class FoundryConnection {
+        +string kind
+        +string endpoint
+        +string name
+        +string connectionType
+    }
+    Connection <|-- FoundryConnection
+    class OAuthConnection {
+        +string kind
+        +string endpoint
+        +string clientId
+        +string clientSecret
+        +string tokenUrl
+        +string[] scopes
+    }
+    Connection <|-- OAuthConnection
 ```
 
 ## Yaml Example
@@ -75,3 +91,5 @@ The following types extend `Connection`:
 - [RemoteConnection](../remoteconnection/)
 - [ApiKeyConnection](../apikeyconnection/)
 - [AnonymousConnection](../anonymousconnection/)
+- [FoundryConnection](../foundryconnection/)
+- [OAuthConnection](../oauthconnection/)

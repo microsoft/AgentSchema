@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
+from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
 from ._PropertySchema import PropertySchema
@@ -17,14 +18,13 @@ from ._Template import Template
 from ._Tool import Tool
 
 
-
 @dataclass
 class AgentDefinition(ABC):
     """The following is a specification for defining AI agents with structured metadata, inputs, outputs, tools, and templates.
     It provides a way to create reusable and composable AI agents that can be executed with specific configurations.
     The specification includes metadata about the agent, model configuration, input parameters, expected outputs,
     available tools, and template configurations for prompt rendering.
-    
+
     Attributes
     ----------
     kind : str
@@ -63,16 +63,15 @@ class AgentDefinition(ABC):
             AgentDefinition: The loaded AgentDefinition instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for AgentDefinition: {data}")
 
         # load polymorphic AgentDefinition instance
         instance = AgentDefinition.load_kind(data, context)
-
 
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
@@ -92,8 +91,6 @@ class AgentDefinition(ABC):
             instance = context.process_output(instance)
         return instance
 
-
-
     @staticmethod
     def load_kind(data: dict, context: Optional[LoadContext]) -> "AgentDefinition":
         # load polymorphic AgentDefinition instance
@@ -107,11 +104,12 @@ class AgentDefinition(ABC):
                 return ContainerAgent.load(data, context)
 
             else:
-                raise ValueError(f"Unknown AgentDefinition discriminator value: {discriminator_value}")
+                raise ValueError(
+                    f"Unknown AgentDefinition discriminator value: {discriminator_value}"
+                )
         else:
 
             raise ValueError("Missing AgentDefinition discriminator property: 'kind'")
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the AgentDefinition instance to a dictionary.
@@ -124,7 +122,6 @@ class AgentDefinition(ABC):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         result: dict[str, Any] = {}
 
@@ -178,7 +175,7 @@ class PromptAgent(AgentDefinition):
     """Prompt based agent definition. Used to create agents that can be executed directly.
     These agents can leverage tools, input parameters, and templates to generate responses.
     They are designed to be straightforward and easy to use for various applications.
-    
+
     Attributes
     ----------
     kind : str
@@ -214,10 +211,10 @@ class PromptAgent(AgentDefinition):
             PromptAgent: The loaded PromptAgent instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for PromptAgent: {data}")
 
@@ -240,7 +237,6 @@ class PromptAgent(AgentDefinition):
             instance = context.process_output(instance)
         return instance
 
-
     @staticmethod
     def load_tools(data: dict | list, context: Optional[LoadContext]) -> list[Tool]:
         if isinstance(data, dict):
@@ -257,13 +253,15 @@ class PromptAgent(AgentDefinition):
         return [Tool.load(item, context) for item in data]
 
     @staticmethod
-    def save_tools(items: list[Tool], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_tools(
+        items: list[Tool], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-        
+
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-        
+
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -271,9 +269,13 @@ class PromptAgent(AgentDefinition):
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, '_shorthand_property'):
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
                     shorthand_prop = item._shorthand_property
-                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -283,7 +285,6 @@ class PromptAgent(AgentDefinition):
                     result["_unnamed"] = []
                 result["_unnamed"].append(item_data)
         return result
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the PromptAgent instance to a dictionary.
@@ -296,11 +297,9 @@ class PromptAgent(AgentDefinition):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -348,15 +347,15 @@ class Workflow(AgentDefinition):
     """A workflow agent that can orchestrate multiple steps and actions.
     This agent type is designed to handle complex workflows that may involve
     multiple tools, models, and decision points.
-    
+
     The workflow agent can be configured with a series of steps that define
     the flow of execution, including conditional logic and parallel processing.
     This allows for the creation of sophisticated AI-driven processes that can
     adapt to various scenarios and requirements.
-    
+
     Note: The detailed structure of the workflow steps and actions is not defined here
     and would need to be implemented based on specific use cases and requirements.
-    
+
     Attributes
     ----------
     kind : str
@@ -380,10 +379,10 @@ class Workflow(AgentDefinition):
             Workflow: The loaded Workflow instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Workflow: {data}")
 
@@ -398,8 +397,6 @@ class Workflow(AgentDefinition):
             instance = context.process_output(instance)
         return instance
 
-
-
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Workflow instance to a dictionary.
         Args:
@@ -411,11 +408,9 @@ class Workflow(AgentDefinition):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
@@ -455,13 +450,19 @@ class ContainerAgent(AgentDefinition):
     """This represents a container based agent hosted by the provider/publisher.
     The intent is to represent a container application that the user wants to run
     in a hosted environment that the provider manages.
-    
+
     Attributes
     ----------
     kind : str
         Type of agent, e.g., 'hosted'
     protocols : list[ProtocolVersionRecord]
         Protocol used by the containerized agent
+    image : str
+        Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+    dockerfilePath : Optional[str]
+        Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
+    resources : ContainerResources
+        Resource allocation for the container
     environmentVariables : list[EnvironmentVariable]
         Environment variables to set in the container
     """
@@ -470,6 +471,9 @@ class ContainerAgent(AgentDefinition):
 
     kind: str = field(default="hosted")
     protocols: list[ProtocolVersionRecord] = field(default_factory=list)
+    image: str = field(default="")
+    dockerfilePath: Optional[str] = None
+    resources: ContainerResources = field(default_factory=ContainerResources)
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)
 
     @staticmethod
@@ -482,10 +486,10 @@ class ContainerAgent(AgentDefinition):
             ContainerAgent: The loaded ContainerAgent instance.
 
         """
-        
+
         if context is not None:
             data = context.process_input(data)
-        
+
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ContainerAgent: {data}")
 
@@ -495,16 +499,27 @@ class ContainerAgent(AgentDefinition):
         if data is not None and "kind" in data:
             instance.kind = data["kind"]
         if data is not None and "protocols" in data:
-            instance.protocols = ContainerAgent.load_protocols(data["protocols"], context)
+            instance.protocols = ContainerAgent.load_protocols(
+                data["protocols"], context
+            )
+        if data is not None and "image" in data:
+            instance.image = data["image"]
+        if data is not None and "dockerfilePath" in data:
+            instance.dockerfilePath = data["dockerfilePath"]
+        if data is not None and "resources" in data:
+            instance.resources = ContainerResources.load(data["resources"], context)
         if data is not None and "environmentVariables" in data:
-            instance.environmentVariables = ContainerAgent.load_environmentVariables(data["environmentVariables"], context)
+            instance.environmentVariables = ContainerAgent.load_environmentVariables(
+                data["environmentVariables"], context
+            )
         if context is not None:
             instance = context.process_output(instance)
         return instance
 
-
     @staticmethod
-    def load_protocols(data: dict | list, context: Optional[LoadContext]) -> list[ProtocolVersionRecord]:
+    def load_protocols(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[ProtocolVersionRecord]:
         if isinstance(data, dict):
             # convert simple named protocols to list of ProtocolVersionRecord
             result = []
@@ -519,13 +534,15 @@ class ContainerAgent(AgentDefinition):
         return [ProtocolVersionRecord.load(item, context) for item in data]
 
     @staticmethod
-    def save_protocols(items: list[ProtocolVersionRecord], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_protocols(
+        items: list[ProtocolVersionRecord], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-        
+
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-        
+
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -533,9 +550,13 @@ class ContainerAgent(AgentDefinition):
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, '_shorthand_property'):
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
                     shorthand_prop = item._shorthand_property
-                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -547,7 +568,9 @@ class ContainerAgent(AgentDefinition):
         return result
 
     @staticmethod
-    def load_environmentVariables(data: dict | list, context: Optional[LoadContext]) -> list[EnvironmentVariable]:
+    def load_environmentVariables(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[EnvironmentVariable]:
         if isinstance(data, dict):
             # convert simple named environmentVariables to list of EnvironmentVariable
             result = []
@@ -562,13 +585,15 @@ class ContainerAgent(AgentDefinition):
         return [EnvironmentVariable.load(item, context) for item in data]
 
     @staticmethod
-    def save_environmentVariables(items: list[EnvironmentVariable], context: Optional[SaveContext]) -> dict[str, Any] | list[dict[str, Any]]:
+    def save_environmentVariables(
+        items: list[EnvironmentVariable], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
         if context is None:
             context = SaveContext()
-        
+
         if context.collection_format == "array":
             return [item.save(context) for item in items]
-        
+
         # Object format: use name as key
         result: dict[str, Any] = {}
         for item in items:
@@ -576,9 +601,13 @@ class ContainerAgent(AgentDefinition):
             name = item_data.pop("name", None)
             if name:
                 # Check if we can use shorthand (only primary property set)
-                if context.use_shorthand and hasattr(item, '_shorthand_property'):
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
                     shorthand_prop = item._shorthand_property
-                    if shorthand_prop and len(item_data) == 1 and shorthand_prop in item_data:
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
                         result[name] = item_data[shorthand_prop]
                         continue
                 result[name] = item_data
@@ -588,7 +617,6 @@ class ContainerAgent(AgentDefinition):
                     result["_unnamed"] = []
                 result["_unnamed"].append(item_data)
         return result
-
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ContainerAgent instance to a dictionary.
@@ -601,18 +629,24 @@ class ContainerAgent(AgentDefinition):
         obj = self
         if context is not None:
             obj = context.process_object(obj)
-        
 
         # Start with parent class properties
         result = super().save(context)
-
 
         if obj.kind is not None:
             result["kind"] = obj.kind
         if obj.protocols is not None:
             result["protocols"] = ContainerAgent.save_protocols(obj.protocols, context)
+        if obj.image is not None:
+            result["image"] = obj.image
+        if obj.dockerfilePath is not None:
+            result["dockerfilePath"] = obj.dockerfilePath
+        if obj.resources is not None:
+            result["resources"] = obj.resources.save(context)
         if obj.environmentVariables is not None:
-            result["environmentVariables"] = ContainerAgent.save_environmentVariables(obj.environmentVariables, context)
+            result["environmentVariables"] = ContainerAgent.save_environmentVariables(
+                obj.environmentVariables, context
+            )
 
         return result
 
@@ -640,4 +674,3 @@ class ContainerAgent(AgentDefinition):
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
-

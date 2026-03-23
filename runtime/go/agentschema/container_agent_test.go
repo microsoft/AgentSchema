@@ -22,6 +22,12 @@ func TestContainerAgentLoadJSON(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -43,6 +49,12 @@ func TestContainerAgentLoadJSON(t *testing.T) {
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
+	if instance.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
+	}
+	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, instance.DockerfilePath)
+	}
 }
 
 // TestContainerAgentLoadYAML tests loading ContainerAgent from YAML
@@ -52,6 +64,11 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
+resources:
+  cpu: "1"
+  memory: 2Gi
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -70,6 +87,12 @@ environmentVariables:
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
+	if instance.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
+	}
+	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, instance.DockerfilePath)
+	}
 }
 
 // TestContainerAgentRoundtrip tests load -> save -> load produces equivalent data
@@ -83,6 +106,12 @@ func TestContainerAgentRoundtrip(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -111,6 +140,12 @@ func TestContainerAgentRoundtrip(t *testing.T) {
 	if reloaded.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, reloaded.Kind)
 	}
+	if reloaded.Image != "myregistry.azurecr.io/my-agent" {
+		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, reloaded.Image)
+	}
+	if reloaded.DockerfilePath == nil || *reloaded.DockerfilePath != "./Dockerfile" {
+		t.Errorf(`Expected DockerfilePath to be "./Dockerfile", got %v`, reloaded.DockerfilePath)
+	}
 }
 
 // TestContainerAgentToJSON tests that ToJSON produces valid JSON
@@ -124,6 +159,12 @@ func TestContainerAgentToJSON(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -164,6 +205,12 @@ func TestContainerAgentToYAML(t *testing.T) {
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",

@@ -11,6 +11,8 @@ export {
   RemoteConnection,
   ApiKeyConnection,
   AnonymousConnection,
+  FoundryConnection,
+  OAuthConnection,
 } from "./connection";
 
 export { ModelOptions } from "./model-options";
@@ -48,6 +50,8 @@ export { Parser } from "./parser";
 export { Template } from "./template";
 
 export { ProtocolVersionRecord } from "./protocol-version-record";
+
+export { ContainerResources } from "./container-resources";
 
 export { EnvironmentVariable } from "./environment-variable";
 

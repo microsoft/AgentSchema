@@ -38,6 +38,21 @@ public class ContainerAgent : AgentDefinition
     public IList<ProtocolVersionRecord> Protocols { get; set; } = [];
 
     /// <summary>
+    /// Container image path (e.g., '<acr-endpoint>/<container-image-name>')
+    /// </summary>
+    public string Image { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
+    /// </summary>
+    public string? DockerfilePath { get; set; }
+
+    /// <summary>
+    /// Resource allocation for the container
+    /// </summary>
+    public ContainerResources Resources { get; set; }
+
+    /// <summary>
     /// Environment variables to set in the container
     /// </summary>
     public IList<EnvironmentVariable>? EnvironmentVariables { get; set; }
@@ -71,6 +86,21 @@ public class ContainerAgent : AgentDefinition
         if (data.TryGetValue("protocols", out var protocolsValue) && protocolsValue is not null)
         {
             instance.Protocols = LoadProtocols(protocolsValue, context);
+        }
+
+        if (data.TryGetValue("image", out var imageValue) && imageValue is not null)
+        {
+            instance.Image = imageValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("dockerfilePath", out var dockerfilePathValue) && dockerfilePathValue is not null)
+        {
+            instance.DockerfilePath = dockerfilePathValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("resources", out var resourcesValue) && resourcesValue is not null)
+        {
+            instance.Resources = ContainerResources.Load(resourcesValue.GetDictionary(), context);
         }
 
         if (data.TryGetValue("environmentVariables", out var environmentVariablesValue) && environmentVariablesValue is not null)
@@ -207,6 +237,21 @@ public class ContainerAgent : AgentDefinition
         if (obj.Protocols is not null)
         {
             result["protocols"] = SaveProtocols(obj.Protocols, context);
+        }
+
+        if (obj.Image is not null)
+        {
+            result["image"] = obj.Image;
+        }
+
+        if (obj.DockerfilePath is not null)
+        {
+            result["dockerfilePath"] = obj.DockerfilePath;
+        }
+
+        if (obj.Resources is not null)
+        {
+            result["resources"] = obj.Resources?.Save(context);
         }
 
         if (obj.EnvironmentVariables is not null)

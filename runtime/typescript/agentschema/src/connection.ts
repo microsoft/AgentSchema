@@ -96,6 +96,10 @@ export abstract class Connection {
           return ApiKeyConnection.load(data, context);
         case "anonymous":
           return AnonymousConnection.load(data, context);
+        case "foundry":
+          return FoundryConnection.load(data, context);
+        case "oauth":
+          return OAuthConnection.load(data, context);
         default:
           throw new Error(`Unknown Connection discriminator value: ${discriminator}`);
       }
@@ -772,6 +776,380 @@ export class AnonymousConnection extends Connection {
     const data = parse(yaml);
 
     return AnonymousConnection.load(data as Record<string, unknown>, context);
+  }
+
+  //#endregion
+}
+
+/**
+ * Connection configuration for Microsoft Foundry projects.
+ * Provides project-scoped access to models, tools, and services
+ * via Entra ID (DefaultAzureCredential) authentication.
+ *
+ */
+export class FoundryConnection extends Connection {
+  /**
+   * The shorthand property name for this type, if any.
+   */
+  static readonly shorthandProperty: string | undefined = undefined;
+
+  /**
+   * The connection kind for Foundry project access
+   */
+  kind: string = "foundry";
+
+  /**
+   * The Foundry project endpoint URL
+   */
+  endpoint: string = "";
+
+  /**
+   * The named connection within the Foundry project
+   */
+  name?: string | undefined;
+
+  /**
+   * The connection type within the Foundry project (e.g., 'model', 'index', 'storage')
+   */
+  connectionType?: string | undefined;
+
+  /**
+   * Initializes a new instance of FoundryConnection.
+   */
+  constructor(init?: Partial<FoundryConnection>) {
+    super(init);
+
+    this.kind = init?.kind ?? "foundry";
+
+    this.endpoint = init?.endpoint ?? "";
+
+    if (init?.name !== undefined) {
+      this.name = init.name;
+    }
+
+    if (init?.connectionType !== undefined) {
+      this.connectionType = init.connectionType;
+    }
+  }
+
+  //#region Load Methods
+
+  /**
+   * Load a FoundryConnection instance from a dictionary.
+   * @param data - The dictionary containing the data.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded FoundryConnection instance.
+   */
+  static load(data: Record<string, unknown>, context?: LoadContext): FoundryConnection {
+    if (context) {
+      data = context.processInput(data);
+    }
+
+    // Create new instance
+    const instance = new FoundryConnection();
+
+    if (data["kind"] !== undefined && data["kind"] !== null) {
+      instance.kind = String(data["kind"]);
+    }
+
+    if (data["endpoint"] !== undefined && data["endpoint"] !== null) {
+      instance.endpoint = String(data["endpoint"]);
+    }
+
+    if (data["name"] !== undefined && data["name"] !== null) {
+      instance.name = String(data["name"]);
+    }
+
+    if (data["connectionType"] !== undefined && data["connectionType"] !== null) {
+      instance.connectionType = String(data["connectionType"]);
+    }
+
+    if (context) {
+      return context.processOutput(instance) as FoundryConnection;
+    }
+    return instance;
+  }
+
+  //#endregion
+
+  //#region Save Methods
+
+  /**
+   * Save the FoundryConnection instance to a dictionary.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The dictionary representation of this instance.
+   */
+  save(context?: SaveContext): Record<string, unknown> {
+    const obj = context ? (context.processObject(this) as FoundryConnection) : this;
+
+    // Start with parent class properties
+    const result = super.save(context);
+
+    if (obj.kind !== undefined && obj.kind !== null) {
+      result["kind"] = obj.kind;
+    }
+
+    if (obj.endpoint !== undefined && obj.endpoint !== null) {
+      result["endpoint"] = obj.endpoint;
+    }
+
+    if (obj.name !== undefined && obj.name !== null) {
+      result["name"] = obj.name;
+    }
+
+    if (obj.connectionType !== undefined && obj.connectionType !== null) {
+      result["connectionType"] = obj.connectionType;
+    }
+
+    return result;
+  }
+
+  /**
+   * Convert the FoundryConnection instance to a YAML string.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The YAML string representation of this instance.
+   */
+  toYaml(context?: SaveContext): string {
+    context = context ?? new SaveContext();
+    return context.toYaml(this.save(context));
+  }
+
+  /**
+   * Convert the FoundryConnection instance to a JSON string.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @param indent - Number of spaces for indentation. Defaults to 2.
+   * @returns The JSON string representation of this instance.
+   */
+  toJson(context?: SaveContext, indent: number = 2): string {
+    context = context ?? new SaveContext();
+    return context.toJson(this.save(context), indent);
+  }
+
+  /**
+   * Load a FoundryConnection instance from a JSON string.
+   * @param json - The JSON string to parse.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded FoundryConnection instance.
+   */
+  static fromJson(json: string, context?: LoadContext): FoundryConnection {
+    const data = JSON.parse(json);
+
+    return FoundryConnection.load(data as Record<string, unknown>, context);
+  }
+
+  /**
+   * Load a FoundryConnection instance from a YAML string.
+   * @param yaml - The YAML string to parse.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded FoundryConnection instance.
+   */
+  static fromYaml(yaml: string, context?: LoadContext): FoundryConnection {
+    const { parse } = require("yaml");
+    const data = parse(yaml);
+
+    return FoundryConnection.load(data as Record<string, unknown>, context);
+  }
+
+  //#endregion
+}
+
+/**
+ * Connection configuration using OAuth 2.0 client credentials.
+ * Useful for tools and services that require OAuth authentication,
+ * such as MCP servers, OpenAPI endpoints, or other REST APIs.
+ *
+ */
+export class OAuthConnection extends Connection {
+  /**
+   * The shorthand property name for this type, if any.
+   */
+  static readonly shorthandProperty: string | undefined = undefined;
+
+  /**
+   * The connection kind for OAuth authentication
+   */
+  kind: string = "oauth";
+
+  /**
+   * The endpoint URL for the service
+   */
+  endpoint: string = "";
+
+  /**
+   * The OAuth client ID
+   */
+  clientId: string = "";
+
+  /**
+   * The OAuth client secret
+   */
+  clientSecret: string = "";
+
+  /**
+   * The OAuth token endpoint URL
+   */
+  tokenUrl: string = "";
+
+  /**
+   * OAuth scopes to request
+   */
+  scopes?: string[] = [];
+
+  /**
+   * Initializes a new instance of OAuthConnection.
+   */
+  constructor(init?: Partial<OAuthConnection>) {
+    super(init);
+
+    this.kind = init?.kind ?? "oauth";
+
+    this.endpoint = init?.endpoint ?? "";
+
+    this.clientId = init?.clientId ?? "";
+
+    this.clientSecret = init?.clientSecret ?? "";
+
+    this.tokenUrl = init?.tokenUrl ?? "";
+
+    if (init?.scopes !== undefined) {
+      this.scopes = init.scopes;
+    }
+  }
+
+  //#region Load Methods
+
+  /**
+   * Load a OAuthConnection instance from a dictionary.
+   * @param data - The dictionary containing the data.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded OAuthConnection instance.
+   */
+  static load(data: Record<string, unknown>, context?: LoadContext): OAuthConnection {
+    if (context) {
+      data = context.processInput(data);
+    }
+
+    // Create new instance
+    const instance = new OAuthConnection();
+
+    if (data["kind"] !== undefined && data["kind"] !== null) {
+      instance.kind = String(data["kind"]);
+    }
+
+    if (data["endpoint"] !== undefined && data["endpoint"] !== null) {
+      instance.endpoint = String(data["endpoint"]);
+    }
+
+    if (data["clientId"] !== undefined && data["clientId"] !== null) {
+      instance.clientId = String(data["clientId"]);
+    }
+
+    if (data["clientSecret"] !== undefined && data["clientSecret"] !== null) {
+      instance.clientSecret = String(data["clientSecret"]);
+    }
+
+    if (data["tokenUrl"] !== undefined && data["tokenUrl"] !== null) {
+      instance.tokenUrl = String(data["tokenUrl"]);
+    }
+
+    if (data["scopes"] !== undefined && data["scopes"] !== null) {
+      instance.scopes = Array.isArray(data["scopes"])
+        ? (data["scopes"] as unknown[]).map((v) => String(v))
+        : [];
+    }
+
+    if (context) {
+      return context.processOutput(instance) as OAuthConnection;
+    }
+    return instance;
+  }
+
+  //#endregion
+
+  //#region Save Methods
+
+  /**
+   * Save the OAuthConnection instance to a dictionary.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The dictionary representation of this instance.
+   */
+  save(context?: SaveContext): Record<string, unknown> {
+    const obj = context ? (context.processObject(this) as OAuthConnection) : this;
+
+    // Start with parent class properties
+    const result = super.save(context);
+
+    if (obj.kind !== undefined && obj.kind !== null) {
+      result["kind"] = obj.kind;
+    }
+
+    if (obj.endpoint !== undefined && obj.endpoint !== null) {
+      result["endpoint"] = obj.endpoint;
+    }
+
+    if (obj.clientId !== undefined && obj.clientId !== null) {
+      result["clientId"] = obj.clientId;
+    }
+
+    if (obj.clientSecret !== undefined && obj.clientSecret !== null) {
+      result["clientSecret"] = obj.clientSecret;
+    }
+
+    if (obj.tokenUrl !== undefined && obj.tokenUrl !== null) {
+      result["tokenUrl"] = obj.tokenUrl;
+    }
+
+    if (obj.scopes !== undefined && obj.scopes !== null) {
+      result["scopes"] = obj.scopes;
+    }
+
+    return result;
+  }
+
+  /**
+   * Convert the OAuthConnection instance to a YAML string.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The YAML string representation of this instance.
+   */
+  toYaml(context?: SaveContext): string {
+    context = context ?? new SaveContext();
+    return context.toYaml(this.save(context));
+  }
+
+  /**
+   * Convert the OAuthConnection instance to a JSON string.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @param indent - Number of spaces for indentation. Defaults to 2.
+   * @returns The JSON string representation of this instance.
+   */
+  toJson(context?: SaveContext, indent: number = 2): string {
+    context = context ?? new SaveContext();
+    return context.toJson(this.save(context), indent);
+  }
+
+  /**
+   * Load a OAuthConnection instance from a JSON string.
+   * @param json - The JSON string to parse.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded OAuthConnection instance.
+   */
+  static fromJson(json: string, context?: LoadContext): OAuthConnection {
+    const data = JSON.parse(json);
+
+    return OAuthConnection.load(data as Record<string, unknown>, context);
+  }
+
+  /**
+   * Load a OAuthConnection instance from a YAML string.
+   * @param yaml - The YAML string to parse.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded OAuthConnection instance.
+   */
+  static fromYaml(yaml: string, context?: LoadContext): OAuthConnection {
+    const { parse } = require("yaml");
+    const data = parse(yaml);
+
+    return OAuthConnection.load(data as Record<string, unknown>, context);
   }
 
   //#endregion

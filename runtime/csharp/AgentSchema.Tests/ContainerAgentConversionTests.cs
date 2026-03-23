@@ -16,6 +16,11 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
+resources:
+  cpu: "1"
+  memory: 2Gi
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -26,6 +31,8 @@ environmentVariables:
 
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
+        Assert.Equal("./Dockerfile", instance.DockerfilePath);
     }
 
     [Fact]
@@ -40,6 +47,12 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -52,6 +65,8 @@ environmentVariables:
         var instance = ContainerAgent.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("hosted", instance.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", instance.Image);
+        Assert.Equal("./Dockerfile", instance.DockerfilePath);
     }
 
     [Fact]
@@ -67,6 +82,12 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -85,6 +106,8 @@ environmentVariables:
         var reloaded = ContainerAgent.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
+        Assert.Equal("./Dockerfile", reloaded.DockerfilePath);
     }
 
     [Fact]
@@ -96,6 +119,11 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
+resources:
+  cpu: "1"
+  memory: 2Gi
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
@@ -111,6 +139,8 @@ environmentVariables:
         var reloaded = ContainerAgent.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("hosted", reloaded.Kind);
+        Assert.Equal("myregistry.azurecr.io/my-agent", reloaded.Image);
+        Assert.Equal("./Dockerfile", reloaded.DockerfilePath);
     }
 
     [Fact]
@@ -125,6 +155,12 @@ environmentVariables:
       "version": "v0.1.1"
     }
   ],
+  "image": "myregistry.azurecr.io/my-agent",
+  "dockerfilePath": "./Dockerfile",
+  "resources": {
+    "cpu": "1",
+    "memory": "2Gi"
+  },
   "environmentVariables": [
     {
       "name": "MY_ENV_VAR",
@@ -150,6 +186,11 @@ kind: hosted
 protocols:
   - protocol: responses
     version: v0.1.1
+image: myregistry.azurecr.io/my-agent
+dockerfilePath: ./Dockerfile
+resources:
+  cpu: "1"
+  memory: 2Gi
 environmentVariables:
   - name: MY_ENV_VAR
     value: my-value
