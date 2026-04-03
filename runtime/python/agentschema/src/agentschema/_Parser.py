@@ -10,10 +10,11 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
+
 @dataclass
 class Parser:
     """Template parser definition
-
+    
     Attributes
     ----------
     kind : str
@@ -37,14 +38,14 @@ class Parser:
             Parser: The loaded Parser instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         # handle alternate representations
         if isinstance(data, str):
             data = {"kind": data}
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Parser: {data}")
 
@@ -59,6 +60,8 @@ class Parser:
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Parser instance to a dictionary.
         Args:
@@ -70,6 +73,7 @@ class Parser:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -106,3 +110,4 @@ class Parser:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

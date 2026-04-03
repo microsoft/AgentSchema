@@ -18,7 +18,10 @@ fn test_mcp_tool_load_json() {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 "####;
     let result = McpTool::from_json(json);
@@ -53,6 +56,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 
 "####;
     let result = McpTool::from_yaml(yaml);
@@ -86,7 +91,10 @@ fn test_mcp_tool_roundtrip() {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 "####;
     let result = McpTool::from_json(json);

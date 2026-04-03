@@ -31,6 +31,10 @@ model McpTool extends Tool {
   @doc("List of allowed operations or resources for the MCP tool")
   @sample(#{ allowedTools: #["operation1", "operation2"] })
   allowedTools?: string[];
+
+  @doc("Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing")
+  @sample(#{ headers: #{ Authorization: "Bearer token" } })
+  headers?: Record<string>;
 }
 
 alias mcpApprovalMode = "always" | "never" | "specify";

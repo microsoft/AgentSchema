@@ -55,6 +55,11 @@ public class McpTool : Tool
     /// </summary>
     public IList<string>? AllowedTools { get; set; }
 
+    /// <summary>
+    /// Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing
+    /// </summary>
+    public IDictionary<string, object>? Headers { get; set; }
+
 
     #region Load Methods
 
@@ -104,6 +109,11 @@ public class McpTool : Tool
         if (data.TryGetValue("allowedTools", out var allowedToolsValue) && allowedToolsValue is not null)
         {
             instance.AllowedTools = (allowedToolsValue as IEnumerable<object>)?.Select(x => x?.ToString()!).ToList() ?? [];
+        }
+
+        if (data.TryGetValue("headers", out var headersValue) && headersValue is not null)
+        {
+            instance.Headers = headersValue.GetDictionary()!;
         }
 
         if (context is not null)
@@ -165,6 +175,11 @@ public class McpTool : Tool
         if (obj.AllowedTools is not null)
         {
             result["allowedTools"] = obj.AllowedTools;
+        }
+
+        if (obj.Headers is not null)
+        {
+            result["headers"] = obj.Headers;
         }
 
 

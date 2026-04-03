@@ -12,17 +12,18 @@ from ._Format import Format
 from ._Parser import Parser
 
 
+
 @dataclass
 class Template:
     """Template model for defining prompt templates.
-
+    
     This model specifies the rendering engine used for slot filling prompts,
     the parser used to process the rendered template into API-compatible format,
     and additional options for the template engine.
-
+    
     It allows for the creation of reusable templates that can be filled with dynamic data
     and processed to generate prompts for AI models.
-
+    
     Attributes
     ----------
     format : Format
@@ -46,10 +47,10 @@ class Template:
             Template: The loaded Template instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for Template: {data}")
 
@@ -64,6 +65,8 @@ class Template:
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the Template instance to a dictionary.
         Args:
@@ -75,6 +78,7 @@ class Template:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -111,3 +115,4 @@ class Template:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

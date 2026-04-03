@@ -574,12 +574,13 @@ func FileSearchToolFromYAML(yamlStr string) (FileSearchTool, error) {
 // McpTool represents The MCP Server tool.
 
 type McpTool struct {
-	Kind              string      `json:"kind" yaml:"kind"`
-	Connection        interface{} `json:"connection" yaml:"connection"`
-	ServerName        string      `json:"serverName" yaml:"serverName"`
-	ServerDescription *string     `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
-	ApprovalMode      interface{} `json:"approvalMode" yaml:"approvalMode"`
-	AllowedTools      []string    `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
+	Kind              string                 `json:"kind" yaml:"kind"`
+	Connection        interface{}            `json:"connection" yaml:"connection"`
+	ServerName        string                 `json:"serverName" yaml:"serverName"`
+	ServerDescription *string                `json:"serverDescription,omitempty" yaml:"serverDescription,omitempty"`
+	ApprovalMode      interface{}            `json:"approvalMode" yaml:"approvalMode"`
+	AllowedTools      []string               `json:"allowedTools,omitempty" yaml:"allowedTools,omitempty"`
+	Headers           map[string]interface{} `json:"headers,omitempty" yaml:"headers,omitempty"`
 }
 
 // LoadMcpTool creates a McpTool from a map[string]interface{}
@@ -620,6 +621,11 @@ func LoadMcpTool(data interface{}, ctx *LoadContext) (McpTool, error) {
 				}
 			}
 		}
+		if val, ok := m["headers"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				result.Headers = m
+			}
+		}
 	}
 
 	return result, nil
@@ -654,6 +660,9 @@ func (obj *McpTool) Save(ctx *SaveContext) map[string]interface{} {
 		result["approvalMode"] = obj.ApprovalMode
 	}
 	result["allowedTools"] = obj.AllowedTools
+	if obj.Headers != nil {
+		result["headers"] = obj.Headers
+	}
 
 	return result
 }

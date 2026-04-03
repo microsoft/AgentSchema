@@ -442,7 +442,7 @@ export const resolveModelProperty = (program: Program, property: ModelProperty, 
     prop.isCollection = false;
 
     prop.typeName = getModelType(model, rootNamespace, rootAlias);
-    if (prop.typeName.name === "Record<unknown>") {
+    if (prop.typeName.name === "Record<unknown>" || prop.typeName.name === "Record<string>") {
       prop.isScalar = true;
       prop.isDict = true;
       prop.typeName = {
