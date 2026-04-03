@@ -722,7 +722,7 @@ export class ContainerAgent extends AgentDefinition {
   /**
    * Container image path (e.g., '<acr-endpoint>/<container-image-name>')
    */
-  image: string = "";
+  image?: string | undefined;
 
   /**
    * Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
@@ -749,7 +749,9 @@ export class ContainerAgent extends AgentDefinition {
 
     this.protocols = init?.protocols ?? [];
 
-    this.image = init?.image ?? "";
+    if (init?.image !== undefined) {
+      this.image = init.image;
+    }
 
     if (init?.dockerfilePath !== undefined) {
       this.dockerfilePath = init.dockerfilePath;
