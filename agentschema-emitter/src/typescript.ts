@@ -318,7 +318,7 @@ function getCollectionTypes(node: TypeNode): Array<{ prop: PropertyNode; type: s
     .map((p) => ({
       prop: p,
       type: p.type?.properties.filter((t) => t.name !== "name").map((t) => t.name) || [],
-      hasNameProperty: p.type?.properties.some((t) => t.name === "name") || false,
+      hasNameProperty: p.type?.properties.some((t) => t.name === "name" && !t.isOptional) || false,
     }));
 }
 

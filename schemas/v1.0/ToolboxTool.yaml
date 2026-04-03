@@ -1,0 +1,29 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ToolboxTool.yaml
+type: object
+properties:
+  id:
+    $ref: ToolboxToolTypes.yaml
+    description: The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')
+  name:
+    type: string
+    description: Optional display name for the tool
+  description:
+    type: string
+    description: Human-readable description of the tool's capabilities
+  target:
+    type: string
+    description: Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)
+  authType:
+    $ref: ToolboxAuthTypes.yaml
+    description: Authentication type for the tool connection
+  options:
+    $ref: RecordUnknown.yaml
+    default: {}
+    description: Additional configuration options for the tool
+required:
+  - id
+description: |-
+  Represents a tool definition within a toolbox.
+  Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+  or external (mcp, openapi, a2a_preview) with connection details.

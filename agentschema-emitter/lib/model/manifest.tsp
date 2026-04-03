@@ -90,7 +90,7 @@ model AgentManifest {
   resources: Resources;
 }
 
-alias ResourceKind = "model" | "tool";
+alias ResourceKind = "model" | "tool" | "toolbox";
 /**
  * Represents a resource required by the agent
  * Resources can include databases, APIs, or other external systems
@@ -139,3 +139,118 @@ alias Resources = Record<Resource> | Named<
   "Name of the resource",
   #{ name: "my-resource" }
 >[];
+
+@doc("Known toolbox tool type identifiers")
+union ToolboxToolTypes {
+  @doc("Model Context Protocol server")
+  mcp: "mcp",
+
+  @doc("Web search via Bing grounding")
+  web_search: "web_search",
+
+  @doc("Azure AI Search index")
+  azure_ai_search: "azure_ai_search",
+
+  @doc("OpenAPI specification endpoint")
+  openapi: "openapi",
+
+  @doc("Agent-to-agent delegation (preview)")
+  a2a_preview: "a2a_preview",
+
+  @doc("Sandboxed Python code execution")
+  code_interpreter: "code_interpreter",
+
+  @doc("Vector store file search")
+  file_search: "file_search",
+
+  string,
+}
+
+@doc("Authentication types for toolbox tool connections")
+union ToolboxAuthTypes {
+  @doc("Custom API key or PAT-based authentication")
+  CustomKeys: "CustomKeys",
+
+  @doc("OAuth 2.0 with identity passthrough")
+  OAuth2: "OAuth2",
+
+  @doc("Microsoft Entra ID user token")
+  UserEntraToken: "UserEntraToken",
+
+  @doc("Foundry project managed identity")
+  ProjectManagedIdentity: "ProjectManagedIdentity",
+
+  @doc("Agentic identity token (preview)")
+  AgenticIdentityToken: "AgenticIdentityToken",
+
+  string,
+}
+
+/**
+ * Represents a tool definition within a toolbox.
+ * Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+ * or external (mcp, openapi, a2a_preview) with connection details.
+ */
+model ToolboxTool {
+  @doc("The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')")
+  @sample(#{ id: "web_search" })
+  id: ToolboxToolTypes;
+
+  @doc("Optional display name for the tool")
+  @sample(#{ name: "my-search-tool" })
+  name?: string;
+
+  @doc("Human-readable description of the tool's capabilities")
+  @sample(#{ description: "Searches the web for up-to-date information" })
+  description?: string;
+
+  @doc("Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)")
+  @sample(#{ target: "https://api.githubcopilot.com/mcp" })
+  target?: string;
+
+  @doc("Authentication type for the tool connection")
+  @sample(#{ authType: "OAuth2" })
+  authType?: ToolboxAuthTypes;
+
+  @doc("Additional configuration options for the tool")
+  @sample(#{ options: #{ indexName: "products-index" } })
+  options?: Record<unknown> = #{};
+}
+
+/**
+ * Represents a Foundry Toolbox resource — a named collection of tools
+ * that is provisioned as a Foundry Toolbox and exposed via MCP endpoint.
+ */
+model ToolboxResource extends Resource {
+  @doc("The kind identifier for toolbox resources")
+  @sample(#{ kind: "toolbox" })
+  kind: "toolbox";
+
+  @doc("Description of the toolbox")
+  @sample(#{ description: "Shared platform tools" })
+  description?: string;
+
+  @doc("The tools contained in this toolbox")
+  @sample(#{
+    tools: #[
+      #{ id: "web_search" },
+      #{
+        id: "azure_ai_search",
+        options: #{ indexName: "products-index" },
+      },
+      #{
+        id: "mcp",
+        name: "github-copilot",
+        target: "https://api.githubcopilot.com/mcp",
+        authType: "OAuth2",
+      },
+      #{
+        id: "a2a_preview",
+        name: "research-agent",
+        description: "Delegates research tasks to a specialized agent",
+        target: "https://research-agent.example.com",
+      }
+    ],
+  })
+  tools: ToolboxTool[];
+}

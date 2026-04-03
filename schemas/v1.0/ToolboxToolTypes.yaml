@@ -1,0 +1,26 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ToolboxToolTypes.yaml
+anyOf:
+  - type: string
+    const: mcp
+    description: Model Context Protocol server
+  - type: string
+    const: web_search
+    description: Web search via Bing grounding
+  - type: string
+    const: azure_ai_search
+    description: Azure AI Search index
+  - type: string
+    const: openapi
+    description: OpenAPI specification endpoint
+  - type: string
+    const: a2a_preview
+    description: Agent-to-agent delegation (preview)
+  - type: string
+    const: code_interpreter
+    description: Sandboxed Python code execution
+  - type: string
+    const: file_search
+    description: Vector store file search
+  - type: string
+description: Known toolbox tool type identifiers

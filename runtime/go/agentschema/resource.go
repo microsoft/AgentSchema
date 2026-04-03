@@ -30,6 +30,8 @@ func LoadResource(data interface{}, ctx *LoadContext) (interface{}, error) {
 				return LoadModelResource(data, ctx)
 			case "tool":
 				return LoadToolResource(data, ctx)
+			case "toolbox":
+				return LoadToolboxResource(data, ctx)
 			}
 		}
 	}
@@ -254,4 +256,102 @@ func ToolResourceFromYAML(yamlStr string) (ToolResource, error) {
 	}
 	ctx := NewLoadContext()
 	return LoadToolResource(data, ctx)
+}
+
+// ToolboxResource represents Represents a Foundry Toolbox resource — a named collection of tools
+// that is provisioned as a Foundry Toolbox and exposed via MCP endpoint.
+
+type ToolboxResource struct {
+	Kind        string        `json:"kind" yaml:"kind"`
+	Description *string       `json:"description,omitempty" yaml:"description,omitempty"`
+	Tools       []ToolboxTool `json:"tools" yaml:"tools"`
+}
+
+// LoadToolboxResource creates a ToolboxResource from a map[string]interface{}
+func LoadToolboxResource(data interface{}, ctx *LoadContext) (ToolboxResource, error) {
+	result := ToolboxResource{}
+
+	// Load from map
+	if m, ok := data.(map[string]interface{}); ok {
+		if val, ok := m["kind"]; ok && val != nil {
+			result.Kind = val.(string)
+		}
+		if val, ok := m["description"]; ok && val != nil {
+			v := val.(string)
+			result.Description = &v
+		}
+		if val, ok := m["tools"]; ok && val != nil {
+			if arr, ok := val.([]interface{}); ok {
+				result.Tools = make([]ToolboxTool, len(arr))
+				for i, v := range arr {
+					if item, ok := v.(map[string]interface{}); ok {
+						loaded, _ := LoadToolboxTool(item, ctx)
+						result.Tools[i] = loaded
+					}
+				}
+			}
+		}
+	}
+
+	return result, nil
+}
+
+// Save serializes ToolboxResource to map[string]interface{}
+func (obj *ToolboxResource) Save(ctx *SaveContext) map[string]interface{} {
+	result := make(map[string]interface{})
+	result["kind"] = obj.Kind
+	if obj.Description != nil {
+		result["description"] = *obj.Description
+	}
+	if obj.Tools != nil {
+		arr := make([]interface{}, len(obj.Tools))
+		for i, item := range obj.Tools {
+			arr[i] = item.Save(ctx)
+		}
+		result["tools"] = arr
+	}
+
+	return result
+}
+
+// ToJSON serializes ToolboxResource to JSON string
+func (obj *ToolboxResource) ToJSON() (string, error) {
+	ctx := NewSaveContext()
+	data := obj.Save(ctx)
+	bytes, err := json.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// ToYAML serializes ToolboxResource to YAML string
+func (obj *ToolboxResource) ToYAML() (string, error) {
+	ctx := NewSaveContext()
+	data := obj.Save(ctx)
+	bytes, err := yaml.Marshal(data)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// FromJSON creates ToolboxResource from JSON string
+func ToolboxResourceFromJSON(jsonStr string) (ToolboxResource, error) {
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonStr), &data); err != nil {
+		return ToolboxResource{}, err
+	}
+	ctx := NewLoadContext()
+	return LoadToolboxResource(data, ctx)
+}
+
+// FromYAML creates ToolboxResource from YAML string
+func ToolboxResourceFromYAML(yamlStr string) (ToolboxResource, error) {
+	var data map[string]interface{}
+	if err := yaml.Unmarshal([]byte(yamlStr), &data); err != nil {
+		return ToolboxResource{}, err
+	}
+	ctx := NewLoadContext()
+	return LoadToolboxResource(data, ctx)
 }

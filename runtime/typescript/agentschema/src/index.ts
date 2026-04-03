@@ -55,6 +55,8 @@ export { ContainerResources } from "./container-resources";
 
 export { EnvironmentVariable } from "./environment-variable";
 
-export { Resource, ModelResource, ToolResource } from "./resource";
+export { Resource, ModelResource, ToolResource, ToolboxResource } from "./resource";
+
+export { ToolboxTool } from "./toolbox-tool";
 
 export { AgentManifest } from "./agent-manifest";

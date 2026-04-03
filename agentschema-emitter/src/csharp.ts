@@ -145,8 +145,8 @@ const renderCSharp = (nodes: TypeNode[], node: TypeNode, classTemplate: nunjucks
     let hasNameProperty = false;
 
     if (itemType) {
-      // Check if item type has a 'name' property (supports object format)
-      hasNameProperty = itemType.properties.some(prop => prop.name === "name");
+      // Check if item type has a required 'name' property (supports object format)
+      hasNameProperty = itemType.properties.some(prop => prop.name === "name" && !prop.isOptional);
 
       if (itemType.alternates && itemType.alternates.length > 0) {
         const firstAlt = itemType.alternates[0];
