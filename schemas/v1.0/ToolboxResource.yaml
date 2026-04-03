@@ -1,0 +1,24 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ToolboxResource.yaml
+type: object
+properties:
+  kind:
+    type: string
+    const: toolbox
+    description: The kind identifier for toolbox resources
+  description:
+    type: string
+    description: Description of the toolbox
+  tools:
+    type: array
+    items:
+      $ref: ToolboxTool.yaml
+    description: The tools contained in this toolbox
+required:
+  - kind
+  - tools
+allOf:
+  - $ref: Resource.yaml
+description: |-
+  Represents a Foundry Toolbox resource — a named collection of tools
+  that is provisioned as a Foundry Toolbox and exposed via MCP endpoint.

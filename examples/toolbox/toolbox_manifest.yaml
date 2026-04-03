@@ -1,0 +1,63 @@
+template:
+  name: Platform Support Agent
+  description: |-
+    A hosted container agent that uses a Foundry Toolbox with Bing search,
+    Azure AI Search, and a custom MCP server for GitHub Copilot integration.
+  metadata:
+    tags:
+      - example
+      - toolbox
+    authors:
+      - sethjuarez
+
+  kind: hosted
+  image: myregistry.azurecr.io/support-agent
+  protocols:
+    - protocol: a2a
+      version: v0.1.0
+  resources:
+    cpu: "1"
+    memory: "2Gi"
+
+resources:
+  - kind: model
+    name: chat
+    id: {{ model_name }}
+
+  - kind: toolbox
+    name: platform-tools
+    description: Shared platform tools for support workflows
+    tools:
+      - id: bing_grounding
+      - id: azure_ai_search
+        options:
+          indexName: support-docs-index
+          queryType: vector_semantic_hybrid
+      - id: code_interpreter
+      - id: mcp
+        name: github-copilot
+        target: https://api.githubcopilot.com/mcp
+        authType: OAuth2
+        options:
+          clientId: "{{ github_client_id }}"
+          clientSecret: "{{ github_client_secret }}"
+
+parameters:
+  model_name:
+    schema:
+      type: string
+      enum:
+        - gpt-4o
+        - gpt-4o-mini
+      default: gpt-4o
+    required: true
+  github_client_id:
+    schema:
+      type: string
+    description: OAuth client ID for GitHub Copilot MCP server
+    required: true
+  github_client_secret:
+    schema:
+      type: string
+    description: OAuth client secret for GitHub Copilot MCP server
+    required: true

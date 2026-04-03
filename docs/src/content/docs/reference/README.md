@@ -269,6 +269,20 @@ classDiagram
         +string id
         +dictionary options
     }
+    class ToolboxTool {
+      
+        +string id
+        +string name
+        +string target
+        +string authType
+        +dictionary options
+    }
+    class ToolboxResource {
+      
+        +string kind
+        +string description
+        +ToolboxTool[] tools
+    }
     class AgentManifest {
       
         +string name
@@ -302,6 +316,7 @@ classDiagram
     McpServerApprovalMode <|-- McpServerToolSpecifyApprovalMode
     Resource <|-- ModelResource
     Resource <|-- ToolResource
+    Resource <|-- ToolboxResource
     AgentDefinition *-- PropertySchema
     AgentDefinition *-- PropertySchema
     Model *-- Connection
@@ -326,6 +341,7 @@ classDiagram
     ContainerAgent *-- ProtocolVersionRecord
     ContainerAgent *-- ContainerResources
     ContainerAgent *-- EnvironmentVariable
+    ToolboxResource *-- ToolboxTool
     AgentManifest *-- AgentDefinition
     AgentManifest *-- PropertySchema
     AgentManifest *-- Resource

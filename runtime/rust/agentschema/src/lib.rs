@@ -51,5 +51,8 @@ pub use environment_variable::*;
 pub mod resource;
 pub use resource::*;
 
+pub mod toolbox_tool;
+pub use toolbox_tool::*;
+
 pub mod agent_manifest;
 pub use agent_manifest::*;

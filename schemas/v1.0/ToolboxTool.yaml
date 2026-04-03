@@ -1,0 +1,50 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ToolboxTool.yaml
+type: object
+properties:
+  id:
+    anyOf:
+      - type: string
+        const: bing_grounding
+      - type: string
+        const: azure_ai_search
+      - type: string
+        const: code_interpreter
+      - type: string
+        const: file_search
+      - type: string
+        const: mcp
+      - type: string
+        const: openapi
+      - type: string
+    description: The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
+  name:
+    type: string
+    description: Optional display name for the tool
+  target:
+    type: string
+    description: Target endpoint URL for external tools (e.g., MCP server URL)
+  authType:
+    anyOf:
+      - type: string
+        const: CustomKeys
+      - type: string
+        const: OAuth2
+      - type: string
+        const: UserEntraToken
+      - type: string
+        const: ProjectManagedIdentity
+      - type: string
+        const: AgenticIdentityToken
+      - type: string
+    description: Authentication type for the tool connection
+  options:
+    $ref: RecordUnknown.yaml
+    default: {}
+    description: Additional configuration options for the tool
+required:
+  - id
+description: |-
+  Represents a tool definition within a toolbox.
+  Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
+  or external (mcp, openapi) with connection details.

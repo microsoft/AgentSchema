@@ -72,7 +72,10 @@ from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
 
 
-from ._Resource import Resource, ModelResource, ToolResource
+from ._Resource import Resource, ModelResource, ToolResource, ToolboxResource
+
+
+from ._ToolboxTool import ToolboxTool
 
 
 from ._AgentManifest import AgentManifest
@@ -119,5 +122,7 @@ __all__ = [
     "Resource",
     "ModelResource",
     "ToolResource",
+    "ToolboxTool",
+    "ToolboxResource",
     "AgentManifest",
 ]

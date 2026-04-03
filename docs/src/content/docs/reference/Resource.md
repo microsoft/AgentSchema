@@ -36,6 +36,12 @@ classDiagram
         +dictionary options
     }
     Resource <|-- ToolResource
+    class ToolboxResource {
+        +string kind
+        +string description
+        +ToolboxTool[] tools
+    }
+    Resource <|-- ToolboxResource
 ```
 
 ## Yaml Example
@@ -58,3 +64,4 @@ The following types extend `Resource`:
 
 - [ModelResource](../modelresource/)
 - [ToolResource](../toolresource/)
+- [ToolboxResource](../toolboxresource/)

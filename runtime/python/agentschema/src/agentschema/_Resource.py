@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
+from ._ToolboxTool import ToolboxTool
 
 
 @dataclass
@@ -67,6 +68,8 @@ class Resource(ABC):
                 return ModelResource.load(data, context)
             elif discriminator_value == "tool":
                 return ToolResource.load(data, context)
+            elif discriminator_value == "toolbox":
+                return ToolboxResource.load(data, context)
 
             else:
                 raise ValueError(
@@ -306,6 +309,158 @@ class ToolResource(Resource):
 
     def to_json(self, context: Optional[SaveContext] = None, indent: int = 2) -> str:
         """Convert the ToolResource instance to a JSON string.
+        Args:
+            context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
+            indent (int): Number of spaces for indentation. Defaults to 2.
+        Returns:
+            str: The JSON string representation of this instance.
+
+        """
+        if context is None:
+            context = SaveContext()
+        return context.to_json(self.save(context), indent)
+
+
+@dataclass
+class ToolboxResource(Resource):
+    """Represents a Foundry Toolbox resource — a named collection of tools
+    that is provisioned as a Foundry Toolbox and exposed via MCP endpoint.
+
+    Attributes
+    ----------
+    kind : str
+        The kind identifier for toolbox resources
+    description : Optional[str]
+        Description of the toolbox
+    tools : list[ToolboxTool]
+        The tools contained in this toolbox
+    """
+
+    _shorthand_property: ClassVar[Optional[str]] = None
+
+    kind: str = field(default="toolbox")
+    description: Optional[str] = None
+    tools: list[ToolboxTool] = field(default_factory=list)
+
+    @staticmethod
+    def load(data: Any, context: Optional[LoadContext] = None) -> "ToolboxResource":
+        """Load a ToolboxResource instance.
+        Args:
+            data (Any): The data to load the instance from.
+            context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
+        Returns:
+            ToolboxResource: The loaded ToolboxResource instance.
+
+        """
+
+        if context is not None:
+            data = context.process_input(data)
+
+        if not isinstance(data, dict):
+            raise ValueError(f"Invalid data for ToolboxResource: {data}")
+
+        # create new instance
+        instance = ToolboxResource()
+
+        if data is not None and "kind" in data:
+            instance.kind = data["kind"]
+        if data is not None and "description" in data:
+            instance.description = data["description"]
+        if data is not None and "tools" in data:
+            instance.tools = ToolboxResource.load_tools(data["tools"], context)
+        if context is not None:
+            instance = context.process_output(instance)
+        return instance
+
+    @staticmethod
+    def load_tools(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[ToolboxTool]:
+        if isinstance(data, dict):
+            # convert simple named tools to list of ToolboxTool
+            result = []
+            for k, v in data.items():
+                if isinstance(v, dict):
+                    # value is an object, spread its properties
+                    result.append({"name": k, **v})
+                else:
+                    # value is a scalar, use it as the primary property
+                    result.append({"name": k, "id": v})
+            data = result
+        return [ToolboxTool.load(item, context) for item in data]
+
+    @staticmethod
+    def save_tools(
+        items: list[ToolboxTool], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
+        if context is None:
+            context = SaveContext()
+
+        if context.collection_format == "array":
+            return [item.save(context) for item in items]
+
+        # Object format: use name as key
+        result: dict[str, Any] = {}
+        for item in items:
+            item_data = item.save(context)
+            name = item_data.pop("name", None)
+            if name:
+                # Check if we can use shorthand (only primary property set)
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
+                    shorthand_prop = item._shorthand_property
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
+                        result[name] = item_data[shorthand_prop]
+                        continue
+                result[name] = item_data
+            else:
+                # No name, fall back to array format for this item
+                if "_unnamed" not in result:
+                    result["_unnamed"] = []
+                result["_unnamed"].append(item_data)
+        return result
+
+    def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
+        """Save the ToolboxResource instance to a dictionary.
+        Args:
+            context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
+        Returns:
+            dict[str, Any]: The dictionary representation of this instance.
+
+        """
+        obj = self
+        if context is not None:
+            obj = context.process_object(obj)
+
+        # Start with parent class properties
+        result = super().save(context)
+
+        if obj.kind is not None:
+            result["kind"] = obj.kind
+        if obj.description is not None:
+            result["description"] = obj.description
+        if obj.tools is not None:
+            result["tools"] = ToolboxResource.save_tools(obj.tools, context)
+
+        return result
+
+    def to_yaml(self, context: Optional[SaveContext] = None) -> str:
+        """Convert the ToolboxResource instance to a YAML string.
+        Args:
+            context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
+        Returns:
+            str: The YAML string representation of this instance.
+
+        """
+        if context is None:
+            context = SaveContext()
+        return context.to_yaml(self.save(context))
+
+    def to_json(self, context: Optional[SaveContext] = None, indent: int = 2) -> str:
+        """Convert the ToolboxResource instance to a JSON string.
         Args:
             context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
             indent (int): Number of spaces for indentation. Defaults to 2.

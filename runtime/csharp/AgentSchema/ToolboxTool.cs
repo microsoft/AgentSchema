@@ -7,11 +7,11 @@ namespace AgentSchema;
 #pragma warning restore IDE0130
 
 /// <summary>
-/// Represents a resource required by the agent
-/// Resources can include databases, APIs, or other external systems
-/// that the agent needs to interact with to perform its tasks
+/// Represents a tool definition within a toolbox.
+/// Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
+/// or external (mcp, openapi) with connection details.
 /// </summary>
-public abstract class Resource
+public class ToolboxTool
 {
     /// <summary>
     /// The shorthand property name for this type, if any.
@@ -19,34 +19,49 @@ public abstract class Resource
     public static string? ShorthandProperty => null;
 
     /// <summary>
-    /// Initializes a new instance of <see cref="Resource"/>.
+    /// Initializes a new instance of <see cref="ToolboxTool"/>.
     /// </summary>
 #pragma warning disable CS8618
-    protected Resource()
+    public ToolboxTool()
     {
     }
 #pragma warning restore CS8618
 
     /// <summary>
-    /// Name of the resource
+    /// The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
     /// </summary>
-    public string Name { get; set; } = string.Empty;
+    public string Id { get; set; } = string.Empty;
 
     /// <summary>
-    /// The kind of resource (e.g., model, tool)
+    /// Optional display name for the tool
     /// </summary>
-    public virtual string Kind { get; set; } = string.Empty;
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Target endpoint URL for external tools (e.g., MCP server URL)
+    /// </summary>
+    public string? Target { get; set; }
+
+    /// <summary>
+    /// Authentication type for the tool connection
+    /// </summary>
+    public string? AuthType { get; set; }
+
+    /// <summary>
+    /// Additional configuration options for the tool
+    /// </summary>
+    public IDictionary<string, object>? Options { get; set; }
 
 
     #region Load Methods
 
     /// <summary>
-    /// Load a Resource instance from a dictionary.
+    /// Load a ToolboxTool instance from a dictionary.
     /// </summary>
     /// <param name="data">The dictionary containing the data.</param>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
-    /// <returns>The loaded Resource instance.</returns>
-    public static Resource Load(Dictionary<string, object?> data, LoadContext? context = null)
+    /// <returns>The loaded ToolboxTool instance.</returns>
+    public static ToolboxTool Load(Dictionary<string, object?> data, LoadContext? context = null)
     {
         if (context is not null)
         {
@@ -54,18 +69,33 @@ public abstract class Resource
         }
 
 
-        // Load polymorphic Resource instance
-        var instance = LoadKind(data, context);
+        // Create new instance
+        var instance = new ToolboxTool();
 
+
+        if (data.TryGetValue("id", out var idValue) && idValue is not null)
+        {
+            instance.Id = idValue?.ToString()!;
+        }
 
         if (data.TryGetValue("name", out var nameValue) && nameValue is not null)
         {
             instance.Name = nameValue?.ToString()!;
         }
 
-        if (data.TryGetValue("kind", out var kindValue) && kindValue is not null)
+        if (data.TryGetValue("target", out var targetValue) && targetValue is not null)
         {
-            instance.Kind = kindValue?.ToString()!;
+            instance.Target = targetValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("authType", out var authTypeValue) && authTypeValue is not null)
+        {
+            instance.AuthType = authTypeValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("options", out var optionsValue) && optionsValue is not null)
+        {
+            instance.Options = optionsValue.GetDictionary()!;
         }
 
         if (context is not null)
@@ -77,38 +107,16 @@ public abstract class Resource
 
 
 
-    /// <summary>
-    /// Load polymorphic Resource based on discriminator.
-    /// </summary>
-    private static Resource LoadKind(Dictionary<string, object?> data, LoadContext? context)
-    {
-        if (data.TryGetValue("kind", out var discriminatorValue) && discriminatorValue is not null)
-        {
-            var discriminator = discriminatorValue.ToString()?.ToLowerInvariant();
-            return discriminator switch
-            {
-                "model" => ModelResource.Load(data, context),
-                "tool" => ToolResource.Load(data, context),
-                "toolbox" => ToolboxResource.Load(data, context),
-                _ => throw new ArgumentException($"Unknown Resource discriminator value: {discriminator}"),
-            };
-        }
-
-        throw new ArgumentException("Missing Resource discriminator property: 'kind'");
-
-    }
-
-
     #endregion
 
     #region Save Methods
 
     /// <summary>
-    /// Save the Resource instance to a dictionary.
+    /// Save the ToolboxTool instance to a dictionary.
     /// </summary>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
     /// <returns>The dictionary representation of this instance.</returns>
-    public virtual Dictionary<string, object?> Save(SaveContext? context = null)
+    public Dictionary<string, object?> Save(SaveContext? context = null)
     {
         var obj = this;
         if (context is not null)
@@ -120,14 +128,29 @@ public abstract class Resource
         var result = new Dictionary<string, object?>();
 
 
+        if (obj.Id is not null)
+        {
+            result["id"] = obj.Id;
+        }
+
         if (obj.Name is not null)
         {
             result["name"] = obj.Name;
         }
 
-        if (obj.Kind is not null)
+        if (obj.Target is not null)
         {
-            result["kind"] = obj.Kind;
+            result["target"] = obj.Target;
+        }
+
+        if (obj.AuthType is not null)
+        {
+            result["authType"] = obj.AuthType;
+        }
+
+        if (obj.Options is not null)
+        {
+            result["options"] = obj.Options;
         }
 
 
@@ -141,7 +164,7 @@ public abstract class Resource
 
 
     /// <summary>
-    /// Convert the Resource instance to a YAML string.
+    /// Convert the ToolboxTool instance to a YAML string.
     /// </summary>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
     /// <returns>The YAML string representation of this instance.</returns>
@@ -152,7 +175,7 @@ public abstract class Resource
     }
 
     /// <summary>
-    /// Convert the Resource instance to a JSON string.
+    /// Convert the ToolboxTool instance to a JSON string.
     /// </summary>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
     /// <param name="indent">Whether to indent the output. Defaults to true.</param>
@@ -164,12 +187,12 @@ public abstract class Resource
     }
 
     /// <summary>
-    /// Load a Resource instance from a JSON string.
+    /// Load a ToolboxTool instance from a JSON string.
     /// </summary>
     /// <param name="json">The JSON string to parse.</param>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
-    /// <returns>The loaded Resource instance.</returns>
-    public static Resource FromJson(string json, LoadContext? context = null)
+    /// <returns>The loaded ToolboxTool instance.</returns>
+    public static ToolboxTool FromJson(string json, LoadContext? context = null)
     {
         using var doc = JsonDocument.Parse(json);
         Dictionary<string, object?> dict;
@@ -180,12 +203,12 @@ public abstract class Resource
     }
 
     /// <summary>
-    /// Load a Resource instance from a YAML string.
+    /// Load a ToolboxTool instance from a YAML string.
     /// </summary>
     /// <param name="yaml">The YAML string to parse.</param>
     /// <param name="context">Optional context with pre/post processing callbacks.</param>
-    /// <returns>The loaded Resource instance.</returns>
-    public static Resource FromYaml(string yaml, LoadContext? context = null)
+    /// <returns>The loaded ToolboxTool instance.</returns>
+    public static ToolboxTool FromYaml(string yaml, LoadContext? context = null)
     {
         var dict = YamlUtils.Deserializer.Deserialize<Dictionary<string, object?>>(yaml)
             ?? throw new ArgumentException("Failed to parse YAML as dictionary");

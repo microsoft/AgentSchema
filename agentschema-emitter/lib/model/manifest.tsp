@@ -90,7 +90,7 @@ model AgentManifest {
   resources: Resources;
 }
 
-alias ResourceKind = "model" | "tool";
+alias ResourceKind = "model" | "tool" | "toolbox";
 /**
  * Represents a resource required by the agent
  * Resources can include databases, APIs, or other external systems
@@ -139,3 +139,79 @@ alias Resources = Record<Resource> | Named<
   "Name of the resource",
   #{ name: "my-resource" }
 >[];
+
+alias ToolboxToolId =
+  | "bing_grounding"
+  | "azure_ai_search"
+  | "code_interpreter"
+  | "file_search"
+  | "mcp"
+  | "openapi"
+  | string;
+
+alias ToolboxAuthType =
+  | "CustomKeys"
+  | "OAuth2"
+  | "UserEntraToken"
+  | "ProjectManagedIdentity"
+  | "AgenticIdentityToken"
+  | string;
+
+/**
+ * Represents a tool definition within a toolbox.
+ * Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
+ * or external (mcp, openapi) with connection details.
+ */
+model ToolboxTool {
+  @doc("The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')")
+  @sample(#{ id: "bing_grounding" })
+  id: ToolboxToolId;
+
+  @doc("Optional display name for the tool")
+  @sample(#{ name: "my-search-tool" })
+  name?: string;
+
+  @doc("Target endpoint URL for external tools (e.g., MCP server URL)")
+  @sample(#{ target: "https://api.githubcopilot.com/mcp" })
+  target?: string;
+
+  @doc("Authentication type for the tool connection")
+  @sample(#{ authType: "OAuth2" })
+  authType?: ToolboxAuthType;
+
+  @doc("Additional configuration options for the tool")
+  @sample(#{ options: #{ indexName: "products-index" } })
+  options?: Record<unknown> = #{};
+}
+
+/**
+ * Represents a Foundry Toolbox resource — a named collection of tools
+ * that is provisioned as a Foundry Toolbox and exposed via MCP endpoint.
+ */
+model ToolboxResource extends Resource {
+  @doc("The kind identifier for toolbox resources")
+  @sample(#{ kind: "toolbox" })
+  kind: "toolbox";
+
+  @doc("Description of the toolbox")
+  @sample(#{ description: "Shared platform tools" })
+  description?: string;
+
+  @doc("The tools contained in this toolbox")
+  @sample(#{
+    tools: #[
+      #{ id: "bing_grounding" },
+      #{
+        id: "azure_ai_search",
+        options: #{ indexName: "products-index" },
+      },
+      #{
+        id: "mcp",
+        name: "github-copilot",
+        target: "https://api.githubcopilot.com/mcp",
+        authType: "OAuth2",
+      }
+    ],
+  })
+  tools: ToolboxTool[];
+}
