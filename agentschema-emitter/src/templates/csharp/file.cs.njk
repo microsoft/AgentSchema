@@ -76,6 +76,12 @@ public{% if node.isAbstract %} abstract{% endif %} class {{ node.typeName.name }
     {
         var result = new List<{{ collection.prop.typeName.name }}>();
         
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -106,6 +112,11 @@ public{% if node.isAbstract %} abstract{% endif %} class {{ node.typeName.name }
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add({{ collection.prop.typeName.name }}.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add({{ collection.prop.typeName.name }}.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }

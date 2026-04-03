@@ -123,6 +123,12 @@ public class ContainerAgent : AgentDefinition
     {
         var result = new List<ProtocolVersionRecord>();
 
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -154,6 +160,11 @@ public class ContainerAgent : AgentDefinition
                 {
                     result.Add(ProtocolVersionRecord.Load(itemDict, context));
                 }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(ProtocolVersionRecord.Load(yamlItemDict.NormalizeDictionary(), context));
+                }
             }
         }
 
@@ -167,6 +178,12 @@ public class ContainerAgent : AgentDefinition
     public static IList<EnvironmentVariable> LoadEnvironmentVariables(object data, LoadContext? context)
     {
         var result = new List<EnvironmentVariable>();
+
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
 
         if (data is Dictionary<string, object?> dict)
         {
@@ -198,6 +215,11 @@ public class ContainerAgent : AgentDefinition
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add(EnvironmentVariable.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(EnvironmentVariable.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }

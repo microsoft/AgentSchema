@@ -123,6 +123,12 @@ public class PromptAgent : AgentDefinition
     {
         var result = new List<Tool>();
 
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -153,6 +159,11 @@ public class PromptAgent : AgentDefinition
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add(Tool.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(Tool.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }
