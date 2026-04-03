@@ -457,7 +457,7 @@ class ContainerAgent(AgentDefinition):
         Type of agent, e.g., 'hosted'
     protocols : list[ProtocolVersionRecord]
         Protocol used by the containerized agent
-    image : str
+    image : Optional[str]
         Container image path (e.g., '<acr-endpoint>/<container-image-name>')
     dockerfilePath : Optional[str]
         Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
@@ -471,7 +471,7 @@ class ContainerAgent(AgentDefinition):
 
     kind: str = field(default="hosted")
     protocols: list[ProtocolVersionRecord] = field(default_factory=list)
-    image: str = field(default="")
+    image: Optional[str] = None
     dockerfilePath: Optional[str] = None
     resources: ContainerResources = field(default_factory=ContainerResources)
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)

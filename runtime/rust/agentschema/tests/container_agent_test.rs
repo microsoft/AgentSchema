@@ -35,7 +35,11 @@ fn test_container_agent_load_json() {
     );
     let instance = result.unwrap();
     assert_eq!(instance.kind, "hosted");
-    assert_eq!(instance.image, "myregistry.azurecr.io/my-agent");
+    assert!(instance.image.is_some(), "Expected image to be Some");
+    assert_eq!(
+        instance.image.as_ref().unwrap(),
+        &"myregistry.azurecr.io/my-agent"
+    );
     assert!(
         instance.dockerfile_path.is_some(),
         "Expected dockerfile_path to be Some"
@@ -68,7 +72,7 @@ environmentVariables:
     );
     let instance = result.unwrap();
     assert_eq!(instance.kind, "hosted");
-    assert_eq!(instance.image, "myregistry.azurecr.io/my-agent");
+    assert!(instance.image.is_some(), "Expected image to be Some");
     assert!(
         instance.dockerfile_path.is_some(),
         "Expected dockerfile_path to be Some"

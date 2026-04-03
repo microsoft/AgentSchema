@@ -378,7 +378,7 @@ func WorkflowFromYAML(yamlStr string) (Workflow, error) {
 type ContainerAgent struct {
 	Kind                 string                  `json:"kind" yaml:"kind"`
 	Protocols            []ProtocolVersionRecord `json:"protocols" yaml:"protocols"`
-	Image                string                  `json:"image" yaml:"image"`
+	Image                *string                 `json:"image,omitempty" yaml:"image,omitempty"`
 	DockerfilePath       *string                 `json:"dockerfilePath,omitempty" yaml:"dockerfilePath,omitempty"`
 	Resources            ContainerResources      `json:"resources" yaml:"resources"`
 	EnvironmentVariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
@@ -405,7 +405,8 @@ func LoadContainerAgent(data interface{}, ctx *LoadContext) (ContainerAgent, err
 			}
 		}
 		if val, ok := m["image"]; ok && val != nil {
-			result.Image = val.(string)
+			v := val.(string)
+			result.Image = &v
 		}
 		if val, ok := m["dockerfilePath"]; ok && val != nil {
 			v := val.(string)
@@ -444,7 +445,9 @@ func (obj *ContainerAgent) Save(ctx *SaveContext) map[string]interface{} {
 		}
 		result["protocols"] = arr
 	}
-	result["image"] = obj.Image
+	if obj.Image != nil {
+		result["image"] = *obj.Image
+	}
 	if obj.DockerfilePath != nil {
 		result["dockerfilePath"] = *obj.DockerfilePath
 	}

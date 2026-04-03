@@ -41,7 +41,6 @@ properties:
 required:
   - kind
   - protocols
-  - image
   - resources
 allOf:
   - $ref: AgentDefinition.yaml

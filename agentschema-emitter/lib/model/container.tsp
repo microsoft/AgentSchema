@@ -66,7 +66,7 @@ model ContainerAgent extends AgentDefinition {
 
   @doc("Container image path (e.g., '<acr-endpoint>/<container-image-name>')")
   @sample(#{ image: "myregistry.azurecr.io/my-agent" })
-  image: string;
+  image?: string;
 
   @doc("Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.")
   @sample(#{ dockerfilePath: "./Dockerfile" })

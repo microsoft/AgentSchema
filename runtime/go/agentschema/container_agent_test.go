@@ -49,7 +49,7 @@ func TestContainerAgentLoadJSON(t *testing.T) {
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
-	if instance.Image != "myregistry.azurecr.io/my-agent" {
+	if instance.Image == nil || *instance.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
 	}
 	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
@@ -87,7 +87,7 @@ environmentVariables:
 	if instance.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, instance.Kind)
 	}
-	if instance.Image != "myregistry.azurecr.io/my-agent" {
+	if instance.Image == nil || *instance.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, instance.Image)
 	}
 	if instance.DockerfilePath == nil || *instance.DockerfilePath != "./Dockerfile" {
@@ -140,7 +140,7 @@ func TestContainerAgentRoundtrip(t *testing.T) {
 	if reloaded.Kind != "hosted" {
 		t.Errorf(`Expected Kind to be "hosted", got %v`, reloaded.Kind)
 	}
-	if reloaded.Image != "myregistry.azurecr.io/my-agent" {
+	if reloaded.Image == nil || *reloaded.Image != "myregistry.azurecr.io/my-agent" {
 		t.Errorf(`Expected Image to be "myregistry.azurecr.io/my-agent", got %v`, reloaded.Image)
 	}
 	if reloaded.DockerfilePath == nil || *reloaded.DockerfilePath != "./Dockerfile" {

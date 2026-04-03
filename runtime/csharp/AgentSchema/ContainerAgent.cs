@@ -40,7 +40,7 @@ public class ContainerAgent : AgentDefinition
     /// <summary>
     /// Container image path (e.g., '<acr-endpoint>/<container-image-name>')
     /// </summary>
-    public string Image { get; set; } = string.Empty;
+    public string? Image { get; set; }
 
     /// <summary>
     /// Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.

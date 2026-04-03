@@ -373,7 +373,7 @@ pub struct ContainerAgent {
     /// Protocol used by the containerized agent
     pub protocols: serde_json::Value,
     /// Container image path (e.g., '<acr-endpoint>/<container-image-name>')
-    pub image: String,
+    pub image: Option<String>,
     /// Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path.
     pub dockerfile_path: Option<String>,
     /// Resource allocation for the container
@@ -415,8 +415,7 @@ impl ContainerAgent {
             image: value
                 .get("image")
                 .and_then(|v| v.as_str())
-                .unwrap_or_default()
-                .to_string(),
+                .map(|s| s.to_string()),
             dockerfile_path: value
                 .get("dockerfilePath")
                 .and_then(|v| v.as_str())
@@ -445,11 +444,8 @@ impl ContainerAgent {
         if !self.protocols.is_null() {
             result.insert("protocols".to_string(), self.protocols.clone());
         }
-        if !self.image.is_empty() {
-            result.insert(
-                "image".to_string(),
-                serde_json::Value::String(self.image.clone()),
-            );
+        if let Some(ref val) = self.image {
+            result.insert("image".to_string(), serde_json::Value::String(val.clone()));
         }
         if let Some(ref val) = self.dockerfile_path {
             result.insert(
