@@ -187,6 +187,7 @@ classDiagram
         +string serverDescription
         +McpServerApprovalMode approvalMode
         +string[] allowedTools
+        +dictionary headers
     }
     class OpenApiTool {
       

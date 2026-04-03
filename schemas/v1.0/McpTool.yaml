@@ -23,6 +23,9 @@ properties:
     items:
       type: string
     description: List of allowed operations or resources for the MCP tool
+  headers:
+    $ref: RecordString.yaml
+    description: Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing
 required:
   - kind
   - connection

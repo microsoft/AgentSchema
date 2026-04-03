@@ -22,6 +22,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 
 """;
 
@@ -50,7 +52,10 @@ allowedTools:
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 """;
 
@@ -79,7 +84,10 @@ allowedTools:
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 """;
 
@@ -111,6 +119,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 
 """;
 
@@ -144,7 +154,10 @@ allowedTools:
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 """;
 
@@ -170,6 +183,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 
 """;
 

@@ -27,7 +27,10 @@ func TestMcpToolLoadJSON(t *testing.T) {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 `
 	var data map[string]interface{}
@@ -64,6 +67,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 
 `
 	var data map[string]interface{}
@@ -103,7 +108,10 @@ func TestMcpToolRoundtrip(t *testing.T) {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 `
 	var data map[string]interface{}
@@ -150,7 +158,10 @@ func TestMcpToolToJSON(t *testing.T) {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 `
 	var data map[string]interface{}
@@ -190,7 +201,10 @@ func TestMcpToolToYAML(t *testing.T) {
   "allowedTools": [
     "operation1",
     "operation2"
-  ]
+  ],
+  "headers": {
+    "Authorization": "Bearer token"
+  }
 }
 `
 	var data map[string]interface{}

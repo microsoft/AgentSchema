@@ -1013,6 +1013,11 @@ export class McpTool extends Tool {
   allowedTools?: string[] = [];
 
   /**
+   * Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing
+   */
+  headers?: Record<string, unknown> | undefined = {};
+
+  /**
    * Initializes a new instance of McpTool.
    */
   constructor(init?: Partial<McpTool>) {
@@ -1032,6 +1037,10 @@ export class McpTool extends Tool {
 
     if (init?.allowedTools !== undefined) {
       this.allowedTools = init.allowedTools;
+    }
+
+    if (init?.headers !== undefined) {
+      this.headers = init.headers;
     }
   }
 
@@ -1080,6 +1089,10 @@ export class McpTool extends Tool {
         : [];
     }
 
+    if (data["headers"] !== undefined && data["headers"] !== null) {
+      instance.headers = data["headers"] as Record<string, unknown>;
+    }
+
     if (context) {
       return context.processOutput(instance) as McpTool;
     }
@@ -1123,6 +1136,10 @@ export class McpTool extends Tool {
 
     if (obj.allowedTools !== undefined && obj.allowedTools !== null) {
       result["allowedTools"] = obj.allowedTools;
+    }
+
+    if (obj.headers !== undefined && obj.headers !== null) {
+      result["headers"] = obj.headers;
     }
 
     return result;

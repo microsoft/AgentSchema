@@ -515,6 +515,8 @@ pub struct McpTool {
     pub approval_mode: serde_json::Value,
     /// List of allowed operations or resources for the MCP tool
     pub allowed_tools: Option<Vec<String>>,
+    /// Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing
+    pub headers: serde_json::Value,
 }
 
 impl McpTool {
@@ -568,6 +570,10 @@ impl McpTool {
                         .filter_map(|v| v.as_str().map(|s| s.to_string()))
                         .collect()
                 }),
+            headers: value
+                .get("headers")
+                .cloned()
+                .unwrap_or(serde_json::Value::Null),
         }
     }
 
@@ -604,6 +610,9 @@ impl McpTool {
                 serde_json::to_value(items).unwrap_or(serde_json::Value::Null),
             );
         }
+        if !self.headers.is_null() {
+            result.insert("headers".to_string(), self.headers.clone());
+        }
         serde_json::Value::Object(result)
     }
 
@@ -615,6 +624,11 @@ impl McpTool {
     /// Serialize McpTool to a YAML string.
     pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
         serde_yaml::to_string(&self.to_value())
+    }
+    /// Returns typed reference to the map if the field is an object.
+    /// Returns `None` if the field is null or not an object.
+    pub fn as_headers_dict(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
+        self.headers.as_object()
     }
 }
 

@@ -18,7 +18,7 @@ describe("McpTool", () => {
 
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
-      const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ]\n}`;
+      const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ],\n  "headers": {\n    "Authorization": "Bearer token"\n  }\n}`;
       const instance = McpTool.fromJson(json);
       expect(instance).toBeDefined();
 
@@ -30,7 +30,7 @@ describe("McpTool", () => {
     });
 
     it("should round-trip JSON - example 1", () => {
-      const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ]\n}`;
+      const json = `{\n  "kind": "mcp",\n  "connection": {\n    "kind": "reference"\n  },\n  "serverName": "My MCP Server",\n  "serverDescription": "This tool allows access to MCP services.",\n  "approvalMode": {\n    "kind": "always"\n  },\n  "allowedTools": [\n    "operation1",\n    "operation2"\n  ],\n  "headers": {\n    "Authorization": "Bearer token"\n  }\n}`;
       const instance = McpTool.fromJson(json);
       const output = instance.toJson();
       const reloaded = McpTool.fromJson(output);
@@ -45,7 +45,7 @@ describe("McpTool", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: mcp\nconnection:\n  kind: reference\nserverName: My MCP Server\nserverDescription: This tool allows access to MCP services.\napprovalMode:\n  kind: always\nallowedTools:\n  - operation1\n  - operation2\n`;
+      const yaml = `kind: mcp\nconnection:\n  kind: reference\nserverName: My MCP Server\nserverDescription: This tool allows access to MCP services.\napprovalMode:\n  kind: always\nallowedTools:\n  - operation1\n  - operation2\nheaders:\n  Authorization: Bearer token\n`;
       const instance = McpTool.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -57,7 +57,7 @@ describe("McpTool", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: mcp\nconnection:\n  kind: reference\nserverName: My MCP Server\nserverDescription: This tool allows access to MCP services.\napprovalMode:\n  kind: always\nallowedTools:\n  - operation1\n  - operation2\n`;
+      const yaml = `kind: mcp\nconnection:\n  kind: reference\nserverName: My MCP Server\nserverDescription: This tool allows access to MCP services.\napprovalMode:\n  kind: always\nallowedTools:\n  - operation1\n  - operation2\nheaders:\n  Authorization: Bearer token\n`;
       const instance = McpTool.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = McpTool.fromYaml(output);

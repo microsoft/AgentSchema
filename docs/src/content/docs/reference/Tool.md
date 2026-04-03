@@ -60,6 +60,7 @@ classDiagram
         +string serverDescription
         +McpServerApprovalMode approvalMode
         +string[] allowedTools
+        +dictionary headers
     }
     Tool <|-- McpTool
     class OpenApiTool {

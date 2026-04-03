@@ -10,11 +10,12 @@ from typing import Any, ClassVar, Optional
 from ._context import LoadContext, SaveContext
 
 
+
 @dataclass
 class ContainerResources:
     """Resource allocation for a containerized agent.
     Valid CPU and memory pairings depend on the target hosting provider.
-
+    
     Attributes
     ----------
     cpu : str
@@ -38,10 +39,10 @@ class ContainerResources:
             ContainerResources: The loaded ContainerResources instance.
 
         """
-
+        
         if context is not None:
             data = context.process_input(data)
-
+        
         if not isinstance(data, dict):
             raise ValueError(f"Invalid data for ContainerResources: {data}")
 
@@ -56,6 +57,8 @@ class ContainerResources:
             instance = context.process_output(instance)
         return instance
 
+
+
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
         """Save the ContainerResources instance to a dictionary.
         Args:
@@ -67,6 +70,7 @@ class ContainerResources:
         obj = self
         if context is not None:
             obj = context.process_object(obj)
+        
 
         result: dict[str, Any] = {}
 
@@ -103,3 +107,4 @@ class ContainerResources:
         if context is None:
             context = SaveContext()
         return context.to_json(self.save(context), indent)
+

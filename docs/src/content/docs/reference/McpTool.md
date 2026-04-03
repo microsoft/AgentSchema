@@ -33,6 +33,7 @@ classDiagram
         +string serverDescription
         +McpServerApprovalMode approvalMode
         +string[] allowedTools
+        +dictionary headers
     }
     class McpServerApprovalMode {
         +string kind
@@ -53,6 +54,8 @@ approvalMode:
 allowedTools:
   - operation1
   - operation2
+headers:
+  Authorization: Bearer token
 ```
 
 ## Properties
@@ -65,6 +68,7 @@ allowedTools:
 | serverDescription | string | The description of the MCP tool |
 | approvalMode | [McpServerApprovalMode](../mcpserverapprovalmode/) | The approval mode for the MCP tool, either &#39;auto&#39; or &#39;manual&#39;(Related Types: [McpServerToolAlwaysRequireApprovalMode](../mcpservertoolalwaysrequireapprovalmode/), [McpServerToolNeverRequireApprovalMode](../mcpservertoolneverrequireapprovalmode/), [McpServerToolSpecifyApprovalMode](../mcpservertoolspecifyapprovalmode/)) |
 | allowedTools | string[] | List of allowed operations or resources for the MCP tool |
+| headers | dictionary | Custom HTTP headers to include in requests to the MCP server, useful for authentication or routing |
 
 ## Composed Types
 
