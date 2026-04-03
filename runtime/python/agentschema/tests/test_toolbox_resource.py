@@ -11,7 +11,7 @@ def test_load_json_toolboxresource():
       "description": "Shared platform tools",
       "tools": [
         {
-          "id": "bing_grounding"
+          "id": "web_search"
         },
         {
           "id": "azure_ai_search",
@@ -24,6 +24,12 @@ def test_load_json_toolboxresource():
           "name": "github-copilot",
           "target": "https://api.githubcopilot.com/mcp",
           "authType": "OAuth2"
+        },
+        {
+          "id": "a2a_preview",
+          "name": "research-agent",
+          "description": "Delegates research tasks to a specialized agent",
+          "target": "https://research-agent.example.com"
         }
       ]
     }
@@ -40,7 +46,7 @@ def test_load_yaml_toolboxresource():
     kind: toolbox
     description: Shared platform tools
     tools:
-      - id: bing_grounding
+      - id: web_search
       - id: azure_ai_search
         options:
           indexName: products-index
@@ -48,6 +54,10 @@ def test_load_yaml_toolboxresource():
         name: github-copilot
         target: "https://api.githubcopilot.com/mcp"
         authType: OAuth2
+      - id: a2a_preview
+        name: research-agent
+        description: Delegates research tasks to a specialized agent
+        target: "https://research-agent.example.com"
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -65,7 +75,7 @@ def test_roundtrip_json_toolboxresource():
       "description": "Shared platform tools",
       "tools": [
         {
-          "id": "bing_grounding"
+          "id": "web_search"
         },
         {
           "id": "azure_ai_search",
@@ -78,6 +88,12 @@ def test_roundtrip_json_toolboxresource():
           "name": "github-copilot",
           "target": "https://api.githubcopilot.com/mcp",
           "authType": "OAuth2"
+        },
+        {
+          "id": "a2a_preview",
+          "name": "research-agent",
+          "description": "Delegates research tasks to a specialized agent",
+          "target": "https://research-agent.example.com"
         }
       ]
     }
@@ -99,7 +115,7 @@ def test_to_json_toolboxresource():
       "description": "Shared platform tools",
       "tools": [
         {
-          "id": "bing_grounding"
+          "id": "web_search"
         },
         {
           "id": "azure_ai_search",
@@ -112,6 +128,12 @@ def test_to_json_toolboxresource():
           "name": "github-copilot",
           "target": "https://api.githubcopilot.com/mcp",
           "authType": "OAuth2"
+        },
+        {
+          "id": "a2a_preview",
+          "name": "research-agent",
+          "description": "Delegates research tasks to a specialized agent",
+          "target": "https://research-agent.example.com"
         }
       ]
     }
@@ -132,7 +154,7 @@ def test_to_yaml_toolboxresource():
       "description": "Shared platform tools",
       "tools": [
         {
-          "id": "bing_grounding"
+          "id": "web_search"
         },
         {
           "id": "azure_ai_search",
@@ -145,6 +167,12 @@ def test_to_yaml_toolboxresource():
           "name": "github-copilot",
           "target": "https://api.githubcopilot.com/mcp",
           "authType": "OAuth2"
+        },
+        {
+          "id": "a2a_preview",
+          "name": "research-agent",
+          "description": "Delegates research tasks to a specialized agent",
+          "target": "https://research-agent.example.com"
         }
       ]
     }

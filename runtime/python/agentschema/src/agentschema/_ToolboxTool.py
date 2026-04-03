@@ -13,17 +13,19 @@ from ._context import LoadContext, SaveContext
 @dataclass
 class ToolboxTool:
     """Represents a tool definition within a toolbox.
-    Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
-    or external (mcp, openapi) with connection details.
+    Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+    or external (mcp, openapi, a2a_preview) with connection details.
 
     Attributes
     ----------
     id : str
-        The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
+        The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')
     name : Optional[str]
         Optional display name for the tool
+    description : Optional[str]
+        Human-readable description of the tool's capabilities
     target : Optional[str]
-        Target endpoint URL for external tools (e.g., MCP server URL)
+        Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)
     authType : Optional[str]
         Authentication type for the tool connection
     options : Optional[dict[str, Any]]
@@ -34,6 +36,7 @@ class ToolboxTool:
 
     id: str = field(default="")
     name: Optional[str] = None
+    description: Optional[str] = None
     target: Optional[str] = None
     authType: Optional[str] = None
     options: Optional[dict[str, Any]] = None
@@ -62,6 +65,8 @@ class ToolboxTool:
             instance.id = data["id"]
         if data is not None and "name" in data:
             instance.name = data["name"]
+        if data is not None and "description" in data:
+            instance.description = data["description"]
         if data is not None and "target" in data:
             instance.target = data["target"]
         if data is not None and "authType" in data:
@@ -90,6 +95,8 @@ class ToolboxTool:
             result["id"] = obj.id
         if obj.name is not None:
             result["name"] = obj.name
+        if obj.description is not None:
+            result["description"] = obj.description
         if obj.target is not None:
             result["target"] = obj.target
         if obj.authType is not None:

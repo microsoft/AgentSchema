@@ -12,8 +12,9 @@ public class ToolboxToolConversionTests
     public void LoadYamlInput()
     {
         string yamlData = """
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: "https://api.githubcopilot.com/mcp"
 authType: OAuth2
 options:
@@ -24,8 +25,9 @@ options:
         var instance = ToolboxTool.FromYaml(yamlData);
 
         Assert.NotNull(instance);
-        Assert.Equal("bing_grounding", instance.Id);
+        Assert.Equal("web_search", instance.Id);
         Assert.Equal("my-search-tool", instance.Name);
+        Assert.Equal("Searches the web for up-to-date information", instance.Description);
         Assert.Equal("https://api.githubcopilot.com/mcp", instance.Target);
         Assert.Equal("OAuth2", instance.AuthType);
     }
@@ -35,8 +37,9 @@ options:
     {
         string jsonData = """
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -47,8 +50,9 @@ options:
 
         var instance = ToolboxTool.FromJson(jsonData);
         Assert.NotNull(instance);
-        Assert.Equal("bing_grounding", instance.Id);
+        Assert.Equal("web_search", instance.Id);
         Assert.Equal("my-search-tool", instance.Name);
+        Assert.Equal("Searches the web for up-to-date information", instance.Description);
         Assert.Equal("https://api.githubcopilot.com/mcp", instance.Target);
         Assert.Equal("OAuth2", instance.AuthType);
     }
@@ -59,8 +63,9 @@ options:
         // Test that FromJson -> ToJson -> FromJson produces equivalent data
         string jsonData = """
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -77,8 +82,9 @@ options:
         
         var reloaded = ToolboxTool.FromJson(json);
         Assert.NotNull(reloaded);
-        Assert.Equal("bing_grounding", reloaded.Id);
+        Assert.Equal("web_search", reloaded.Id);
         Assert.Equal("my-search-tool", reloaded.Name);
+        Assert.Equal("Searches the web for up-to-date information", reloaded.Description);
         Assert.Equal("https://api.githubcopilot.com/mcp", reloaded.Target);
         Assert.Equal("OAuth2", reloaded.AuthType);
     }
@@ -88,8 +94,9 @@ options:
     {
         // Test that FromYaml -> ToYaml -> FromYaml produces equivalent data
         string yamlData = """
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: "https://api.githubcopilot.com/mcp"
 authType: OAuth2
 options:
@@ -105,8 +112,9 @@ options:
         
         var reloaded = ToolboxTool.FromYaml(yaml);
         Assert.NotNull(reloaded);
-        Assert.Equal("bing_grounding", reloaded.Id);
+        Assert.Equal("web_search", reloaded.Id);
         Assert.Equal("my-search-tool", reloaded.Name);
+        Assert.Equal("Searches the web for up-to-date information", reloaded.Description);
         Assert.Equal("https://api.githubcopilot.com/mcp", reloaded.Target);
         Assert.Equal("OAuth2", reloaded.AuthType);
     }
@@ -116,8 +124,9 @@ options:
     {
         string jsonData = """
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -138,8 +147,9 @@ options:
     public void ToYamlProducesValidYaml()
     {
         string yamlData = """
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: "https://api.githubcopilot.com/mcp"
 authType: OAuth2
 options:

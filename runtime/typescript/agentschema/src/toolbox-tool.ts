@@ -5,8 +5,8 @@ import { LoadContext, SaveContext } from "./context";
 
 /**
  * Represents a tool definition within a toolbox.
- * Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
- * or external (mcp, openapi) with connection details.
+ * Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+ * or external (mcp, openapi, a2a_preview) with connection details.
  *
  */
 export class ToolboxTool {
@@ -16,7 +16,7 @@ export class ToolboxTool {
   static readonly shorthandProperty: string | undefined = undefined;
 
   /**
-   * The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
+   * The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')
    */
   id: string = "";
 
@@ -26,7 +26,12 @@ export class ToolboxTool {
   name?: string | undefined;
 
   /**
-   * Target endpoint URL for external tools (e.g., MCP server URL)
+   * Human-readable description of the tool's capabilities
+   */
+  description?: string | undefined;
+
+  /**
+   * Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)
    */
   target?: string | undefined;
 
@@ -48,6 +53,10 @@ export class ToolboxTool {
 
     if (init?.name !== undefined) {
       this.name = init.name;
+    }
+
+    if (init?.description !== undefined) {
+      this.description = init.description;
     }
 
     if (init?.target !== undefined) {
@@ -85,6 +94,10 @@ export class ToolboxTool {
 
     if (data["name"] !== undefined && data["name"] !== null) {
       instance.name = String(data["name"]);
+    }
+
+    if (data["description"] !== undefined && data["description"] !== null) {
+      instance.description = String(data["description"]);
     }
 
     if (data["target"] !== undefined && data["target"] !== null) {
@@ -125,6 +138,10 @@ export class ToolboxTool {
 
     if (obj.name !== undefined && obj.name !== null) {
       result["name"] = obj.name;
+    }
+
+    if (obj.description !== undefined && obj.description !== null) {
+      result["description"] = obj.description;
     }
 
     if (obj.target !== undefined && obj.target !== null) {

@@ -6,8 +6,9 @@ use agentschema::ToolboxTool;
 fn test_toolbox_tool_load_json() {
     let json = r####"
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -22,9 +23,17 @@ fn test_toolbox_tool_load_json() {
         result.err()
     );
     let instance = result.unwrap();
-    assert_eq!(instance.id, "bing_grounding");
+    assert_eq!(instance.id, "web_search");
     assert!(instance.name.is_some(), "Expected name to be Some");
     assert_eq!(instance.name.as_ref().unwrap(), &"my-search-tool");
+    assert!(
+        instance.description.is_some(),
+        "Expected description to be Some"
+    );
+    assert_eq!(
+        instance.description.as_ref().unwrap(),
+        &"Searches the web for up-to-date information"
+    );
     assert!(instance.target.is_some(), "Expected target to be Some");
     assert_eq!(
         instance.target.as_ref().unwrap(),
@@ -40,8 +49,9 @@ fn test_toolbox_tool_load_json() {
 #[test]
 fn test_toolbox_tool_load_yaml() {
     let yaml = r####"
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: "https://api.githubcopilot.com/mcp"
 authType: OAuth2
 options:
@@ -55,8 +65,12 @@ options:
         result.err()
     );
     let instance = result.unwrap();
-    assert_eq!(instance.id, "bing_grounding");
+    assert_eq!(instance.id, "web_search");
     assert!(instance.name.is_some(), "Expected name to be Some");
+    assert!(
+        instance.description.is_some(),
+        "Expected description to be Some"
+    );
     assert!(instance.target.is_some(), "Expected target to be Some");
     assert!(
         instance.auth_type.is_some(),
@@ -68,8 +82,9 @@ options:
 fn test_toolbox_tool_roundtrip() {
     let json = r####"
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {

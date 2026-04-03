@@ -8,8 +8,8 @@ namespace AgentSchema;
 
 /// <summary>
 /// Represents a tool definition within a toolbox.
-/// Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
-/// or external (mcp, openapi) with connection details.
+/// Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+/// or external (mcp, openapi, a2a_preview) with connection details.
 /// </summary>
 public class ToolboxTool
 {
@@ -28,7 +28,7 @@ public class ToolboxTool
 #pragma warning restore CS8618
 
     /// <summary>
-    /// The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
+    /// The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')
     /// </summary>
     public string Id { get; set; } = string.Empty;
 
@@ -38,7 +38,12 @@ public class ToolboxTool
     public string? Name { get; set; }
 
     /// <summary>
-    /// Target endpoint URL for external tools (e.g., MCP server URL)
+    /// Human-readable description of the tool's capabilities
+    /// </summary>
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)
     /// </summary>
     public string? Target { get; set; }
 
@@ -81,6 +86,11 @@ public class ToolboxTool
         if (data.TryGetValue("name", out var nameValue) && nameValue is not null)
         {
             instance.Name = nameValue?.ToString()!;
+        }
+
+        if (data.TryGetValue("description", out var descriptionValue) && descriptionValue is not null)
+        {
+            instance.Description = descriptionValue?.ToString()!;
         }
 
         if (data.TryGetValue("target", out var targetValue) && targetValue is not null)
@@ -136,6 +146,11 @@ public class ToolboxTool
         if (obj.Name is not null)
         {
             result["name"] = obj.Name;
+        }
+
+        if (obj.Description is not null)
+        {
+            result["description"] = obj.Description;
         }
 
         if (obj.Target is not null)

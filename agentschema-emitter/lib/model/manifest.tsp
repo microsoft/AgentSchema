@@ -140,44 +140,77 @@ alias Resources = Record<Resource> | Named<
   #{ name: "my-resource" }
 >[];
 
-alias ToolboxToolId =
-  | "bing_grounding"
-  | "azure_ai_search"
-  | "code_interpreter"
-  | "file_search"
-  | "mcp"
-  | "openapi"
-  | string;
+@doc("Known toolbox tool type identifiers")
+union ToolboxToolTypes {
+  @doc("Model Context Protocol server")
+  mcp: "mcp",
 
-alias ToolboxAuthType =
-  | "CustomKeys"
-  | "OAuth2"
-  | "UserEntraToken"
-  | "ProjectManagedIdentity"
-  | "AgenticIdentityToken"
-  | string;
+  @doc("Web search via Bing grounding")
+  web_search: "web_search",
+
+  @doc("Azure AI Search index")
+  azure_ai_search: "azure_ai_search",
+
+  @doc("OpenAPI specification endpoint")
+  openapi: "openapi",
+
+  @doc("Agent-to-agent delegation (preview)")
+  a2a_preview: "a2a_preview",
+
+  @doc("Sandboxed Python code execution")
+  code_interpreter: "code_interpreter",
+
+  @doc("Vector store file search")
+  file_search: "file_search",
+
+  string,
+}
+
+@doc("Authentication types for toolbox tool connections")
+union ToolboxAuthTypes {
+  @doc("Custom API key or PAT-based authentication")
+  CustomKeys: "CustomKeys",
+
+  @doc("OAuth 2.0 with identity passthrough")
+  OAuth2: "OAuth2",
+
+  @doc("Microsoft Entra ID user token")
+  UserEntraToken: "UserEntraToken",
+
+  @doc("Foundry project managed identity")
+  ProjectManagedIdentity: "ProjectManagedIdentity",
+
+  @doc("Agentic identity token (preview)")
+  AgenticIdentityToken: "AgenticIdentityToken",
+
+  string,
+}
 
 /**
  * Represents a tool definition within a toolbox.
- * Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
- * or external (mcp, openapi) with connection details.
+ * Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+ * or external (mcp, openapi, a2a_preview) with connection details.
  */
 model ToolboxTool {
-  @doc("The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')")
-  @sample(#{ id: "bing_grounding" })
-  id: ToolboxToolId;
+  @doc("The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')")
+  @sample(#{ id: "web_search" })
+  id: ToolboxToolTypes;
 
   @doc("Optional display name for the tool")
   @sample(#{ name: "my-search-tool" })
   name?: string;
 
-  @doc("Target endpoint URL for external tools (e.g., MCP server URL)")
+  @doc("Human-readable description of the tool's capabilities")
+  @sample(#{ description: "Searches the web for up-to-date information" })
+  description?: string;
+
+  @doc("Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)")
   @sample(#{ target: "https://api.githubcopilot.com/mcp" })
   target?: string;
 
   @doc("Authentication type for the tool connection")
   @sample(#{ authType: "OAuth2" })
-  authType?: ToolboxAuthType;
+  authType?: ToolboxAuthTypes;
 
   @doc("Additional configuration options for the tool")
   @sample(#{ options: #{ indexName: "products-index" } })
@@ -200,7 +233,7 @@ model ToolboxResource extends Resource {
   @doc("The tools contained in this toolbox")
   @sample(#{
     tools: #[
-      #{ id: "bing_grounding" },
+      #{ id: "web_search" },
       #{
         id: "azure_ai_search",
         options: #{ indexName: "products-index" },
@@ -210,6 +243,12 @@ model ToolboxResource extends Resource {
         name: "github-copilot",
         target: "https://api.githubcopilot.com/mcp",
         authType: "OAuth2",
+      },
+      #{
+        id: "a2a_preview",
+        name: "research-agent",
+        description: "Delegates research tasks to a specialized agent",
+        target: "https://research-agent.example.com",
       }
     ],
   })

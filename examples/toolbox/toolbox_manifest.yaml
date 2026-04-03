@@ -28,7 +28,7 @@ resources:
     name: platform-tools
     description: Shared platform tools for support workflows
     tools:
-      - id: bing_grounding
+      - id: web_search
       - id: azure_ai_search
         options:
           indexName: support-docs-index
@@ -41,6 +41,10 @@ resources:
         options:
           clientId: "{{ github_client_id }}"
           clientSecret: "{{ github_client_secret }}"
+      - id: a2a_preview
+        name: research-agent
+        description: Delegates deep research tasks to a specialized agent
+        target: https://research-agent.internal.example.com
 
 parameters:
   model_name:

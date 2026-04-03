@@ -15,7 +15,7 @@ public class ToolboxResourceConversionTests
 kind: toolbox
 description: Shared platform tools
 tools:
-  - id: bing_grounding
+  - id: web_search
   - id: azure_ai_search
     options:
       indexName: products-index
@@ -23,6 +23,10 @@ tools:
     name: github-copilot
     target: "https://api.githubcopilot.com/mcp"
     authType: OAuth2
+  - id: a2a_preview
+    name: research-agent
+    description: Delegates research tasks to a specialized agent
+    target: "https://research-agent.example.com"
 
 """;
 
@@ -42,7 +46,7 @@ tools:
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -55,6 +59,12 @@ tools:
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -76,7 +86,7 @@ tools:
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -89,6 +99,12 @@ tools:
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -114,7 +130,7 @@ tools:
 kind: toolbox
 description: Shared platform tools
 tools:
-  - id: bing_grounding
+  - id: web_search
   - id: azure_ai_search
     options:
       indexName: products-index
@@ -122,6 +138,10 @@ tools:
     name: github-copilot
     target: "https://api.githubcopilot.com/mcp"
     authType: OAuth2
+  - id: a2a_preview
+    name: research-agent
+    description: Delegates research tasks to a specialized agent
+    target: "https://research-agent.example.com"
 
 """;
 
@@ -146,7 +166,7 @@ tools:
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -159,6 +179,12 @@ tools:
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -179,7 +205,7 @@ tools:
 kind: toolbox
 description: Shared platform tools
 tools:
-  - id: bing_grounding
+  - id: web_search
   - id: azure_ai_search
     options:
       indexName: products-index
@@ -187,6 +213,10 @@ tools:
     name: github-copilot
     target: "https://api.githubcopilot.com/mcp"
     authType: OAuth2
+  - id: a2a_preview
+    name: research-agent
+    description: Delegates research tasks to a specialized agent
+    target: "https://research-agent.example.com"
 
 """;
 

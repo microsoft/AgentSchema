@@ -1,0 +1,20 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: ToolboxAuthTypes.yaml
+anyOf:
+  - type: string
+    const: CustomKeys
+    description: Custom API key or PAT-based authentication
+  - type: string
+    const: OAuth2
+    description: OAuth 2.0 with identity passthrough
+  - type: string
+    const: UserEntraToken
+    description: Microsoft Entra ID user token
+  - type: string
+    const: ProjectManagedIdentity
+    description: Foundry project managed identity
+  - type: string
+    const: AgenticIdentityToken
+    description: Agentic identity token (preview)
+  - type: string
+description: Authentication types for toolbox tool connections

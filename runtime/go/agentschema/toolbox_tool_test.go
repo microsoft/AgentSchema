@@ -15,8 +15,9 @@ import (
 func TestToolboxToolLoadJSON(t *testing.T) {
 	jsonData := `
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -34,11 +35,14 @@ func TestToolboxToolLoadJSON(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to load ToolboxTool: %v", err)
 	}
-	if instance.Id != "bing_grounding" {
-		t.Errorf(`Expected Id to be "bing_grounding", got %v`, instance.Id)
+	if instance.Id != "web_search" {
+		t.Errorf(`Expected Id to be "web_search", got %v`, instance.Id)
 	}
 	if instance.Name == nil || *instance.Name != "my-search-tool" {
 		t.Errorf(`Expected Name to be "my-search-tool", got %v`, instance.Name)
+	}
+	if instance.Description == nil || *instance.Description != "Searches the web for up-to-date information" {
+		t.Errorf(`Expected Description to be "Searches the web for up-to-date information", got %v`, instance.Description)
 	}
 	if instance.Target == nil || *instance.Target != "https://api.githubcopilot.com/mcp" {
 		t.Errorf(`Expected Target to be "https://api.githubcopilot.com/mcp", got %v`, instance.Target)
@@ -51,8 +55,9 @@ func TestToolboxToolLoadJSON(t *testing.T) {
 // TestToolboxToolLoadYAML tests loading ToolboxTool from YAML
 func TestToolboxToolLoadYAML(t *testing.T) {
 	yamlData := `
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: "https://api.githubcopilot.com/mcp"
 authType: OAuth2
 options:
@@ -69,11 +74,14 @@ options:
 	if err != nil {
 		t.Fatalf("Failed to load ToolboxTool: %v", err)
 	}
-	if instance.Id != "bing_grounding" {
-		t.Errorf(`Expected Id to be "bing_grounding", got %v`, instance.Id)
+	if instance.Id != "web_search" {
+		t.Errorf(`Expected Id to be "web_search", got %v`, instance.Id)
 	}
 	if instance.Name == nil || *instance.Name != "my-search-tool" {
 		t.Errorf(`Expected Name to be "my-search-tool", got %v`, instance.Name)
+	}
+	if instance.Description == nil || *instance.Description != "Searches the web for up-to-date information" {
+		t.Errorf(`Expected Description to be "Searches the web for up-to-date information", got %v`, instance.Description)
 	}
 	if instance.Target == nil || *instance.Target != "https://api.githubcopilot.com/mcp" {
 		t.Errorf(`Expected Target to be "https://api.githubcopilot.com/mcp", got %v`, instance.Target)
@@ -87,8 +95,9 @@ options:
 func TestToolboxToolRoundtrip(t *testing.T) {
 	jsonData := `
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -113,11 +122,14 @@ func TestToolboxToolRoundtrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to reload ToolboxTool: %v", err)
 	}
-	if reloaded.Id != "bing_grounding" {
-		t.Errorf(`Expected Id to be "bing_grounding", got %v`, reloaded.Id)
+	if reloaded.Id != "web_search" {
+		t.Errorf(`Expected Id to be "web_search", got %v`, reloaded.Id)
 	}
 	if reloaded.Name == nil || *reloaded.Name != "my-search-tool" {
 		t.Errorf(`Expected Name to be "my-search-tool", got %v`, reloaded.Name)
+	}
+	if reloaded.Description == nil || *reloaded.Description != "Searches the web for up-to-date information" {
+		t.Errorf(`Expected Description to be "Searches the web for up-to-date information", got %v`, reloaded.Description)
 	}
 	if reloaded.Target == nil || *reloaded.Target != "https://api.githubcopilot.com/mcp" {
 		t.Errorf(`Expected Target to be "https://api.githubcopilot.com/mcp", got %v`, reloaded.Target)
@@ -131,8 +143,9 @@ func TestToolboxToolRoundtrip(t *testing.T) {
 func TestToolboxToolToJSON(t *testing.T) {
 	jsonData := `
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {
@@ -165,8 +178,9 @@ func TestToolboxToolToJSON(t *testing.T) {
 func TestToolboxToolToYAML(t *testing.T) {
 	jsonData := `
 {
-  "id": "bing_grounding",
+  "id": "web_search",
   "name": "my-search-tool",
+  "description": "Searches the web for up-to-date information",
   "target": "https://api.githubcopilot.com/mcp",
   "authType": "OAuth2",
   "options": {

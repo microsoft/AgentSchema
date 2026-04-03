@@ -9,15 +9,16 @@ import (
 )
 
 // ToolboxTool represents Represents a tool definition within a toolbox.
-// Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
-// or external (mcp, openapi) with connection details.
+// Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+// or external (mcp, openapi, a2a_preview) with connection details.
 
 type ToolboxTool struct {
-	Id       string                 `json:"id" yaml:"id"`
-	Name     *string                `json:"name,omitempty" yaml:"name,omitempty"`
-	Target   *string                `json:"target,omitempty" yaml:"target,omitempty"`
-	AuthType *string                `json:"authType,omitempty" yaml:"authType,omitempty"`
-	Options  map[string]interface{} `json:"options,omitempty" yaml:"options,omitempty"`
+	Id          string                 `json:"id" yaml:"id"`
+	Name        *string                `json:"name,omitempty" yaml:"name,omitempty"`
+	Description *string                `json:"description,omitempty" yaml:"description,omitempty"`
+	Target      *string                `json:"target,omitempty" yaml:"target,omitempty"`
+	AuthType    *string                `json:"authType,omitempty" yaml:"authType,omitempty"`
+	Options     map[string]interface{} `json:"options,omitempty" yaml:"options,omitempty"`
 }
 
 // LoadToolboxTool creates a ToolboxTool from a map[string]interface{}
@@ -32,6 +33,10 @@ func LoadToolboxTool(data interface{}, ctx *LoadContext) (ToolboxTool, error) {
 		if val, ok := m["name"]; ok && val != nil {
 			v := val.(string)
 			result.Name = &v
+		}
+		if val, ok := m["description"]; ok && val != nil {
+			v := val.(string)
+			result.Description = &v
 		}
 		if val, ok := m["target"]; ok && val != nil {
 			v := val.(string)
@@ -57,6 +62,9 @@ func (obj *ToolboxTool) Save(ctx *SaveContext) map[string]interface{} {
 	result["id"] = obj.Id
 	if obj.Name != nil {
 		result["name"] = *obj.Name
+	}
+	if obj.Description != nil {
+		result["description"] = *obj.Description
 	}
 	if obj.Target != nil {
 		result["target"] = *obj.Target

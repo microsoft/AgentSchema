@@ -18,13 +18,15 @@ describe("ToolboxTool", () => {
 
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
-      const json = `{\n  "id": "bing_grounding",\n  "name": "my-search-tool",\n  "target": "https://api.githubcopilot.com/mcp",\n  "authType": "OAuth2",\n  "options": {\n    "indexName": "products-index"\n  }\n}`;
+      const json = `{\n  "id": "web_search",\n  "name": "my-search-tool",\n  "description": "Searches the web for up-to-date information",\n  "target": "https://api.githubcopilot.com/mcp",\n  "authType": "OAuth2",\n  "options": {\n    "indexName": "products-index"\n  }\n}`;
       const instance = ToolboxTool.fromJson(json);
       expect(instance).toBeDefined();
 
-      expect(instance.id).toEqual("bing_grounding");
+      expect(instance.id).toEqual("web_search");
 
       expect(instance.name).toEqual("my-search-tool");
+
+      expect(instance.description).toEqual("Searches the web for up-to-date information");
 
       expect(instance.target).toEqual("https://api.githubcopilot.com/mcp");
 
@@ -32,7 +34,7 @@ describe("ToolboxTool", () => {
     });
 
     it("should round-trip JSON - example 1", () => {
-      const json = `{\n  "id": "bing_grounding",\n  "name": "my-search-tool",\n  "target": "https://api.githubcopilot.com/mcp",\n  "authType": "OAuth2",\n  "options": {\n    "indexName": "products-index"\n  }\n}`;
+      const json = `{\n  "id": "web_search",\n  "name": "my-search-tool",\n  "description": "Searches the web for up-to-date information",\n  "target": "https://api.githubcopilot.com/mcp",\n  "authType": "OAuth2",\n  "options": {\n    "indexName": "products-index"\n  }\n}`;
       const instance = ToolboxTool.fromJson(json);
       const output = instance.toJson();
       const reloaded = ToolboxTool.fromJson(output);
@@ -40,6 +42,8 @@ describe("ToolboxTool", () => {
       expect(reloaded.id).toEqual(instance.id);
 
       expect(reloaded.name).toEqual(instance.name);
+
+      expect(reloaded.description).toEqual(instance.description);
 
       expect(reloaded.target).toEqual(instance.target);
 
@@ -49,13 +53,15 @@ describe("ToolboxTool", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `id: bing_grounding\nname: my-search-tool\ntarget: "https://api.githubcopilot.com/mcp"\nauthType: OAuth2\noptions:\n  indexName: products-index\n`;
+      const yaml = `id: web_search\nname: my-search-tool\ndescription: Searches the web for up-to-date information\ntarget: "https://api.githubcopilot.com/mcp"\nauthType: OAuth2\noptions:\n  indexName: products-index\n`;
       const instance = ToolboxTool.fromYaml(yaml);
       expect(instance).toBeDefined();
 
-      expect(instance.id).toEqual("bing_grounding");
+      expect(instance.id).toEqual("web_search");
 
       expect(instance.name).toEqual("my-search-tool");
+
+      expect(instance.description).toEqual("Searches the web for up-to-date information");
 
       expect(instance.target).toEqual("https://api.githubcopilot.com/mcp");
 
@@ -63,7 +69,7 @@ describe("ToolboxTool", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `id: bing_grounding\nname: my-search-tool\ntarget: "https://api.githubcopilot.com/mcp"\nauthType: OAuth2\noptions:\n  indexName: products-index\n`;
+      const yaml = `id: web_search\nname: my-search-tool\ndescription: Searches the web for up-to-date information\ntarget: "https://api.githubcopilot.com/mcp"\nauthType: OAuth2\noptions:\n  indexName: products-index\n`;
       const instance = ToolboxTool.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ToolboxTool.fromYaml(output);
@@ -71,6 +77,8 @@ describe("ToolboxTool", () => {
       expect(reloaded.id).toEqual(instance.id);
 
       expect(reloaded.name).toEqual(instance.name);
+
+      expect(reloaded.description).toEqual(instance.description);
 
       expect(reloaded.target).toEqual(instance.target);
 

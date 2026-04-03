@@ -5,8 +5,8 @@ slug: "reference/toolboxtool"
 ---
 
 Represents a tool definition within a toolbox.
-Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
-or external (mcp, openapi) with connection details.
+Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+or external (mcp, openapi, a2a_preview) with connection details.
 
 ## Class Diagram
 
@@ -24,6 +24,7 @@ classDiagram
       
         +string id
         +string name
+        +string description
         +string target
         +string authType
         +dictionary options
@@ -33,8 +34,9 @@ classDiagram
 ## Yaml Example
 
 ```yaml
-id: bing_grounding
+id: web_search
 name: my-search-tool
+description: Searches the web for up-to-date information
 target: https://api.githubcopilot.com/mcp
 authType: OAuth2
 options:
@@ -45,8 +47,9 @@ options:
 
 | Name | Type | Description |
 | ---- | ---- | ----------- |
-| id | string | The tool type identifier (e.g., &#39;bing_grounding&#39;, &#39;azure_ai_search&#39;, &#39;mcp&#39;) |
+| id | string | The tool type identifier (e.g., &#39;web_search&#39;, &#39;azure_ai_search&#39;, &#39;mcp&#39;, &#39;a2a_preview&#39;) |
 | name | string | Optional display name for the tool |
-| target | string | Target endpoint URL for external tools (e.g., MCP server URL) |
+| description | string | Human-readable description of the tool&#39;s capabilities |
+| target | string | Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL) |
 | authType | string | Authentication type for the tool connection |
 | options | dictionary | Additional configuration options for the tool |

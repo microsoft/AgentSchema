@@ -19,7 +19,7 @@ func TestToolboxResourceLoadJSON(t *testing.T) {
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -32,6 +32,12 @@ func TestToolboxResourceLoadJSON(t *testing.T) {
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -60,7 +66,7 @@ func TestToolboxResourceLoadYAML(t *testing.T) {
 kind: toolbox
 description: Shared platform tools
 tools:
-  - id: bing_grounding
+  - id: web_search
   - id: azure_ai_search
     options:
       indexName: products-index
@@ -68,6 +74,10 @@ tools:
     name: github-copilot
     target: "https://api.githubcopilot.com/mcp"
     authType: OAuth2
+  - id: a2a_preview
+    name: research-agent
+    description: Delegates research tasks to a specialized agent
+    target: "https://research-agent.example.com"
 
 `
 	var data map[string]interface{}
@@ -96,7 +106,7 @@ func TestToolboxResourceRoundtrip(t *testing.T) {
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -109,6 +119,12 @@ func TestToolboxResourceRoundtrip(t *testing.T) {
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -146,7 +162,7 @@ func TestToolboxResourceToJSON(t *testing.T) {
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -159,6 +175,12 @@ func TestToolboxResourceToJSON(t *testing.T) {
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }
@@ -192,7 +214,7 @@ func TestToolboxResourceToYAML(t *testing.T) {
   "description": "Shared platform tools",
   "tools": [
     {
-      "id": "bing_grounding"
+      "id": "web_search"
     },
     {
       "id": "azure_ai_search",
@@ -205,6 +227,12 @@ func TestToolboxResourceToYAML(t *testing.T) {
       "name": "github-copilot",
       "target": "https://api.githubcopilot.com/mcp",
       "authType": "OAuth2"
+    },
+    {
+      "id": "a2a_preview",
+      "name": "research-agent",
+      "description": "Delegates research tasks to a specialized agent",
+      "target": "https://research-agent.example.com"
     }
   ]
 }

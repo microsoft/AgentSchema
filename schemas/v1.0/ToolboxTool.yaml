@@ -3,40 +3,19 @@ $id: ToolboxTool.yaml
 type: object
 properties:
   id:
-    anyOf:
-      - type: string
-        const: bing_grounding
-      - type: string
-        const: azure_ai_search
-      - type: string
-        const: code_interpreter
-      - type: string
-        const: file_search
-      - type: string
-        const: mcp
-      - type: string
-        const: openapi
-      - type: string
-    description: The tool type identifier (e.g., 'bing_grounding', 'azure_ai_search', 'mcp')
+    $ref: ToolboxToolTypes.yaml
+    description: The tool type identifier (e.g., 'web_search', 'azure_ai_search', 'mcp', 'a2a_preview')
   name:
     type: string
     description: Optional display name for the tool
+  description:
+    type: string
+    description: Human-readable description of the tool's capabilities
   target:
     type: string
-    description: Target endpoint URL for external tools (e.g., MCP server URL)
+    description: Target endpoint URL for external tools (e.g., MCP server URL, A2A agent URL)
   authType:
-    anyOf:
-      - type: string
-        const: CustomKeys
-      - type: string
-        const: OAuth2
-      - type: string
-        const: UserEntraToken
-      - type: string
-        const: ProjectManagedIdentity
-      - type: string
-        const: AgenticIdentityToken
-      - type: string
+    $ref: ToolboxAuthTypes.yaml
     description: Authentication type for the tool connection
   options:
     $ref: RecordUnknown.yaml
@@ -46,5 +25,5 @@ required:
   - id
 description: |-
   Represents a tool definition within a toolbox.
-  Tools can be Foundry-hosted (bing_grounding, azure_ai_search, etc.)
-  or external (mcp, openapi) with connection details.
+  Tools can be Foundry-hosted (web_search, azure_ai_search, etc.)
+  or external (mcp, openapi, a2a_preview) with connection details.

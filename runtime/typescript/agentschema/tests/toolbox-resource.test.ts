@@ -18,7 +18,7 @@ describe("ToolboxResource", () => {
 
   describe("JSON serialization", () => {
     it("should load from JSON - example 1", () => {
-      const json = `{\n  "kind": "toolbox",\n  "description": "Shared platform tools",\n  "tools": [\n    {\n      "id": "bing_grounding"\n    },\n    {\n      "id": "azure_ai_search",\n      "options": {\n        "indexName": "products-index"\n      }\n    },\n    {\n      "id": "mcp",\n      "name": "github-copilot",\n      "target": "https://api.githubcopilot.com/mcp",\n      "authType": "OAuth2"\n    }\n  ]\n}`;
+      const json = `{\n  "kind": "toolbox",\n  "description": "Shared platform tools",\n  "tools": [\n    {\n      "id": "web_search"\n    },\n    {\n      "id": "azure_ai_search",\n      "options": {\n        "indexName": "products-index"\n      }\n    },\n    {\n      "id": "mcp",\n      "name": "github-copilot",\n      "target": "https://api.githubcopilot.com/mcp",\n      "authType": "OAuth2"\n    },\n    {\n      "id": "a2a_preview",\n      "name": "research-agent",\n      "description": "Delegates research tasks to a specialized agent",\n      "target": "https://research-agent.example.com"\n    }\n  ]\n}`;
       const instance = ToolboxResource.fromJson(json);
       expect(instance).toBeDefined();
 
@@ -28,7 +28,7 @@ describe("ToolboxResource", () => {
     });
 
     it("should round-trip JSON - example 1", () => {
-      const json = `{\n  "kind": "toolbox",\n  "description": "Shared platform tools",\n  "tools": [\n    {\n      "id": "bing_grounding"\n    },\n    {\n      "id": "azure_ai_search",\n      "options": {\n        "indexName": "products-index"\n      }\n    },\n    {\n      "id": "mcp",\n      "name": "github-copilot",\n      "target": "https://api.githubcopilot.com/mcp",\n      "authType": "OAuth2"\n    }\n  ]\n}`;
+      const json = `{\n  "kind": "toolbox",\n  "description": "Shared platform tools",\n  "tools": [\n    {\n      "id": "web_search"\n    },\n    {\n      "id": "azure_ai_search",\n      "options": {\n        "indexName": "products-index"\n      }\n    },\n    {\n      "id": "mcp",\n      "name": "github-copilot",\n      "target": "https://api.githubcopilot.com/mcp",\n      "authType": "OAuth2"\n    },\n    {\n      "id": "a2a_preview",\n      "name": "research-agent",\n      "description": "Delegates research tasks to a specialized agent",\n      "target": "https://research-agent.example.com"\n    }\n  ]\n}`;
       const instance = ToolboxResource.fromJson(json);
       const output = instance.toJson();
       const reloaded = ToolboxResource.fromJson(output);
@@ -41,7 +41,7 @@ describe("ToolboxResource", () => {
 
   describe("YAML serialization", () => {
     it("should load from YAML - example 1", () => {
-      const yaml = `kind: toolbox\ndescription: Shared platform tools\ntools:\n  - id: bing_grounding\n  - id: azure_ai_search\n    options:\n      indexName: products-index\n  - id: mcp\n    name: github-copilot\n    target: "https://api.githubcopilot.com/mcp"\n    authType: OAuth2\n`;
+      const yaml = `kind: toolbox\ndescription: Shared platform tools\ntools:\n  - id: web_search\n  - id: azure_ai_search\n    options:\n      indexName: products-index\n  - id: mcp\n    name: github-copilot\n    target: "https://api.githubcopilot.com/mcp"\n    authType: OAuth2\n  - id: a2a_preview\n    name: research-agent\n    description: Delegates research tasks to a specialized agent\n    target: "https://research-agent.example.com"\n`;
       const instance = ToolboxResource.fromYaml(yaml);
       expect(instance).toBeDefined();
 
@@ -51,7 +51,7 @@ describe("ToolboxResource", () => {
     });
 
     it("should round-trip YAML - example 1", () => {
-      const yaml = `kind: toolbox\ndescription: Shared platform tools\ntools:\n  - id: bing_grounding\n  - id: azure_ai_search\n    options:\n      indexName: products-index\n  - id: mcp\n    name: github-copilot\n    target: "https://api.githubcopilot.com/mcp"\n    authType: OAuth2\n`;
+      const yaml = `kind: toolbox\ndescription: Shared platform tools\ntools:\n  - id: web_search\n  - id: azure_ai_search\n    options:\n      indexName: products-index\n  - id: mcp\n    name: github-copilot\n    target: "https://api.githubcopilot.com/mcp"\n    authType: OAuth2\n  - id: a2a_preview\n    name: research-agent\n    description: Delegates research tasks to a specialized agent\n    target: "https://research-agent.example.com"\n`;
       const instance = ToolboxResource.fromYaml(yaml);
       const output = instance.toYaml();
       const reloaded = ToolboxResource.fromYaml(output);

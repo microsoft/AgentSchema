@@ -273,6 +273,7 @@ classDiagram
       
         +string id
         +string name
+        +string description
         +string target
         +string authType
         +dictionary options
