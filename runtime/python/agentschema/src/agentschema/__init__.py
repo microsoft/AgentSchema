@@ -72,6 +72,9 @@ from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
 
 
+from ._CodeConfiguration import CodeConfiguration
+
+
 from ._Resource import Resource, ModelResource, ToolResource
 
 
@@ -115,6 +118,7 @@ __all__ = [
     "ProtocolVersionRecord",
     "ContainerResources",
     "EnvironmentVariable",
+    "CodeConfiguration",
     "ContainerAgent",
     "Resource",
     "ModelResource",

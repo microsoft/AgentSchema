@@ -244,6 +244,12 @@ classDiagram
         +string name
         +string value
     }
+    class CodeConfiguration {
+      
+        +string runtime
+        +string entryPoint
+        +string dependencyResolution
+    }
     class ContainerAgent {
       
         +string kind
@@ -252,6 +258,7 @@ classDiagram
         +string dockerfilePath
         +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
+        +CodeConfiguration codeConfiguration
     }
     class Resource {
       <<abstract>>
@@ -326,6 +333,7 @@ classDiagram
     ContainerAgent *-- ProtocolVersionRecord
     ContainerAgent *-- ContainerResources
     ContainerAgent *-- EnvironmentVariable
+    ContainerAgent *-- CodeConfiguration
     AgentManifest *-- AgentDefinition
     AgentManifest *-- PropertySchema
     AgentManifest *-- Resource

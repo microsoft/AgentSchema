@@ -57,6 +57,11 @@ public class ContainerAgent : AgentDefinition
     /// </summary>
     public IList<EnvironmentVariable>? EnvironmentVariables { get; set; }
 
+    /// <summary>
+    /// Configuration for code-based (ZIP upload) deployment. When present, agent source code is uploaded directly instead of building a container image.
+    /// </summary>
+    public CodeConfiguration? CodeConfiguration { get; set; }
+
 
     #region Load Methods
 
@@ -106,6 +111,11 @@ public class ContainerAgent : AgentDefinition
         if (data.TryGetValue("environmentVariables", out var environmentVariablesValue) && environmentVariablesValue is not null)
         {
             instance.EnvironmentVariables = LoadEnvironmentVariables(environmentVariablesValue, context);
+        }
+
+        if (data.TryGetValue("codeConfiguration", out var codeConfigurationValue) && codeConfigurationValue is not null)
+        {
+            instance.CodeConfiguration = CodeConfiguration.Load(codeConfigurationValue.GetDictionary(), context);
         }
 
         if (context is not null)
@@ -257,6 +267,11 @@ public class ContainerAgent : AgentDefinition
         if (obj.EnvironmentVariables is not null)
         {
             result["environmentVariables"] = SaveEnvironmentVariables(obj.EnvironmentVariables, context);
+        }
+
+        if (obj.CodeConfiguration is not null)
+        {
+            result["codeConfiguration"] = obj.CodeConfiguration?.Save(context);
         }
 
 

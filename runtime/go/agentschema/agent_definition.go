@@ -382,6 +382,7 @@ type ContainerAgent struct {
 	DockerfilePath       *string                 `json:"dockerfilePath,omitempty" yaml:"dockerfilePath,omitempty"`
 	Resources            ContainerResources      `json:"resources" yaml:"resources"`
 	EnvironmentVariables []EnvironmentVariable   `json:"environmentVariables,omitempty" yaml:"environmentVariables,omitempty"`
+	CodeConfiguration    *CodeConfiguration      `json:"codeConfiguration,omitempty" yaml:"codeConfiguration,omitempty"`
 }
 
 // LoadContainerAgent creates a ContainerAgent from a map[string]interface{}
@@ -429,6 +430,12 @@ func LoadContainerAgent(data interface{}, ctx *LoadContext) (ContainerAgent, err
 				}
 			}
 		}
+		if val, ok := m["codeConfiguration"]; ok && val != nil {
+			if m, ok := val.(map[string]interface{}); ok {
+				loaded, _ := LoadCodeConfiguration(m, ctx)
+				result.CodeConfiguration = &loaded
+			}
+		}
 	}
 
 	return result, nil
@@ -459,6 +466,9 @@ func (obj *ContainerAgent) Save(ctx *SaveContext) map[string]interface{} {
 			arr[i] = item.Save(ctx)
 		}
 		result["environmentVariables"] = arr
+	}
+	if obj.CodeConfiguration != nil {
+		result["codeConfiguration"] = obj.CodeConfiguration.Save(ctx)
 	}
 
 	return result
