@@ -23,6 +23,26 @@ alias EnvironmentVariables = Record<EnvironmentVariable> | Named<
 
 alias AgentProtocol = "responses" | "activity" | string;
 
+alias DependencyResolution = "bundled" | "remote_build" | string;
+
+/**
+ * Configuration for code-based (ZIP upload) deployment of a hosted agent.
+ * When present, the agent source code is uploaded directly instead of building a container image.
+ */
+model CodeConfiguration {
+  @doc("Runtime identifier for code execution (e.g., 'python_3_11', 'dotnet_8').")
+  @sample(#{ runtime: "python_3_11" })
+  runtime: string;
+
+  @doc("The entry point file for the agent (e.g., 'main.py' for Python, 'HelloWorld.dll' for .NET).")
+  @sample(#{ entryPoint: "main.py" })
+  entryPoint: string;
+
+  @doc("How package dependencies are resolved at deployment time.")
+  @sample(#{ dependencyResolution: "remote_build" })
+  dependencyResolution?: DependencyResolution;
+}
+
 /*
  * A record mapping for a single protocol and its version.
  */
@@ -81,4 +101,7 @@ model ContainerAgent extends AgentDefinition {
     environmentVariables: #[#{ name: "MY_ENV_VAR", value: "my-value" }],
   })
   environmentVariables?: EnvironmentVariables;
+
+  @doc("Configuration for code-based (ZIP upload) deployment. When present, agent source code is uploaded directly instead of building a container image.")
+  codeConfiguration?: CodeConfiguration;
 }

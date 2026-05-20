@@ -38,6 +38,9 @@ properties:
             - name
             - value
     description: Environment variables to set in the container
+  codeConfiguration:
+    $ref: CodeConfiguration.yaml
+    description: Configuration for code-based (ZIP upload) deployment. When present, agent source code is uploaded directly instead of building a container image.
 required:
   - kind
   - protocols

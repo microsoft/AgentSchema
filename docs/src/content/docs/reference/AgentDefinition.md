@@ -52,6 +52,7 @@ classDiagram
         +string dockerfilePath
         +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
+        +CodeConfiguration codeConfiguration
     }
     AgentDefinition <|-- ContainerAgent
 ```

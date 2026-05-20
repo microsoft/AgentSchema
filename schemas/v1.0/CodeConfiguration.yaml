@@ -1,0 +1,24 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: CodeConfiguration.yaml
+type: object
+properties:
+  runtime:
+    type: string
+    description: Runtime identifier for code execution (e.g., 'python_3_11', 'dotnet_8').
+  entryPoint:
+    type: string
+    description: The entry point file for the agent (e.g., 'main.py' for Python, 'HelloWorld.dll' for .NET).
+  dependencyResolution:
+    anyOf:
+      - type: string
+        const: bundled
+      - type: string
+        const: remote_build
+      - type: string
+    description: How package dependencies are resolved at deployment time.
+required:
+  - runtime
+  - entryPoint
+description: |-
+  Configuration for code-based (ZIP upload) deployment of a hosted agent.
+  When present, the agent source code is uploaded directly instead of building a container image.

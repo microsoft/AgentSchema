@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
+from ._CodeConfiguration import CodeConfiguration
 from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
@@ -465,6 +466,8 @@ class ContainerAgent(AgentDefinition):
         Resource allocation for the container
     environmentVariables : list[EnvironmentVariable]
         Environment variables to set in the container
+    codeConfiguration : Optional[CodeConfiguration]
+        Configuration for code-based (ZIP upload) deployment. When present, agent source code is uploaded directly instead of building a container image.
     """
 
     _shorthand_property: ClassVar[Optional[str]] = None
@@ -475,6 +478,7 @@ class ContainerAgent(AgentDefinition):
     dockerfilePath: Optional[str] = None
     resources: ContainerResources = field(default_factory=ContainerResources)
     environmentVariables: list[EnvironmentVariable] = field(default_factory=list)
+    codeConfiguration: Optional[CodeConfiguration] = None
 
     @staticmethod
     def load(data: Any, context: Optional[LoadContext] = None) -> "ContainerAgent":
@@ -511,6 +515,10 @@ class ContainerAgent(AgentDefinition):
         if data is not None and "environmentVariables" in data:
             instance.environmentVariables = ContainerAgent.load_environmentVariables(
                 data["environmentVariables"], context
+            )
+        if data is not None and "codeConfiguration" in data:
+            instance.codeConfiguration = CodeConfiguration.load(
+                data["codeConfiguration"], context
             )
         if context is not None:
             instance = context.process_output(instance)
@@ -647,6 +655,8 @@ class ContainerAgent(AgentDefinition):
             result["environmentVariables"] = ContainerAgent.save_environmentVariables(
                 obj.environmentVariables, context
             )
+        if obj.codeConfiguration is not None:
+            result["codeConfiguration"] = obj.codeConfiguration.save(context)
 
         return result
 

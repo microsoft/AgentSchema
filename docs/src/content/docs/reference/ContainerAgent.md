@@ -38,6 +38,7 @@ classDiagram
         +string dockerfilePath
         +ContainerResources resources
         +EnvironmentVariable[] environmentVariables
+        +CodeConfiguration codeConfiguration
     }
     class ProtocolVersionRecord {
         +string protocol
@@ -54,6 +55,12 @@ classDiagram
         +string value
     }
     ContainerAgent *-- EnvironmentVariable
+    class CodeConfiguration {
+        +string runtime
+        +string entryPoint
+        +string dependencyResolution
+    }
+    ContainerAgent *-- CodeConfiguration
 ```
 
 ## Yaml Example
@@ -83,6 +90,7 @@ environmentVariables:
 | dockerfilePath | string | Path to a Dockerfile for deployment. Can be relative to the working directory or an absolute path. |
 | resources | [ContainerResources](../containerresources/) | Resource allocation for the container |
 | environmentVariables | [EnvironmentVariable[]](../environmentvariable/) | Environment variables to set in the container |
+| codeConfiguration | [CodeConfiguration](../codeconfiguration/) | Configuration for code-based (ZIP upload) deployment. When present, agent source code is uploaded directly instead of building a container image. |
 
 ## Composed Types
 
@@ -91,3 +99,4 @@ The following types are composed within `ContainerAgent`:
 - [ProtocolVersionRecord](../protocolversionrecord/)
 - [ContainerResources](../containerresources/)
 - [EnvironmentVariable](../environmentvariable/)
+- [CodeConfiguration](../codeconfiguration/)
