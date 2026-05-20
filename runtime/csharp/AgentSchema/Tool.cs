@@ -101,6 +101,12 @@ public abstract class Tool
     {
         var result = new List<Binding>();
 
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -131,6 +137,11 @@ public abstract class Tool
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add(Binding.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(Binding.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }
