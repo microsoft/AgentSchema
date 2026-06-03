@@ -36,6 +36,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
+        +AgentPolicies policies
     }
     AgentDefinition <|-- Workflow
     class Workflow {

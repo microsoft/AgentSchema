@@ -1,0 +1,8 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: AgentPolicies.yaml
+type: object
+properties:
+  raiConfig:
+    $ref: RaiConfig.yaml
+    description: Responsible AI (content safety) configuration for the agent.
+description: Safety and governance policies for an agent.

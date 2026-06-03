@@ -5,6 +5,12 @@
 ##########################################
 from ._context import LoadContext, SaveContext
 
+from ._RaiConfig import RaiConfig
+
+
+from ._AgentPolicies import AgentPolicies
+
+
 from ._AgentDefinition import AgentDefinition, PromptAgent, Workflow, ContainerAgent
 
 
@@ -83,6 +89,8 @@ from ._AgentManifest import AgentManifest
 __all__ = [
     "LoadContext",
     "SaveContext",
+    "RaiConfig",
+    "AgentPolicies",
     "AgentDefinition",
     "Connection",
     "ReferenceConnection",

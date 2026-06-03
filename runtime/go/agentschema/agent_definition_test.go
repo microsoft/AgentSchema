@@ -52,6 +52,11 @@ func TestAgentDefinitionLoadJSON(t *testing.T) {
         "description": "The answer to the user's question."
       }
     }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -100,6 +105,9 @@ outputSchema:
     answer:
       kind: string
       description: The answer to the user's question.
+policies:
+  raiConfig:
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 `
 	var data map[string]interface{}
@@ -157,6 +165,11 @@ func TestAgentDefinitionRoundtrip(t *testing.T) {
         "kind": "string",
         "description": "The answer to the user's question."
       }
+    }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
   }
 }
@@ -217,6 +230,11 @@ func TestAgentDefinitionToJSON(t *testing.T) {
         "description": "The answer to the user's question."
       }
     }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -275,6 +293,11 @@ func TestAgentDefinitionToYAML(t *testing.T) {
         "kind": "string",
         "description": "The answer to the user's question."
       }
+    }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
   }
 }
@@ -336,6 +359,11 @@ func TestAgentDefinitionLoadJSON1(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -384,6 +412,9 @@ outputSchema:
     - name: answer
       kind: string
       description: The answer to the user's question.
+policies:
+  raiConfig:
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 `
 	var data map[string]interface{}
@@ -443,6 +474,11 @@ func TestAgentDefinitionRoundtrip1(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -503,6 +539,11 @@ func TestAgentDefinitionToJSON1(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -563,6 +604,11 @@ func TestAgentDefinitionToYAML1(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -625,6 +671,11 @@ func TestAgentDefinitionLoadJSON2(t *testing.T) {
         "description": "The answer to the user's question."
       }
     }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -673,6 +724,9 @@ outputSchema:
     answer:
       kind: string
       description: The answer to the user's question.
+policies:
+  raiConfig:
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 `
 	var data map[string]interface{}
@@ -733,6 +787,11 @@ func TestAgentDefinitionRoundtrip2(t *testing.T) {
         "kind": "string",
         "description": "The answer to the user's question."
       }
+    }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
   }
 }
@@ -796,6 +855,11 @@ func TestAgentDefinitionToJSON2(t *testing.T) {
         "description": "The answer to the user's question."
       }
     }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -857,6 +921,11 @@ func TestAgentDefinitionToYAML2(t *testing.T) {
         "kind": "string",
         "description": "The answer to the user's question."
       }
+    }
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
   }
 }
@@ -921,6 +990,11 @@ func TestAgentDefinitionLoadJSON3(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -969,6 +1043,9 @@ outputSchema:
     - name: answer
       kind: string
       description: The answer to the user's question.
+policies:
+  raiConfig:
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 `
 	var data map[string]interface{}
@@ -1031,6 +1108,11 @@ func TestAgentDefinitionRoundtrip3(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -1094,6 +1176,11 @@ func TestAgentDefinitionToJSON3(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `
@@ -1157,6 +1244,11 @@ func TestAgentDefinitionToYAML3(t *testing.T) {
         "description": "The answer to the user's question."
       }
     ]
+  },
+  "policies": {
+    "raiConfig": {
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
   }
 }
 `

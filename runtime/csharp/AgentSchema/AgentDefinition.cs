@@ -63,6 +63,11 @@ public abstract class AgentDefinition
     /// </summary>
     public PropertySchema? OutputSchema { get; set; }
 
+    /// <summary>
+    /// Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
+    /// </summary>
+    public AgentPolicies? Policies { get; set; }
+
 
     #region Load Methods
 
@@ -117,6 +122,11 @@ public abstract class AgentDefinition
         if (data.TryGetValue("outputSchema", out var outputSchemaValue) && outputSchemaValue is not null)
         {
             instance.OutputSchema = PropertySchema.Load(outputSchemaValue.GetDictionary(), context);
+        }
+
+        if (data.TryGetValue("policies", out var policiesValue) && policiesValue is not null)
+        {
+            instance.Policies = AgentPolicies.Load(policiesValue.GetDictionary(), context);
         }
 
         if (context is not null)
@@ -204,6 +214,11 @@ public abstract class AgentDefinition
         if (obj.OutputSchema is not null)
         {
             result["outputSchema"] = obj.OutputSchema?.Save(context);
+        }
+
+        if (obj.Policies is not null)
+        {
+            result["policies"] = obj.Policies?.Save(context);
         }
 
 

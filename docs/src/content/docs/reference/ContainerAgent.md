@@ -28,6 +28,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
+        +AgentPolicies policies
     }
     AgentDefinition <|-- ContainerAgent
     class ContainerAgent {

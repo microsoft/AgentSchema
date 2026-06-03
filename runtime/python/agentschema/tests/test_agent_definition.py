@@ -44,6 +44,11 @@ def test_load_json_agentdefinition():
             "description": "The answer to the user's question."
           }
         }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -88,6 +93,9 @@ def test_load_yaml_agentdefinition():
         answer:
           kind: string
           description: The answer to the user's question.
+    policies:
+      raiConfig:
+        raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -142,6 +150,11 @@ def test_roundtrip_json_agentdefinition():
             "kind": "string",
             "description": "The answer to the user's question."
           }
+        }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
       }
     }
@@ -201,6 +214,11 @@ def test_to_json_agentdefinition():
             "description": "The answer to the user's question."
           }
         }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -252,6 +270,11 @@ def test_to_yaml_agentdefinition():
             "kind": "string",
             "description": "The answer to the user's question."
           }
+        }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
       }
     }
@@ -305,6 +328,11 @@ def test_load_json_agentdefinition_1():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -349,6 +377,9 @@ def test_load_yaml_agentdefinition_1():
         - name: answer
           kind: string
           description: The answer to the user's question.
+    policies:
+      raiConfig:
+        raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -405,6 +436,11 @@ def test_roundtrip_json_agentdefinition_1():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -464,6 +500,11 @@ def test_to_json_agentdefinition_1():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -517,6 +558,11 @@ def test_to_yaml_agentdefinition_1():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -571,6 +617,11 @@ def test_load_json_agentdefinition_2():
             "description": "The answer to the user's question."
           }
         }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -615,6 +666,9 @@ def test_load_yaml_agentdefinition_2():
         answer:
           kind: string
           description: The answer to the user's question.
+    policies:
+      raiConfig:
+        raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -672,6 +726,11 @@ def test_roundtrip_json_agentdefinition_2():
             "kind": "string",
             "description": "The answer to the user's question."
           }
+        }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
       }
     }
@@ -734,6 +793,11 @@ def test_to_json_agentdefinition_2():
             "description": "The answer to the user's question."
           }
         }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -788,6 +852,11 @@ def test_to_yaml_agentdefinition_2():
             "kind": "string",
             "description": "The answer to the user's question."
           }
+        }
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
       }
     }
@@ -844,6 +913,11 @@ def test_load_json_agentdefinition_3():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -888,6 +962,9 @@ def test_load_yaml_agentdefinition_3():
         - name: answer
           kind: string
           description: The answer to the user's question.
+    policies:
+      raiConfig:
+        raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
     data = yaml.load(yaml_data, Loader=yaml.FullLoader)
@@ -947,6 +1024,11 @@ def test_roundtrip_json_agentdefinition_3():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -1009,6 +1091,11 @@ def test_to_json_agentdefinition_3():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """
@@ -1065,6 +1152,11 @@ def test_to_yaml_agentdefinition_3():
             "description": "The answer to the user's question."
           }
         ]
+      },
+      "policies": {
+        "raiConfig": {
+          "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+        }
       }
     }
     """

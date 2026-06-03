@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
+from ._AgentPolicies import AgentPolicies
 from ._CodeConfiguration import CodeConfiguration
 from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
@@ -42,6 +43,8 @@ class AgentDefinition(ABC):
         Input parameters that participate in template rendering
     outputSchema : Optional[PropertySchema]
         Expected output format and structure from the agent
+    policies : Optional[AgentPolicies]
+        Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
     """
 
     _shorthand_property: ClassVar[Optional[str]] = None
@@ -53,6 +56,7 @@ class AgentDefinition(ABC):
     metadata: Optional[dict[str, Any]] = None
     inputSchema: Optional[PropertySchema] = None
     outputSchema: Optional[PropertySchema] = None
+    policies: Optional[AgentPolicies] = None
 
     @staticmethod
     def load(data: Any, context: Optional[LoadContext] = None) -> "AgentDefinition":
@@ -88,6 +92,8 @@ class AgentDefinition(ABC):
             instance.inputSchema = PropertySchema.load(data["inputSchema"], context)
         if data is not None and "outputSchema" in data:
             instance.outputSchema = PropertySchema.load(data["outputSchema"], context)
+        if data is not None and "policies" in data:
+            instance.policies = AgentPolicies.load(data["policies"], context)
         if context is not None:
             instance = context.process_output(instance)
         return instance
@@ -140,6 +146,8 @@ class AgentDefinition(ABC):
             result["inputSchema"] = obj.inputSchema.save(context)
         if obj.outputSchema is not None:
             result["outputSchema"] = obj.outputSchema.save(context)
+        if obj.policies is not None:
+            result["policies"] = obj.policies.save(context)
 
         if context is not None:
             result = context.process_dict(result)

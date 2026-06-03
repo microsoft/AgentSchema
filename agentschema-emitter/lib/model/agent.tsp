@@ -10,6 +10,32 @@ namespace AgentSchema;
 alias AgentKind = "prompt" | "hosted" | "workflow";
 
 /**
+ * Responsible AI (content safety) configuration applied to an agent.
+ * Associates the agent with a Responsible AI policy that governs content
+ * filtering and safety guardrails for prompts and completions.
+ */
+model RaiConfig {
+  @doc("Full ARM resource ID of the Responsible AI policy on the Cognitive Services account (e.g., '/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.CognitiveServices/accounts/<account>/raiPolicies/<policyName>').")
+  @sample(#{
+    raiPolicyName: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2",
+  })
+  raiPolicyName: string;
+}
+
+/**
+ * Safety and governance policies for an agent.
+ */
+model AgentPolicies {
+  @doc("Responsible AI (content safety) configuration for the agent.")
+  @sample(#{
+    raiConfig: #{
+      raiPolicyName: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2",
+    },
+  })
+  raiConfig?: RaiConfig;
+}
+
+/**
  * The following is a specification for defining AI agents with structured metadata, inputs, outputs, tools, and templates.
  * It provides a way to create reusable and composable AI agents that can be executed with specific configurations.
  * The specification includes metadata about the agent, model configuration, input parameters, expected outputs,
@@ -95,6 +121,17 @@ model AgentDefinition {
     },
   })
   outputSchema?: PropertySchema;
+
+  // Policies
+  @doc("Safety and governance policies for the agent, such as Responsible AI content-safety configuration.")
+  @sample(#{
+    policies: #{
+      raiConfig: #{
+        raiPolicyName: "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2",
+      },
+    },
+  })
+  policies?: AgentPolicies;
 }
 
 /**
