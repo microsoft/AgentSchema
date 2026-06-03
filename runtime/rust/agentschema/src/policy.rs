@@ -9,7 +9,7 @@
 #[derive(Debug, Clone, Default)]
 pub struct Policy {
     /// The policy type. 'rai_policy' attaches a Responsible AI (content safety) guardrail.
-    pub type: String,
+    pub r#type: String,
     /// For 'rai_policy', the full ARM resource ID of the Responsible AI policy on the Cognitive Services account (e.g., '/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.CognitiveServices/accounts/<account>/raiPolicies/<policyName>').
     pub rai_policy_name: Option<String>,
 }
@@ -35,7 +35,7 @@ impl Policy {
     /// Load Policy from a `serde_json::Value`.
     pub fn load_from_value(value: &serde_json::Value) -> Self {
         Self {
-            type: value.get("type").and_then(|v| v.as_str()).unwrap_or_default().to_string(),
+            r#type: value.get("type").and_then(|v| v.as_str()).unwrap_or_default().to_string(),
             rai_policy_name: value.get("raiPolicyName").and_then(|v| v.as_str()).map(|s| s.to_string()),
         }
     }
@@ -43,8 +43,8 @@ impl Policy {
     /// Serialize Policy to a `serde_json::Value`.
     pub fn to_value(&self) -> serde_json::Value {
         let mut result = serde_json::Map::new();
-        if !self.type.is_empty() {
-            result.insert("type".to_string(), serde_json::Value::String(self.type.clone()));
+        if !self.r#type.is_empty() {
+            result.insert("type".to_string(), serde_json::Value::String(self.r#type.clone()));
         }
         if let Some(ref val) = self.rai_policy_name {
             result.insert("raiPolicyName".to_string(), serde_json::Value::String(val.clone()));

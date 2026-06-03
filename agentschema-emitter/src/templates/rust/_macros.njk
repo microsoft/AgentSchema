@@ -83,7 +83,7 @@ Default::default()
   Optional non-polymorphic non-scalar fields are wrapped in Some().
 #}
 {% macro loadProperty(prop, varName, typeMapper, polymorphicTypeNames) -%}
-{%- set propNameRust = prop.name | snakeCase -%}
+{%- set propNameRust = prop.name | rustFieldIdent -%}
 {%- if prop.isCollection and not prop.isDict and not prop.isScalar %}
         if let Some(val) = {{ varName }}.get("{{ prop.name }}") {
             result.{{ propNameRust }} = val.clone();
@@ -212,7 +212,7 @@ Default::default()
   Render save code for a single property.
 #}
 {% macro saveProperty(prop, polymorphicTypeNames) -%}
-{%- set propNameRust = prop.name | snakeCase -%}
+{%- set propNameRust = prop.name | rustFieldIdent -%}
 {%- if prop.isCollection and not prop.isDict and not prop.isScalar %}
         if !self.{{ propNameRust }}.is_null() {
             result.insert("{{ prop.name }}".to_string(), self.{{ propNameRust }}.clone());
@@ -294,12 +294,13 @@ Default::default()
 #}
 {% macro typedAccessor(prop) -%}
 {%- set propNameRust = prop.name | snakeCase -%}
+{%- set propNameField = prop.name | rustFieldIdent -%}
 {%- if prop.isCollection and not prop.isScalar and not prop.isDict %}
     /// Returns typed `Vec<{{ prop.typeName.name }}>` by parsing the stored JSON value.
     /// Handles both array format `[{...}]` and dict format `{"name": {...}}`.
     /// Returns `None` if the field is null or cannot be parsed.
     pub fn as_{{ propNameRust }}(&self) -> Option<Vec<{{ prop.typeName.name }}>> {
-        match &self.{{ propNameRust }} {
+        match &self.{{ propNameField }} {
             serde_json::Value::Array(arr) => {
                 Some(arr.iter().map({{ prop.typeName.name }}::load_from_value).collect())
             }
@@ -327,7 +328,7 @@ Default::default()
     /// Returns typed reference to the map if the field is an object.
     /// Returns `None` if the field is null or not an object.
     pub fn as_{{ propNameRust }}_dict(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
-        self.{{ propNameRust }}.as_object()
+        self.{{ propNameField }}.as_object()
     }
 {%- endif -%}
 {%- endmacro %}
@@ -338,7 +339,7 @@ Default::default()
   Used for struct initialization syntax to avoid clippy::field_reassign_with_default.
 #}
 {% macro fieldInitializer(prop, varName, typeMapper, polymorphicTypeNames) -%}
-{%- set propNameRust = prop.name | snakeCase -%}
+{%- set propNameRust = prop.name | rustFieldIdent -%}
 {%- if prop.isCollection and not prop.isDict and not prop.isScalar %}
 {{ varName }}.get("{{ prop.name }}").cloned().unwrap_or(serde_json::Value::Null)
 {%- elif prop.isCollection and not prop.isDict and prop.isScalar %}
