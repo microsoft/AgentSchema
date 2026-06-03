@@ -11,8 +11,8 @@ import (
 	"github.com/microsoft/agentschema-go/agentschema"
 )
 
-// TestRaiConfigLoadJSON tests loading RaiConfig from JSON
-func TestRaiConfigLoadJSON(t *testing.T) {
+// TestPolicyLoadJSON tests loading Policy from JSON
+func TestPolicyLoadJSON(t *testing.T) {
 	jsonData := `
 {
   "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
@@ -24,17 +24,17 @@ func TestRaiConfigLoadJSON(t *testing.T) {
 	}
 
 	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadRaiConfig(data, ctx)
+	instance, err := agentschema.LoadPolicy(data, ctx)
 	if err != nil {
-		t.Fatalf("Failed to load RaiConfig: %v", err)
+		t.Fatalf("Failed to load Policy: %v", err)
 	}
-	if instance.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
+	if instance.RaiPolicyName == nil || *instance.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
 		t.Errorf(`Expected RaiPolicyName to be "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", got %v`, instance.RaiPolicyName)
 	}
 }
 
-// TestRaiConfigLoadYAML tests loading RaiConfig from YAML
-func TestRaiConfigLoadYAML(t *testing.T) {
+// TestPolicyLoadYAML tests loading Policy from YAML
+func TestPolicyLoadYAML(t *testing.T) {
 	yamlData := `
 raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
@@ -45,17 +45,17 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 	}
 
 	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadRaiConfig(data, ctx)
+	instance, err := agentschema.LoadPolicy(data, ctx)
 	if err != nil {
-		t.Fatalf("Failed to load RaiConfig: %v", err)
+		t.Fatalf("Failed to load Policy: %v", err)
 	}
-	if instance.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
+	if instance.RaiPolicyName == nil || *instance.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
 		t.Errorf(`Expected RaiPolicyName to be "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", got %v`, instance.RaiPolicyName)
 	}
 }
 
-// TestRaiConfigRoundtrip tests load -> save -> load produces equivalent data
-func TestRaiConfigRoundtrip(t *testing.T) {
+// TestPolicyRoundtrip tests load -> save -> load produces equivalent data
+func TestPolicyRoundtrip(t *testing.T) {
 	jsonData := `
 {
   "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
@@ -67,24 +67,24 @@ func TestRaiConfigRoundtrip(t *testing.T) {
 	}
 
 	loadCtx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadRaiConfig(data, loadCtx)
+	instance, err := agentschema.LoadPolicy(data, loadCtx)
 	if err != nil {
-		t.Fatalf("Failed to load RaiConfig: %v", err)
+		t.Fatalf("Failed to load Policy: %v", err)
 	}
 	saveCtx := agentschema.NewSaveContext()
 	savedData := instance.Save(saveCtx)
 
-	reloaded, err := agentschema.LoadRaiConfig(savedData, loadCtx)
+	reloaded, err := agentschema.LoadPolicy(savedData, loadCtx)
 	if err != nil {
-		t.Fatalf("Failed to reload RaiConfig: %v", err)
+		t.Fatalf("Failed to reload Policy: %v", err)
 	}
-	if reloaded.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
+	if reloaded.RaiPolicyName == nil || *reloaded.RaiPolicyName != "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2" {
 		t.Errorf(`Expected RaiPolicyName to be "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", got %v`, reloaded.RaiPolicyName)
 	}
 }
 
-// TestRaiConfigToJSON tests that ToJSON produces valid JSON
-func TestRaiConfigToJSON(t *testing.T) {
+// TestPolicyToJSON tests that ToJSON produces valid JSON
+func TestPolicyToJSON(t *testing.T) {
 	jsonData := `
 {
   "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
@@ -96,9 +96,9 @@ func TestRaiConfigToJSON(t *testing.T) {
 	}
 
 	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadRaiConfig(data, ctx)
+	instance, err := agentschema.LoadPolicy(data, ctx)
 	if err != nil {
-		t.Fatalf("Failed to load RaiConfig: %v", err)
+		t.Fatalf("Failed to load Policy: %v", err)
 	}
 	jsonOutput, err := instance.ToJSON()
 	if err != nil {
@@ -111,8 +111,8 @@ func TestRaiConfigToJSON(t *testing.T) {
 	}
 }
 
-// TestRaiConfigToYAML tests that ToYAML produces valid YAML
-func TestRaiConfigToYAML(t *testing.T) {
+// TestPolicyToYAML tests that ToYAML produces valid YAML
+func TestPolicyToYAML(t *testing.T) {
 	jsonData := `
 {
   "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
@@ -124,9 +124,9 @@ func TestRaiConfigToYAML(t *testing.T) {
 	}
 
 	ctx := agentschema.NewLoadContext()
-	instance, err := agentschema.LoadRaiConfig(data, ctx)
+	instance, err := agentschema.LoadPolicy(data, ctx)
 	if err != nil {
-		t.Fatalf("Failed to load RaiConfig: %v", err)
+		t.Fatalf("Failed to load Policy: %v", err)
 	}
 	yamlOutput, err := instance.ToYAML()
 	if err != nil {

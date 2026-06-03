@@ -6,7 +6,7 @@ namespace AgentSchema;
 #pragma warning restore IDE0130
 
 
-public class RaiConfigConversionTests
+public class PolicyConversionTests
 {   
     [Fact]
     public void LoadYamlInput()
@@ -16,7 +16,7 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 
 """;
 
-        var instance = RaiConfig.FromYaml(yamlData);
+        var instance = Policy.FromYaml(yamlData);
 
         Assert.NotNull(instance);
         Assert.Equal("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", instance.RaiPolicyName);
@@ -31,7 +31,7 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 }
 """;
 
-        var instance = RaiConfig.FromJson(jsonData);
+        var instance = Policy.FromJson(jsonData);
         Assert.NotNull(instance);
         Assert.Equal("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", instance.RaiPolicyName);
     }
@@ -46,13 +46,13 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 }
 """;
 
-        var original = RaiConfig.FromJson(jsonData);
+        var original = Policy.FromJson(jsonData);
         Assert.NotNull(original);
         
         var json = original.ToJson();
         Assert.False(string.IsNullOrEmpty(json));
         
-        var reloaded = RaiConfig.FromJson(json);
+        var reloaded = Policy.FromJson(json);
         Assert.NotNull(reloaded);
         Assert.Equal("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", reloaded.RaiPolicyName);
     }
@@ -66,13 +66,13 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 
 """;
 
-        var original = RaiConfig.FromYaml(yamlData);
+        var original = Policy.FromYaml(yamlData);
         Assert.NotNull(original);
         
         var yaml = original.ToYaml();
         Assert.False(string.IsNullOrEmpty(yaml));
         
-        var reloaded = RaiConfig.FromYaml(yaml);
+        var reloaded = Policy.FromYaml(yaml);
         Assert.NotNull(reloaded);
         Assert.Equal("/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2", reloaded.RaiPolicyName);
     }
@@ -86,7 +86,7 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 }
 """;
 
-        var instance = RaiConfig.FromJson(jsonData);
+        var instance = Policy.FromJson(jsonData);
         var json = instance.ToJson();
         
         // Verify it's valid JSON by parsing it
@@ -102,7 +102,7 @@ raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroup
 
 """;
 
-        var instance = RaiConfig.FromYaml(yamlData);
+        var instance = Policy.FromYaml(yamlData);
         var yaml = instance.ToYaml();
         
         // Verify it's valid YAML by parsing it

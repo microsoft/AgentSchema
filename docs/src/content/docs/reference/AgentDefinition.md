@@ -30,7 +30,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
-        +AgentPolicies policies
+        +Policy[] policies
     }
     class PromptAgent {
         +string kind
@@ -56,10 +56,11 @@ classDiagram
         +CodeConfiguration codeConfiguration
     }
     AgentDefinition <|-- ContainerAgent
-    class AgentPolicies {
-        +RaiConfig raiConfig
+    class Policy {
+        +string type
+        +string raiPolicyName
     }
-    AgentDefinition *-- AgentPolicies
+    AgentDefinition *-- Policy
 ```
 
 ## Yaml Example
@@ -93,7 +94,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 ```
 
@@ -108,7 +109,7 @@ policies:
 | metadata | dictionary | Additional metadata including authors, tags, and other arbitrary properties |
 | inputSchema | [PropertySchema](../propertyschema/) | Input parameters that participate in template rendering |
 | outputSchema | [PropertySchema](../propertyschema/) | Expected output format and structure from the agent |
-| policies | [AgentPolicies](../agentpolicies/) | Safety and governance policies for the agent, such as Responsible AI content-safety configuration. |
+| policies | [Policy[]](../policy/) | Safety and governance policies for the agent, such as Responsible AI content-safety configuration. |
 
 ## Child Types
 
@@ -122,4 +123,4 @@ The following types extend `AgentDefinition`:
 
 The following types are composed within `AgentDefinition`:
 
-- [AgentPolicies](../agentpolicies/)
+- [Policy](../policy/)

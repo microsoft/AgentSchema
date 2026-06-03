@@ -28,7 +28,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
-        +AgentPolicies policies
+        +Policy[] policies
     }
     AgentDefinition <|-- PromptAgent
     class PromptAgent {

@@ -3,9 +3,7 @@
 
 export { LoadContext, SaveContext } from "./context";
 
-export { RaiConfig } from "./rai-config";
-
-export { AgentPolicies } from "./agent-policies";
+export { Policy } from "./policy";
 
 export { AgentDefinition, PromptAgent, Workflow, ContainerAgent } from "./agent-definition";
 

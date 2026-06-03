@@ -9,11 +9,11 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
-from ._AgentPolicies import AgentPolicies
 from ._CodeConfiguration import CodeConfiguration
 from ._ContainerResources import ContainerResources
 from ._EnvironmentVariable import EnvironmentVariable
 from ._Model import Model
+from ._Policy import Policy
 from ._PropertySchema import PropertySchema
 from ._ProtocolVersionRecord import ProtocolVersionRecord
 from ._Template import Template
@@ -43,7 +43,7 @@ class AgentDefinition(ABC):
         Input parameters that participate in template rendering
     outputSchema : Optional[PropertySchema]
         Expected output format and structure from the agent
-    policies : Optional[AgentPolicies]
+    policies : list[Policy]
         Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
     """
 
@@ -56,7 +56,7 @@ class AgentDefinition(ABC):
     metadata: Optional[dict[str, Any]] = None
     inputSchema: Optional[PropertySchema] = None
     outputSchema: Optional[PropertySchema] = None
-    policies: Optional[AgentPolicies] = None
+    policies: list[Policy] = field(default_factory=list)
 
     @staticmethod
     def load(data: Any, context: Optional[LoadContext] = None) -> "AgentDefinition":
@@ -93,10 +93,61 @@ class AgentDefinition(ABC):
         if data is not None and "outputSchema" in data:
             instance.outputSchema = PropertySchema.load(data["outputSchema"], context)
         if data is not None and "policies" in data:
-            instance.policies = AgentPolicies.load(data["policies"], context)
+            instance.policies = AgentDefinition.load_policies(data["policies"], context)
         if context is not None:
             instance = context.process_output(instance)
         return instance
+
+    @staticmethod
+    def load_policies(
+        data: dict | list, context: Optional[LoadContext]
+    ) -> list[Policy]:
+        if isinstance(data, dict):
+            # convert simple named policies to list of Policy
+            result = []
+            for k, v in data.items():
+                if isinstance(v, dict):
+                    # value is an object, spread its properties
+                    result.append({"name": k, **v})
+                else:
+                    # value is a scalar, use it as the primary property
+                    result.append({"name": k, "type": v})
+            data = result
+        return [Policy.load(item, context) for item in data]
+
+    @staticmethod
+    def save_policies(
+        items: list[Policy], context: Optional[SaveContext]
+    ) -> dict[str, Any] | list[dict[str, Any]]:
+        if context is None:
+            context = SaveContext()
+
+        if context.collection_format == "array":
+            return [item.save(context) for item in items]
+
+        # Object format: use name as key
+        result: dict[str, Any] = {}
+        for item in items:
+            item_data = item.save(context)
+            name = item_data.pop("name", None)
+            if name:
+                # Check if we can use shorthand (only primary property set)
+                if context.use_shorthand and hasattr(item, "_shorthand_property"):
+                    shorthand_prop = item._shorthand_property
+                    if (
+                        shorthand_prop
+                        and len(item_data) == 1
+                        and shorthand_prop in item_data
+                    ):
+                        result[name] = item_data[shorthand_prop]
+                        continue
+                result[name] = item_data
+            else:
+                # No name, fall back to array format for this item
+                if "_unnamed" not in result:
+                    result["_unnamed"] = []
+                result["_unnamed"].append(item_data)
+        return result
 
     @staticmethod
     def load_kind(data: dict, context: Optional[LoadContext]) -> "AgentDefinition":
@@ -147,7 +198,7 @@ class AgentDefinition(ABC):
         if obj.outputSchema is not None:
             result["outputSchema"] = obj.outputSchema.save(context)
         if obj.policies is not None:
-            result["policies"] = obj.policies.save(context)
+            result["policies"] = AgentDefinition.save_policies(obj.policies, context)
 
         if context is not None:
             result = context.process_dict(result)

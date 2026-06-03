@@ -46,11 +46,12 @@ fn test_agent_definition_load_json() {
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -88,7 +89,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
@@ -138,11 +139,12 @@ fn test_agent_definition_roundtrip() {
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -193,11 +195,12 @@ fn test_agent_definition_load_json_1() {
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -235,7 +238,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
@@ -286,11 +289,12 @@ fn test_agent_definition_roundtrip_1() {
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -343,11 +347,12 @@ fn test_agent_definition_load_json_2() {
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -385,7 +390,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
@@ -438,11 +443,12 @@ fn test_agent_definition_roundtrip_2() {
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -496,11 +502,12 @@ fn test_agent_definition_load_json_3() {
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -538,7 +545,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
@@ -592,11 +599,12 @@ fn test_agent_definition_roundtrip_3() {
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);

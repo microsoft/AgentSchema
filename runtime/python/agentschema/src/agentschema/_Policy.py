@@ -4,35 +4,41 @@
 # ANY EDITS WILL BE LOST
 ##########################################
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, ClassVar, Optional
 
 from ._context import LoadContext, SaveContext
-from ._RaiConfig import RaiConfig
 
 
 @dataclass
-class AgentPolicies:
-    """Safety and governance policies for an agent.
+class Policy:
+    """A single safety or governance policy attached to an agent.
+    The `type` field discriminates the policy kind; the remaining fields are
+    interpreted based on `type`. For `rai_policy`, `raiPolicyName` associates the
+    agent with a Responsible AI policy that governs content filtering and safety
+    guardrails for prompts and completions.
 
     Attributes
     ----------
-    raiConfig : Optional[RaiConfig]
-        Responsible AI (content safety) configuration for the agent.
+    type : str
+        The policy type. 'rai_policy' attaches a Responsible AI (content safety) guardrail.
+    raiPolicyName : Optional[str]
+        For 'rai_policy', the full ARM resource ID of the Responsible AI policy on the Cognitive Services account (e.g., '/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.CognitiveServices/accounts/<account>/raiPolicies/<policyName>').
     """
 
     _shorthand_property: ClassVar[Optional[str]] = None
 
-    raiConfig: Optional[RaiConfig] = None
+    type: str = field(default="rai_policy")
+    raiPolicyName: Optional[str] = None
 
     @staticmethod
-    def load(data: Any, context: Optional[LoadContext] = None) -> "AgentPolicies":
-        """Load a AgentPolicies instance.
+    def load(data: Any, context: Optional[LoadContext] = None) -> "Policy":
+        """Load a Policy instance.
         Args:
             data (Any): The data to load the instance from.
             context (Optional[LoadContext]): Optional context with pre/post processing callbacks.
         Returns:
-            AgentPolicies: The loaded AgentPolicies instance.
+            Policy: The loaded Policy instance.
 
         """
 
@@ -40,19 +46,21 @@ class AgentPolicies:
             data = context.process_input(data)
 
         if not isinstance(data, dict):
-            raise ValueError(f"Invalid data for AgentPolicies: {data}")
+            raise ValueError(f"Invalid data for Policy: {data}")
 
         # create new instance
-        instance = AgentPolicies()
+        instance = Policy()
 
-        if data is not None and "raiConfig" in data:
-            instance.raiConfig = RaiConfig.load(data["raiConfig"], context)
+        if data is not None and "type" in data:
+            instance.type = data["type"]
+        if data is not None and "raiPolicyName" in data:
+            instance.raiPolicyName = data["raiPolicyName"]
         if context is not None:
             instance = context.process_output(instance)
         return instance
 
     def save(self, context: Optional[SaveContext] = None) -> dict[str, Any]:
-        """Save the AgentPolicies instance to a dictionary.
+        """Save the Policy instance to a dictionary.
         Args:
             context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
         Returns:
@@ -65,15 +73,17 @@ class AgentPolicies:
 
         result: dict[str, Any] = {}
 
-        if obj.raiConfig is not None:
-            result["raiConfig"] = obj.raiConfig.save(context)
+        if obj.type is not None:
+            result["type"] = obj.type
+        if obj.raiPolicyName is not None:
+            result["raiPolicyName"] = obj.raiPolicyName
 
         if context is not None:
             result = context.process_dict(result)
         return result
 
     def to_yaml(self, context: Optional[SaveContext] = None) -> str:
-        """Convert the AgentPolicies instance to a YAML string.
+        """Convert the Policy instance to a YAML string.
         Args:
             context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
         Returns:
@@ -85,7 +95,7 @@ class AgentPolicies:
         return context.to_yaml(self.save(context))
 
     def to_json(self, context: Optional[SaveContext] = None, indent: int = 2) -> str:
-        """Convert the AgentPolicies instance to a JSON string.
+        """Convert the Policy instance to a JSON string.
         Args:
             context (Optional[SaveContext]): Optional context with pre/post processing callbacks.
             indent (int): Number of spaces for indentation. Defaults to 2.

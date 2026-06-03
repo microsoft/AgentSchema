@@ -4,11 +4,8 @@
 pub mod context;
 pub use context::*;
 
-pub mod rai_config;
-pub use rai_config::*;
-
-pub mod agent_policies;
-pub use agent_policies::*;
+pub mod policy;
+pub use policy::*;
 
 pub mod agent_definition;
 pub use agent_definition::*;

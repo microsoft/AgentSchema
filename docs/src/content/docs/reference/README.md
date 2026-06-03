@@ -19,13 +19,10 @@ config:
     hideEmptyMembersBox: true
 ---
 classDiagram
-    class RaiConfig {
+    class Policy {
       
+        +string type
         +string raiPolicyName
-    }
-    class AgentPolicies {
-      
-        +RaiConfig raiConfig
     }
     class AgentDefinition {
       <<abstract>>
@@ -36,7 +33,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
-        +AgentPolicies policies
+        +Policy[] policies
     }
     class Connection {
       <<abstract>>
@@ -318,10 +315,9 @@ classDiagram
     McpServerApprovalMode <|-- McpServerToolSpecifyApprovalMode
     Resource <|-- ModelResource
     Resource <|-- ToolResource
-    AgentPolicies *-- RaiConfig
     AgentDefinition *-- PropertySchema
     AgentDefinition *-- PropertySchema
-    AgentDefinition *-- AgentPolicies
+    AgentDefinition *-- Policy
     Model *-- Connection
     Model *-- ModelOptions
     Tool *-- Binding

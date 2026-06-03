@@ -21,7 +21,7 @@ type AgentDefinition struct {
 	Metadata     map[string]interface{} `json:"metadata,omitempty" yaml:"metadata,omitempty"`
 	InputSchema  *PropertySchema        `json:"inputSchema,omitempty" yaml:"inputSchema,omitempty"`
 	OutputSchema *PropertySchema        `json:"outputSchema,omitempty" yaml:"outputSchema,omitempty"`
-	Policies     *AgentPolicies         `json:"policies,omitempty" yaml:"policies,omitempty"`
+	Policies     []Policy               `json:"policies,omitempty" yaml:"policies,omitempty"`
 }
 
 // LoadAgentDefinition creates a AgentDefinition from a map[string]interface{}
@@ -76,9 +76,14 @@ func LoadAgentDefinition(data interface{}, ctx *LoadContext) (interface{}, error
 			}
 		}
 		if val, ok := m["policies"]; ok && val != nil {
-			if m, ok := val.(map[string]interface{}); ok {
-				loaded, _ := LoadAgentPolicies(m, ctx)
-				result.Policies = &loaded
+			if arr, ok := val.([]interface{}); ok {
+				result.Policies = make([]Policy, len(arr))
+				for i, v := range arr {
+					if item, ok := v.(map[string]interface{}); ok {
+						loaded, _ := LoadPolicy(item, ctx)
+						result.Policies[i] = loaded
+					}
+				}
 			}
 		}
 	}
@@ -107,7 +112,11 @@ func (obj *AgentDefinition) Save(ctx *SaveContext) map[string]interface{} {
 		result["outputSchema"] = obj.OutputSchema.Save(ctx)
 	}
 	if obj.Policies != nil {
-		result["policies"] = obj.Policies.Save(ctx)
+		arr := make([]interface{}, len(obj.Policies))
+		for i, item := range obj.Policies {
+			arr[i] = item.Save(ctx)
+		}
+		result["policies"] = arr
 	}
 
 	return result

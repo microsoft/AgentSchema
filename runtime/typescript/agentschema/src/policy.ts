@@ -4,51 +4,66 @@
 import { LoadContext, SaveContext } from "./context";
 
 /**
- * Responsible AI (content safety) configuration applied to an agent.
- * Associates the agent with a Responsible AI policy that governs content
- * filtering and safety guardrails for prompts and completions.
+ * A single safety or governance policy attached to an agent.
+ * The `type` field discriminates the policy kind; the remaining fields are
+ * interpreted based on `type`. For `rai_policy`, `raiPolicyName` associates the
+ * agent with a Responsible AI policy that governs content filtering and safety
+ * guardrails for prompts and completions.
  *
  */
-export class RaiConfig {
+export class Policy {
   /**
    * The shorthand property name for this type, if any.
    */
   static readonly shorthandProperty: string | undefined = undefined;
 
   /**
-   * Full ARM resource ID of the Responsible AI policy on the Cognitive Services account (e.g., '/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.CognitiveServices/accounts/<account>/raiPolicies/<policyName>').
+   * The policy type. 'rai_policy' attaches a Responsible AI (content safety) guardrail.
    */
-  raiPolicyName: string = "";
+  type: string = "rai_policy";
 
   /**
-   * Initializes a new instance of RaiConfig.
+   * For 'rai_policy', the full ARM resource ID of the Responsible AI policy on the Cognitive Services account (e.g., '/subscriptions/<sub>/resourceGroups/<rg>/providers/Microsoft.CognitiveServices/accounts/<account>/raiPolicies/<policyName>').
    */
-  constructor(init?: Partial<RaiConfig>) {
-    this.raiPolicyName = init?.raiPolicyName ?? "";
+  raiPolicyName?: string | undefined;
+
+  /**
+   * Initializes a new instance of Policy.
+   */
+  constructor(init?: Partial<Policy>) {
+    this.type = init?.type ?? "rai_policy";
+
+    if (init?.raiPolicyName !== undefined) {
+      this.raiPolicyName = init.raiPolicyName;
+    }
   }
 
   //#region Load Methods
 
   /**
-   * Load a RaiConfig instance from a dictionary.
+   * Load a Policy instance from a dictionary.
    * @param data - The dictionary containing the data.
    * @param context - Optional context with pre/post processing callbacks.
-   * @returns The loaded RaiConfig instance.
+   * @returns The loaded Policy instance.
    */
-  static load(data: Record<string, unknown>, context?: LoadContext): RaiConfig {
+  static load(data: Record<string, unknown>, context?: LoadContext): Policy {
     if (context) {
       data = context.processInput(data);
     }
 
     // Create new instance
-    const instance = new RaiConfig();
+    const instance = new Policy();
+
+    if (data["type"] !== undefined && data["type"] !== null) {
+      instance.type = String(data["type"]);
+    }
 
     if (data["raiPolicyName"] !== undefined && data["raiPolicyName"] !== null) {
       instance.raiPolicyName = String(data["raiPolicyName"]);
     }
 
     if (context) {
-      return context.processOutput(instance) as RaiConfig;
+      return context.processOutput(instance) as Policy;
     }
     return instance;
   }
@@ -58,14 +73,18 @@ export class RaiConfig {
   //#region Save Methods
 
   /**
-   * Save the RaiConfig instance to a dictionary.
+   * Save the Policy instance to a dictionary.
    * @param context - Optional context with pre/post processing callbacks.
    * @returns The dictionary representation of this instance.
    */
   save(context?: SaveContext): Record<string, unknown> {
-    const obj = context ? (context.processObject(this) as RaiConfig) : this;
+    const obj = context ? (context.processObject(this) as Policy) : this;
 
     const result: Record<string, unknown> = {};
+
+    if (obj.type !== undefined && obj.type !== null) {
+      result["type"] = obj.type;
+    }
 
     if (obj.raiPolicyName !== undefined && obj.raiPolicyName !== null) {
       result["raiPolicyName"] = obj.raiPolicyName;
@@ -79,7 +98,7 @@ export class RaiConfig {
   }
 
   /**
-   * Convert the RaiConfig instance to a YAML string.
+   * Convert the Policy instance to a YAML string.
    * @param context - Optional context with pre/post processing callbacks.
    * @returns The YAML string representation of this instance.
    */
@@ -89,7 +108,7 @@ export class RaiConfig {
   }
 
   /**
-   * Convert the RaiConfig instance to a JSON string.
+   * Convert the Policy instance to a JSON string.
    * @param context - Optional context with pre/post processing callbacks.
    * @param indent - Number of spaces for indentation. Defaults to 2.
    * @returns The JSON string representation of this instance.
@@ -100,28 +119,28 @@ export class RaiConfig {
   }
 
   /**
-   * Load a RaiConfig instance from a JSON string.
+   * Load a Policy instance from a JSON string.
    * @param json - The JSON string to parse.
    * @param context - Optional context with pre/post processing callbacks.
-   * @returns The loaded RaiConfig instance.
+   * @returns The loaded Policy instance.
    */
-  static fromJson(json: string, context?: LoadContext): RaiConfig {
+  static fromJson(json: string, context?: LoadContext): Policy {
     const data = JSON.parse(json);
 
-    return RaiConfig.load(data as Record<string, unknown>, context);
+    return Policy.load(data as Record<string, unknown>, context);
   }
 
   /**
-   * Load a RaiConfig instance from a YAML string.
+   * Load a Policy instance from a YAML string.
    * @param yaml - The YAML string to parse.
    * @param context - Optional context with pre/post processing callbacks.
-   * @returns The loaded RaiConfig instance.
+   * @returns The loaded Policy instance.
    */
-  static fromYaml(yaml: string, context?: LoadContext): RaiConfig {
+  static fromYaml(yaml: string, context?: LoadContext): Policy {
     const { parse } = require("yaml");
     const data = parse(yaml);
 
-    return RaiConfig.load(data as Record<string, unknown>, context);
+    return Policy.load(data as Record<string, unknown>, context);
   }
 
   //#endregion

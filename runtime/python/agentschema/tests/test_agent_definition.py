@@ -45,11 +45,12 @@ def test_load_json_agentdefinition():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -94,7 +95,7 @@ def test_load_yaml_agentdefinition():
           kind: string
           description: The answer to the user's question.
     policies:
-      raiConfig:
+      - type: rai_policy
         raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
@@ -152,11 +153,12 @@ def test_roundtrip_json_agentdefinition():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     original_data = json.loads(json_data, strict=False)
@@ -215,11 +217,12 @@ def test_to_json_agentdefinition():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -272,11 +275,12 @@ def test_to_yaml_agentdefinition():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -329,11 +333,12 @@ def test_load_json_agentdefinition_1():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -378,7 +383,7 @@ def test_load_yaml_agentdefinition_1():
           kind: string
           description: The answer to the user's question.
     policies:
-      raiConfig:
+      - type: rai_policy
         raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
@@ -437,11 +442,12 @@ def test_roundtrip_json_agentdefinition_1():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     original_data = json.loads(json_data, strict=False)
@@ -501,11 +507,12 @@ def test_to_json_agentdefinition_1():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -559,11 +566,12 @@ def test_to_yaml_agentdefinition_1():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -618,11 +626,12 @@ def test_load_json_agentdefinition_2():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -667,7 +676,7 @@ def test_load_yaml_agentdefinition_2():
           kind: string
           description: The answer to the user's question.
     policies:
-      raiConfig:
+      - type: rai_policy
         raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
@@ -728,11 +737,12 @@ def test_roundtrip_json_agentdefinition_2():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     original_data = json.loads(json_data, strict=False)
@@ -794,11 +804,12 @@ def test_to_json_agentdefinition_2():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -854,11 +865,12 @@ def test_to_yaml_agentdefinition_2():
           }
         }
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -914,11 +926,12 @@ def test_load_json_agentdefinition_3():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -963,7 +976,7 @@ def test_load_yaml_agentdefinition_3():
           kind: string
           description: The answer to the user's question.
     policies:
-      raiConfig:
+      - type: rai_policy
         raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
     
     """
@@ -1025,11 +1038,12 @@ def test_roundtrip_json_agentdefinition_3():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     original_data = json.loads(json_data, strict=False)
@@ -1092,11 +1106,12 @@ def test_to_json_agentdefinition_3():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)
@@ -1153,11 +1168,12 @@ def test_to_yaml_agentdefinition_3():
           }
         ]
       },
-      "policies": {
-        "raiConfig": {
+      "policies": [
+        {
+          "type": "rai_policy",
           "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
         }
-      }
+      ]
     }
     """
     data = json.loads(json_data, strict=False)

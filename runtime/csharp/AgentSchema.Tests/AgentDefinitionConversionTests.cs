@@ -40,7 +40,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -97,11 +97,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -157,11 +158,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -212,7 +214,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -274,11 +276,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -322,7 +325,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -367,7 +370,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -425,11 +428,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -486,11 +490,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -541,7 +546,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -604,11 +609,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -652,7 +658,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -697,7 +703,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -757,11 +763,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -820,11 +827,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -875,7 +883,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -940,11 +948,12 @@ policies:
       }
     }
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -988,7 +997,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -1033,7 +1042,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -1094,11 +1103,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -1158,11 +1168,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -1213,7 +1224,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
@@ -1279,11 +1290,12 @@ policies:
       }
     ]
   },
-  "policies": {
-    "raiConfig": {
+  "policies": [
+    {
+      "type": "rai_policy",
       "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
     }
-  }
+  ]
 }
 """;
 
@@ -1327,7 +1339,7 @@ outputSchema:
       kind: string
       description: The answer to the user's question.
 policies:
-  raiConfig:
+  - type: rai_policy
     raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 """;
