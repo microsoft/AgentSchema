@@ -29,7 +29,7 @@ pub struct {{ class.node.typeName.name }} {
 {%- if prop.description %}
     /// {{ prop.description | replace("\r\n", " ") | replace("\n", " ") | trim }}
 {%- endif %}
-    pub {{ prop.name | snakeCase }}: {{ rust.rustType(prop, typeMapper, polymorphicTypeNames) | trim }},
+    pub {{ prop.name | rustFieldIdent }}: {{ rust.rustType(prop, typeMapper, polymorphicTypeNames) | trim }},
 {%- endfor %}
 }
 
@@ -81,7 +81,7 @@ impl {{ class.node.typeName.name }} {
         {%- endif %}
         Self {
 {%- for prop in class.node.properties %}
-            {{ prop.name | snakeCase }}: {{ rust.fieldInitializer(prop, "value", typeMapper, polymorphicTypeNames) | trim }},
+            {{ prop.name | rustFieldIdent }}: {{ rust.fieldInitializer(prop, "value", typeMapper, polymorphicTypeNames) | trim }},
 {%- endfor %}
         }
     }

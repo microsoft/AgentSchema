@@ -33,6 +33,11 @@ properties:
   outputSchema:
     $ref: PropertySchema.yaml
     description: Expected output format and structure from the agent
+  policies:
+    type: array
+    items:
+      $ref: Policy.yaml
+    description: Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
 required:
   - kind
   - name

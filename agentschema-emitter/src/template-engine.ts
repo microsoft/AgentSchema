@@ -82,6 +82,32 @@ export class TemplateEngine {
         .replace(/^_/, '');
     });
 
+    // rustFieldIdent: snake_case the name, then escape Rust reserved keywords
+    // so the generated identifier is valid (e.g. "type" -> "r#type"). The wire
+    // key (serde/JSON name) is rendered separately from the original property
+    // name, so escaping here only affects the Rust identifier.
+    this.env.addFilter('rustFieldIdent', (str: string): string => {
+      if (!str) return str;
+      const snake = str
+        .replace(/([A-Z])/g, '_$1')
+        .toLowerCase()
+        .replace(/^_/, '');
+      // Strict and reserved Rust keywords that are valid raw identifiers.
+      const rawKeywords = new Set([
+        'as', 'break', 'const', 'continue', 'dyn', 'else', 'enum', 'extern',
+        'false', 'fn', 'for', 'if', 'impl', 'in', 'let', 'loop', 'match', 'mod',
+        'move', 'mut', 'pub', 'ref', 'return', 'static', 'struct', 'trait',
+        'true', 'type', 'unsafe', 'use', 'where', 'while', 'async', 'await',
+        'abstract', 'become', 'box', 'do', 'final', 'macro', 'override', 'priv',
+        'typeof', 'unsized', 'virtual', 'yield', 'try', 'union',
+      ]);
+      // Keywords that cannot be raw identifiers; escape with a trailing underscore.
+      const nonRawKeywords = new Set(['crate', 'self', 'Self', 'super']);
+      if (nonRawKeywords.has(snake)) return `${snake}_`;
+      if (rawKeywords.has(snake)) return `r#${snake}`;
+      return snake;
+    });
+
     // kebab-case: "helloWorld" -> "hello-world"
     this.env.addFilter('kebabCase', (str: string): string => {
       if (!str) return str;

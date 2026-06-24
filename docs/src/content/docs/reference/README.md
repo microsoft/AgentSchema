@@ -19,6 +19,11 @@ config:
     hideEmptyMembersBox: true
 ---
 classDiagram
+    class Policy {
+      
+        +string type
+        +string raiPolicyName
+    }
     class AgentDefinition {
       <<abstract>>
         +string kind
@@ -28,6 +33,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
+        +Policy[] policies
     }
     class Connection {
       <<abstract>>
@@ -311,6 +317,7 @@ classDiagram
     Resource <|-- ToolResource
     AgentDefinition *-- PropertySchema
     AgentDefinition *-- PropertySchema
+    AgentDefinition *-- Policy
     Model *-- Connection
     Model *-- ModelOptions
     Tool *-- Binding

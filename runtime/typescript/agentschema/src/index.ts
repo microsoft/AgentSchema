@@ -3,6 +3,8 @@
 
 export { LoadContext, SaveContext } from "./context";
 
+export { Policy } from "./policy";
+
 export { AgentDefinition, PromptAgent, Workflow, ContainerAgent } from "./agent-definition";
 
 export {

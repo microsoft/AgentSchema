@@ -11,6 +11,8 @@ use crate::environment_variable::EnvironmentVariable;
 
 use crate::model::Model;
 
+use crate::policy::Policy;
+
 use crate::property_schema::PropertySchema;
 
 use crate::protocol_version_record::ProtocolVersionRecord;
@@ -38,6 +40,8 @@ pub struct AgentDefinition {
     pub input_schema: Option<PropertySchema>,
     /// Expected output format and structure from the agent
     pub output_schema: Option<PropertySchema>,
+    /// Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
+    pub policies: serde_json::Value,
 }
 
 impl AgentDefinition {
@@ -68,6 +72,7 @@ impl AgentDefinition {
             metadata: value.get("metadata").cloned().unwrap_or(serde_json::Value::Null),
             input_schema: value.get("inputSchema").filter(|v| v.is_object() || v.is_array()).map(PropertySchema::load_from_value),
             output_schema: value.get("outputSchema").filter(|v| v.is_object() || v.is_array()).map(PropertySchema::load_from_value),
+            policies: value.get("policies").cloned().unwrap_or(serde_json::Value::Null),
         }
     }
 
@@ -101,6 +106,9 @@ impl AgentDefinition {
                 result.insert("outputSchema".to_string(), nested);
             }
         }
+        if !self.policies.is_null() {
+            result.insert("policies".to_string(), self.policies.clone());
+        }
         serde_json::Value::Object(result)
     }
 
@@ -117,6 +125,34 @@ impl AgentDefinition {
     /// Returns `None` if the field is null or not an object.
     pub fn as_metadata_dict(&self) -> Option<&serde_json::Map<String, serde_json::Value>> {
         self.metadata.as_object()
+    }
+    /// Returns typed `Vec<Policy>` by parsing the stored JSON value.
+    /// Handles both array format `[{...}]` and dict format `{"name": {...}}`.
+    /// Returns `None` if the field is null or cannot be parsed.
+    pub fn as_policies(&self) -> Option<Vec<Policy>> {
+        match &self.policies {
+            serde_json::Value::Array(arr) => {
+                Some(arr.iter().map(Policy::load_from_value).collect())
+            }
+            serde_json::Value::Object(obj) => {
+                let result: Vec<Policy> = obj
+                    .iter()
+                    .map(|(name, value)| {
+                        let mut v = if value.is_object() {
+                            value.clone()
+                        } else {
+                            serde_json::json!({ "value": value })
+                        };
+                        if let serde_json::Value::Object(ref mut m) = v {
+                            m.entry("name".to_string()).or_insert_with(|| serde_json::Value::String(name.clone()));
+                        }
+                        Policy::load_from_value(&v)
+                    })
+                    .collect();
+                Some(result)
+            }
+            _ => None,
+        }
     }
 }
 

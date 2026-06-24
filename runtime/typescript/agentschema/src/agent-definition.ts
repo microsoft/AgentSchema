@@ -6,6 +6,7 @@ import { CodeConfiguration } from "./code-configuration";
 import { ContainerResources } from "./container-resources";
 import { EnvironmentVariable } from "./environment-variable";
 import { Model } from "./model";
+import { Policy } from "./policy";
 import { PropertySchema } from "./property-schema";
 import { ProtocolVersionRecord } from "./protocol-version-record";
 import { Template } from "./template";
@@ -60,6 +61,11 @@ export abstract class AgentDefinition {
   outputSchema?: PropertySchema | undefined;
 
   /**
+   * Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
+   */
+  policies?: Policy[] = [];
+
+  /**
    * Initializes a new instance of AgentDefinition.
    */
   constructor(init?: Partial<AgentDefinition>) {
@@ -85,6 +91,10 @@ export abstract class AgentDefinition {
 
     if (init?.outputSchema !== undefined) {
       this.outputSchema = init.outputSchema;
+    }
+
+    if (init?.policies !== undefined) {
+      this.policies = init.policies;
     }
   }
 
@@ -138,10 +148,50 @@ export abstract class AgentDefinition {
       );
     }
 
+    if (data["policies"] !== undefined && data["policies"] !== null) {
+      instance.policies = AgentDefinition.loadPolicies(data["policies"], context);
+    }
+
     if (context) {
       return context.processOutput(instance) as AgentDefinition;
     }
     return instance;
+  }
+
+  /**
+   * Load a collection of Policy from a dictionary or array.
+   * @param data - The data to load from.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The loaded array of Policy.
+   */
+  static loadPolicies(data: unknown, context?: LoadContext): Policy[] {
+    const result: Policy[] = [];
+
+    if (data && typeof data === "object" && !Array.isArray(data)) {
+      // Convert named dictionary to array
+      for (const [key, value] of Object.entries(data as Record<string, unknown>)) {
+        if (value && typeof value === "object" && !Array.isArray(value)) {
+          // Value is an object, add name to it
+          (value as Record<string, unknown>)["name"] = key;
+          result.push(Policy.load(value as Record<string, unknown>, context));
+        } else {
+          // Value is a scalar, use it as the primary property
+          const newObj: Record<string, unknown> = {
+            name: key,
+            type: value,
+          };
+          result.push(Policy.load(newObj, context));
+        }
+      }
+    } else if (Array.isArray(data)) {
+      for (const item of data) {
+        if (item && typeof item === "object") {
+          result.push(Policy.load(item as Record<string, unknown>, context));
+        }
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -211,11 +261,31 @@ export abstract class AgentDefinition {
       result["outputSchema"] = obj.outputSchema?.save(context);
     }
 
+    if (obj.policies !== undefined && obj.policies !== null) {
+      result["policies"] = AgentDefinition.savePolicies(obj.policies, context);
+    }
+
     if (context) {
       return context.processDict(result);
     }
 
     return result;
+  }
+
+  /**
+   * Save a collection of Policy to object or array format.
+   * @param items - The items to save.
+   * @param context - Optional context with pre/post processing callbacks.
+   * @returns The saved collection in object or array format.
+   */
+  static savePolicies(
+    items: Policy[],
+    context?: SaveContext
+  ): Record<string, unknown> | Record<string, unknown>[] {
+    context = context ?? new SaveContext();
+
+    // This type doesn't have a 'name' property, so always use array format
+    return items.map((item) => item.save(context));
   }
 
   /**

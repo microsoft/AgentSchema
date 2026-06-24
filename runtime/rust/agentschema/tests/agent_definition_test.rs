@@ -45,7 +45,13 @@ fn test_agent_definition_load_json() {
         "description": "The answer to the user's question."
       }
     }
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -82,6 +88,9 @@ outputSchema:
     answer:
       kind: string
       description: The answer to the user's question.
+policies:
+  - type: rai_policy
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
     let result = AgentDefinition::from_yaml(yaml);
@@ -129,7 +138,13 @@ fn test_agent_definition_roundtrip() {
         "description": "The answer to the user's question."
       }
     }
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -179,7 +194,13 @@ fn test_agent_definition_load_json_1() {
         "description": "The answer to the user's question."
       }
     ]
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -216,6 +237,9 @@ outputSchema:
     - name: answer
       kind: string
       description: The answer to the user's question.
+policies:
+  - type: rai_policy
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
     let result = AgentDefinition::from_yaml(yaml);
@@ -264,7 +288,13 @@ fn test_agent_definition_roundtrip_1() {
         "description": "The answer to the user's question."
       }
     ]
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -316,7 +346,13 @@ fn test_agent_definition_load_json_2() {
         "description": "The answer to the user's question."
       }
     }
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -353,6 +389,9 @@ outputSchema:
     answer:
       kind: string
       description: The answer to the user's question.
+policies:
+  - type: rai_policy
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
     let result = AgentDefinition::from_yaml(yaml);
@@ -403,7 +442,13 @@ fn test_agent_definition_roundtrip_2() {
         "description": "The answer to the user's question."
       }
     }
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -456,7 +501,13 @@ fn test_agent_definition_load_json_3() {
         "description": "The answer to the user's question."
       }
     ]
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);
@@ -493,6 +544,9 @@ outputSchema:
     - name: answer
       kind: string
       description: The answer to the user's question.
+policies:
+  - type: rai_policy
+    raiPolicyName: /subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2
 
 "####;
     let result = AgentDefinition::from_yaml(yaml);
@@ -544,7 +598,13 @@ fn test_agent_definition_roundtrip_3() {
         "description": "The answer to the user's question."
       }
     ]
-  }
+  },
+  "policies": [
+    {
+      "type": "rai_policy",
+      "raiPolicyName": "/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.CognitiveServices/accounts/my-account/raiPolicies/Microsoft.DefaultV2"
+    }
+  ]
 }
 "####;
     let result = AgentDefinition::from_json(json);

@@ -63,6 +63,11 @@ public abstract class AgentDefinition
     /// </summary>
     public PropertySchema? OutputSchema { get; set; }
 
+    /// <summary>
+    /// Safety and governance policies for the agent, such as Responsible AI content-safety configuration.
+    /// </summary>
+    public IList<Policy>? Policies { get; set; }
+
 
     #region Load Methods
 
@@ -119,11 +124,61 @@ public abstract class AgentDefinition
             instance.OutputSchema = PropertySchema.Load(outputSchemaValue.GetDictionary(), context);
         }
 
+        if (data.TryGetValue("policies", out var policiesValue) && policiesValue is not null)
+        {
+            instance.Policies = LoadPolicies(policiesValue, context);
+        }
+
         if (context is not null)
         {
             instance = context.ProcessOutput(instance);
         }
         return instance;
+    }
+
+
+    /// <summary>
+    /// Load a list of Policy from a dictionary or list.
+    /// </summary>
+    public static IList<Policy> LoadPolicies(object data, LoadContext? context)
+    {
+        var result = new List<Policy>();
+
+        if (data is Dictionary<string, object?> dict)
+        {
+            // Convert named dictionary to list
+            foreach (var kvp in dict)
+            {
+                if (kvp.Value is Dictionary<string, object?> itemDict)
+                {
+                    // Value is an object, add name to it
+                    itemDict["name"] = kvp.Key;
+                    result.Add(Policy.Load(itemDict, context));
+                }
+                else
+                {
+                    // Value is a scalar, use it as the primary property
+                    var newDict = new Dictionary<string, object?>
+                    {
+                        ["name"] = kvp.Key,
+                        [""] = kvp.Value
+                    };
+                    result.Add(Policy.Load(newDict, context));
+                }
+            }
+        }
+        else if (data is IEnumerable<object> list)
+        {
+            foreach (var item in list)
+            {
+                if (item is Dictionary<string, object?> itemDict)
+                {
+                    result.Add(Policy.Load(itemDict, context));
+                }
+            }
+        }
+
+        return result;
     }
 
 
@@ -206,6 +261,11 @@ public abstract class AgentDefinition
             result["outputSchema"] = obj.OutputSchema?.Save(context);
         }
 
+        if (obj.Policies is not null)
+        {
+            result["policies"] = SavePolicies(obj.Policies, context);
+        }
+
 
         if (context is not null)
         {
@@ -213,6 +273,19 @@ public abstract class AgentDefinition
         }
 
         return result;
+    }
+
+
+    /// <summary>
+    /// Save a list of Policy to object or array format.
+    /// </summary>
+    public static object SavePolicies(IList<Policy> items, SaveContext? context)
+    {
+        context ??= new SaveContext();
+
+        // This collection type does not have a 'name' property, only array format is supported
+        return items.Select(item => item.Save(context)).ToList();
+
     }
 
 

@@ -47,6 +47,7 @@ classDiagram
         +dictionary metadata
         +PropertySchema inputSchema
         +PropertySchema outputSchema
+        +Policy[] policies
     }
     AgentManifest *-- AgentDefinition
     class Resource {
