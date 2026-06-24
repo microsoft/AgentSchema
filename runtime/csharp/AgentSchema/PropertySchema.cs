@@ -92,6 +92,12 @@ public class PropertySchema
     {
         var result = new List<Property>();
 
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -122,6 +128,11 @@ public class PropertySchema
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add(Property.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(Property.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }

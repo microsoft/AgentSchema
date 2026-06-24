@@ -397,4 +397,43 @@ internal static class Utils
 
         return dict;
     }
+
+    /// <summary>
+    /// Normalizes a YamlDotNet Dictionary&lt;object, object&gt; to Dictionary&lt;string, object?&gt;,
+    /// recursively normalizing all nested values.
+    /// </summary>
+    /// <param name="dict">The YamlDotNet dictionary to normalize.</param>
+    /// <returns>A normalized Dictionary&lt;string, object?&gt;.</returns>
+    public static Dictionary<string, object?> NormalizeDictionary(this Dictionary<object, object> dict)
+    {
+        var result = new Dictionary<string, object?>();
+        foreach (var kvp in dict)
+        {
+            result[kvp.Key?.ToString() ?? ""] = NormalizeValue(kvp.Value);
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Recursively normalizes a value from YamlDotNet deserialization,
+    /// converting Dictionary&lt;object, object&gt; to Dictionary&lt;string, object?&gt;
+    /// and normalizing items within lists.
+    /// </summary>
+    /// <param name="value">The value to normalize.</param>
+    /// <returns>The normalized value.</returns>
+    public static object? NormalizeValue(this object? value)
+    {
+        if (value is Dictionary<object, object> dictObjObj)
+            return dictObjObj.NormalizeDictionary();
+
+        if (value is IEnumerable<object> enumerable)
+        {
+            var list = new List<object?>();
+            foreach (var item in enumerable)
+                list.Add(NormalizeValue(item));
+            return list;
+        }
+
+        return value;
+    }
 }

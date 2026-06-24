@@ -142,6 +142,12 @@ public class AgentManifest
     {
         var result = new List<Resource>();
 
+        // Normalize YamlDotNet's Dictionary<object, object> to Dictionary<string, object?>
+        if (data is Dictionary<object, object> rawYamlDict)
+        {
+            data = rawYamlDict.NormalizeDictionary();
+        }
+
         if (data is Dictionary<string, object?> dict)
         {
             // Convert named dictionary to list
@@ -172,6 +178,11 @@ public class AgentManifest
                 if (item is Dictionary<string, object?> itemDict)
                 {
                     result.Add(Resource.Load(itemDict, context));
+                }
+                else if (item is Dictionary<object, object> yamlItemDict)
+                {
+                    // Handle YamlDotNet's Dictionary<object, object> list items
+                    result.Add(Resource.Load(yamlItemDict.NormalizeDictionary(), context));
                 }
             }
         }
